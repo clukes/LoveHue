@@ -2,6 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:relationship_bars/Database/database_handler.dart';
 import 'package:relationship_bars/Database/relationship_bar_model.dart';
 import 'package:relationship_bars/main.dart';
+import 'package:sqflite/sqflite.dart';
+
+/* TODO: SHOW LINK WITH PARTNER CODE FORM WHEN NO PARTNER LINKED */
+
+const String partnersRelationshipBarsTableName = "PartnersRelationshipBars";
 
 class PartnersBars extends StatefulWidget {
   const PartnersBars({Key? key}) : super(key: key);
@@ -11,10 +16,11 @@ class PartnersBars extends StatefulWidget {
 }
 
 class _PartnersBarsState extends State<PartnersBars> {
-  RelationshipBarRepository barRepo = RelationshipBarRepository(DatabaseHandler(), 'PartnersRelationshipBars');
+  RelationshipBarRepository barRepo = RelationshipBarRepository(DatabaseHandler(), partnersRelationshipBarsTableName);
 
   @override
   Widget build(BuildContext context) {
+    print("BUILD PARTNERS");
     return Scaffold(
       appBar: AppBar(
         title: const Text('Partners Relationship Bars'),
