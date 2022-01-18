@@ -42,9 +42,10 @@ class RelationshipBarDao implements Dao<RelationshipBar> {
         '$_columnLabel TEXT NON NULL UNIQUE, '
         '$_columnValue INTEGER DEFAULT 100)'
     );
+    print(tableName);
     Batch batch = db.batch();
-    for(var relationshipBar in defaultBars){
-      batch.insert(tableName, toMap(relationshipBar), conflictAlgorithm: ConflictAlgorithm.replace);
+    for(RelationshipBar relationshipBar in defaultBars){
+      batch.insert(tableName, toMap(relationshipBar));
     }
     await batch.commit(noResult: true);
   }
@@ -61,6 +62,11 @@ class RelationshipBarDao implements Dao<RelationshipBar> {
     _columnLabel: bar.label,
    _columnValue: bar.value,
     };
+  }
+
+  @override
+  List<Map<String,dynamic>> toList(List<RelationshipBar> bars) {
+    return bars.map((e) => toMap(e)).toList();
   }
 
   @override
@@ -126,6 +132,7 @@ class RelationshipBarRepository implements ElementsRepository<RelationshipBar> {
   @override
   // A method that retrieves all bars from a table.
   Future<List<RelationshipBar>> retrieveElements() async {
+    print("RETRIEVE 1");
     // Get a reference to the database.
     final db = await databaseHandler.db();
 
