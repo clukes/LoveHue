@@ -2,20 +2,22 @@ import 'dart:async';
 
 import 'package:relationship_bars/Database/relationship_bar_model.dart';
 import 'package:path/path.dart';
+import 'package:relationship_bars/Pages/your_bars_page.dart';
 import 'package:sqflite/sqflite.dart';
 
+import '../Pages/partners_bars_page.dart';
+
 class DatabaseHandler {
-  bool isInitialized = false;
   late Database _db;
 
   Future<Database> db() async {
-    if (!isInitialized) await _initializeDB();
-    return _db;
+    return await _initializeDB();
   }
 
   Future<Database> _initializeDB() async {
+    print("INITIALIZE DB");
     // Open the database and store the reference.
-    final database = openDatabase(
+    _db = await openDatabase(
       // Set the path to the database. Note: Using the `join` function from the
       // `path` package is best practice to ensure the path is correctly
       // constructed for each platform.
@@ -23,14 +25,15 @@ class DatabaseHandler {
       // When the database is first created, create a table to store bars.
       onCreate: (Database db, version) async {
         // Run the CREATE TABLE statement on the database.
-        await RelationshipBarDao('YourRelationshipBars').createTable(db);
-        await RelationshipBarDao('PartnersRelationshipBars').createTable(db);
+        await RelationshipBarDao(yourRelationshipBarsTableName).createTable(db);
+        await RelationshipBarDao(partnersRelationshipBarsTableName).createTable(db);
+        print("CREATED");
       },
       // Set the version. This executes the onCreate function and provides a
       // path to perform database upgrades and downgrades.
       version: 1,
     );
-    return database;
+    return _db;
   }
 }
 
@@ -51,6 +54,7 @@ abstract class Dao<T> {
 
   //abstract mapping methods
   T fromMap(Map<String, dynamic> query);
-  List<T> fromList(List<Map<String,dynamic>> query);
   Map<String, dynamic> toMap(T object);
+  List<T> fromList(List<Map<String,dynamic>> query);
+  List<Map<String,dynamic>> toList(List<T> query);
 }
