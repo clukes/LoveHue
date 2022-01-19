@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:relationship_bars/Database/database_handler.dart';
-import 'package:relationship_bars/Database/relationship_bar_model.dart';
-import 'package:relationship_bars/main.dart';
+import 'package:relationship_bars/database/database_handler.dart';
+import 'package:relationship_bars/database/relationship_bar_model.dart';
+import 'package:relationship_bars/database/update_database.dart';
 
-import '../application_state.dart';
-import '../authentication.dart';
+import '../main.dart';
+import '../providers/application_state.dart';
+import '../resources/authentication.dart';
 
 const String yourRelationshipBarsTableName = 'YourRelationshipBars';
 
@@ -17,8 +18,7 @@ class YourBars extends StatefulWidget {
 }
 
 class _YourBarsState extends State<YourBars> {
-  RelationshipBarRepository barRepo = RelationshipBarRepository(
-      DatabaseHandler(), yourRelationshipBarsTableName);
+  RelationshipBarRepository barRepo = RelationshipBarRepository(DatabaseHandler(), yourRelationshipBarsTableName);
 
   @override
   Widget build(BuildContext context) {
@@ -44,9 +44,9 @@ class _YourBarsState extends State<YourBars> {
           child:
           (appState.loginState == ApplicationLoginState.loggedIn) ?
               FloatingActionButton(
-                onPressed: () async => appState.updateBarsInOnlineDatabase(
-                    await barRepo.retrieveElements()),
-                /* TODO: SAVE BAR VALUES IN SERVER */ /* TODO: ONLY SHOW SAVE BUTTON WHEN VALUES CHANGED, ALSO HAVE CANCEL */
+                onPressed: () async => updateBarsInOnlineDatabase(
+                    await barRepo.retrieveElements(), appState.loginState),
+                /* TODO: ONLY SHOW SAVE BUTTON WHEN VALUES CHANGED, ALSO HAVE CANCEL */
                 tooltip: 'Save',
                 child: const Icon(Icons.add),
               ) : null
