@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:relationship_bars/database/database_handler.dart';
+import 'package:relationship_bars/database/local_database_handler.dart';
 import 'package:relationship_bars/database/relationship_bar_model.dart';
-import 'package:relationship_bars/database/update_database.dart';
+import 'package:relationship_bars/database/update_firestore_database.dart';
 
 import '../main.dart';
 import '../providers/application_state.dart';
