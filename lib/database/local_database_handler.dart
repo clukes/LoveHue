@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:relationship_bars/Database/relationship_bar_model.dart';
+import 'package:relationship_bars/database/relationship_bar_model.dart';
 import 'package:path/path.dart';
 import 'package:relationship_bars/Pages/your_bars_page.dart';
 import 'package:sqflite/sqflite.dart';
