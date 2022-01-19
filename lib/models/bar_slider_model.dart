@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:relationship_bars/Database/relationship_bar_model.dart';
+import 'package:relationship_bars/database/relationship_bar_model.dart';
 
 abstract class BarSlider extends StatefulWidget {
   final RelationshipBar relationshipBar;
