@@ -46,11 +46,11 @@ class Authentication extends StatefulWidget {
   final ApplicationLoginState loginState;
   final String? email;
   final void Function() startLoginFlow;
-  final void Function(
+  final Future<void> Function(
     String email,
-    void Function(Exception e) error,
+    void Function(FirebaseAuthException e) error,
   ) verifyEmail;
-  final void Function(
+  final Future<void> Function(
     String emailLink,
     void Function(FirebaseAuthException e) errorCallback,
   ) signInWithEmailAndLink;
@@ -71,20 +71,7 @@ class Authentication extends StatefulWidget {
   _AuthenticationState createState() => _AuthenticationState();
 }
 
-class _AuthenticationState extends State<Authentication>
-    with WidgetsBindingObserver {
-  @override
-  void initState() {
-    super.initState();
-    WidgetsBinding.instance!.addObserver(this);
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    WidgetsBinding.instance!.removeObserver(this);
-  }
-
+class _AuthenticationState extends State<Authentication> {
   @override
   Widget build(BuildContext context) {
     switch (widget.loginState) {
@@ -102,20 +89,22 @@ class _AuthenticationState extends State<Authentication>
       case ApplicationLoginState.emailAddress:
         return EmailForm(
             callback: (email) => widget.verifyEmail(
-                email, (e) => _showErrorDialog(context, 'Invalid email', e)));
+                email, (e) => showErrorDialog(context, 'Invalid email', e)));
       case ApplicationLoginState.awaitEmailLink:
         return Column(
           children: [
             Padding(
               padding: EdgeInsets.only(bottom: 24.0),
-              child: Text('Email sent to: ${widget.email}.\nClick link in your email to sign in.'),
+              child: Text(
+                  'Email sent to: ${widget.email}.\nClick link in your email to sign in.'),
             ),
             const Padding(
               padding: EdgeInsets.only(bottom: 8.0),
-              child: Text('Make sure to check your spam/junk folder.\nIf email does not arrive, click button below to re-enter your email.',
-              textScaleFactor: 0.9,),
+              child: Text(
+                'Make sure to check your spam/junk folder.\nIf email does not arrive, click button below to re-enter your email.',
+                textScaleFactor: 0.9,
+              ),
             ),
-
             StyledButton(
               onPressed: () {
                 widget.cancelRegistration();
@@ -149,33 +138,11 @@ class _AuthenticationState extends State<Authentication>
     }
   }
 
-  @override
-  void didChangeAppLifecycleState(AppLifecycleState state) async {
-    errorCallback(e) => _showErrorDialog(context, 'Login Link Error', e);
-
-    print("STATE CHANGED");
-    if (state == AppLifecycleState.resumed) {
-      final PendingDynamicLinkData? initialLink =
-          await FirebaseDynamicLinks.instance.getInitialLink();
-      if (initialLink?.link != null) {
-        widget.signInWithEmailAndLink(
-            initialLink!.link.toString(), errorCallback);
-      }
-      FirebaseDynamicLinks.instance.onLink.listen((dynamicLinkData) async {
-        final Uri deepLink = dynamicLinkData.link;
-        widget.signInWithEmailAndLink(deepLink.toString(), errorCallback);
-      }).onError((e) async {
-        print('onLinkError');
-        print(e.message);
-      });
-    }
-  }
-
   void _pushEnter() {
     Navigator.pushNamed(context, '/yours');
   }
 
-  void _showErrorDialog(BuildContext context, String title, Exception e) {
+  void showErrorDialog(BuildContext context, String title, Exception e) {
     showDialog<void>(
       context: context,
       builder: (context) {

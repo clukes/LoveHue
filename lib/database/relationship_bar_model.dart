@@ -1,6 +1,6 @@
 import 'package:sqflite/sqflite.dart';
 
-import 'database_handler.dart';
+import 'local_database_handler.dart';
 
 List<RelationshipBar> defaultBars = [
   RelationshipBar(label:"Words of Affirmation"),

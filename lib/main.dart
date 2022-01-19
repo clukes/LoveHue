@@ -22,10 +22,13 @@ TODO: Settings Screen - Login, Logout, Connect to partner (Display user code), C
 TODO: Display name on your bars and partners name on partners bars.
 TODO: Firebase implementation - account/auth, storing in server, updating from server
 TODO: Allow convert an anonymous account to a permanent account https://firebase.google.com/docs/auth/android/anonymous-auth?authuser=0#convert-an-anonymous-account-to-a-permanent-account
- TODO: Beautify UI, don't leave as Instahram clone.
+ TODO: Beautify UI, don't leave as Instagram clone.
+ TODO: Delete account option
  */
 
 void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   runApp(
       ChangeNotifierProvider(
         create: (context) => ApplicationState(),
@@ -48,7 +51,7 @@ class RelationshipBarsApp extends StatelessWidget {
       theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: mobileBackgroundColor,
       ),
-      initialRoute: '/login',
+      initialRoute: '/yours',
       routes: {
         '/login': (context) => const LoginPage(),
         '/yours': (context) => const YourBars(),
