@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:relationship_bars/Database/database_handler.dart';
-import 'package:relationship_bars/Database/relationship_bar_model.dart';
+import 'package:relationship_bars/database/database_handler.dart';
+import 'package:relationship_bars/database/relationship_bar_model.dart';
 import 'package:relationship_bars/main.dart';
 import 'package:sqflite/sqflite.dart';
 

@@ -7,8 +7,8 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:relationship_bars/Database/relationship_bar_model.dart';
 import 'package:relationship_bars/Pages/your_bars_page.dart';
 
-import 'firebase_options.dart';
-import 'authentication.dart';
+import '../resources/firebase_options.dart';
+import '../resources/authentication.dart';
 
 class ApplicationState extends ChangeNotifier {
   ApplicationState() {
@@ -46,10 +46,9 @@ class ApplicationState extends ChangeNotifier {
     void Function(FirebaseAuthException e) errorCallback,
   ) async {
     try {
+      /* TODO: PREVENT DOUBLE EMAIL SENDING */
       await FirebaseAuth.instance
           .sendSignInLinkToEmail(email: email, actionCodeSettings: acs)
-          .catchError(
-              (onError) => print('Error sending email verification $onError'))
           .then((value) => print('Successfully sent email verification to $email'));
       _loginState = ApplicationLoginState.awaitEmailLink;
       _email = email;
@@ -59,23 +58,22 @@ class ApplicationState extends ChangeNotifier {
     }
   }
 
-  Future<void> signInWithEmailAndLink(String emailLink) async {
+  /* TODO: FIX MULTIPLE ERRORS POPPING UP ON ERRONEOUS LINK */
+  Future<void> signInWithEmailAndLink(String emailLink,
+      void Function(FirebaseAuthException e) errorCallback,
+      ) async {
     print("EMAIL SIGN IN");
-    try {
       var auth = FirebaseAuth.instance;
       if (auth.isSignInWithEmailLink(emailLink)) {
-        auth
+        await auth
             .signInWithEmailLink(email: _email!, emailLink: emailLink)
             .then((value) {
           print('Successfully signed in with email link!');
         }).catchError((onError) {
+          errorCallback(onError);
           print('Error signing in with email link $onError');
         });
       }
-    } on FirebaseAuthException catch (e) {
-      print('Sign In Error');
-      print(e.message);
-    }
   }
 
   void cancelRegistration() {
@@ -85,23 +83,5 @@ class ApplicationState extends ChangeNotifier {
 
   void signOut() {
     FirebaseAuth.instance.signOut();
-  }
-
-  Future<void> updateBarsInOnlineDatabase(List<RelationshipBar> relationshipBars) {
-    if (_loginState != ApplicationLoginState.loggedIn) {
-      throw Exception('Must be logged in');
-    }
-    String userId = FirebaseAuth.instance.currentUser!.uid;
-    Map <String, dynamic> data = <String, dynamic>{
-      'relationshipBars': RelationshipBarDao(yourRelationshipBarsTableName).toList(relationshipBars),
-      'timestamp': DateTime.now().millisecondsSinceEpoch,
-      'name': FirebaseAuth.instance.currentUser!.displayName,
-      'userId': userId,
-    };
-  /* TODO: UPDATE IF ALREADY STORED, USE USERID AS PRIMARY KEY */
-    return FirebaseFirestore.instance
-        .collection('UserBars')
-        .doc(userId)
-        .set(data, SetOptions(merge: true));
   }
 }
