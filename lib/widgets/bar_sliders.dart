@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:relationship_bars/database/relationship_bar_model.dart';
+import 'package:relationship_bars/models/relationship_bar_model.dart';
 
 abstract class BarSlider extends StatefulWidget {
   final RelationshipBar relationshipBar;
@@ -18,28 +18,35 @@ abstract class _BarSliderState extends State<BarSlider> {
     _sliderValue = widget.relationshipBar.value;
   }
 
+  Widget sliderText() {
+    return Text(
+        widget.relationshipBar.toString(),
+        style: _biggerFont,
+    );
+  }
+
+  Widget slider() {
+    return Slider(
+        value: _sliderValue.toDouble(),
+        min: 0,
+        max: 100,
+        divisions: 100,
+        label: _sliderValue.toString(),
+        onChanged: changed,
+        onChangeEnd: onChangeEnd,
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     return Card(
         child: Column(children: [
           ListTile(
-            title: Text(
-              widget.relationshipBar.toString(),
-              style: _biggerFont,
-            ),
+            title: sliderText(),
           ),
           ListTile(
-            title: Slider(
-              value: _sliderValue.toDouble(),
-              min: 0,
-              max: 100,
-              divisions: 100,
-              label: _sliderValue.toString(),
-              onChanged: changed,
-              onChangeEnd: onChangeEnd,
-            ),
-          ),
+            title: slider(),
+          )
         ])
     );
   }
@@ -67,13 +74,33 @@ class _InteractableBarSliderState extends _BarSliderState {
   @override
   Future<void> onChangeEnd(double value) async {
     int iValue = value.round();
-    widget.relationshipBar.value = iValue;
+    widget.relationshipBar.setValue(iValue);
+    await updateBar(iValue);
+  }
+
+  Future<void> updateBar(int value) async {
     await widget.barRepo.update(widget.relationshipBar);
     setState(() {
-      _sliderValue = iValue;
+      _sliderValue = value;
     });
   }
 
+  @override
+  Widget sliderText() {
+    return Stack(
+        children: [
+          super.sliderText(),
+          if(widget.relationshipBar.changed) Positioned(
+              top: -10,
+              right: -10,
+              child: IconButton(
+                  onPressed: () async => await updateBar(widget.relationshipBar.resetValue()), /* TODO: RESET BAR VALUE WHEN PRESSED */
+                  icon: const Icon(Icons.undo)
+              )
+          )
+        ]
+    );
+  }
 }
 
 class NonInteractableBarSlider extends BarSlider {
