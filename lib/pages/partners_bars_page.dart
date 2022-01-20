@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:relationship_bars/database/local_database_handler.dart';
-import 'package:relationship_bars/database/relationship_bar_model.dart';
+import 'package:relationship_bars/models/relationship_bar_model.dart';
 import 'package:relationship_bars/main.dart';
+import 'package:relationship_bars/widgets/bar_builders.dart';
 import 'package:sqflite/sqflite.dart';
 
 /* TODO: SHOW LINK WITH PARTNER CODE FORM WHEN NO PARTNER LINKED */
