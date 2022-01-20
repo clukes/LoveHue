@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:relationship_bars/database/local_database_handler.dart';
-import 'package:relationship_bars/database/relationship_bar_model.dart';
+import 'package:relationship_bars/models/relationship_bar_model.dart';
 import 'package:relationship_bars/database/update_firestore_database.dart';
+import 'package:relationship_bars/widgets/bar_builders.dart';
 
 import '../main.dart';
 import '../providers/application_state.dart';
@@ -40,17 +41,30 @@ class _YourBarsState extends State<YourBars> {
       ),
       /* TODO: FIX BUTTON SO IT DOESN'T OVERLAP SLIDERS. CHOOSE BETTER ICON (FLOPPY DISK) */
       floatingActionButton: Consumer<ApplicationState>(
-        builder: (context, appState, _) => Container(
-          child:
-          (appState.loginState == ApplicationLoginState.loggedIn) ?
-              FloatingActionButton(
-                onPressed: () async => updateBarsInOnlineDatabase(
-                    await barRepo.retrieveElements(), appState.loginState),
-                /* TODO: ONLY SHOW SAVE BUTTON WHEN VALUES CHANGED, ALSO HAVE CANCEL */
-                tooltip: 'Save',
-                child: const Icon(Icons.add),
-              ) : null
-        ),
+        builder: (context, appState, _) =>
+          (appState.loginState != ApplicationLoginState.loggedIn) ?
+              Row(
+                children: [
+                  FloatingActionButton(
+                    onPressed: () async {
+                      List<RelationshipBar> bars = await barRepo.retrieveElements();
+                      await updateBarsInOnlineDatabase(bars, appState.loginState).onError((error, _) => print(error));
+                      setState(() {
+                        bars = RelationshipBarDao.resetBarsChanged(bars);
+                      });
+                      await barRepo.insertList(bars);
+                    },
+                    /* TODO: ONLY SHOW SAVE BUTTON WHEN VALUES CHANGED, ALSO HAVE CANCEL */
+                    tooltip: 'Save',
+                    child: const Icon(Icons.save),
+                  ),
+                  FloatingActionButton(
+                    onPressed: () async => await null, /* TODO: CANCEL CHANGES, RESET TO ONLINE DATABASE VALUES */
+                    tooltip: 'Cancel',
+                    child: const Icon(Icons.cancel),
+                  ),
+                ],
+              ) : const SizedBox.shrink()
       ),
     );
   }
