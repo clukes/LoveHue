@@ -15,7 +15,7 @@ List<Map<String,String>> defaultBarLabels = [
 CollectionReference<RelationshipBar> userBarsFirestoreRef(String userID) => FirebaseFirestore.instance
     .collection(userBarsCollection)
     .doc(userID)
-    .collection(userBarsCollection)
+    .collection(specificUserBarsCollection)
     .withConverter<RelationshipBar>(
   fromFirestore: (snapshots, _) => RelationshipBar.fromMap(snapshots.data()!),
   toFirestore: (relationshipBar, _) => relationshipBar.toMap(),
@@ -60,6 +60,15 @@ class RelationshipBar {
     }).toList();
   }
 
+  static List<RelationshipBar>? resetBars(List<RelationshipBar> bars) {
+    return bars.map((e) {
+      e.value = e.prevValue;
+      e.changed = false;
+      return e;
+    }).toList();
+  }
+
+
   @override
   String toString() {
     return label + ": " + value.toString();
@@ -70,7 +79,6 @@ class RelationshipBar {
   static const String columnLabel = 'label';
   static const String columnValue = 'value';
   static const String columnPrevValue = 'prevValue';
-  static const String columnChanged = 'changed';
 
   static RelationshipBar fromMap(Map<String, Object?> res) {
     return RelationshipBar(
@@ -78,7 +86,6 @@ class RelationshipBar {
         label: res[columnLabel]! as String,
         value: res[columnValue] is int ? res[columnValue] as int : defaultBarValue,
         prevValue: res[columnValue] is int ? res[columnValue] as int : defaultBarValue,
-        changed: (res[columnChanged] == 1 || res[columnChanged] == true)
     );
   }
 
@@ -88,7 +95,6 @@ class RelationshipBar {
       columnLabel: label,
       columnPrevValue: prevValue,
       columnValue: value,
-      columnChanged: changed
     };
   }
 
@@ -100,11 +106,15 @@ class RelationshipBar {
     return query.map((e) => fromMap(e)).toList();
   }
 
+  static List<RelationshipBar> fromQuerySnapshot(QuerySnapshot<RelationshipBar> snapshot) {
+    return snapshot.docs.map((e) => e.data()).toList();
+  }
+
   static Future<List<RelationshipBar>?> firestoreGetBars(String userID) async {
     List<RelationshipBar>? bars;
     bars = await userBarsFirestoreRef(userID)
         .get()
-        .then((snapshot) => snapshot.docs.map((e) => e.data()).toList())
+        .then((snapshot) => fromQuerySnapshot(snapshot))
         .catchError((error) { print("Failed to retrieve relationship bar: $error"); return <RelationshipBar>[]; });
     return bars;
   }

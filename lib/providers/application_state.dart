@@ -12,6 +12,7 @@ import 'package:relationship_bars/database/local_database_handler.dart';
 import 'package:relationship_bars/database/secure_storage_handler.dart';
 import 'package:relationship_bars/models/relationship_bar_model.dart';
 import 'package:relationship_bars/models/userinfo_firestore_collection_model.dart';
+import 'package:relationship_bars/providers/your_bars_state.dart';
 import 'package:relationship_bars/resources/database_and_table_names.dart';
 
 import '../firebase_options.dart';
@@ -24,23 +25,27 @@ enum ApplicationLoginState {
 }
 
 class ApplicationState extends ChangeNotifier {
-  ApplicationState() {
-    init();
-  }
+  static final ApplicationState _instance = ApplicationState._internal();
+
+  static ApplicationState get instance => _instance;
+
+  ApplicationState._internal();
+  factory ApplicationState() => _instance;
 
   Future<void> init() async {
-    // initDynamicLinks();
     FirebaseAuth.instance.authStateChanges().listen((user) async {
       if (user != null) {
         _loginState = ApplicationLoginState.loggedIn;
         _userInfo ??= await UserInformation.firestoreGet(user.uid);
-        if(_userInfo != null) {
+        if(_userInfo == null) {
           _userInfo = UserInformation(userID: user.uid, displayName: user.displayName);
           await _userInfo!.firestoreSet();
           await RelationshipBar.firestoreAddMap(_userInfo!.userID, defaultBarLabels);
         }
-        _setupPartnerInfoSubscription();
-        yourRelationshipBars ??= await RelationshipBar.firestoreGetBars(userID!);
+        print(_userInfo);
+        print(_userInfo?.userID);
+        _setupPartnerInfoSubscription(_userInfo?.partnerID);
+        YourBarsState.instance.yourRelationshipBars ??= await RelationshipBar.firestoreGetBars(userID!);
         notifyListeners();
       } else {
         _loginState = ApplicationLoginState.loggedOut;
@@ -53,11 +58,9 @@ class ApplicationState extends ChangeNotifier {
   }
 
   ApplicationLoginState _loginState = ApplicationLoginState.loggedOut;
-
   ApplicationLoginState get loginState => _loginState;
 
   String? _email;
-
   String? get email => _email;
 
   UserInformation? _userInfo;
@@ -69,16 +72,16 @@ class ApplicationState extends ChangeNotifier {
   UserInformation? get partnersInfo => _userInfo;
   String? get partnersID => _partnersInfo?.userID;
 
-  List<RelationshipBar>? yourRelationshipBars;
-
-  void _setupPartnerInfoSubscription() {
-    if (partnersID != null) {
+  void _setupPartnerInfoSubscription(String? partnerID) {
+    print(partnerID);
+    if (partnerID != null) {
       _partnersInfoSubscription = userInfoFirestoreRef
-          .doc(partnersID)
+          .doc(partnerID)
           .snapshots()
           .listen((snapshot) {
+            print("PARTNER INFO");
             UserInformation? partnersInfo = snapshot.data();
-            if(partnersInfo?.partnerID?.id == userID) {
+            if(partnersInfo?.partnerID == userID) {
                _partnersInfo = partnersInfo;
             }
             else {

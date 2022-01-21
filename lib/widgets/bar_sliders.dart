@@ -1,6 +1,9 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:relationship_bars/models/relationship_bar_model.dart';
+import 'package:relationship_bars/providers/application_state.dart';
+import 'package:relationship_bars/providers/your_bars_state.dart';
+import 'package:relationship_bars/utils/colors.dart';
 
 abstract class BarSlider extends StatefulWidget {
   final RelationshipBar relationshipBar;
@@ -10,7 +13,10 @@ abstract class BarSlider extends StatefulWidget {
 
 abstract class _BarSliderState extends State<BarSlider> {
   int _sliderValue = 100;
-  final _biggerFont = const TextStyle(fontSize: 18.0);
+  final TextStyle _biggerFont = const TextStyle(fontSize: 18.0);
+
+  get changed => null;
+  get onChangeEnd => null;
 
   @override
   void initState() {
@@ -40,7 +46,8 @@ abstract class _BarSliderState extends State<BarSlider> {
   @override
   Widget build(BuildContext context) {
     return Card(
-        child: Column(children: [
+        child:
+        Column(children: [
           ListTile(
             title: sliderText(),
           ),
@@ -50,9 +57,6 @@ abstract class _BarSliderState extends State<BarSlider> {
         ])
     );
   }
-
-  void changed(double value) {}
-  void onChangeEnd(double value) {}
 }
 
 class InteractableBarSlider extends BarSlider {
@@ -65,20 +69,21 @@ class InteractableBarSlider extends BarSlider {
 
 class _InteractableBarSliderState extends _BarSliderState {
   @override
-  void changed(double value) {
+  get changed => (double value) {
     setState(() {
       _sliderValue = value.round();
     });
-  }
+  };
 
   @override
-  Future<void> onChangeEnd(double value) async {
+  get onChangeEnd => (double value) {
     int iValue = value.round();
     widget.relationshipBar.setValue(iValue);
-    await updateBar(iValue);
-  }
+    YourBarsState.instance.barChange();
+    updateBar(iValue);
+  };
 
-  Future<void> updateBar(int value) async {
+  void updateBar(int value)  {
     setState(() {
       _sliderValue = value;
     });
@@ -93,13 +98,22 @@ class _InteractableBarSliderState extends _BarSliderState {
               top: -10,
               right: -10,
               child: IconButton(
-                  onPressed: () async => await updateBar(widget.relationshipBar.resetValue()), /* TODO: RESET BAR VALUE WHEN PRESSED */
+                  onPressed: () => updateBar(widget.relationshipBar.resetValue()),
                   icon: const Icon(Icons.undo)
               )
           )
         ]
     );
   }
+
+  @override
+  Widget slider() {
+    if (YourBarsState.instance.barsReset) {
+      _sliderValue = widget.relationshipBar.value;
+    }
+    return super.slider();
+  }
+
 }
 
 class NonInteractableBarSlider extends BarSlider {
@@ -110,4 +124,9 @@ class NonInteractableBarSlider extends BarSlider {
 }
 
 class _NonInteractableBarSliderState extends _BarSliderState {
+  @override
+  Widget slider() {
+    _sliderValue = widget.relationshipBar.value;
+    return super.slider();
+  }
 }

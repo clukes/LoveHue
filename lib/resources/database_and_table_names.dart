@@ -1,5 +1,6 @@
 //Firestore names
 const userBarsCollection = 'UserBars';
+const specificUserBarsCollection = 'YourBars';
 const userInfoCollection = 'UserInfo';
 
 //sqflite (Local Database) names
