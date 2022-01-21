@@ -9,7 +9,9 @@ import 'package:provider/provider.dart';
 import 'package:relationship_bars/models/relationship_bar_model.dart';
 import 'package:relationship_bars/pages/partners_bars_page.dart';
 import 'package:relationship_bars/pages/profile_page.dart';
+import 'package:relationship_bars/pages/sign_in_page.dart';
 import 'package:relationship_bars/pages/your_bars_page.dart';
+import 'package:relationship_bars/providers/your_bars_state.dart';
 import 'package:relationship_bars/resources/authentication.dart';
 import 'package:relationship_bars/firebase_options.dart';
 import 'package:relationship_bars/widgets/bar_sliders.dart';
@@ -24,7 +26,7 @@ import 'database/local_database_handler.dart';
 import 'providers/application_state.dart';
 
 /*
-TODO: Fix save and cancel buttons
+TODO: Clean up code.
 TODO: Bottom Navigation Bar
 TODO: Add loading indicators wherever awaiting async. Use listener.
 TODO: Only save your bars to local storage when save button pressed, only read from local storage when no value in local relationshipbar variable. Pull from local storage on app init.
@@ -42,6 +44,7 @@ TODO: Beautify UI, don't leave as Instagram clone.
 TODO: Delete account option.
 TODO: Restrict all pages except login page when not logged in.
 TODO: Error if linking to partner who is already linked.
+TODO: Optimization, only update widgets that need updating.
  */
 
 void main() async {
@@ -49,9 +52,10 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
+  await ApplicationState.instance.init();
   runApp(
-      ChangeNotifierProvider(
-        create: (context) => ApplicationState(),
+      ChangeNotifierProvider.value(
+        value: ApplicationState.instance,
         builder: (context, _) => const RelationshipBarsApp(),
       )
   );
@@ -64,19 +68,20 @@ class RelationshipBarsApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final auth = FirebaseAuth.instance;
-
     return MaterialApp(
       showPerformanceOverlay: false,
       title: 'Relationship Bars',
       theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: mobileBackgroundColor,
       ),
-      initialRoute: auth.currentUser == null ? '/login' : '/yours',
+      initialRoute: FirebaseAuth.instance.currentUser == null ? '/login' : '/yours',
       routes: {
-        '/login': (context) => const AuthGate(),
+        '/login': (context) => const SignInPage(),
         '/profile': (context) => const ProfilePage(),
-        '/yours': (context) => const YourBars(),
+        '/yours': (context) => ChangeNotifierProvider.value(
+          value: YourBarsState.instance,
+          builder: (context, _) => const YourBars(),
+        ),
         '/partners': (context) => const PartnersBars(),
       },
       // home: const ResponsiveLayout(

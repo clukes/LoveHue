@@ -14,20 +14,21 @@ final CollectionReference<UserInformation?> userInfoFirestoreRef = FirebaseFires
 class UserInformation {
   final String userID;
   String? displayName;
-  DocumentReference? partnerID;
+  DocumentReference? partner;
+  String? get partnerID => partner?.id;
 
   //Firestore database info
   static const String columnUserID = 'id';
   static const String columnDisplayName = 'displayName';
-  static const String columnPartnerID = 'partnerID';
+  static const String columnPartner = 'partner';
 
-  UserInformation({required this.userID, this.displayName, this.partnerID});
+  UserInformation({required this.userID, this.displayName, this.partner});
 
   static UserInformation fromMap(Map<String, Object?> res) {
     return UserInformation(
       userID: res[columnUserID]! as String,
       displayName: res[columnDisplayName] as String?,
-      partnerID: res[columnPartnerID] as DocumentReference?,
+      partner: res[columnPartner] as DocumentReference?,
     );
   }
 
@@ -35,7 +36,7 @@ class UserInformation {
     return <String, dynamic>{
       columnUserID: userID,
       columnDisplayName: displayName,
-      columnPartnerID: partnerID,
+      columnPartner: partner,
     };
   }
 
