@@ -39,11 +39,15 @@ class _PartnersBarsState extends State<PartnersBars> {
         ),
         body: Consumer<ApplicationState>(
           builder: (context, appState, _) => (appState.partnersID != null)
-              ? barStreamBuilder(appState.partnersID!, nonInteractableBarBuilder)
-              : Container(),
+              ? barStreamBuilder(
+                  appState.partnersID!, nonInteractableBarBuilder)
+              : const Center(
+                  child: Text("No partner"), /* TODO: Show link partner form here */
+                ),
         ));
   }
+
   void _pushYour() {
-    Navigator.pop(context);
+    Navigator.pushReplacementNamed(context, '/yours');
   }
 }
