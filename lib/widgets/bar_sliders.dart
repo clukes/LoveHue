@@ -1,11 +1,11 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:relationship_bars/models/relationship_bar_model.dart';
 
 abstract class BarSlider extends StatefulWidget {
   final RelationshipBar relationshipBar;
-  final RelationshipBarRepository barRepo;
 
-  const BarSlider({Key? key, required this.relationshipBar, required this.barRepo}) : super(key: key);
+  const BarSlider({Key? key, required this.relationshipBar}) : super(key: key);
 }
 
 abstract class _BarSliderState extends State<BarSlider> {
@@ -56,7 +56,7 @@ abstract class _BarSliderState extends State<BarSlider> {
 }
 
 class InteractableBarSlider extends BarSlider {
-  const InteractableBarSlider({Key? key, required relationshipBar, required barRepo}) : super(key: key, relationshipBar: relationshipBar, barRepo: barRepo);
+  const InteractableBarSlider({Key? key, required relationshipBar}) : super(key: key, relationshipBar: relationshipBar);
 
   @override
   _InteractableBarSliderState createState() => _InteractableBarSliderState();
@@ -79,7 +79,6 @@ class _InteractableBarSliderState extends _BarSliderState {
   }
 
   Future<void> updateBar(int value) async {
-    await widget.barRepo.update(widget.relationshipBar);
     setState(() {
       _sliderValue = value;
     });
@@ -104,7 +103,7 @@ class _InteractableBarSliderState extends _BarSliderState {
 }
 
 class NonInteractableBarSlider extends BarSlider {
-  const NonInteractableBarSlider({Key? key, required relationshipBar, required barRepo}) : super(key: key, relationshipBar: relationshipBar, barRepo: barRepo);
+  const NonInteractableBarSlider({Key? key, required relationshipBar}) : super(key: key, relationshipBar: relationshipBar);
 
   @override
   _NonInteractableBarSliderState createState() => _NonInteractableBarSliderState();
