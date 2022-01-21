@@ -3,18 +3,14 @@ import 'dart:ui';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:flutter/material.dart';
+import 'package:flutterfire_ui/auth.dart';
+import 'package:relationship_bars/pages/sign_in_page.dart';
+import 'package:relationship_bars/pages/your_bars_page.dart';
 import 'package:relationship_bars/utils/colors.dart';
+import 'package:relationship_bars/widgets/header.dart';
 import 'package:relationship_bars/widgets/styled_button.dart';
 
 import '../Widgets/text_form_field_input.dart';
-
-enum ApplicationLoginState {
-  loggedOut,
-  emailAddress,
-  register,
-  awaitEmailLink,
-  loggedIn,
-}
 
 var acs = ActionCodeSettings(
     // URL you want to redirect back to. The domain (www.example.com) for this
@@ -28,216 +24,226 @@ var acs = ActionCodeSettings(
     // minimumVersion
     androidMinimumVersion: '12');
 
-class Header extends StatelessWidget {
-  const Header(this.heading);
-  final String heading;
+final providerConfigs = [
+  EmailLinkProviderConfiguration(actionCodeSettings: acs),
+];
 
-  @override
-  Widget build(BuildContext context) => Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Text(
-          heading,
-          style: const TextStyle(fontSize: 24),
-        ),
-      );
-}
+class AuthGate extends StatelessWidget {
+  const AuthGate({Key? key}) : super(key: key);
 
-class Authentication extends StatefulWidget {
-  final ApplicationLoginState loginState;
-  final String? email;
-  final void Function() startLoginFlow;
-  final Future<void> Function(
-    String email,
-    void Function(FirebaseAuthException e) error,
-  ) verifyEmail;
-  final Future<void> Function(
-    String emailLink,
-    void Function(FirebaseAuthException e) errorCallback,
-  ) signInWithEmailAndLink;
-  final void Function() cancelRegistration;
-  final void Function() signOut;
-
-  const Authentication({
-    required this.loginState,
-    required this.email,
-    required this.startLoginFlow,
-    required this.verifyEmail,
-    required this.signInWithEmailAndLink,
-    required this.cancelRegistration,
-    required this.signOut,
-  });
-
-  @override
-  _AuthenticationState createState() => _AuthenticationState();
-}
-
-class _AuthenticationState extends State<Authentication> {
   @override
   Widget build(BuildContext context) {
-    switch (widget.loginState) {
-      case ApplicationLoginState.loggedOut:
-        return Container(
-          width: double.infinity,
-          padding: const EdgeInsets.symmetric(vertical: 12),
-          child: StyledButton(
-            onPressed: () {
-              widget.startLoginFlow();
-            },
-            child: const Text('Login'),
-          ),
-        );
-      case ApplicationLoginState.emailAddress:
-        return EmailForm(
-            callback: (email) => widget.verifyEmail(
-                email, (e) => showErrorDialog(context, 'Invalid email', e)));
-      case ApplicationLoginState.awaitEmailLink:
-        return Column(
-          children: [
-            Padding(
-              padding: EdgeInsets.only(bottom: 24.0),
-              child: Text(
-                  'Email sent to: ${widget.email}.\nClick link in your email to sign in.'),
-            ),
-            const Padding(
-              padding: EdgeInsets.only(bottom: 8.0),
-              child: Text(
-                'Make sure to check your spam/junk folder.\nIf email does not arrive, click button below to re-enter your email.',
-                textScaleFactor: 0.9,
-              ),
-            ),
-            StyledButton(
-              onPressed: () {
-                widget.cancelRegistration();
-              },
-              child: const Text('Re-enter Email'),
-            ),
-          ],
-        );
-      case ApplicationLoginState.loggedIn:
-        return Column(
-          children: [
-            StyledButton(
-              onPressed: () {
-                widget.signOut();
-              },
-              child: const Text('Logout'),
-            ),
-            const SizedBox(height: 30),
-            StyledButton(
-              onPressed: _pushEnter,
-              child: const Text('Enter App'),
-            ),
-          ],
-        );
-      default:
-        return Row(
-          children: const [
-            Text("Internal error, this shouldn't happen..."),
-          ],
-        );
-    }
-  }
+    return StreamBuilder<User?>(
+      stream: FirebaseAuth.instance.authStateChanges(),
+      builder: (context, snapshot) {
+        // User is not signed in
+        if (!snapshot.hasData) {
+          return const SignInPage();
+        }
 
-  void _pushEnter() {
-    Navigator.pushNamed(context, '/yours');
-  }
-
-  void showErrorDialog(BuildContext context, String title, Exception e) {
-    showDialog<void>(
-      context: context,
-      builder: (context) {
-        return AlertDialog(
-          title: Text(
-            title,
-            style: const TextStyle(fontSize: 24),
-          ),
-          content: SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                Text(
-                  '${(e as dynamic).message}',
-                  style: const TextStyle(fontSize: 18),
-                ),
-              ],
-            ),
-          ),
-          actions: <Widget>[
-            StyledButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text(
-                'OK',
-              ),
-            ),
-          ],
-        );
+        // Render your application if authenticated
+        return const YourBars();
       },
     );
   }
 }
 
-class EmailForm extends StatefulWidget {
-  const EmailForm({required this.callback});
-  final void Function(String email) callback;
-  @override
-  _EmailFormState createState() => _EmailFormState();
-}
-
-/* TODO: FIX NEXT BUTTON GOING OFFSCREEN WHEN KEYBOARD POPS UP */
-class _EmailFormState extends State<EmailForm> {
-  final _formKey = GlobalKey<FormState>(debugLabel: '_EmailFormState');
-  final _controller = TextEditingController();
-
-  @override
-  void dispose() {
-    super.dispose();
-    _controller.dispose();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        const Padding(
-          padding: EdgeInsets.only(bottom: 12),
-          child: Header('Sign in with email'),
-        ),
-        Form(
-          key: _formKey,
-          child: SizedBox(
-            width: double.infinity,
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: <Widget>[
-                TextFormFieldInput(
-                  textEditingController: _controller,
-                  textInputType: TextInputType.emailAddress,
-                  hintText: 'Enter your email',
-                  validator: (value) {
-                    if (value!.isEmpty) {
-                      return 'Enter your email address to continue';
-                    }
-                    return null;
-                  },
-                ),
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.only(top: 12),
-                  child: StyledButton(
-                    onPressed: () async {
-                      if (_formKey.currentState!.validate()) {
-                        widget.callback(_controller.text);
-                      }
-                    },
-                    child: const Text('NEXT'),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
+// class Authentication extends StatefulWidget {
+//   final ApplicationLoginState loginState;
+//   final String? email;
+//   final void Function() startLoginFlow;
+//   final Future<void> Function(
+//     String email,
+//     void Function(FirebaseAuthException e) error,
+//   ) verifyEmail;
+//   final Future<void> Function(
+//     String emailLink,
+//     void Function(FirebaseAuthException e) errorCallback,
+//   ) signInWithEmailAndLink;
+//   final void Function() cancelRegistration;
+//   final void Function() signOut;
+//
+//   const Authentication({
+//     required this.loginState,
+//     required this.email,
+//     required this.startLoginFlow,
+//     required this.verifyEmail,
+//     required this.signInWithEmailAndLink,
+//     required this.cancelRegistration,
+//     required this.signOut,
+//   });
+//
+//   @override
+//   _AuthenticationState createState() => _AuthenticationState();
+// }
+//
+// class _AuthenticationState extends State<Authentication> {
+//   @override
+//   Widget build(BuildContext context) {
+//     switch (widget.loginState) {
+//       case ApplicationLoginState.loggedOut:
+//         return Container(
+//           width: double.infinity,
+//           padding: const EdgeInsets.symmetric(vertical: 12),
+//           child: StyledButton(
+//             onPressed: () {
+//               widget.startLoginFlow();
+//             },
+//             child: const Text('Login'),
+//           ),
+//         );
+//       case ApplicationLoginState.emailAddress:
+//         return EmailForm(
+//             callback: (email) => widget.verifyEmail(
+//                 email, (e) => showErrorDialog(context, 'Invalid email', e)));
+//       case ApplicationLoginState.awaitEmailLink:
+//         return Column(
+//           children: [
+//             Padding(
+//               padding: EdgeInsets.only(bottom: 24.0),
+//               child: Text(
+//                   'Email sent to: ${widget.email}.\nClick link in your email to sign in.'),
+//             ),
+//             const Padding(
+//               padding: EdgeInsets.only(bottom: 8.0),
+//               child: Text(
+//                 'Make sure to check your spam/junk folder.\nIf email does not arrive, click button below to re-enter your email.',
+//                 textScaleFactor: 0.9,
+//               ),
+//             ),
+//             StyledButton(
+//               onPressed: () {
+//                 widget.cancelRegistration();
+//               },
+//               child: const Text('Re-enter Email'),
+//             ),
+//           ],
+//         );
+//       case ApplicationLoginState.loggedIn:
+//         return Column(
+//           children: [
+//             StyledButton(
+//               onPressed: () {
+//                 widget.signOut();
+//               },
+//               child: const Text('Logout'),
+//             ),
+//             const SizedBox(height: 30),
+//             StyledButton(
+//               onPressed: _pushEnter,
+//               child: const Text('Enter App'),
+//             ),
+//           ],
+//         );
+//       default:
+//         return Row(
+//           children: const [
+//             Text("Internal error, this shouldn't happen..."),
+//           ],
+//         );
+//     }
+//   }
+//
+//   void _pushEnter() {
+//     Navigator.pushNamed(context, '/yours');
+//   }
+//
+//   void showErrorDialog(BuildContext context, String title, Exception e) {
+//     showDialog<void>(
+//       context: context,
+//       builder: (context) {
+//         return AlertDialog(
+//           title: Text(
+//             title,
+//             style: const TextStyle(fontSize: 24),
+//           ),
+//           content: SingleChildScrollView(
+//             child: ListBody(
+//               children: <Widget>[
+//                 Text(
+//                   '${(e as dynamic).message}',
+//                   style: const TextStyle(fontSize: 18),
+//                 ),
+//               ],
+//             ),
+//           ),
+//           actions: <Widget>[
+//             StyledButton(
+//               onPressed: () {
+//                 Navigator.of(context).pop();
+//               },
+//               child: const Text(
+//                 'OK',
+//               ),
+//             ),
+//           ],
+//         );
+//       },
+//     );
+//   }
+// }
+//
+// class EmailForm extends StatefulWidget {
+//   const EmailForm({required this.callback});
+//   final void Function(String email) callback;
+//   @override
+//   _EmailFormState createState() => _EmailFormState();
+// }
+//
+// /* TODO: FIX NEXT BUTTON GOING OFFSCREEN WHEN KEYBOARD POPS UP */
+// class _EmailFormState extends State<EmailForm> {
+//   final _formKey = GlobalKey<FormState>(debugLabel: '_EmailFormState');
+//   final _controller = TextEditingController();
+//
+//   @override
+//   void dispose() {
+//     super.dispose();
+//     _controller.dispose();
+//   }
+//
+//   @override
+//   Widget build(BuildContext context) {
+//     return Column(
+//       children: [
+//         const Padding(
+//           padding: EdgeInsets.only(bottom: 12),
+//           child: Header('Sign in with email'),
+//         ),
+//         Form(
+//           key: _formKey,
+//           child: SizedBox(
+//             width: double.infinity,
+//             child: Column(
+//               mainAxisAlignment: MainAxisAlignment.center,
+//               children: <Widget>[
+//                 TextFormFieldInput(
+//                   textEditingController: _controller,
+//                   textInputType: TextInputType.emailAddress,
+//                   hintText: 'Enter your email',
+//                   validator: (value) {
+//                     if (value!.isEmpty) {
+//                       return 'Enter your email address to continue';
+//                     }
+//                     return null;
+//                   },
+//                 ),
+//                 Container(
+//                   width: double.infinity,
+//                   padding: const EdgeInsets.only(top: 12),
+//                   child: StyledButton(
+//                     onPressed: () async {
+//                       if (_formKey.currentState!.validate()) {
+//                         widget.callback(_controller.text);
+//                       }
+//                     },
+//                     child: const Text('NEXT'),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//           ),
+//         ),
+//       ],
+//     );
+//   }
+// }
