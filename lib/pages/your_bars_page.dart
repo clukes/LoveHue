@@ -25,14 +25,7 @@ class _YourBarsState extends State<YourBars> {
   Widget build(BuildContext context) {
     return Scaffold(
           appBar: AppBar(
-            title: const Text('Your Relationship Bars'),
-            actions: [
-              IconButton(
-                icon: const Icon(Icons.list),
-                onPressed: _pushPartners,
-                tooltip: 'Partners Bars',
-              ),
-            ],
+            title: const Text('Your Bars'),
           ),
           body: Consumer<ApplicationState>(
               builder: (context, appState, _) =>(appState.userID != null)
@@ -50,9 +43,9 @@ class _YourBarsState extends State<YourBars> {
                       children: [
                         FloatingActionButton(
                           heroTag: "cancelButton",
-                          onPressed: () {
+                          onPressed: () async {
+                            yourBarsState.yourRelationshipBars = await RelationshipBar.resetBars(yourBarsState.yourRelationshipBars!);
                             setState(() {
-                              yourBarsState.yourRelationshipBars = RelationshipBar.resetBars(yourBarsState.yourRelationshipBars!);
                               yourBarsState.resetBarChange();
                               yourBarsState.barsReset = true;
                             });
@@ -86,5 +79,9 @@ class _YourBarsState extends State<YourBars> {
 
   void _pushPartners() {
     Navigator.pushReplacementNamed(context, '/partners');
+  }
+
+  void _pushProfile() {
+    Navigator.pushReplacementNamed(context, '/profile');
   }
 }

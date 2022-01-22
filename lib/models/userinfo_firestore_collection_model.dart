@@ -3,7 +3,6 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:relationship_bars/database/firestore_database_handler.dart';
 import 'package:relationship_bars/resources/database_and_table_names.dart';
 
-
 final CollectionReference<UserInformation?> userInfoFirestoreRef = FirebaseFirestore.instance
     .collection(userInfoCollection)
     .withConverter<UserInformation?>(
@@ -13,22 +12,25 @@ final CollectionReference<UserInformation?> userInfoFirestoreRef = FirebaseFires
 
 class UserInformation {
   final String userID;
-  String? displayName;
+  String? displayName = "User";
   DocumentReference? partner;
+  DocumentReference? linkCode;
   String? get partnerID => partner?.id;
 
   //Firestore database info
   static const String columnUserID = 'id';
   static const String columnDisplayName = 'displayName';
   static const String columnPartner = 'partner';
+  static const String columnLinkCode = 'linkCode';
 
-  UserInformation({required this.userID, this.displayName, this.partner});
+  UserInformation({required this.userID, this.displayName, this.partner, this.linkCode});
 
   static UserInformation fromMap(Map<String, Object?> res) {
     return UserInformation(
       userID: res[columnUserID]! as String,
       displayName: res[columnDisplayName] as String?,
       partner: res[columnPartner] as DocumentReference?,
+      linkCode: res[columnLinkCode] as DocumentReference?,
     );
   }
 
@@ -37,6 +39,7 @@ class UserInformation {
       columnUserID: userID,
       columnDisplayName: displayName,
       columnPartner: partner,
+      columnLinkCode: linkCode,
     };
   }
 
@@ -59,7 +62,7 @@ class UserInformation {
     return info;
   }
 
-  Future<void> firestoreSet() async {
+  Future<void> firestoreSet(WriteBatch? batch) async {
     return await userInfoFirestoreRef
         .doc(userID)
         .set(this, SetOptions(merge: true))

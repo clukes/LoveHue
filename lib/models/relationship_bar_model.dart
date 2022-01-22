@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:relationship_bars/providers/application_state.dart';
 import 'package:relationship_bars/resources/database_and_table_names.dart';
 import 'package:sqflite/sqflite.dart';
 
@@ -60,12 +61,9 @@ class RelationshipBar {
     }).toList();
   }
 
-  static List<RelationshipBar>? resetBars(List<RelationshipBar> bars) {
-    return bars.map((e) {
-      e.value = e.prevValue;
-      e.changed = false;
-      return e;
-    }).toList();
+  static Future<List<RelationshipBar>> resetBars(List<RelationshipBar> bars) async {
+    bars = (await firestoreGetBars(ApplicationState.instance.userID!, const GetOptions(source: Source.cache)))!;
+    return resetBarsChanged(bars);
   }
 
 
@@ -110,10 +108,10 @@ class RelationshipBar {
     return snapshot.docs.map((e) => e.data()).toList();
   }
 
-  static Future<List<RelationshipBar>?> firestoreGetBars(String userID) async {
+  static Future<List<RelationshipBar>?> firestoreGetBars(String userID, [GetOptions? options]) async {
     List<RelationshipBar>? bars;
     bars = await userBarsFirestoreRef(userID)
-        .get()
+        .get(options)
         .then((snapshot) => fromQuerySnapshot(snapshot))
         .catchError((error) { print("Failed to retrieve relationship bar: $error"); return <RelationshipBar>[]; });
     return bars;
@@ -138,15 +136,20 @@ class RelationshipBar {
   }
 
   static Future<void> firestoreAddMap(String userID, List<Map<String, dynamic>> barsData) async {
+    WriteBatch batch = FirebaseFirestore.instance.batch();
+    firestoreAddMapWithBatch(userID, barsData, batch);
+    await batch.commit();
+  }
+
+  static void firestoreAddMapWithBatch(String userID, List<Map<String, dynamic>> barsData, WriteBatch batch) {
     final CollectionReference<RelationshipBar> ref = userBarsFirestoreRef(userID);
-    final WriteBatch batch = FirebaseFirestore.instance.batch();
 
     for (Map<String, dynamic> barMap in barsData) {
       DocumentReference<RelationshipBar> doc = ref.doc();
       barMap[columnID] = doc.id;
       batch.set(doc, RelationshipBar.fromMap(barMap), SetOptions(merge: true));
     }
-    await batch.commit();
+
   }
 
   static Future<void> firestoreUpdateColumns(String userID, String barID, Map<String, dynamic> data) async {
