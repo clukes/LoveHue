@@ -8,6 +8,7 @@ import 'package:relationship_bars/main.dart';
 import 'package:relationship_bars/providers/application_state.dart';
 import 'package:relationship_bars/resources/database_and_table_names.dart';
 import 'package:relationship_bars/widgets/bar_builders.dart';
+import 'package:relationship_bars/widgets/link_partner_form.dart';
 import 'package:sqflite/sqflite.dart';
 
 /* TODO: SHOW LINK WITH PARTNER CODE FORM WHEN NO PARTNER LINKED */
@@ -25,29 +26,17 @@ class _PartnersBarsState extends State<PartnersBars> {
 
   @override
   Widget build(BuildContext context) {
+    String title = ApplicationState.instance.partnersInfo?.displayName ?? "Partner";
     print("BUILD PARTNERS");
     return Scaffold(
         appBar: AppBar(
-          title: const Text('Partners Relationship Bars'),
-          actions: [
-            IconButton(
-              icon: const Icon(Icons.list),
-              onPressed: _pushYour,
-              tooltip: 'Your Bars',
-            ),
-          ],
+          title: Text('$title\'s Bars'),
         ),
         body: Consumer<ApplicationState>(
           builder: (context, appState, _) => (appState.partnersID != null)
               ? barStreamBuilder(
                   appState.partnersID!, nonInteractableBarBuilder)
-              : const Center(
-                  child: Text("No partner"), /* TODO: Show link partner form here */
-                ),
+              : const LinkPartnerForm()
         ));
-  }
-
-  void _pushYour() {
-    Navigator.pushReplacementNamed(context, '/yours');
   }
 }
