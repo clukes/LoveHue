@@ -51,7 +51,7 @@ class SignInPage extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   width: double.infinity,
-                  child: StyledButton(
+                  child: OutlinedButton(
                     onPressed: signInAnonymously,
                     child: const Text('Skip Login'),
                   ),

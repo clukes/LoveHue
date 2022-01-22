@@ -27,7 +27,8 @@ import 'providers/application_state.dart';
 
 /*
 TODO: Clean up code.
-TODO: Bottom Navigation Bar
+TODO: Accept/Reject incoming partner link request.
+TODO: Order bars so that they are always shown in the same order for each person. Have some order field to support reordering.
 TODO: Add loading indicators wherever awaiting async. Use listener.
 TODO: Only save your bars to local storage when save button pressed, only read from local storage when no value in local relationshipbar variable. Pull from local storage on app init.
 TODO: Only read partners bars from local storage when no value in local variable and no connection on app init. Only pull from online DB on app init and partners bars page refresh.
@@ -41,9 +42,6 @@ TODO: Store partners displayname when getting their ID. Display name on your bar
 TODO: Firebase implementation - account/auth, storing in server, updating from server
 TODO: Allow convert an anonymous account to a permanent account https://firebase.google.com/docs/auth/android/anonymous-auth?authuser=0#convert-an-anonymous-account-to-a-permanent-account
 TODO: Beautify UI, don't leave as Instagram clone.
-TODO: Delete account option.
-TODO: Restrict all pages except login page when not logged in.
-TODO: Error if linking to partner who is already linked.
 TODO: Optimization, only update widgets that need updating.
  */
 
@@ -69,25 +67,37 @@ class RelationshipBarsApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
+      debugShowCheckedModeBanner: false,
       showPerformanceOverlay: false,
       title: 'Relationship Bars',
       theme: ThemeData.light().copyWith(
         scaffoldBackgroundColor: mobileBackgroundColor,
       ),
-      initialRoute: FirebaseAuth.instance.currentUser == null ? '/login' : '/yours',
-      routes: {
-        '/login': (context) => const SignInPage(),
-        '/profile': (context) => const ProfilePage(),
-        '/yours': (context) => ChangeNotifierProvider.value(
-          value: YourBarsState.instance,
-          builder: (context, _) => const YourBars(),
-        ),
-        '/partners': (context) => const PartnersBars(),
-      },
-      // home: const ResponsiveLayout(
-      //   mobileScreenLayout: MobileScreenLayout(),
-      //   webScreenLayout: WebScreenLayout(),
-      // ),
+      home: StreamBuilder(
+          stream: FirebaseAuth.instance.authStateChanges(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.active &&
+                ApplicationState.instance.loginState ==
+                    ApplicationLoginState.loggedIn) {
+              return const ResponsiveLayout(
+                mobileScreenLayout: MobileScreenLayout(),
+                webScreenLayout: WebScreenLayout(),
+              );
+            }
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(
+                child: CircularProgressIndicator(),
+              );
+            }
+            if (ApplicationState.instance.loginState ==
+                ApplicationLoginState.loggedOut) {
+              return const SignInPage();
+            }
+            return const Center(
+              child: Text('Error: You shouldn\'t see this message'),
+            );
+          }
+      ),
     );
   }
 }

@@ -2,6 +2,7 @@
 const userBarsCollection = 'UserBars';
 const specificUserBarsCollection = 'YourBars';
 const userInfoCollection = 'UserInfo';
+const linkCodesCollection = 'LinkCodes';
 
 //sqflite (Local Database) names
 const relationshipBarsDatabase = 'relationshipBars.db';
