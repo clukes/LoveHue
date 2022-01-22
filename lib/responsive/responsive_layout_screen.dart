@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:relationship_bars/utils/dimensions.dart';
+import 'package:relationship_bars/utils/globals.dart';
 
 class ResponsiveLayout extends StatelessWidget {
   final Widget webScreenLayout;

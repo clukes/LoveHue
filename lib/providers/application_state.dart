@@ -10,10 +10,12 @@ import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
 import 'package:relationship_bars/Pages/your_bars_page.dart';
 import 'package:relationship_bars/database/local_database_handler.dart';
 import 'package:relationship_bars/database/secure_storage_handler.dart';
+import 'package:relationship_bars/models/link_code_firestore_collection_model.dart';
 import 'package:relationship_bars/models/relationship_bar_model.dart';
 import 'package:relationship_bars/models/userinfo_firestore_collection_model.dart';
 import 'package:relationship_bars/providers/your_bars_state.dart';
 import 'package:relationship_bars/resources/database_and_table_names.dart';
+import 'package:relationship_bars/resources/unique_link_code_generator.dart';
 
 import '../firebase_options.dart';
 import '../resources/authentication.dart';
@@ -36,20 +38,29 @@ class ApplicationState extends ChangeNotifier {
     FirebaseAuth.instance.authStateChanges().listen((user) async {
       if (user != null) {
         _loginState = ApplicationLoginState.loggedIn;
-        _userInfo ??= await UserInformation.firestoreGet(user.uid);
-        if(_userInfo == null) {
-          _userInfo = UserInformation(userID: user.uid, displayName: user.displayName);
-          await _userInfo!.firestoreSet();
-          await RelationshipBar.firestoreAddMap(_userInfo!.userID, defaultBarLabels);
+        userInfo ??= await UserInformation.firestoreGet(user.uid);
+        if(userInfo == null) {
+          DocumentReference<LinkCode?>? linkCode;
+          while(linkCode == null) {
+            linkCode = await linkCodeFirestoreRef.doc(generateLinkCode()).get().then((snapshot) => !snapshot.exists ? snapshot.reference: null);
+          }
+          userInfo = UserInformation(userID: user.uid, displayName: user.displayName, linkCode: linkCode);
+          DocumentReference<UserInformation?> userDoc = userInfoFirestoreRef.doc(userInfo?.userID);
+          WriteBatch batch = FirebaseFirestore.instance.batch();
+          batch.set(userDoc, userInfo);
+          batch.set(linkCode, LinkCode(linkCode: linkCode.id, user: userDoc));
+          RelationshipBar.firestoreAddMapWithBatch(userInfo!.userID, defaultBarLabels, batch);
+          await batch.commit().catchError((error) => print("Batch Error: $error"));
         }
-        print(_userInfo);
-        print(_userInfo?.userID);
-        _setupPartnerInfoSubscription(_userInfo?.partnerID);
+        if(userInfo?.partnerID != null) {
+          _partnersInfo = await UserInformation.firestoreGet(userInfo!.partnerID!);
+        }
+        setupPartnerInfoSubscription();
         YourBarsState.instance.yourRelationshipBars ??= await RelationshipBar.firestoreGetBars(userID!);
         notifyListeners();
       } else {
         _loginState = ApplicationLoginState.loggedOut;
-        _userInfo = null;
+        userInfo = null;
         _partnersInfo = null;
         _partnersInfoSubscription?.cancel();
       }
@@ -63,26 +74,32 @@ class ApplicationState extends ChangeNotifier {
   String? _email;
   String? get email => _email;
 
-  UserInformation? _userInfo;
-  UserInformation? get userInfo => _userInfo;
-  String? get userID => _userInfo?.userID;
+  UserInformation? userInfo;
+  String? get userID => userInfo?.userID;
+  String? get linkCode => userInfo?.linkCode?.id;
 
   StreamSubscription<DocumentSnapshot>? _partnersInfoSubscription;
   UserInformation? _partnersInfo;
-  UserInformation? get partnersInfo => _userInfo;
-  String? get partnersID => _partnersInfo?.userID;
+  set partnersInfo(UserInformation? info) {
+    _partnersInfo = info;
+    notifyListeners();
+  }
+  UserInformation? get partnersInfo => _partnersInfo;
+  String? get partnersID => partnersInfo?.userID;
 
-  void _setupPartnerInfoSubscription(String? partnerID) {
-    print(partnerID);
-    if (partnerID != null) {
+  void setupPartnerInfoSubscription() {
+    print(partnersID);
+    if (partnersID != null) {
       _partnersInfoSubscription = userInfoFirestoreRef
-          .doc(partnerID)
+          .doc(partnersID)
           .snapshots()
           .listen((snapshot) {
             print("PARTNER INFO");
-            UserInformation? partnersInfo = snapshot.data();
-            if(partnersInfo?.partnerID == userID) {
-               _partnersInfo = partnersInfo;
+            UserInformation? partnersUserInfo = snapshot.data();
+            print(partnersUserInfo?.partnerID);
+            print(partnersInfo);
+            if(partnersUserInfo?.partnerID == userID) {
+               partnersInfo = partnersUserInfo;
             }
             else {
               print("Error: Not linked to partner");

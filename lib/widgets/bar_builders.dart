@@ -11,6 +11,7 @@ Widget buildBars(
     AsyncSnapshot<QuerySnapshot<RelationshipBar>> snapshot,
     Widget Function(BuildContext context, RelationshipBar bar)
         itemBuilderFunction) {
+  print("Build");
   if (snapshot.hasError) {
     return Center(
       child: Text(snapshot.error.toString()),
@@ -33,6 +34,7 @@ class BarListBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print("LIST");
     if (bars != null) {
       return ListView.separated(
         padding: const EdgeInsets.fromLTRB(16, 16, 16, kFloatingActionButtonMargin + 128),
@@ -53,10 +55,13 @@ Widget interactableBarBuilder(BuildContext context, RelationshipBar bar) {
 }
 
 Widget nonInteractableBarBuilder(BuildContext context, RelationshipBar bar) {
+  print("BAR");
+
   return NonInteractableBarSlider(relationshipBar: bar);
 }
 
 Widget barStreamBuilder(String id, Widget Function(BuildContext context, RelationshipBar bar) itemBuilderFunction) {
+  print("BUILDER");
   return StreamBuilder<QuerySnapshot<RelationshipBar>>(
       stream: userBarsFirestoreRef(id).snapshots(),
       builder: (context, snapshot) {
