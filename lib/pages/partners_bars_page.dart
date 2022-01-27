@@ -22,17 +22,18 @@ class PartnersBars extends StatefulWidget {
 class _PartnersBarsState extends State<PartnersBars> {
   @override
   Widget build(BuildContext context) {
-    String title = PartnersInfoState.instance.partnersInfo?.displayName ?? "Partner";
-    print("BUILD PARTNERS");
-    return Scaffold(
+    return Consumer<PartnersInfoState>(
+        builder: (context, partnersInfoState, _) {
+      String title = partnersInfoState.partnersInfo?.displayName ?? "Partner";
+      return Scaffold(
         appBar: AppBar(
           title: Text('$title\'s Bars'),
         ),
-        body: Consumer<PartnersInfoState>(
-          builder: (context, partnersInfoState, _) => (partnersInfoState.partnersID != null)
-              ? barStreamBuilder(
-                  partnersInfoState.partnersID!, nonInteractableBarBuilder)
-              : const LinkPartnerForm()
-        ));
+        body: (partnersInfoState.partnersID != null)
+            ? barStreamBuilder(
+                partnersInfoState.partnersID!, nonInteractableBarBuilder)
+            : const LinkPartnerForm(),
+      );
+    });
   }
 }
