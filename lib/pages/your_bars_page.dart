@@ -29,28 +29,26 @@ class _YourBarsState extends State<YourBars> {
           ),
           body: Consumer<ApplicationState>(
               builder: (context, appState, _) =>(appState.userID != null)
-              ? BarListBuilder(bars: YourBarsState.instance.yourRelationshipBars, itemBuilderFunction: interactableBarBuilder)
+              ? BarListBuilder(bars: YourBarsState.instance.latestRelationshipBarDoc?.barList, itemBuilderFunction: interactableBarBuilder)
               : const Center(
-                  child: Text("Not logged in"),
+                  child: CircularProgressIndicator(),
                 ),
           ),
-          // /* TODO: FIX BUTTON SO IT DOESN'T OVERLAP SLIDERS. CHOOSE BETTER ICON (FLOPPY DISK) */
           floatingActionButton: Consumer<YourBarsState>(
               builder: (context, yourBarsState, _) =>
-              (ApplicationState.instance.loginState == ApplicationLoginState.loggedIn && yourBarsState.yourRelationshipBars != null && yourBarsState.barsChanged)
+              (ApplicationState.instance.loginState == ApplicationLoginState.loggedIn && yourBarsState.latestRelationshipBarDoc != null && yourBarsState.barsChanged)
                   ? Row(
                       mainAxisAlignment: MainAxisAlignment.end,
                       children: [
                         FloatingActionButton(
                           heroTag: "cancelButton",
                           onPressed: () async {
-                            yourBarsState.yourRelationshipBars = await RelationshipBar.resetBars(yourBarsState.yourRelationshipBars!);
+                            yourBarsState.latestRelationshipBarDoc = await yourBarsState.latestRelationshipBarDoc?.resetBars();
                             setState(() {
                               yourBarsState.resetBarChange();
                               yourBarsState.barsReset = true;
                             });
                           },
-                          /* TODO: CANCEL CHANGES, RESET TO ONLINE DATABASE VALUES */
                           tooltip: 'Cancel',
                           child: const Icon(Icons.cancel),
                         ),
@@ -59,15 +57,14 @@ class _YourBarsState extends State<YourBars> {
                           heroTag: "saveButton",
                           onPressed: () async {
                             setState(() {
-                              yourBarsState.yourRelationshipBars = RelationshipBar.resetBarsChanged(yourBarsState.yourRelationshipBars!);
+                              yourBarsState.latestRelationshipBarDoc = yourBarsState.latestRelationshipBarDoc!.resetBarsChanged();
                               yourBarsState.resetBarChange();
                             });
                             if (ApplicationState.instance.userID != null) {
-                              await RelationshipBar.firestoreSetList(
-                                  ApplicationState.instance.userID!, yourBarsState.yourRelationshipBars!);
+                              await yourBarsState.latestRelationshipBarDoc!.firestoreSet(
+                                  ApplicationState.instance.userID!);
                             }
                           },
-                          /* TODO: ONLY SHOW SAVE BUTTON WHEN VALUES CHANGED. USE SOME ANYCHANGED VARIABLE SET TO TRUE WHEN DISPLAYING UNDO BUTTONS. */
                           tooltip: 'Save',
                           child: const Icon(Icons.save),
                         ),
@@ -75,13 +72,5 @@ class _YourBarsState extends State<YourBars> {
                     )
                   : const SizedBox.shrink()),
     );
-  }
-
-  void _pushPartners() {
-    Navigator.pushReplacementNamed(context, '/partners');
-  }
-
-  void _pushProfile() {
-    Navigator.pushReplacementNamed(context, '/profile');
   }
 }

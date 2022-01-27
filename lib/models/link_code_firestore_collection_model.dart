@@ -3,6 +3,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:relationship_bars/database/firestore_database_handler.dart';
 import 'package:relationship_bars/models/userinfo_firestore_collection_model.dart';
 import 'package:relationship_bars/providers/application_state.dart';
+import 'package:relationship_bars/providers/partners_info_state.dart';
 import 'package:relationship_bars/resources/database_and_table_names.dart';
 import 'package:relationship_bars/resources/printable_error.dart';
 
@@ -39,7 +40,7 @@ class LinkCode {
   }
 
   static Future<String?> connectLinkCode(String linkCode) async {
-    if(ApplicationState.instance.partnersInfo != null) {
+    if(PartnersInfoState.instance.partnersInfo != null) {
       throw PrintableError("Already connected to a partner");
     }
     await FirebaseFirestore.instance.runTransaction((transaction) async {
@@ -62,8 +63,8 @@ class LinkCode {
       transaction.update(partner, {UserInformation.columnPartner: currentUser});
       return partnerSnapshot.data();
     }).then((partnerInfo) {
-      ApplicationState.instance.partnersInfo = partnerInfo;
-      ApplicationState.instance.setupPartnerInfoSubscription();
+      PartnersInfoState.instance.partnersInfo = partnerInfo;
+      PartnersInfoState.instance.setupPartnerInfoSubscription();
     }
     );
   }
