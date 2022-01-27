@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'package:relationship_bars/pages/partners_bars_page.dart';
 import 'package:relationship_bars/pages/profile_page.dart';
 import 'package:relationship_bars/pages/your_bars_page.dart';
+import 'package:relationship_bars/providers/partners_info_state.dart';
 import 'package:relationship_bars/providers/your_bars_state.dart';
 
 const webScreenSize = 900;
@@ -10,7 +11,8 @@ const webScreenSize = 900;
 List<Widget> navigationBarItems = [
   ChangeNotifierProvider.value(
       value: YourBarsState.instance, builder: (context, _) => const YourBars()),
-  const PartnersBars(),
+  ChangeNotifierProvider.value(
+      value: PartnersInfoState.instance, builder: (context, _) => const PartnersBars()),
   const ProfilePage(),
 ];
 
@@ -21,7 +23,7 @@ List<IconData> navigationBarIcons = [
 ];
 
 const List<String> navigationBarLabels = [
-  "Yours",
-  "Partners",
+  "You",
+  "Partner",
   "Settings"
 ];

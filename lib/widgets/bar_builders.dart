@@ -8,7 +8,7 @@ import 'package:relationship_bars/widgets/bar_sliders.dart';
 
 Widget buildBars(
     BuildContext context,
-    AsyncSnapshot<QuerySnapshot<RelationshipBar>> snapshot,
+    AsyncSnapshot<QuerySnapshot<RelationshipBarDocument>> snapshot,
     Widget Function(BuildContext context, RelationshipBar bar)
         itemBuilderFunction) {
   print("Build");
@@ -20,7 +20,8 @@ Widget buildBars(
   if (!snapshot.hasData) {
     return const Center(child: CircularProgressIndicator());
   }
-  final List<RelationshipBar> bars = RelationshipBar.fromQuerySnapshot(snapshot.requireData);
+  final RelationshipBarDocument latestBarDoc = RelationshipBarDocument.fromQuerySnapshot(snapshot.requireData)[0];
+  final List<RelationshipBar>? bars = latestBarDoc.barList;
 
   return BarListBuilder(bars: bars, itemBuilderFunction: itemBuilderFunction);
 }
@@ -62,8 +63,8 @@ Widget nonInteractableBarBuilder(BuildContext context, RelationshipBar bar) {
 
 Widget barStreamBuilder(String id, Widget Function(BuildContext context, RelationshipBar bar) itemBuilderFunction) {
   print("BUILDER");
-  return StreamBuilder<QuerySnapshot<RelationshipBar>>(
-      stream: userBarsFirestoreRef(id).snapshots(),
+  return StreamBuilder<QuerySnapshot<RelationshipBarDocument>>(
+      stream: userBarsFirestoreRef(id).orderBy(RelationshipBarDocument.columnTimestamp, descending: true).snapshots(),
       builder: (context, snapshot) {
         return buildBars(context, snapshot, itemBuilderFunction);
       });
