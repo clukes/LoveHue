@@ -24,53 +24,66 @@ class _YourBarsState extends State<YourBars> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-          appBar: AppBar(
-            title: const Text('Your Bars'),
-          ),
-          body: Consumer<ApplicationState>(
-              builder: (context, appState, _) =>(appState.userID != null)
-              ? BarListBuilder(bars: YourBarsState.instance.latestRelationshipBarDoc?.barList, itemBuilderFunction: interactableBarBuilder)
-              : const Center(
-                  child: CircularProgressIndicator(),
-                ),
-          ),
-          floatingActionButton: Consumer<YourBarsState>(
-              builder: (context, yourBarsState, _) =>
-              (ApplicationState.instance.loginState == ApplicationLoginState.loggedIn && yourBarsState.latestRelationshipBarDoc != null && yourBarsState.barsChanged)
-                  ? Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
-                      children: [
-                        FloatingActionButton(
-                          heroTag: "cancelButton",
-                          onPressed: () async {
-                            yourBarsState.latestRelationshipBarDoc = await yourBarsState.latestRelationshipBarDoc?.resetBars();
-                            setState(() {
-                              yourBarsState.resetBarChange();
-                              yourBarsState.barsReset = true;
-                            });
-                          },
-                          tooltip: 'Cancel',
-                          child: const Icon(Icons.cancel),
-                        ),
-                        const SizedBox(width: 10),
-                        FloatingActionButton(
-                          heroTag: "saveButton",
-                          onPressed: () async {
-                            setState(() {
-                              yourBarsState.latestRelationshipBarDoc = yourBarsState.latestRelationshipBarDoc!.resetBarsChanged();
-                              yourBarsState.resetBarChange();
-                            });
-                            if (ApplicationState.instance.userID != null) {
-                              await yourBarsState.latestRelationshipBarDoc!.firestoreSet(
-                                  ApplicationState.instance.userID!);
-                            }
-                          },
-                          tooltip: 'Save',
-                          child: const Icon(Icons.save),
-                        ),
-                      ],
-                    )
-                  : const SizedBox.shrink()),
+      appBar: AppBar(
+        title: const Text('Your Bars'),
+      ),
+      body: Consumer<ApplicationState>(
+        builder: (context, appState, _) => (appState.userID != null)
+            ? BarDocBuilder(
+                barDoc: YourBarsState.instance.latestRelationshipBarDoc,
+                itemBuilderFunction: interactableBarBuilder)
+            : const Center(
+                child: CircularProgressIndicator(),
+              ),
+      ),
+      floatingActionButton: Consumer<YourBarsState>(
+          builder: (context, yourBarsState, _) => (ApplicationState
+                          .instance.loginState ==
+                      ApplicationLoginState.loggedIn &&
+                  yourBarsState.latestRelationshipBarDoc != null &&
+                  yourBarsState.barsChanged)
+              ? Row(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    FloatingActionButton(
+                      heroTag: "cancelButton",
+                      onPressed: () async {
+                        yourBarsState.latestRelationshipBarDoc =
+                            await yourBarsState.latestRelationshipBarDoc
+                                ?.resetBars();
+                        setState(() {
+                          yourBarsState.resetBarChange();
+                          yourBarsState.barsReset = true;
+                        });
+                      },
+                      tooltip: 'Cancel',
+                      child: const Icon(Icons.cancel),
+                    ),
+                    const SizedBox(width: 10),
+                    FloatingActionButton(
+                      heroTag: "saveButton",
+                      onPressed: () async {
+                        if (ApplicationState.instance.userID != null &&
+                            yourBarsState.barList != null) {
+                          RelationshipBarDocument barDoc = yourBarsState
+                              .latestRelationshipBarDoc!
+                              .resetBarsChanged();
+                          yourBarsState.resetBarChange();
+                          barDoc =
+                              await RelationshipBarDocument.firestoreAddBarList(
+                                  ApplicationState.instance.userID!,
+                                  barDoc.barList!);
+                          setState(() {
+                            yourBarsState.latestRelationshipBarDoc = barDoc;
+                          });
+                        }
+                      },
+                      tooltip: 'Save',
+                      child: const Icon(Icons.save),
+                    ),
+                  ],
+                )
+              : const SizedBox.shrink()),
     );
   }
 }

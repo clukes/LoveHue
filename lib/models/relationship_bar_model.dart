@@ -93,6 +93,7 @@ class RelationshipBar {
   }
 
   static List<RelationshipBar>? fromMapList(List<dynamic>? query) {
+    query?.sort((a, b) => a[columnOrder].compareTo(b[columnOrder]));
     return query?.map((e) => fromMap((e as Map<String, dynamic>))).toList();
   }
 
@@ -153,7 +154,6 @@ class RelationshipBarDocument {
 
   static List<RelationshipBarDocument> fromQuerySnapshot(
       QuerySnapshot<RelationshipBarDocument> snapshot) {
-    print("data: ${snapshot.docs[0].data()}");
     return snapshot.docs.map((e) => e.data()).toList();
   }
 
@@ -242,12 +242,13 @@ class RelationshipBarDocument {
             print("firestoreDelete: Failed to delete relationship bar document: $error"));
   }
 
-  static Future<void> firestoreAddBarList(
+  static Future<RelationshipBarDocument> firestoreAddBarList(
       String userID, List<RelationshipBar> barList) async {
     print("firestoreAddBarList: $barList");
     WriteBatch batch = FirebaseFirestore.instance.batch();
-    firestoreAddBarListWithBatch(userID, barList, batch);
+    RelationshipBarDocument barDoc = firestoreAddBarListWithBatch(userID, barList, batch);
     await batch.commit();
+    return barDoc;
   }
 
   static RelationshipBarDocument firestoreAddBarListWithBatch(

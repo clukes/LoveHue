@@ -11,6 +11,7 @@ class YourBarsState extends ChangeNotifier {
 
   RelationshipBarDocument? _latestRelationshipBarDoc;
   RelationshipBarDocument? get latestRelationshipBarDoc => _latestRelationshipBarDoc;
+  List<RelationshipBar>? get barList => latestRelationshipBarDoc?.barList;
 
   set latestRelationshipBarDoc(RelationshipBarDocument? latestRelationshipBarDoc) {
     _latestRelationshipBarDoc = latestRelationshipBarDoc;

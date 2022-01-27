@@ -51,7 +51,7 @@ class ApplicationState extends ChangeNotifier {
         YourBarsState.instance.latestRelationshipBarDoc ??= await RelationshipBarDocument.firestoreGetLatest(userID!);
         _loginState = ApplicationLoginState.loggedIn;
         notifyListeners();
-      } else if(_loginState != ApplicationLoginState.loggedIn) {
+      } else if(user == null && _loginState == ApplicationLoginState.loggedIn) {
         _loginState = ApplicationLoginState.loading;
         userInfo = null;
         PartnersInfoState.instance.partnersInfo = null;
