@@ -52,7 +52,7 @@ class UserInformation {
   }
 
   static Future<UserInformation?> firestoreGet(String userID) async {
-    print("Get");
+    print("UserInfo firestoreGet");
     UserInformation? info;
     info = await userInfoFirestoreRef
         .doc(userID)
