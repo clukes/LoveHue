@@ -1,0 +1,87 @@
+TODO:
+For 1.0 Release
+- Put last update with timestamp on you page (last time saved to db), and partner page (last time updated).
+
+- Display bars in order from order field on your and partner screens.
+
+- Ensure partner's name shows up on partner's page and settings page.
+- Refresh partner's app when user links to them.
+
+- Accept/Rejection for incoming link requests. Only show requests if not linked to a partner.
+
+- Settings screen:
+        - Remove profile picture icon.
+        - Implement an unlink partner button.
+        - Implement delete account button properly, delete all database data for user.
+
+- When pulling partners bars from online database, check if still linked to partner. If not, delete partner id from local storage.
+
+- Add email sign in button to convert account when anonymously signed in.
+- Have clearer sign out button.
+
+- Store anon account details/token in somewhere to allow signing back in to same account on sign out.
+
+- Pull down to refresh and refresh button on partners page.
+
+- Explain what magic link is on sign in screen, and explain what not signing in will mean, e.g. anonymous and data won't persist on reinstall or across devices.
+- Cancel/back buttons on sign in process.
+
+- Fix buttons being hidden by keyboard on sign in screens.
+
+- Add loading overlays for all async actions that require it, e.g. don't want user to click twice when saving bars or signing in.
+    [Possibly use listener for this]
+
+
+- Show part of bottom slider on bar screens to make it clear that you can scroll.
+- Improve UI theming/design.
+- See if can call the bars needs, or something similar.
+
+- Improve error displays, display more errors on screen rather than printing, and log non display errors.
+- Show no internet connection message when trying to connect to FireStore with no internet.
+- Improve code comments/documentation.
+
+- Check performance, see if can reduce storage.
+
+- Change default bars since 5 love languages is copyrighted.
+- Check licenses of everything used, including UI and packages.
+- Write terms and conditions and license.
+
+- Create App Name and Logo
+- Perform actions needed for release: Specify app ID and add signing config.
+
+
+
+
+
+
+
+
+Future
+- History page. Show yours and partners histories.
+
+- Notifications:
+        - reminders to set needs (customisable how frequent)
+        - notification when partner updates
+        - incoming link request notification
+        - partner unlink notification
+- Notification settings, set every type of notification.
+- Nudge button, tells partner you've updated and want them to update.
+
+- Overall bar that averages rest of bars and when changed, changes the rest proportionally.
+
+- Add/Edit/Remove bars.
+- Subcategory bars. Overall category bar can optionally average its subcategory bars.
+
+
+- Optional decay, bars reduce over time with advanced setting to customise this.
+
+- Simple mode and advanced mode. Have advanced settings to allow people to customise more advanced things like decay amount.
+Notification reminders to set needs.
+
+- Different themes: light mode, dark mode etc. Setting to choose or follow device theme.
+
+- Moodlets.
+- Wishes.
+
+
+

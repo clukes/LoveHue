@@ -1,4 +1,4 @@
-import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:relationship_bars/models/relationship_bar_model.dart';
 
 class YourBarsState extends ChangeNotifier {
@@ -9,11 +9,12 @@ class YourBarsState extends ChangeNotifier {
   YourBarsState._internal();
   factory YourBarsState() => _instance;
 
-  List<RelationshipBar>? _yourRelationshipBars;
-  List<RelationshipBar>? get yourRelationshipBars => _yourRelationshipBars;
+  RelationshipBarDocument? _latestRelationshipBarDoc;
+  RelationshipBarDocument? get latestRelationshipBarDoc => _latestRelationshipBarDoc;
 
-  set yourRelationshipBars(List<RelationshipBar>? yourRelationshipBars) {
-    _yourRelationshipBars = yourRelationshipBars;
+  set latestRelationshipBarDoc(RelationshipBarDocument? latestRelationshipBarDoc) {
+    _latestRelationshipBarDoc = latestRelationshipBarDoc;
+    print("NOTIFY BARS");
     notifyListeners();
   }
 
@@ -22,11 +23,13 @@ class YourBarsState extends ChangeNotifier {
 
   void barChange() {
     barsChanged = true;
+    print("NOTIFY BARS");
     notifyListeners();
   }
 
   void resetBarChange() {
     barsChanged = false;
+    print("NOTIFY BARS");
     notifyListeners();
   }
 }
