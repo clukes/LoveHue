@@ -23,7 +23,8 @@ For 1.0 Release
 
 - Pull down to refresh and refresh button on partners page.
 
-- Explain what magic link is on sign in screen, and explain what not signing in will mean, e.g. anonymous and data won't persist on reinstall or across devices.
+- Explain what magic link is on sign in screen.
+- Maybe add alert dialog when skip log in. Explain what not logging in will mean, e.g. anonymous and data won't persist on reinstall or across devices.
 - Cancel/back buttons on sign in process.
 
 - Fix buttons being hidden by keyboard on sign in screens.
