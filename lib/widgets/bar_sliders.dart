@@ -1,9 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:relationship_bars/models/relationship_bar_model.dart';
-import 'package:relationship_bars/providers/application_state.dart';
 import 'package:relationship_bars/providers/your_bars_state.dart';
-import 'package:relationship_bars/utils/colors.dart';
 
 abstract class BarSlider extends StatefulWidget {
   final RelationshipBar relationshipBar;
@@ -26,36 +23,34 @@ abstract class _BarSliderState extends State<BarSlider> {
 
   Widget sliderText() {
     return Text(
-        widget.relationshipBar.toString(),
-        style: _biggerFont,
+      widget.relationshipBar.toString(),
+      style: _biggerFont,
     );
   }
 
   Widget slider() {
     return Slider(
-        value: _sliderValue.toDouble(),
-        min: 0,
-        max: 100,
-        divisions: 100,
-        label: _sliderValue.toString(),
-        onChanged: changed,
-        onChangeEnd: onChangeEnd,
+      value: _sliderValue.toDouble(),
+      min: 0,
+      max: 100,
+      divisions: 100,
+      label: _sliderValue.toString(),
+      onChanged: changed,
+      onChangeEnd: onChangeEnd,
     );
   }
 
   @override
   Widget build(BuildContext context) {
     return Card(
-        child:
-        Column(children: [
-          ListTile(
-            title: sliderText(),
-          ),
-          ListTile(
-            title: slider(),
-          )
-        ])
-    );
+        child: Column(children: [
+      ListTile(
+        title: sliderText(),
+      ),
+      ListTile(
+        title: slider(),
+      )
+    ]));
   }
 }
 
@@ -64,26 +59,25 @@ class InteractableBarSlider extends BarSlider {
 
   @override
   _InteractableBarSliderState createState() => _InteractableBarSliderState();
-
 }
 
 class _InteractableBarSliderState extends _BarSliderState {
   @override
   get changed => (double value) {
-    setState(() {
-      _sliderValue = value.round();
-    });
-  };
+        setState(() {
+          _sliderValue = value.round();
+        });
+      };
 
   @override
   get onChangeEnd => (double value) {
-    int iValue = value.round();
-    widget.relationshipBar.setValue(iValue);
-    YourBarsState.instance.barChange();
-    updateBar(iValue);
-  };
+        int iValue = value.round();
+        widget.relationshipBar.setValue(iValue);
+        YourBarsState.instance.barChange();
+        updateBar(iValue);
+      };
 
-  void updateBar(int value)  {
+  void updateBar(int value) {
     setState(() {
       _sliderValue = value;
     });
@@ -91,19 +85,15 @@ class _InteractableBarSliderState extends _BarSliderState {
 
   @override
   Widget sliderText() {
-    return Stack(
-        children: [
-          super.sliderText(),
-          if(widget.relationshipBar.changed) Positioned(
-              top: -10,
-              right: -10,
-              child: IconButton(
-                  onPressed: () => updateBar(widget.relationshipBar.resetValue()),
-                  icon: const Icon(Icons.undo)
-              )
-          )
-        ]
-    );
+    return Stack(children: [
+      super.sliderText(),
+      if (widget.relationshipBar.changed)
+        Positioned(
+            top: -10,
+            right: -10,
+            child: IconButton(
+                onPressed: () => updateBar(widget.relationshipBar.resetValue()), icon: const Icon(Icons.undo)))
+    ]);
   }
 
   @override
@@ -113,11 +103,11 @@ class _InteractableBarSliderState extends _BarSliderState {
     }
     return super.slider();
   }
-
 }
 
 class NonInteractableBarSlider extends BarSlider {
-  const NonInteractableBarSlider({Key? key, required relationshipBar}) : super(key: key, relationshipBar: relationshipBar);
+  const NonInteractableBarSlider({Key? key, required relationshipBar})
+      : super(key: key, relationshipBar: relationshipBar);
 
   @override
   _NonInteractableBarSliderState createState() => _NonInteractableBarSliderState();

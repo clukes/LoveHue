@@ -1,17 +1,10 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:relationship_bars/database/local_database_handler.dart';
 import 'package:relationship_bars/models/relationship_bar_model.dart';
-import 'package:relationship_bars/database/firestore_database_handler.dart';
+import 'package:relationship_bars/providers/application_state.dart';
+import 'package:relationship_bars/providers/user_info_state.dart';
 import 'package:relationship_bars/providers/your_bars_state.dart';
-import 'package:relationship_bars/resources/database_and_table_names.dart';
 import 'package:relationship_bars/widgets/bar_builders.dart';
-
-import '../main.dart';
-import '../providers/application_state.dart';
-import '../resources/authentication.dart';
 
 class YourBars extends StatefulWidget {
   const YourBars({Key? key}) : super(key: key);
@@ -27,18 +20,16 @@ class _YourBarsState extends State<YourBars> {
       appBar: AppBar(
         title: const Text('Your Bars'),
       ),
-      body: Consumer<ApplicationState>(
-        builder: (context, appState, _) => (appState.userID != null)
+      body: Consumer<UserInfoState>(
+        builder: (context, appState, _) => (appState.userExist)
             ? BarDocBuilder(
-                barDoc: YourBarsState.instance.latestRelationshipBarDoc,
-                itemBuilderFunction: interactableBarBuilder)
+                barDoc: YourBarsState.instance.latestRelationshipBarDoc, itemBuilderFunction: interactableBarBuilder)
             : const Center(
                 child: CircularProgressIndicator(),
               ),
       ),
       floatingActionButton: Consumer<YourBarsState>(
-          builder: (context, yourBarsState, _) => (ApplicationState
-                          .instance.loginState ==
+          builder: (context, yourBarsState, _) => (ApplicationState.instance.loginState ==
                       ApplicationLoginState.loggedIn &&
                   yourBarsState.latestRelationshipBarDoc != null &&
                   yourBarsState.barsChanged)
@@ -49,8 +40,7 @@ class _YourBarsState extends State<YourBars> {
                       heroTag: "cancelButton",
                       onPressed: () async {
                         yourBarsState.latestRelationshipBarDoc =
-                            await yourBarsState.latestRelationshipBarDoc
-                                ?.resetBars();
+                            await yourBarsState.latestRelationshipBarDoc?.resetBars();
                         setState(() {
                           yourBarsState.resetBarChange();
                           yourBarsState.barsReset = true;
@@ -63,16 +53,11 @@ class _YourBarsState extends State<YourBars> {
                     FloatingActionButton(
                       heroTag: "saveButton",
                       onPressed: () async {
-                        if (ApplicationState.instance.userID != null &&
-                            yourBarsState.barList != null) {
-                          RelationshipBarDocument barDoc = yourBarsState
-                              .latestRelationshipBarDoc!
-                              .resetBarsChanged();
+                        String? userID = UserInfoState.instance.userID;
+                        if (userID != null && yourBarsState.barList != null) {
+                          RelationshipBarDocument barDoc = yourBarsState.latestRelationshipBarDoc!.resetBarsChanged();
                           yourBarsState.resetBarChange();
-                          barDoc =
-                              await RelationshipBarDocument.firestoreAddBarList(
-                                  ApplicationState.instance.userID!,
-                                  barDoc.barList!);
+                          barDoc = await RelationshipBarDocument.firestoreAddBarList(userID, barDoc.barList!);
                           setState(() {
                             yourBarsState.latestRelationshipBarDoc = barDoc;
                           });

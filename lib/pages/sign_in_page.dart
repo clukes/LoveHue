@@ -6,7 +6,6 @@ import 'package:relationship_bars/resources/authentication.dart';
 import 'package:relationship_bars/responsive/mobile_screen_layout.dart';
 import 'package:relationship_bars/responsive/responsive_screen_layout.dart';
 import 'package:relationship_bars/responsive/web_screen_layout.dart';
-import 'package:relationship_bars/widgets/styled_button.dart';
 
 class SignInPage extends StatelessWidget {
   const SignInPage({Key? key}) : super(key: key);

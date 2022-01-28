@@ -16,6 +16,5 @@ final ThemeData themeData = ThemeData(
       backgroundColor: MaterialStateProperty.all<Color>(blueColor),
       foregroundColor: MaterialStateProperty.all<Color>(primaryColor),
       shape: MaterialStateProperty.all<RoundedRectangleBorder>(
-          const RoundedRectangleBorder(
-              borderRadius: BorderRadius.all(Radius.circular(4)))),
+          const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4)))),
     )));

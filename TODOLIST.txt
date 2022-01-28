@@ -1,13 +1,13 @@
 TODO:
 For 1.0 Release
-- Put last update with timestamp on you page (last time saved to db), and partner page (last time updated).
+- Test timestamps and display them nicer.
 
-- Display bars in order from order field on your and partner screens.
+- Test that bars are displayed in order from order field on your and partner screens.
 
 - Ensure partner's name shows up on partner's page and settings page.
-- Refresh partner's app when user links to them.
 
 - Accept/Rejection for incoming link requests. Only show requests if not linked to a partner.
+- Refresh partner's app when user links to them.
 
 - Settings screen:
         - Remove profile picture icon.
@@ -50,7 +50,7 @@ For 1.0 Release
 - Create App Name and Logo
 - Perform actions needed for release: Specify app ID and add signing config.
 
-
+- Write tests.
 
 
 
@@ -86,3 +86,10 @@ Notification reminders to set needs.
 
 
 
+
+DONE:
+For 1.0 Release
+- Display timestamps on yours and partners pages.
+- Display bars in order from order field on your and partner screens.
+- Accept/Rejection for incoming link requests. Only show requests if not linked to a partner.
+- Refresh partner's app when user links to them.

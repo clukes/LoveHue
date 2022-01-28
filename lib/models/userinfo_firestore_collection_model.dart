@@ -1,29 +1,29 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:relationship_bars/database/firestore_database_handler.dart';
+import 'package:relationship_bars/models/link_code_firestore_collection_model.dart';
 import 'package:relationship_bars/resources/database_and_table_names.dart';
 
-final CollectionReference<UserInformation?> userInfoFirestoreRef = FirebaseFirestore.instance
-    .collection(userInfoCollection)
-    .withConverter<UserInformation?>(
-  fromFirestore: (snapshots, _) => UserInformation.fromMap(snapshots.data()!),
-  toFirestore: (userInfo, _) => userInfo!.toMap(),
-);
+final CollectionReference<UserInformation?> userInfoFirestoreRef =
+    FirebaseFirestore.instance.collection(userInfoCollection).withConverter<UserInformation?>(
+          fromFirestore: (snapshots, _) => UserInformation.fromMap(snapshots.data()!),
+          toFirestore: (userInfo, _) => userInfo!.toMap(),
+        );
 
 class UserInformation {
   final String userID;
-  String? displayName = "User";
+  String? displayName;
   DocumentReference? partner;
   DocumentReference? linkCode;
   String? get partnerID => partner?.id;
+  bool linkPending;
 
   //Firestore database info
   static const String columnUserID = 'id';
   static const String columnDisplayName = 'displayName';
   static const String columnPartner = 'partner';
   static const String columnLinkCode = 'linkCode';
+  static const String columnLinkPending = 'linkPending';
 
-  UserInformation({required this.userID, this.displayName, this.partner, this.linkCode});
+  UserInformation({required this.userID, this.displayName, this.partner, this.linkCode, this.linkPending = false});
 
   static UserInformation fromMap(Map<String, Object?> res) {
     return UserInformation(
@@ -31,6 +31,7 @@ class UserInformation {
       displayName: res[columnDisplayName] as String?,
       partner: res[columnPartner] as DocumentReference?,
       linkCode: res[columnLinkCode] as DocumentReference?,
+      linkPending: res[columnLinkPending] as bool,
     );
   }
 
@@ -40,6 +41,7 @@ class UserInformation {
       columnDisplayName: displayName,
       columnPartner: partner,
       columnLinkCode: linkCode,
+      columnLinkPending: linkPending
     };
   }
 
@@ -54,11 +56,9 @@ class UserInformation {
   static Future<UserInformation?> firestoreGet(String userID) async {
     print("UserInfo firestoreGet");
     UserInformation? info;
-    info = await userInfoFirestoreRef
-        .doc(userID)
-        .get()
-        .then((snapshot) => snapshot.data())
-        .catchError((error) { print("Failed to retrieve user info: $error");});
+    info = await userInfoFirestoreRef.doc(userID).get().then((snapshot) => snapshot.data()).catchError((error) {
+      print("Failed to retrieve user info: $error");
+    });
     return info;
   }
 

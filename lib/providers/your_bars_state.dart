@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:relationship_bars/models/relationship_bar_model.dart';
 
-class YourBarsState extends ChangeNotifier {
+class YourBarsState with ChangeNotifier {
   static final YourBarsState _instance = YourBarsState._internal();
 
   static YourBarsState get instance => _instance;
