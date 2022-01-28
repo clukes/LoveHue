@@ -6,16 +6,16 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:relationship_bars/pages/partners_bars_page.dart';
 import 'package:relationship_bars/pages/sign_in_page.dart';
-import 'package:relationship_bars/pages/your_bars_page.dart';
 import 'package:relationship_bars/firebase_options.dart';
+import 'package:relationship_bars/providers/application_state.dart';
+import 'package:relationship_bars/providers/partners_info_state.dart';
+import 'package:relationship_bars/providers/user_info_state.dart';
+import 'package:relationship_bars/providers/your_bars_state.dart';
 import 'package:relationship_bars/responsive/mobile_screen_layout.dart';
 import 'package:relationship_bars/responsive/responsive_screen_layout.dart';
 import 'package:relationship_bars/responsive/web_screen_layout.dart';
 import 'package:relationship_bars/utils/colors.dart';
-
-import 'providers/application_state.dart';
 
 /*
 TODO: Delete database data when delete account clicked.
@@ -44,13 +44,8 @@ void main() async {
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
   );
-  print("MAIN INIT");
   await ApplicationState.instance.init();
-  print("AFTER MAIN INIT");
-  runApp(ChangeNotifierProvider.value(
-    value: ApplicationState.instance,
-    builder: (context, _) => const RelationshipBarsApp(),
-  ));
+  runApp(const RelationshipBarsApp());
 }
 
 class RelationshipBarsApp extends StatelessWidget {
@@ -58,39 +53,44 @@ class RelationshipBarsApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      showPerformanceOverlay: false,
-      title: 'Relationship Bars',
-      theme: ThemeData.light().copyWith(
-        scaffoldBackgroundColor: mobileBackgroundColor,
-      ),
-      home: StreamBuilder(
-          stream: FirebaseAuth.instance.userChanges(),
-          builder: (context, snapshot) {
-            if (snapshot.connectionState == ConnectionState.active &&
-                ApplicationState.instance.loginState ==
-                    ApplicationLoginState.loggedIn) {
-              return const ResponsiveLayout(
-                mobileScreenLayout: MobileScreenLayout(),
-                webScreenLayout: WebScreenLayout(),
-              );
-            }
-            if (snapshot.connectionState == ConnectionState.waiting
-                || ApplicationState.instance.loginState == ApplicationLoginState.loading) {
-              return const Center(
-                child: CircularProgressIndicator(),
-              );
-            }
-            if (ApplicationState.instance.loginState ==
-                ApplicationLoginState.loggedOut) {
-              return const SignInPage();
-            }
-            return const Center(
-              child: Text('Error: You shouldn\'t see this message'),
-            );
-          }
-      )
+    return MultiProvider(
+        providers: [
+          ChangeNotifierProvider<ApplicationState>.value(value: ApplicationState.instance),
+          ChangeNotifierProvider<UserInfoState>.value(value: UserInfoState.instance),
+          ChangeNotifierProvider<PartnersInfoState>.value(value: PartnersInfoState.instance),
+          ChangeNotifierProvider<YourBarsState>.value(value: YourBarsState.instance),
+        ],
+        child: MaterialApp(
+            debugShowCheckedModeBanner: false,
+            showPerformanceOverlay: false,
+            title: 'Relationship Bars',
+            theme: ThemeData.light().copyWith(
+              scaffoldBackgroundColor: mobileBackgroundColor,
+            ),
+            home: StreamBuilder(
+                stream: FirebaseAuth.instance.authStateChanges(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.active &&
+                      ApplicationState.instance.loginState == ApplicationLoginState.loggedIn) {
+                    return const ResponsiveLayout(
+                      mobileScreenLayout: MobileScreenLayout(),
+                      webScreenLayout: WebScreenLayout(),
+                    );
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting ||
+                      ApplicationState.instance.loginState == ApplicationLoginState.loading) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
+                    );
+                  }
+                  if (ApplicationState.instance.loginState == ApplicationLoginState.loggedOut) {
+                    return const SignInPage();
+                  }
+                  return const Center(
+                    child: Text("Error: You shouldn't see this message"),
+                  );
+                })
+        )
     );
   }
 }
