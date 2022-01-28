@@ -7,7 +7,8 @@ class TextFormFieldInput extends StatelessWidget {
   final TextInputType textInputType;
   final FormFieldValidator? validator;
 
-  const TextFormFieldInput({Key? key,
+  const TextFormFieldInput({
+    Key? key,
     required this.textEditingController,
     this.isObscured = false,
     required this.hintText,
@@ -17,9 +18,7 @@ class TextFormFieldInput extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final inputBorder = OutlineInputBorder(
-      borderSide: Divider.createBorderSide(context)
-    );
+    final inputBorder = OutlineInputBorder(borderSide: Divider.createBorderSide(context));
     return TextFormField(
       controller: textEditingController,
       decoration: InputDecoration(
@@ -27,7 +26,7 @@ class TextFormFieldInput extends StatelessWidget {
         border: inputBorder,
         focusedBorder: inputBorder,
         enabledBorder: inputBorder,
-        filled:true,
+        filled: true,
         contentPadding: const EdgeInsets.all(8),
       ),
       keyboardType: textInputType,
