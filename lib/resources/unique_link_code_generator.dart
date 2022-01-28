@@ -1,7 +1,6 @@
 import 'dart:math';
 
-const String codeAlphabet =
-    "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+const String codeAlphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 const int linkCodeLength = 5;
 final _random = Random();
 

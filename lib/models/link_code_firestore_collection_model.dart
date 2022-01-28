@@ -1,19 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:relationship_bars/database/firestore_database_handler.dart';
+import 'package:relationship_bars/models/relationship_bar_model.dart';
 import 'package:relationship_bars/models/userinfo_firestore_collection_model.dart';
-import 'package:relationship_bars/providers/application_state.dart';
 import 'package:relationship_bars/providers/partners_info_state.dart';
+import 'package:relationship_bars/providers/user_info_state.dart';
 import 'package:relationship_bars/resources/database_and_table_names.dart';
 import 'package:relationship_bars/resources/printable_error.dart';
 
-
-final CollectionReference<LinkCode?> linkCodeFirestoreRef = FirebaseFirestore.instance
-    .collection(linkCodesCollection)
-    .withConverter<LinkCode?>(
-  fromFirestore: (snapshots, _) => LinkCode.fromMap(snapshots.data()!),
-  toFirestore: (linkCode, _) => linkCode!.toMap(),
-);
+final CollectionReference<LinkCode?> linkCodeFirestoreRef =
+    FirebaseFirestore.instance.collection(linkCodesCollection).withConverter<LinkCode?>(
+          fromFirestore: (snapshots, _) => LinkCode.fromMap(snapshots.data()!),
+          toFirestore: (linkCode, _) => linkCode!.toMap(),
+        );
 
 class LinkCode {
   final String linkCode;
@@ -40,32 +37,81 @@ class LinkCode {
   }
 
   static Future<String?> connectLinkCode(String linkCode) async {
-    if(PartnersInfoState.instance.partnersInfo != null) {
-      throw PrintableError("Already connected to a partner");
+    if (PartnersInfoState.instance.partnerExist) {
+      PartnersInfoState.instance.partnerPending
+          ? throw PrintableError("Partner link already pending.")
+          : throw PrintableError("Already connected to a partner.");
     }
     await FirebaseFirestore.instance.runTransaction((transaction) async {
-      DocumentReference<Object?> linkCodeReference = linkCodeFirestoreRef.doc(linkCode);
+      DocumentReference<LinkCode?> linkCodeReference = linkCodeFirestoreRef.doc(linkCode);
       DocumentSnapshot linkCodeSnapshot = await transaction.get(linkCodeReference);
       if (!linkCodeSnapshot.exists) {
         throw PrintableError("Link code does not exist.");
       }
       String partnerID = linkCodeSnapshot.get(LinkCode.columnUser).id;
       DocumentReference<UserInformation?> partner = userInfoFirestoreRef.doc(partnerID);
-      DocumentReference<UserInformation?> currentUser = userInfoFirestoreRef.doc(ApplicationState.instance.userID);
+      DocumentReference<UserInformation?> currentUser = userInfoFirestoreRef.doc(UserInfoState.instance.userID);
       DocumentSnapshot<UserInformation?> partnerSnapshot = await transaction.get(partner);
-      if(!partnerSnapshot.exists || partnerSnapshot.data() == null) {
+      if (!partnerSnapshot.exists || partnerSnapshot.data() == null) {
         throw PrintableError("Link code does not exist.");
       }
-      if(partnerSnapshot.get(UserInformation.columnPartner) != null) {
+      if (partnerSnapshot.get(UserInformation.columnPartner) != null) {
         throw PrintableError("That user is already connected to a partner.");
       }
-      transaction.update(currentUser, {UserInformation.columnPartner: partner});
-      transaction.update(partner, {UserInformation.columnPartner: currentUser});
-      return partnerSnapshot.data();
+      transaction
+          .update(currentUser, {UserInformation.columnPartner: partner, UserInformation.columnLinkPending: false});
+      transaction
+          .update(partner, {UserInformation.columnPartner: currentUser, UserInformation.columnLinkPending: true});
+      UserInformation partnerInfo = partnerSnapshot.data()!;
+      partnerInfo.linkPending = true;
+      partnerInfo.partner = currentUser;
+      return partnerInfo;
     }).then((partnerInfo) {
       PartnersInfoState.instance.partnersInfo = partnerInfo;
       PartnersInfoState.instance.setupPartnerInfoSubscription();
+    });
+  }
+
+
+  static Future<void> acceptLinkCode() async {
+    if (PartnersInfoState.instance.partnerExist && !UserInfoState.instance.userPending) {
+      throw PrintableError("Already connected to a partner.");
     }
-    );
+    UserInformation? userInfo = UserInfoState.instance.userInfo;
+    if (userInfo == null) {
+      throw PrintableError("No user.");
+    }
+    if (userInfo.partner == null) {
+      throw PrintableError("No partner.");
+    }
+    DocumentReference<UserInformation?> currentUser = userInfoFirestoreRef.doc(userInfo.userID);
+    await currentUser.update({UserInformation.columnLinkPending: false});
+    UserInfoState.instance.userInfo?.linkPending = false;
+    if(!PartnersInfoState.instance.partnerExist && userInfo.partnerID != null) {
+      PartnersInfoState.instance.partnersInfo = await UserInformation.firestoreGet(userInfo.partnerID!);
+      PartnersInfoState.instance.setupPartnerInfoSubscription();
+    }
+  }
+
+  static Future<void> rejectLinkCode() async {
+    UserInformation? userInfo = UserInfoState.instance.userInfo;
+    if (userInfo == null) {
+      throw PrintableError("No user.");
+    }
+    if (userInfo.partner == null) {
+      throw PrintableError("No partner.");
+    }
+    await FirebaseFirestore.instance.runTransaction((transaction) async {
+      DocumentReference<UserInformation?> currentUser = userInfoFirestoreRef.doc(UserInfoState.instance.userID);
+      transaction
+          .update(currentUser, {UserInformation.columnPartner: null, UserInformation.columnLinkPending: false});
+      transaction
+          .update(userInfo.partner!, {UserInformation.columnPartner: null, UserInformation.columnLinkPending: false});
+    }).then((_) {
+      PartnersInfoState.instance.partnersInfoSubscription?.cancel();
+      PartnersInfoState.instance.partnersInfo = null;
+      UserInfoState.instance.userInfo?.linkPending = false;
+      UserInfoState.instance.userInfo?.partner = null;
+    });
   }
 }

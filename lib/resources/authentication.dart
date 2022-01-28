@@ -1,16 +1,5 @@
-import 'dart:ui';
-
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_dynamic_links/firebase_dynamic_links.dart';
-import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
-import 'package:relationship_bars/pages/sign_in_page.dart';
-import 'package:relationship_bars/pages/your_bars_page.dart';
-import 'package:relationship_bars/utils/colors.dart';
-import 'package:relationship_bars/widgets/header.dart';
-import 'package:relationship_bars/widgets/styled_button.dart';
-
-import '../Widgets/text_form_field_input.dart';
 
 var acs = ActionCodeSettings(
     // URL you want to redirect back to. The domain (www.example.com) for this
