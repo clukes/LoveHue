@@ -17,6 +17,10 @@ class PartnersInfoState with ChangeNotifier {
 
   set partnersInfo(UserInformation? info) {
     _partnersInfo = info;
+    notify();
+  }
+
+  void notify() {
     print("NOTIFY PARTNER");
     notifyListeners();
   }

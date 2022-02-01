@@ -13,7 +13,10 @@ class YourBars extends StatefulWidget {
   _YourBarsState createState() => _YourBarsState();
 }
 
-class _YourBarsState extends State<YourBars> {
+class _YourBarsState extends State<YourBars> with AutomaticKeepAliveClientMixin<YourBars> {
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

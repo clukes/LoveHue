@@ -71,7 +71,6 @@ class LinkCode {
     });
   }
 
-
   static Future<void> acceptLinkCode() async {
     if (PartnersInfoState.instance.partnerExist && !UserInfoState.instance.userPending) {
       throw PrintableError("Already connected to a partner.");
@@ -84,12 +83,21 @@ class LinkCode {
       throw PrintableError("No partner.");
     }
     DocumentReference<UserInformation?> currentUser = userInfoFirestoreRef.doc(userInfo.userID);
-    await currentUser.update({UserInformation.columnLinkPending: false});
-    UserInfoState.instance.userInfo?.linkPending = false;
-    if(!PartnersInfoState.instance.partnerExist && userInfo.partnerID != null) {
-      PartnersInfoState.instance.partnersInfo = await UserInformation.firestoreGet(userInfo.partnerID!);
-      PartnersInfoState.instance.setupPartnerInfoSubscription();
-    }
+    await currentUser.update({UserInformation.columnLinkPending: false}).then((_) async {
+      print("UPDATED USER");
+      UserInfoState.instance.userInfo?.linkPending = false;
+      print(userInfo.partnerID);
+      print(PartnersInfoState.instance.partnerExist);
+      print(PartnersInfoState.instance.partnersID);
+      if (userInfo.partnerID != null && (!PartnersInfoState.instance.partnerExist || userInfo.partnerID != PartnersInfoState.instance.partnersID)) {
+        print("UPDATE PARTNER INFO");
+        PartnersInfoState.instance.partnersInfo = await UserInformation.firestoreGet(userInfo.partnerID!);
+        PartnersInfoState.instance.setupPartnerInfoSubscription();
+      }
+      else {
+        PartnersInfoState.instance.notify();
+      }
+    });
   }
 
   static Future<void> rejectLinkCode() async {
@@ -102,8 +110,7 @@ class LinkCode {
     }
     await FirebaseFirestore.instance.runTransaction((transaction) async {
       DocumentReference<UserInformation?> currentUser = userInfoFirestoreRef.doc(UserInfoState.instance.userID);
-      transaction
-          .update(currentUser, {UserInformation.columnPartner: null, UserInformation.columnLinkPending: false});
+      transaction.update(currentUser, {UserInformation.columnPartner: null, UserInformation.columnLinkPending: false});
       transaction
           .update(userInfo.partner!, {UserInformation.columnPartner: null, UserInformation.columnLinkPending: false});
     }).then((_) {

@@ -1,13 +1,20 @@
 TODO:
+Bugs:
+/ When accepting link request, error: shouldn't see this message appears until leave page.
+
 For 1.0 Release
 - Test timestamps and display them nicer.
 
 - Test that bars are displayed in order from order field on your and partner screens.
 
+- Make link codes copyable.
+
 - Ensure partner's name shows up on partner's page and settings page.
 
 - Accept/Rejection for incoming link requests. Only show requests if not linked to a partner.
 - Refresh partner's app when user links to them.
+
+- Persist scroll state/position across screens.
 
 - Settings screen:
         - Remove profile picture icon.
@@ -15,6 +22,7 @@ For 1.0 Release
         - Implement delete account button properly, delete all database data for user.
 
 - When pulling partners bars from online database, check if still linked to partner. If not, delete partner id from local storage.
+- Put your bar numbers on partners bars screen (next to their numbers somewhere) for easy comparison.
 
 - Add email sign in button to convert account when anonymously signed in.
 - Have clearer sign out button.
@@ -60,6 +68,8 @@ For 1.0 Release
 
 
 Future
+- Text input slider number.
+
 - History page. Show yours and partners histories.
 
 - Notifications:

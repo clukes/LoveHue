@@ -22,8 +22,9 @@ class _LinkPartnerScreenState extends State<LinkPartnerScreen> {
         child: SizedBox(
             width: double.infinity,
             child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Consumer<UserInfoState>(
-                  builder: (context, userInfoState, _) => getLinkStatusWidget(userInfoState, widget.partnersInfoState)),
+              Consumer<UserInfoState>(builder: (context, userInfoState, _) {
+                return getLinkStatusWidget(userInfoState, widget.partnersInfoState);
+              }),
               const SizedBox(height: 64),
               Padding(
                 padding: const EdgeInsets.symmetric(vertical: 64),
@@ -52,6 +53,10 @@ class _LinkPartnerScreenState extends State<LinkPartnerScreen> {
     }
     if (!partnersInfoState.partnerExist) {
       return const LinkPartnerForm();
+    }
+    if (partnersInfoState.partnerLinked) {
+      ScaffoldMessenger.of(context).clearSnackBars();
+      return const CircularProgressIndicator();
     }
     return const Center(
       child: Text("Error: You shouldn't see this message"),
@@ -136,26 +141,28 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
   }
 }
 
-class LinkRequestSent extends StatelessWidget {
+class LinkRequestSent extends StatefulWidget {
   const LinkRequestSent({Key? key}) : super(key: key);
 
+  @override
+  State<LinkRequestSent> createState() => _LinkRequestSentState();
+}
+
+class _LinkRequestSentState extends State<LinkRequestSent> {
   @override
   Widget build(BuildContext context) {
     String code = PartnersInfoState.instance.linkCode ?? "[Error: no partner link code]";
     return Center(
       child: Padding(
-        padding: const EdgeInsets.only(bottom: 16),
-        child: Column(
-          children: <Widget>[
+          padding: const EdgeInsets.only(bottom: 16),
+          child: Column(children: <Widget>[
             Header(heading: "Link request sent to: $code."),
             const SizedBox(height: 16),
             OutlinedButton(
               onPressed: () async => await cancelRequest(context),
               child: const Text('Cancel'),
             ),
-          ]
-        )
-      ),
+          ])),
     );
   }
 
@@ -170,9 +177,14 @@ class LinkRequestSent extends StatelessWidget {
   }
 }
 
-class IncomingLinkRequest extends StatelessWidget {
+class IncomingLinkRequest extends StatefulWidget {
   const IncomingLinkRequest({Key? key}) : super(key: key);
 
+  @override
+  State<IncomingLinkRequest> createState() => _IncomingLinkRequestState();
+}
+
+class _IncomingLinkRequestState extends State<IncomingLinkRequest> {
   @override
   Widget build(BuildContext context) {
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
@@ -185,9 +197,9 @@ class IncomingLinkRequest extends StatelessWidget {
             children: <TextSpan>[
               const TextSpan(text: 'Incoming link request from:\n\n'),
               TextSpan(
-                  text: Provider.of<PartnersInfoState>(context, listen: true).linkCode ?? "[Error: something went wrong.]",
-                  style: const TextStyle(fontWeight: FontWeight.bold)
-              )
+                  text: Provider.of<PartnersInfoState>(context, listen: true).linkCode ??
+                      "[Error: something went wrong.]",
+                  style: const TextStyle(fontWeight: FontWeight.bold))
             ],
           ),
           textAlign: TextAlign.center,
@@ -212,9 +224,11 @@ class IncomingLinkRequest extends StatelessWidget {
       const SnackBar(content: Text('Accepting...')),
     );
     await LinkCode.acceptLinkCode().catchError((error) {
-      print(error);
+      print("ACCEPT ERROR: $error");
+      print("ACCEPT");
+      ScaffoldMessenger.of(context).clearSnackBars();
     });
-    ScaffoldMessenger.of(context).clearSnackBars();
+    print("DONE ACCEPT");
   }
 
   Future<void> rejectRequest(BuildContext context) async {
@@ -223,7 +237,6 @@ class IncomingLinkRequest extends StatelessWidget {
     );
     await LinkCode.rejectLinkCode().catchError((error) {
       print(error);
-    });
-    ScaffoldMessenger.of(context).clearSnackBars();
+    }).then((_) => ScaffoldMessenger.of(context).clearSnackBars());
   }
 }
