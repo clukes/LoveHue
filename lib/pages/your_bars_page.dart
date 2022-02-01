@@ -21,7 +21,7 @@ class _YourBarsState extends State<YourBars> {
         title: const Text('Your Bars'),
       ),
       body: Consumer<UserInfoState>(
-        builder: (context, appState, _) => (appState.userExist)
+        builder: (context, appState, _) => (ApplicationState.instance.loginState == ApplicationLoginState.loggedIn && appState.userExist)
             ? BarDocBuilder(
                 barDoc: YourBarsState.instance.latestRelationshipBarDoc, itemBuilderFunction: interactableBarBuilder)
             : const Center(

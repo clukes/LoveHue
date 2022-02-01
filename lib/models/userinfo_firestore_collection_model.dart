@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:relationship_bars/models/link_code_firestore_collection_model.dart';
 import 'package:relationship_bars/resources/database_and_table_names.dart';
 
 final CollectionReference<UserInformation?> userInfoFirestoreRef =

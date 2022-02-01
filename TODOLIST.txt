@@ -43,6 +43,8 @@ For 1.0 Release
 
 - Check performance, see if can reduce storage.
 
+- Test on many different devices and screen sizes.
+
 - Change default bars since 5 love languages is copyrighted.
 - Check licenses of everything used, including UI and packages.
 - Write terms and conditions and license.
