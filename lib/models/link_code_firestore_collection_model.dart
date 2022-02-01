@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:relationship_bars/models/relationship_bar_model.dart';
 import 'package:relationship_bars/models/userinfo_firestore_collection_model.dart';
 import 'package:relationship_bars/providers/partners_info_state.dart';
 import 'package:relationship_bars/providers/user_info_state.dart';
