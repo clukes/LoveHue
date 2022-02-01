@@ -11,7 +11,10 @@ class PartnersBars extends StatefulWidget {
   _PartnersBarsState createState() => _PartnersBarsState();
 }
 
-class _PartnersBarsState extends State<PartnersBars> {
+class _PartnersBarsState extends State<PartnersBars> with AutomaticKeepAliveClientMixin<PartnersBars> {
+  @override
+  bool get wantKeepAlive => true;
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -30,6 +33,7 @@ class _PartnersBarsState extends State<PartnersBars> {
           print("Partner: " + (partnersInfoState.partnersInfo?.partnerID ?? ''));
           return barStreamBuilder(partnersInfoState.partnersID!, nonInteractableBarBuilder);
         }
+        print("NOT LINKED");
         return LinkPartnerScreen(partnersInfoState: partnersInfoState);
       }),
     );

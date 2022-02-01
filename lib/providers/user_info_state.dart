@@ -14,15 +14,7 @@ class UserInfoState with ChangeNotifier {
   factory UserInfoState() => _instance;
 
   StreamSubscription<DocumentSnapshot>? yourInfoSubscription;
-  UserInformation? _userInfo;
-
-  UserInformation? get userInfo => _userInfo;
-
-  set userInfo(UserInformation? info) {
-    _userInfo = info;
-    print("NOTIFY USER");
-    notifyListeners();
-  }
+  UserInformation? userInfo;
 
   String? get userID => userInfo?.userID;
 
@@ -44,6 +36,7 @@ class UserInfoState with ChangeNotifier {
         if(partnerID == null && PartnersInfoState.instance.partnerExist) {
           PartnersInfoState.instance.partnersInfo = null;
         }
+        notifyListeners();
       });
     }
   }
