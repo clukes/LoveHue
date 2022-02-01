@@ -70,27 +70,24 @@ class RelationshipBarsApp extends StatelessWidget {
             home: StreamBuilder(
                 stream: FirebaseAuth.instance.authStateChanges(),
                 builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.active &&
-                      ApplicationState.instance.loginState == ApplicationLoginState.loggedIn) {
-                    return const ResponsiveLayout(
-                      mobileScreenLayout: MobileScreenLayout(),
-                      webScreenLayout: WebScreenLayout(),
-                    );
+                  if (snapshot.connectionState == ConnectionState.active) {
+                    if (snapshot.hasData) {
+                      return const ResponsiveLayout(
+                        mobileScreenLayout: MobileScreenLayout(),
+                        webScreenLayout: WebScreenLayout(),
+                      );
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    }
                   }
-                  if (snapshot.connectionState == ConnectionState.waiting ||
-                      ApplicationState.instance.loginState == ApplicationLoginState.loading) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
                     return const Center(
                       child: CircularProgressIndicator(),
                     );
                   }
-                  if (ApplicationState.instance.loginState == ApplicationLoginState.loggedOut) {
-                    return const SignInPage();
-                  }
-                  return const Center(
-                    child: Text("Error: You shouldn't see this message"),
-                  );
-                })
-        )
-    );
+                  return const SignInPage();
+                })));
   }
 }
