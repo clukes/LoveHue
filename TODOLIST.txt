@@ -3,7 +3,7 @@ Bugs:
 / When accepting link request, error: shouldn't see this message appears until leave page.
 
 For 1.0 Release
-- Test timestamps and display them nicer.
+/ Test timestamps and display them nicer.
 
 - Test that bars are displayed in order from order field on your and partner screens.
 
@@ -43,6 +43,7 @@ For 1.0 Release
 
 - Show part of bottom slider on bar screens to make it clear that you can scroll.
 - Improve UI theming/design.
+- Fix thin line between top app bar and timestamp display.
 - See if can call the bars needs, or something similar.
 
 - Improve error displays, display more errors on screen rather than printing, and log non display errors.
