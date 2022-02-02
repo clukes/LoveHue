@@ -4,6 +4,7 @@ import 'package:relationship_bars/models/relationship_bar_model.dart';
 import 'package:relationship_bars/providers/application_state.dart';
 import 'package:relationship_bars/providers/user_info_state.dart';
 import 'package:relationship_bars/providers/your_bars_state.dart';
+import 'package:relationship_bars/widgets/app_bars.dart';
 import 'package:relationship_bars/widgets/bar_builders.dart';
 
 class YourBars extends StatefulWidget {
@@ -19,17 +20,24 @@ class _YourBarsState extends State<YourBars> with AutomaticKeepAliveClientMixin<
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     return Scaffold(
-      appBar: AppBar(
-        title: const Text('Your Bars'),
-      ),
-      body: Consumer<UserInfoState>(
-        builder: (context, appState, _) => (ApplicationState.instance.loginState == ApplicationLoginState.loggedIn && appState.userExist)
-            ? BarDocBuilder(
-                barDoc: YourBarsState.instance.latestRelationshipBarDoc, itemBuilderFunction: interactableBarBuilder)
-            : const Center(
-                child: CircularProgressIndicator(),
-              ),
+      body: NestedScrollView(
+        headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+          return <Widget>[
+            const BarsPageAppBar(barTitleWidget: Text("Your Bars")),
+          ];
+        },
+        body: Consumer<UserInfoState>(
+          builder: (context, appState, _) =>
+              (ApplicationState.instance.loginState == ApplicationLoginState.loggedIn && appState.userExist)
+                  ? BarDocBuilder(
+                      barDoc: YourBarsState.instance.latestRelationshipBarDoc,
+                      itemBuilderFunction: interactableBarBuilder)
+                  : const Center(
+                      child: CircularProgressIndicator(),
+                    ),
+        ),
       ),
       floatingActionButton: Consumer<YourBarsState>(
           builder: (context, yourBarsState, _) => (ApplicationState.instance.loginState ==

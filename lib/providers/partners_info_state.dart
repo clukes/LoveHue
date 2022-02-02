@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:relationship_bars/models/userinfo_firestore_collection_model.dart';
@@ -17,6 +18,7 @@ class PartnersInfoState with ChangeNotifier {
 
   set partnersInfo(UserInformation? info) {
     _partnersInfo = info;
+    partnersName.value = info?.displayName ?? "Partner";
     notify();
   }
 
@@ -31,6 +33,7 @@ class PartnersInfoState with ChangeNotifier {
   bool get partnerExist => (_partnersInfo?.userID != null);
   bool get partnerLinked => (partnerExist && !(_partnersInfo?.linkPending ?? true) && !UserInfoState.instance.userPending);
   bool get partnerPending => (partnerExist && (_partnersInfo?.linkPending ?? false));
+  ValueNotifier<String> partnersName = ValueNotifier<String>("Partner");
 
   void setupPartnerInfoSubscription() {
     print(partnersID);
