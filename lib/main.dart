@@ -6,8 +6,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:relationship_bars/pages/sign_in_page.dart';
 import 'package:relationship_bars/firebase_options.dart';
+import 'package:relationship_bars/pages/sign_in_page.dart';
 import 'package:relationship_bars/providers/application_state.dart';
 import 'package:relationship_bars/providers/partners_info_state.dart';
 import 'package:relationship_bars/providers/user_info_state.dart';
@@ -65,7 +65,8 @@ class RelationshipBarsApp extends StatelessWidget {
             showPerformanceOverlay: false,
             title: 'Relationship Bars',
             theme: ThemeData.light().copyWith(
-              scaffoldBackgroundColor: mobileBackgroundColor,
+                scaffoldBackgroundColor: mobileBackgroundColor,
+                // primaryTextTheme: const TextTheme(headline6: TextStyle(color: Colors.white)),
             ),
             home: StreamBuilder(
                 stream: FirebaseAuth.instance.authStateChanges(),

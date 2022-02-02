@@ -1,8 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:relationship_bars/models/relationship_bar_model.dart';
 import 'package:relationship_bars/providers/your_bars_state.dart';
+import 'package:relationship_bars/resources/data_formatting.dart';
 import 'package:relationship_bars/widgets/bar_sliders.dart';
 
 Widget buildBars(BuildContext context, AsyncSnapshot<QuerySnapshot<RelationshipBarDocument>> snapshot,
@@ -39,9 +39,13 @@ class BarDocBuilder extends StatelessWidget {
       List<RelationshipBar>? bars = barDoc!.barList ?? [];
       return Column(children: [
         (barDoc?.timestamp != null)
-            ? Center(
-                child: Text("Last updated: ${formatTimestamp(barDoc!.timestamp!)}"),
-              )
+            ? Container(
+          padding: const EdgeInsets.symmetric(vertical: 10),
+          color: Theme.of(context).primaryColor,
+              child: Center(
+                  child: Text("Last updated: ${formatTimestamp(barDoc!.timestamp!)}", style:Theme.of(context).primaryTextTheme.headline6?.copyWith(fontSize: 15), textAlign: TextAlign.center),
+                ),
+            )
             : const SizedBox.shrink(),
         Expanded(
           child: ListView.separated(
@@ -54,10 +58,6 @@ class BarDocBuilder extends StatelessWidget {
       ]);
     }
     return const Center(child: Text("No Relationship Bars"));
-  }
-
-  String formatTimestamp(Timestamp timestamp) {
-    return DateFormat.yMMMd().add_jm().format(timestamp.toDate().toLocal());
   }
 }
 
