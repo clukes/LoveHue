@@ -1,10 +1,7 @@
 TODO:
 Bugs:
-/ When accepting link request, error: shouldn't see this message appears until leave page.
 
 For 1.0 Release
-/ Test timestamps and display them nicer.
-
 - Test that bars are displayed in order from order field on your and partner screens.
 
 - Make link codes copyable.
@@ -35,6 +32,8 @@ For 1.0 Release
 - Maybe add alert dialog when skip log in. Explain what not logging in will mean, e.g. anonymous and data won't persist on reinstall or across devices.
 - Cancel/back buttons on sign in process.
 
+- Improve magic link email
+
 - Fix buttons being hidden by keyboard on sign in screens.
 
 - Add loading overlays for all async actions that require it, e.g. don't want user to click twice when saving bars or signing in.
@@ -58,11 +57,21 @@ For 1.0 Release
 - Check licenses of everything used, including UI and packages.
 - Write terms and conditions and license.
 
+- Write database security rules
+- Optimise database access
+- Work out business model:
+    - Calculate database costs per user
+    - Decide on monetization: Figure out how to cover database costs with that monetisation method.
+
+- Setup production database with analytics
+
 - Create App Name and Logo
 - Perform actions needed for release: Specify app ID and add signing config.
 
 - Write tests.
 
+- Release on github
+- Release on play store
 
 
 
@@ -101,8 +110,13 @@ Notification reminders to set needs.
 
 
 DONE:
+Bugs
+- When accepting link request, error: shouldn't see this message appears until leave page.
+
+
 For 1.0 Release
 - Display timestamps on yours and partners pages.
 - Display bars in order from order field on your and partner screens.
 - Accept/Rejection for incoming link requests. Only show requests if not linked to a partner.
 - Refresh partner's app when user links to them.
+- Test timestamps and display them nicer.
