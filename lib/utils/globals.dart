@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:relationship_bars/pages/partners_bars_page.dart';
-import 'package:relationship_bars/pages/profile_page.dart';
+import 'package:relationship_bars/pages/settings_page.dart';
 import 'package:relationship_bars/pages/your_bars_page.dart';
 
 const webScreenSize = 900;
@@ -8,7 +8,7 @@ const webScreenSize = 900;
 List<Widget> navigationBarItems = [
   const YourBars(),
   const PartnersBars(),
-  const ProfilePage(),
+  const SettingsPage(),
 ];
 
 List<IconData> navigationBarIcons = [
