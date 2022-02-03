@@ -3,7 +3,9 @@ import 'package:provider/provider.dart';
 import 'package:relationship_bars/models/link_code_firestore_collection_model.dart';
 import 'package:relationship_bars/providers/partners_info_state.dart';
 import 'package:relationship_bars/providers/user_info_state.dart';
+import 'package:relationship_bars/resources/copy_to_clipboard.dart';
 import 'package:relationship_bars/resources/unique_link_code_generator.dart';
+
 import 'header.dart';
 
 class LinkPartnerScreen extends StatefulWidget {
@@ -17,6 +19,8 @@ class LinkPartnerScreen extends StatefulWidget {
 class _LinkPartnerScreenState extends State<LinkPartnerScreen> {
   @override
   Widget build(BuildContext context) {
+    String linkCodeText = '${UserInfoState.instance.linkCode}';
+    TextStyle linkCodeTextStyle = DefaultTextStyle.of(context).style.copyWith(fontSize: 20);
     return Container(
         padding: const EdgeInsets.symmetric(horizontal: 32),
         child: SizedBox(
@@ -26,22 +30,37 @@ class _LinkPartnerScreenState extends State<LinkPartnerScreen> {
                 return getLinkStatusWidget(userInfoState, widget.partnersInfoState);
               }),
               const SizedBox(height: 64),
-              Padding(
-                padding: const EdgeInsets.symmetric(vertical: 64),
-                child: RichText(
-                  text: TextSpan(
-                    style: DefaultTextStyle.of(context).style.copyWith(fontSize: 20),
-                    children: <TextSpan>[
-                      const TextSpan(text: 'Your link code is:\n'),
-                      TextSpan(
-                          text: '${UserInfoState.instance.linkCode}',
-                          style: const TextStyle(fontWeight: FontWeight.bold)),
-                    ],
-                  ),
+              Text(
+                  'Your link code is:',
+                  style: linkCodeTextStyle,
                   textAlign: TextAlign.center,
                 ),
+              Row(
+                children: [
+                  const Spacer(flex: 3,),
+                  Expanded(
+                    child: SelectableText(
+                      linkCodeText,
+                      style: linkCodeTextStyle.copyWith(fontWeight: FontWeight.bold),
+                      textAlign: TextAlign.center,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 3,
+                    child: Align(
+                      alignment: Alignment.centerLeft,
+                      child: IconButton(
+                      icon: const Icon(Icons.copy),
+                      onPressed: () => copyToClipboard(linkCodeText, context),
+                    ),
+                    ),
+                  ),
+                ],
               ),
-            ])));
+            ]
+            )
+        )
+    );
   }
 
   getLinkStatusWidget(UserInfoState userInfoState, PartnersInfoState partnersInfoState) {
