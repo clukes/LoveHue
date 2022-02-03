@@ -37,7 +37,7 @@ class _LinkPartnerScreenState extends State<LinkPartnerScreen> {
                 ),
               Row(
                 children: [
-                  const Spacer(flex: 3,),
+                  const Spacer(),
                   Expanded(
                     child: SelectableText(
                       linkCodeText,
@@ -46,7 +46,6 @@ class _LinkPartnerScreenState extends State<LinkPartnerScreen> {
                     ),
                   ),
                   Expanded(
-                    flex: 3,
                     child: Align(
                       alignment: Alignment.centerLeft,
                       child: IconButton(
@@ -117,7 +116,7 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
           Container(
             width: double.infinity,
             padding: const EdgeInsets.only(top: 12),
-            child: OutlinedButton(
+            child: OutlinedButton.icon(
               onPressed: () async {
                 if (_formKey.currentState!.validate()) {
                   ScaffoldMessenger.of(context).showSnackBar(
@@ -135,7 +134,8 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
                 }
                 ScaffoldMessenger.of(context).clearSnackBars();
               },
-              child: const Text('Link'),
+              icon: const Icon(Icons.person_add_alt_1),
+              label: const Text('Link'),
             ),
           ),
         ],
