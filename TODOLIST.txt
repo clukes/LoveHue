@@ -2,12 +2,6 @@ TODO:
 Bugs:
 
 For 1.0 Release:
-- Ensure partner's name shows up on partner's page and settings page.
-- When changing display name on profile screen, update name in userinfo database.
-
-- Settings screen:
-        - Implement delete account button properly, delete all database data for user.
-
 - Separate Profile page and settings screen. Have settings button in top right instead of sign out.
 - On settings screen, have delete account button, about this app, and theme switcher (dark/light mode).
 
@@ -57,6 +51,7 @@ For 1.0 Release:
 
 - Write database security rules
 - Optimise database access
+- Maybe use callable cloud functions to edit data in database.
 - Work out business model:
     - Calculate database costs per user
     - Decide on monetisation: Figure out how to cover database costs with that monetisation method.
@@ -125,4 +120,7 @@ For 1.0 Release
 - Settings screen:
         - Remove profile picture icon.
         - Implement an unlink partner button.
+        - Implement delete account button properly, delete all database data for user.
 - Test that bars are displayed in order from order field on your and partner screens.
+- Ensure partner's name shows up on partner's page and settings page.
+- When changing display name on profile screen, update name in userinfo database.
