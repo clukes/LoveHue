@@ -19,7 +19,6 @@ class LinkPartnerScreen extends StatefulWidget {
 class _LinkPartnerScreenState extends State<LinkPartnerScreen> {
   @override
   Widget build(BuildContext context) {
-    String linkCodeText = '${UserInfoState.instance.linkCode}';
     TextStyle linkCodeTextStyle = DefaultTextStyle.of(context).style.copyWith(fontSize: 20);
     return Container(
         padding: const EdgeInsets.symmetric(horizontal: 32),
@@ -31,35 +30,35 @@ class _LinkPartnerScreenState extends State<LinkPartnerScreen> {
               }),
               const SizedBox(height: 64),
               Text(
-                  'Your link code is:',
-                  style: linkCodeTextStyle,
-                  textAlign: TextAlign.center,
-                ),
-              Row(
-                children: [
-                  const Spacer(),
-                  Expanded(
-                    child: SelectableText(
-                      linkCodeText,
-                      style: linkCodeTextStyle.copyWith(fontWeight: FontWeight.bold),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  Expanded(
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: IconButton(
-                      icon: const Icon(Icons.copy),
-                      onPressed: () => copyToClipboard(linkCodeText, context),
-                    ),
-                    ),
-                  ),
-                ],
+                'Your link code is:',
+                style: linkCodeTextStyle,
+                textAlign: TextAlign.center,
               ),
-            ]
-            )
-        )
-    );
+              Consumer<UserInfoState>(builder: (BuildContext context, UserInfoState userInfoState, _) {
+                String linkCodeText = userInfoState.linkCode ?? 'Loading...';
+                return Row(
+                  children: [
+                    const Spacer(),
+                    Expanded(
+                      child: SelectableText(
+                        linkCodeText,
+                        style: linkCodeTextStyle.copyWith(fontWeight: FontWeight.bold),
+                        textAlign: TextAlign.center,
+                      ),
+                    ),
+                    Expanded(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: IconButton(
+                          icon: const Icon(Icons.copy),
+                          onPressed: () => copyToClipboard(linkCodeText, context),
+                        ),
+                      ),
+                    ),
+                  ],
+                );
+              }),
+            ])));
   }
 
   getLinkStatusWidget(UserInfoState userInfoState, PartnersInfoState partnersInfoState) {

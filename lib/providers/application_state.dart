@@ -33,9 +33,15 @@ class ApplicationState with ChangeNotifier {
       UserInfoState userInfoState = UserInfoState.instance;
       PartnersInfoState partnerInfoState = PartnersInfoState.instance;
       print("CHANGE");
-      if (user != null && _loginState != ApplicationLoginState.loggedIn) {
+      if (user != null && _loginState == ApplicationLoginState.loggedOut) {
         await userLoggedInSetup(user, userInfoState, partnerInfoState);
         notifyListeners();
+      } else if(user != null && _loginState == ApplicationLoginState.loggedIn) {
+        //When something changes while user is logged in.
+        if(userInfoState.userExist && user.displayName != userInfoState.userInfo?.displayName) {
+          //When user display name changes, update their userInfo display name.
+          await UserInformation.firestoreUpdateColumns(userInfoState.userID!, {UserInformation.columnDisplayName: user.displayName});
+        }
       } else if (user == null && _loginState == ApplicationLoginState.loggedIn) {
         resetAppState(userInfoState, partnerInfoState);
         notifyListeners();

@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
 
+import '../utils/colors.dart';
+
+const double appBarHeight = 40;
+const appBarColor = blueColor;
+
 class BarsPageAppBar extends StatefulWidget {
   final Widget barTitleWidget;
   const BarsPageAppBar({Key? key, required this.barTitleWidget}) : super(key: key);
@@ -16,7 +21,8 @@ class _BarsPageAppBarState extends State<BarsPageAppBar> {
       centerTitle: true,
       floating: false,
       pinned: false,
-      toolbarHeight: kToolbarHeight - 10,
+      toolbarHeight: appBarHeight,
+      backgroundColor: appBarColor,
     );
   }
 }
