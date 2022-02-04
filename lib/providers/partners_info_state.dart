@@ -16,12 +16,6 @@ class PartnersInfoState with ChangeNotifier {
   StreamSubscription<DocumentSnapshot>? partnersInfoSubscription;
   UserInformation? _partnersInfo;
 
-  set partnersInfo(UserInformation? info) {
-    _partnersInfo = info;
-    partnersName.value = info?.displayName ?? "Partner";
-    notify();
-  }
-
   void notify() {
     print("NOTIFY PARTNER");
     notifyListeners();
@@ -31,7 +25,8 @@ class PartnersInfoState with ChangeNotifier {
   String? get partnersID => _partnersInfo?.userID;
   String? get linkCode => _partnersInfo?.linkCode?.id;
   bool get partnerExist => (_partnersInfo?.userID != null);
-  bool get partnerLinked => (partnerExist && !(_partnersInfo?.linkPending ?? true) && !UserInfoState.instance.userPending);
+  bool get partnerLinked =>
+      (partnerExist && !(_partnersInfo?.linkPending ?? true) && !UserInfoState.instance.userPending);
   bool get partnerPending => (partnerExist && (_partnersInfo?.linkPending ?? false));
   ValueNotifier<String> partnersName = ValueNotifier<String>("Partner");
 
@@ -44,12 +39,30 @@ class PartnersInfoState with ChangeNotifier {
         print(partnersUserInfo?.partnerID);
         print(partnersInfo);
         if (UserInfoState.instance.userID != null && partnersUserInfo?.partnerID == UserInfoState.instance.userID) {
-          partnersInfo = partnersUserInfo;
+          _partnersInfo = partnersUserInfo;
         } else {
           print("Error: Not linked to partner");
-          partnersInfo = null;
+          _partnersInfo = null;
         }
+        notifyListeners();
       });
     }
+  }
+
+  void addPartner(UserInformation? newPartnerInfo) {
+    if(newPartnerInfo != null) {
+      PartnersInfoState.instance._partnersInfo = newPartnerInfo;
+      partnersName.value = newPartnerInfo.displayName ?? "Partner";
+      PartnersInfoState.instance.setupPartnerInfoSubscription();
+      notifyListeners();
+    }
+  }
+
+  void removePartner() {
+    PartnersInfoState.instance._partnersInfo = null;
+    PartnersInfoState.instance.partnersInfoSubscription?.cancel();
+    UserInfoState.instance.userInfo?.linkPending = false;
+    UserInfoState.instance.userInfo?.partner = null;
+    notifyListeners();
   }
 }

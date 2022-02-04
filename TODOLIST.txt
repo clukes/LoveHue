@@ -1,22 +1,15 @@
 TODO:
 Bugs:
 
-For 1.0 Release
-- Test that bars are displayed in order from order field on your and partner screens.
-
-- Make link codes copyable.
-
+For 1.0 Release:
 - Ensure partner's name shows up on partner's page and settings page.
-
-- Accept/Rejection for incoming link requests. Only show requests if not linked to a partner.
-- Refresh partner's app when user links to them.
-
-- Persist scroll state/position across screens.
+- When changing display name on profile screen, update name in userinfo database.
 
 - Settings screen:
-        - Remove profile picture icon.
-        - Implement an unlink partner button.
         - Implement delete account button properly, delete all database data for user.
+
+- Separate Profile page and settings screen. Have settings button in top right instead of sign out.
+- On settings screen, have delete account button, about this app, and theme switcher (dark/light mode).
 
 - When pulling partners bars from online database, check if still linked to partner. If not, delete partner id from local storage.
 - Put your bar numbers on partners bars screen (next to their numbers somewhere) for easy comparison.
@@ -30,6 +23,7 @@ For 1.0 Release
 
 - Explain what magic link is on sign in screen.
 - Maybe add alert dialog when skip log in. Explain what not logging in will mean, e.g. anonymous and data won't persist on reinstall or across devices.
+- Add icon to skip log in.
 - Cancel/back buttons on sign in process.
 
 - Improve magic link email
@@ -42,6 +36,9 @@ For 1.0 Release
 
 - Show part of bottom slider on bar screens to make it clear that you can scroll.
 - Improve UI theming/design.
+- UI
+    - Less space below Your bars/partner bars titles
+
 - Fix thin line between top app bar and timestamp display.
 - See if can call the bars needs, or something similar.
 
@@ -50,6 +47,7 @@ For 1.0 Release
 - Improve code comments/documentation.
 
 - Check performance, see if can reduce storage.
+- Speed up performance where can. Reduce jank, use computes https://docs.flutter.dev/cookbook/networking/background-parsing.
 
 - Test on many different devices and screen sizes.
 
@@ -61,7 +59,7 @@ For 1.0 Release
 - Optimise database access
 - Work out business model:
     - Calculate database costs per user
-    - Decide on monetization: Figure out how to cover database costs with that monetisation method.
+    - Decide on monetisation: Figure out how to cover database costs with that monetisation method.
 
 - Setup production database with analytics
 
@@ -120,3 +118,11 @@ For 1.0 Release
 - Accept/Rejection for incoming link requests. Only show requests if not linked to a partner.
 - Refresh partner's app when user links to them.
 - Test timestamps and display them nicer.
+- Make link codes copyable.
+- Accept/Rejection for incoming link requests. Only show requests if not linked to a partner.
+- Refresh partner's app when user links to them.
+- Persist scroll state/position across screens.
+- Settings screen:
+        - Remove profile picture icon.
+        - Implement an unlink partner button.
+- Test that bars are displayed in order from order field on your and partner screens.

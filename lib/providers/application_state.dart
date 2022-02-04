@@ -1,4 +1,5 @@
 import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -67,22 +68,18 @@ class ApplicationState with ChangeNotifier {
       await batch.commit().catchError((error) => print("Batch Error: $error"));
     }
     if (userInfo.partnerID != null) {
-      partnerInfoState.partnersInfo = await UserInformation.firestoreGet(userInfo.partnerID!);
+      partnerInfoState.addPartner(await UserInformation.firestoreGet(userInfo.partnerID!));
     }
-    partnerInfoState.setupPartnerInfoSubscription();
     YourBarsState.instance.latestRelationshipBarDoc ??=
         await RelationshipBarDocument.firestoreGetLatest(userInfo.userID);
-    userInfoState.userInfo = userInfo;
-    userInfoState.setupYourInfoSubscription();
+    userInfoState.addUser(userInfo);
     _loginState = ApplicationLoginState.loggedIn;
   }
 
   void resetAppState(UserInfoState userInfoState, PartnersInfoState partnerInfoState) {
     _loginState = ApplicationLoginState.loading;
-    userInfoState.userInfo = null;
-    partnerInfoState.partnersInfo = null;
-    partnerInfoState.partnersInfoSubscription?.cancel();
-    userInfoState.yourInfoSubscription?.cancel();
+    partnerInfoState.removePartner();
+    userInfoState.removeUser();
     _loginState = ApplicationLoginState.loggedOut;
   }
 }

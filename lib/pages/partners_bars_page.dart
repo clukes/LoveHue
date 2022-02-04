@@ -29,7 +29,7 @@ class _PartnersBarsState extends State<PartnersBars> with AutomaticKeepAliveClie
             BarsPageAppBar(barTitleWidget: listenableTitle),
           ];
         },
-        body: Consumer<PartnersInfoState>(builder: (context, partnersInfoState, _) {
+        body: Consumer<PartnersInfoState>(builder: (BuildContext context, PartnersInfoState partnersInfoState, _) {
           if (partnersInfoState.partnerLinked) {
             print("Partner: " + (partnersInfoState.partnersInfo?.partnerID ?? ''));
             return barStreamBuilder(partnersInfoState.partnersID!, nonInteractableBarBuilder);
