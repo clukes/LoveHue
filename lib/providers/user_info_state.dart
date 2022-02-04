@@ -31,13 +31,25 @@ class UserInfoState with ChangeNotifier {
         userInfo = yourUserInfo;
         String? partnerID = yourUserInfo?.partnerID;
         if(partnerID != null && (!PartnersInfoState.instance.partnerExist || PartnersInfoState.instance.partnersID != partnerID)) {
-          PartnersInfoState.instance.partnersInfo = await UserInformation.firestoreGet(partnerID);
+          PartnersInfoState.instance.addPartner(await UserInformation.firestoreGet(partnerID));
         }
         if(partnerID == null && PartnersInfoState.instance.partnerExist) {
-          PartnersInfoState.instance.partnersInfo = null;
+          PartnersInfoState.instance.removePartner();
         }
         notifyListeners();
       });
     }
+  }
+
+  void removeUser() {
+    userInfo = null;
+    yourInfoSubscription?.cancel();
+    notifyListeners();
+  }
+
+  void addUser(UserInformation newUserInfo) {
+    userInfo = newUserInfo;
+    setupYourInfoSubscription();
+    notifyListeners();
   }
 }
