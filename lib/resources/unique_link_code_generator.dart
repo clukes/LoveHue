@@ -6,7 +6,6 @@ final _random = Random();
 
 String generateLinkCode() {
   String code = '';
-
   for (int i = 0; i < linkCodeLength; i++) {
     code += codeAlphabet[_random.nextInt(codeAlphabet.length)];
   }

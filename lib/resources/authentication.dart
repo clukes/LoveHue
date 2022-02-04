@@ -13,7 +13,7 @@ var acs = ActionCodeSettings(
     // minimumVersion
     androidMinimumVersion: '12');
 
-final providerConfigs = [
+final providerConfigs = <ProviderConfiguration>[
   EmailLinkProviderConfiguration(actionCodeSettings: acs),
 ];
 
