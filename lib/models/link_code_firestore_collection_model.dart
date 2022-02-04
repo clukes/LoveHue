@@ -35,7 +35,7 @@ class LinkCode {
     };
   }
 
-  static Future<String?> connectLinkCode(String linkCode) async {
+  static Future<void> connectLinkCode(String linkCode) async {
     if (PartnersInfoState.instance.partnerExist) {
       PartnersInfoState.instance.partnerPending
           ? throw PrintableError("Partner link already pending.")
@@ -66,8 +66,7 @@ class LinkCode {
       partnerInfo.partner = currentUser;
       return partnerInfo;
     }).then((partnerInfo) {
-      PartnersInfoState.instance.partnersInfo = partnerInfo;
-      PartnersInfoState.instance.setupPartnerInfoSubscription();
+      PartnersInfoState.instance.addPartner(partnerInfo);
     });
   }
 
@@ -91,8 +90,7 @@ class LinkCode {
       print(PartnersInfoState.instance.partnersID);
       if (userInfo.partnerID != null && (!PartnersInfoState.instance.partnerExist || userInfo.partnerID != PartnersInfoState.instance.partnersID)) {
         print("UPDATE PARTNER INFO");
-        PartnersInfoState.instance.partnersInfo = await UserInformation.firestoreGet(userInfo.partnerID!);
-        PartnersInfoState.instance.setupPartnerInfoSubscription();
+        PartnersInfoState.instance.addPartner(await UserInformation.firestoreGet(userInfo.partnerID!));
       }
       else {
         PartnersInfoState.instance.notify();
@@ -114,10 +112,11 @@ class LinkCode {
       transaction
           .update(userInfo.partner!, {UserInformation.columnPartner: null, UserInformation.columnLinkPending: false});
     }).then((_) {
-      PartnersInfoState.instance.partnersInfoSubscription?.cancel();
-      PartnersInfoState.instance.partnersInfo = null;
-      UserInfoState.instance.userInfo?.linkPending = false;
-      UserInfoState.instance.userInfo?.partner = null;
+      PartnersInfoState.instance.removePartner();
     });
+  }
+
+  static Future<void> unlinkLinkCode() async {
+    rejectLinkCode();
   }
 }
