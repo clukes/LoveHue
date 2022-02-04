@@ -5,6 +5,8 @@ import 'package:relationship_bars/providers/your_bars_state.dart';
 import 'package:relationship_bars/resources/data_formatting.dart';
 import 'package:relationship_bars/widgets/bar_sliders.dart';
 
+import 'app_bars.dart';
+
 Widget buildBars(BuildContext context, AsyncSnapshot<QuerySnapshot<RelationshipBarDocument>> snapshot,
     Widget Function(BuildContext context, RelationshipBar bar) itemBuilderFunction) {
   print("Build");
@@ -40,8 +42,9 @@ class BarDocBuilder extends StatelessWidget {
       return Column(children: [
         (barDoc?.timestamp != null)
             ? Container(
-          padding: const EdgeInsets.symmetric(vertical: 10),
-          color: Theme.of(context).primaryColor,
+          height: appBarHeight,
+          // padding: const EdgeInsets.symmetric(vertical: 8),
+          color: appBarColor,
               child: Center(
                   child: Text("Last updated: ${formatTimestamp(barDoc!.timestamp!)}", style:Theme.of(context).primaryTextTheme.headline6?.copyWith(fontSize: 15), textAlign: TextAlign.center),
                 ),
