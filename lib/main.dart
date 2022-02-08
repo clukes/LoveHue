@@ -15,7 +15,7 @@ import 'package:relationship_bars/providers/your_bars_state.dart';
 import 'package:relationship_bars/responsive/mobile_screen_layout.dart';
 import 'package:relationship_bars/responsive/responsive_screen_layout.dart';
 import 'package:relationship_bars/responsive/web_screen_layout.dart';
-import 'package:relationship_bars/utils/colors.dart';
+import 'package:relationship_bars/utils/theme_data.dart';
 
 /*
 TODO: Delete database data when delete account clicked.
@@ -64,10 +64,7 @@ class RelationshipBarsApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             showPerformanceOverlay: false,
             title: 'Relationship Bars',
-            theme: ThemeData.light().copyWith(
-                scaffoldBackgroundColor: mobileBackgroundColor,
-                // primaryTextTheme: const TextTheme(headline6: TextStyle(color: Colors.white)),
-            ),
+            theme: themeData,
             home: StreamBuilder(
                 stream: FirebaseAuth.instance.authStateChanges(),
                 builder: (context, snapshot) {

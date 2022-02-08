@@ -1,19 +1,24 @@
 TODO:
 Bugs:
+/ Partner name doesn't update instantly on partner's bars page.
+/ Username editing bug seems to be flutter problem, hopefully flutter fixes soon.
+- Partners bars not updating, database security rule cause it.
 
 For 1.0 Release:
-- Separate Profile page and settings screen. Have settings button in top right instead of sign out.
-- On settings screen, have delete account button, about this app, and theme switcher (dark/light mode).
+- Change profile page name to account. Change icon too.
+/ Separate Profile page and settings screen. Have settings button in top right instead of sign out.
+/ On settings screen, have delete account button, about this app, and theme switcher (dark/light mode).
 
-- When pulling partners bars from online database, check if still linked to partner. If not, delete partner id from local storage.
-- Put your bar numbers on partners bars screen (next to their numbers somewhere) for easy comparison.
+? When pulling partners bars from online database, check if still linked to partner. If not, delete partner id from local storage.
+/ Put your bar numbers on partners bars screen (next to their numbers somewhere) for easy comparison.
+  [NOTE: Possibly not needed anymore now that scroll position persists when switching screens.
+   Maybe put previous bar values on bars screen? At least until history is added.]
 
-- Add email sign in button to convert account when anonymously signed in.
-- Have clearer sign out button.
+- Add email sign in button to convert account when anonymously signed in. - Hoping flutterfire ui does this soon. If not will have to implement myself.
+/ Have clearer sign out button.
 
-- Store anon account details/token in somewhere to allow signing back in to same account on sign out.
-
-- Pull down to refresh and refresh button on partners page.
+- Put message stating that if you sign out with anonymous account you cannot sign back in to that account.
+- Delete account on anonymous sign out?
 
 - Explain what magic link is on sign in screen.
 - Maybe add alert dialog when skip log in. Explain what not logging in will mean, e.g. anonymous and data won't persist on reinstall or across devices.
@@ -32,6 +37,8 @@ For 1.0 Release:
 - Improve UI theming/design.
 - UI
     - Less space below Your bars/partner bars titles
+    - Pick better colours for sliders and everything else.
+    - Add yellow colour to slider.
 
 - Fix thin line between top app bar and timestamp display.
 - See if can call the bars needs, or something similar.
@@ -48,10 +55,14 @@ For 1.0 Release:
 - Change default bars since 5 love languages is copyrighted.
 - Check licenses of everything used, including UI and packages.
 - Write terms and conditions and license.
+- Write about app dialog info.
 
 - Write database security rules
 - Optimise database access
 - Maybe use callable cloud functions to edit data in database.
+- Check best way to write to database. Is current way secure enough? Is there better option for production?
+- Look at what need to do for moving to production.
+
 - Work out business model:
     - Calculate database costs per user
     - Decide on monetisation: Figure out how to cover database costs with that monetisation method.
@@ -63,7 +74,7 @@ For 1.0 Release:
 
 - Write tests.
 
-- Release on github
+- Release on github, setup different branches with release and testing.
 - Release on play store
 
 

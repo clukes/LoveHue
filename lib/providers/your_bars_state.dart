@@ -9,28 +9,25 @@ class YourBarsState with ChangeNotifier {
   YourBarsState._internal();
   factory YourBarsState() => _instance;
 
-  RelationshipBarDocument? _latestRelationshipBarDoc;
-  RelationshipBarDocument? get latestRelationshipBarDoc => _latestRelationshipBarDoc;
+  RelationshipBarDocument? latestRelationshipBarDoc;
   List<RelationshipBar>? get barList => latestRelationshipBarDoc?.barList;
-
-  set latestRelationshipBarDoc(RelationshipBarDocument? latestRelationshipBarDoc) {
-    _latestRelationshipBarDoc = latestRelationshipBarDoc;
-    print("NOTIFY BARS");
-    notifyListeners();
-  }
 
   bool barsChanged = false;
   bool barsReset = false;
 
   void barChange() {
-    barsChanged = true;
-    print("NOTIFY BARS");
-    notifyListeners();
+    if(!barsChanged) {
+      barsChanged = true;
+      print("NOTIFY BARS");
+      notifyListeners();
+    }
   }
 
   void resetBarChange() {
-    barsChanged = false;
-    print("NOTIFY BARS");
-    notifyListeners();
+    if(barsChanged) {
+      barsChanged = false;
+      print("NOTIFY BARS");
+      notifyListeners();
+    }
   }
 }

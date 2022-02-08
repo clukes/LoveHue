@@ -1,5 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
+
+import '../responsive/mobile_screen_layout.dart';
+import '../responsive/responsive_screen_layout.dart';
+import '../responsive/web_screen_layout.dart';
 
 var acs = ActionCodeSettings(
     // URL you want to redirect back to. The domain (www.example.com) for this
@@ -16,6 +21,65 @@ var acs = ActionCodeSettings(
 final providerConfigs = <ProviderConfiguration>[
   EmailLinkProviderConfiguration(actionCodeSettings: acs),
 ];
+
+Future<void> signInAnonymously(BuildContext context) async {
+  /* TODO: HAVE LOADING OVERLAY */
+  print("ANON");
+  await FirebaseAuth.instance.signInAnonymously();
+  if (FirebaseAuth.instance.currentUser != null) {
+    afterSignIn(context);
+  } else {
+    /* TODO: Display Error */
+    print("Sign In Error.");
+  }
+  print("ANON DONE");
+}
+
+void afterSignIn(BuildContext context) {
+  Navigator.of(context).pushAndRemoveUntil(
+      MaterialPageRoute(
+        builder: (context) => const ResponsiveLayout(
+          mobileScreenLayout: MobileScreenLayout(),
+          webScreenLayout: WebScreenLayout(),
+        ),
+      ),
+          (route) => false);
+}
+
+// Future<void> _linkCredentials(
+//     BuildContext context,
+//     CredentialReceived state,
+//     ) async {
+//   final _auth = FirebaseAuth.instance;
+//   print("Credentials link");
+//   await _auth.currentUser!.linkWithCredential(state.credential).catchError((error, stackTrace) { print(error); });
+// }
+//
+// Future<void> convertAnonSignInToEmail (BuildContext context) async {
+//   Navigator.of(context).push(
+//       MaterialPageRoute(
+//         builder: (_) {
+//           return FlutterFireUIActions(
+//             actions: [
+//               AuthStateChangeAction<CredentialReceived>(_linkCredentials),
+//               AuthStateChangeAction<CredentialLinked>((context, _) async {
+//                 print("Signed in");
+//                 afterSignIn(context);
+//               }),
+//             ],
+//             child: EmailLinkSignInScreen(
+//               config: providerConfigs.firstWhere((e) => e is EmailLinkProviderConfiguration) as EmailLinkProviderConfiguration,
+//             ),
+//           );
+//         },
+//       )
+//   );
+//   //     FirebaseAuth auth = FirebaseAuth.instance;
+//   // await showDifferentMethodSignInDialog(context: context,
+//   //     availableProviders: ["email_link", "phone"],
+//   //     providerConfigs: providerConfigs);
+//   // await auth.currentUser!.reload();
+// }
 
 // class AuthGate extends StatelessWidget {
 //   const AuthGate({Key? key}) : super(key: key);

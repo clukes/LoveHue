@@ -1,5 +1,4 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../models/link_code_firestore_collection_model.dart';
@@ -68,12 +67,11 @@ Future<void> showUnlinkAlertDialog(BuildContext context, String partnerName, Str
                     "Partner Code: $partnerLinkCode",
                 textScaleFactor: partnerInfoScaleFactor,
               ),
-              if (_errorMsg != null) ...[
+              if (_errorMsg != null)
                 Text(
                   "\n${_errorMsg!}",
                   textScaleFactor: errorScaleFactor,
                 )
-              ],
             ],
           ),
         );
@@ -118,12 +116,11 @@ Future<void> showDeleteAlertDialog(BuildContext context) async {
               children: <Widget>[
                 const Text("Are you sure you would like to delete your account?\n"),
                 const Text("(All your data will be permanently deleted)", textScaleFactor: noteScaleFactor),
-                if (_errorMsg != null) ...[
+                if (_errorMsg != null)
                   Text(
                     "\n${_errorMsg!}",
                     textScaleFactor: errorScaleFactor,
                   )
-                ],
               ],
             ),
           );
@@ -149,7 +146,7 @@ Future<void> showDeleteAlertDialog(BuildContext context) async {
 }
 
 Future<void> deleteAccount(BuildContext context) async {
-  UserInformation.deleteUserData().then((_) {
+  UserInformation.deleteUserData(context).then((_) {
     FirebaseAuth.instance.currentUser?.delete();
   });
 }

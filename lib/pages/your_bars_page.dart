@@ -28,15 +28,18 @@ class _YourBarsState extends State<YourBars> with AutomaticKeepAliveClientMixin<
             const BarsPageAppBar(barTitleWidget: Text("Your Bars")),
           ];
         },
-        body: Consumer<UserInfoState>(
-          builder: (context, appState, _) =>
-              (ApplicationState.instance.loginState == ApplicationLoginState.loggedIn && appState.userExist)
-                  ? BarDocBuilder(
-                      barDoc: YourBarsState.instance.latestRelationshipBarDoc,
-                      itemBuilderFunction: interactableBarBuilder)
-                  : const Center(
-                      child: CircularProgressIndicator(),
-                    ),
+        body: Container(
+          // decoration: const BoxDecoration(gradient: backgroundGradient),
+          child: Consumer<UserInfoState>(
+            builder: (context, appState, _) =>
+                (ApplicationState.instance.loginState == ApplicationLoginState.loggedIn && appState.userExist)
+                    ? BarDocBuilder(
+                        barDoc: YourBarsState.instance.latestRelationshipBarDoc,
+                        itemBuilderFunction: interactableBarBuilder)
+                    : const Center(
+                        child: CircularProgressIndicator(),
+                      ),
+          ),
         ),
       ),
       floatingActionButton: Consumer<YourBarsState>(
