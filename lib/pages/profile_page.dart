@@ -1,17 +1,14 @@
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
-import 'package:flutterfire_ui/i10n.dart';
 import 'package:provider/provider.dart';
+import 'package:relationship_bars/pages/settings_page.dart';
 import 'package:relationship_bars/pages/sign_in_page.dart';
 import 'package:relationship_bars/providers/partners_info_state.dart';
 import 'package:relationship_bars/providers/user_info_state.dart';
 import 'package:relationship_bars/widgets/profile_page_widgets.dart';
 
-import '../resources/authentication.dart';
-import '../utils/colors.dart';
-
+import '../widgets/default_scaffold.dart';
 //Sourced from flutterfire_ui ProfileScreen(). Edited code.
 class ProfilePage extends StatefulWidget {
   const ProfilePage({
@@ -32,19 +29,8 @@ class _ProfilePageState extends State<ProfilePage> {
     ));
   }
 
-  Future<bool> _reauthenticate(BuildContext context) {
-    return showReauthenticateDialog(
-      context: context,
-      providerConfigs: providerConfigs,
-      auth: _auth,
-      onSignedIn: () => Navigator.of(context).pop(true),
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
-    final l = FlutterFireUILocalizations.labelsOf(context);
-
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
@@ -70,43 +56,17 @@ class _ProfilePageState extends State<ProfilePage> {
           return const SizedBox.shrink();
         }),
         const SizedBox(height: 64),
-        //TODO: About dialog
-        OutlinedButton.icon(
-            onPressed: () => showAboutDialog(context: context),
-            icon: const Icon(Icons.info),
-            label: const Text('About this app')),
-        const SizedBox(height: 24),
         ElevatedButton.icon(
             onPressed: () async => await _signOut(context),
             icon: const Icon(Icons.logout),
             label: const Text('Sign Out')),
-        /* TODO: Add sign in button when anonymously signed in */
-        /* TODO: Delete account functionality. Have confirmation popup. */
         const SizedBox(height: 24),
-        ElevatedButton.icon(
-          style: ElevatedButton.styleFrom(primary: redColor),
-            onPressed: () => showDeleteAlertDialog(context),
-            icon: const Icon(Icons.delete),
-            label: const Text('Delete Account')),
+        // if (FirebaseAuth.instance.currentUser?.isAnonymous == true)
+        // OutlinedButton.icon(
+        //     onPressed: null,//() async => await convertAnonSignInToEmail(context),    //TODO: Add sign in button when anonymously signed in, hopefully flutterfire ui will be updated soon to permit that easily
+        //     icon: const Icon(Icons.email),
+        //     label: const Text('Sign In With Email')),
       ],
-    );
-
-    final body = Padding(
-      padding: const EdgeInsets.all(16),
-      child: Center(
-        child: LayoutBuilder(
-          builder: (context, constraints) {
-            if (constraints.maxWidth > 500) {
-              return ConstrainedBox(
-                constraints: const BoxConstraints(maxWidth: 500),
-                child: content,
-              );
-            } else {
-              return content;
-            }
-          },
-        ),
-      ),
     );
 
     return FlutterFireUIActions(
@@ -120,20 +80,20 @@ class _ProfilePageState extends State<ProfilePage> {
         }),
       ],
       child: Builder(
-        builder: (context) => Scaffold(
-          appBar: AppBar(
-            title: Text(l.profile),
-            actions: [
-              IconButton(
-                //TODO: Navigate to settings page
-                onPressed: () => {},
-                icon: const Icon(
-                  Icons.settings,
-                ),
-              )
-            ],
-          ),
-          body: SafeArea(child: SingleChildScrollView(child: body)),
+        builder: (context) => DefaultScaffold(
+          title: const Text("Account"),
+          actions: [
+            IconButton(
+              //TODO: Navigate to settings page
+              onPressed: () => Navigator.of(context).push(MaterialPageRoute(
+                builder: (context) => const SettingsPage(),
+              )),
+              icon: const Icon(
+                Icons.settings,
+              ),
+            )
+          ],
+          content: content,
         ),
       ),
     );

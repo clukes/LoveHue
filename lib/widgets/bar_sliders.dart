@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:relationship_bars/models/relationship_bar_model.dart';
 import 'package:relationship_bars/providers/your_bars_state.dart';
+import 'package:relationship_bars/utils/colors.dart';
 
 abstract class BarSlider extends StatefulWidget {
   final RelationshipBar relationshipBar;
@@ -22,10 +23,13 @@ abstract class _BarSliderState extends State<BarSlider> {
   }
 
   Widget sliderText() {
-    return Text(
-      widget.relationshipBar.toString(),
-      style: _biggerFont,
-    );
+    return FittedBox(
+        fit: BoxFit.scaleDown,
+        alignment: Alignment.centerLeft,
+        child: Text(
+          widget.relationshipBar.toString(),
+          style: _biggerFont,
+        ));
   }
 
   Widget slider() {
@@ -37,20 +41,25 @@ abstract class _BarSliderState extends State<BarSlider> {
       label: _sliderValue.toString(),
       onChanged: changed,
       onChangeEnd: onChangeEnd,
+      activeColor: getSliderColor(_sliderValue)?.active, //TODO: Stop hardcoding colours and values. Add yellow colour, and maybe a lighter green. Maybe check sims colours rgb values?
+      inactiveColor: getSliderColor(_sliderValue)?.inactive,
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-        child: Column(children: [
-      ListTile(
-        title: sliderText(),
-      ),
-      ListTile(
-        title: slider(),
-      )
-    ]));
+    return Container(
+      decoration: BoxDecoration(gradient: cardGradient, borderRadius: BorderRadius.circular(20)),
+      child: Card(
+          child: Column(children: [
+        ListTile(
+          title: sliderText(),
+        ),
+        ListTile(
+          title: slider(),
+        )
+      ])),
+    );
   }
 }
 
@@ -85,14 +94,10 @@ class _InteractableBarSliderState extends _BarSliderState {
 
   @override
   Widget sliderText() {
-    return Stack(children: [
-      super.sliderText(),
+    return Row(children: [
+      Expanded(child: super.sliderText()),
       if (widget.relationshipBar.changed)
-        Positioned(
-            top: -10,
-            right: -10,
-            child: IconButton(
-                onPressed: () => updateBar(widget.relationshipBar.resetValue()), icon: const Icon(Icons.undo)))
+        IconButton(onPressed: () => updateBar(widget.relationshipBar.resetValue()), icon: const Icon(Icons.undo)),
     ]);
   }
 
@@ -119,4 +124,18 @@ class _NonInteractableBarSliderState extends _BarSliderState {
     _sliderValue = widget.relationshipBar.value;
     return super.slider();
   }
+
+  /* TODO: When history is implemented, possibly display the previous bar values on partners screen?
+  @override
+  Widget sliderText() {
+    int prevValue = widget.relationshipBar.prevValue;
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+      Expanded(child: super.sliderText()),
+      if (_sliderValue != prevValue)
+        Text("(Previous: $prevValue)", textAlign: TextAlign.center,),
+      const Spacer()
+    ]);
+  }
+  */
 }

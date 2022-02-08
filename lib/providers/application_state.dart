@@ -80,6 +80,7 @@ class ApplicationState with ChangeNotifier {
         await RelationshipBarDocument.firestoreGetLatest(userInfo.userID);
     userInfoState.addUser(userInfo);
     _loginState = ApplicationLoginState.loggedIn;
+    YourBarsState.instance.notifyListeners();
   }
 
   void resetAppState(UserInfoState userInfoState, PartnersInfoState partnerInfoState) {

@@ -40,6 +40,9 @@ class PartnersInfoState with ChangeNotifier {
         print(partnersInfo);
         if (UserInfoState.instance.userID != null && partnersUserInfo?.partnerID == UserInfoState.instance.userID) {
           _partnersInfo = partnersUserInfo;
+          if(partnersName.value != partnersUserInfo?.displayName && partnersUserInfo?.displayName != null) {
+            partnersName.value = partnersUserInfo!.displayName!;
+          }
         } else {
           print("Error: Not linked to partner");
           _partnersInfo = null;
