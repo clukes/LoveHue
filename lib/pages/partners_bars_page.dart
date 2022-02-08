@@ -20,7 +20,9 @@ class _PartnersBarsState extends State<PartnersBars> with AutomaticKeepAliveClie
   Widget build(BuildContext context) {
     ValueListenableBuilder<String> listenableTitle = ValueListenableBuilder<String>(
         valueListenable: PartnersInfoState.instance.partnersName,
-        builder: (BuildContext context, value, Widget? child) => Text("$value's Bars"));
+        builder: (BuildContext context, value, Widget? child) => FittedBox(
+            fit: BoxFit.scaleDown,
+            child: Text("$value's Bars")));
     super.build(context);
     return Scaffold(
       body: NestedScrollView(

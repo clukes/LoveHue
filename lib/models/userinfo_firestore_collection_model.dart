@@ -1,13 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutterfire_ui/auth.dart';
 import 'package:relationship_bars/models/relationship_bar_model.dart';
 import 'package:relationship_bars/resources/database_and_table_names.dart';
 import 'package:relationship_bars/resources/delete_firestore_collection.dart';
 import 'package:relationship_bars/resources/printable_error.dart';
 
 import '../providers/user_info_state.dart';
-const MAX_WRITES_PER_BATCH = 500;
-
+import '../resources/authentication.dart';
 final CollectionReference<UserInformation?> userInfoFirestoreRef =
     FirebaseFirestore.instance.collection(userInfoCollection).withConverter<UserInformation?>(
           fromFirestore: (snapshots, _) => UserInformation.fromMap(snapshots.data()!),
@@ -92,12 +93,12 @@ class UserInformation {
         .catchError((error) => print("Failed to delete user info: $error"));
   }
 
-  static Future<void> deleteUserData() async {
-    String? userID = FirebaseAuth.instance.currentUser?.uid;
+  static Future<void> deleteUserData(BuildContext context) async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    String? userID = auth.currentUser?.uid;
     UserInformation? userInfo = UserInfoState.instance.userInfo;
     if (userID != null && userID == userInfo?.userID) {
       try {
-        int batchCount = 0;
         WriteBatch batch = FirebaseFirestore.instance.batch();
         if (userInfo?.partner != null) {
           batch.update(userInfo!.partner!, {UserInformation.columnPartner: null});
@@ -112,7 +113,8 @@ class UserInformation {
         batchPromises.add(batch.commit());
         //Commit all batch commits at once.
         await Future.wait(batchPromises);
-        print("Deleted: ${userID}, ${userInfo?.userID}");
+        await deleteAccount(context, auth);
+        print("Deleted: $userID, ${userInfo?.userID}");
       }
       catch (error) {
         throw PrintableError(error.toString());
@@ -125,5 +127,25 @@ class UserInformation {
     {
       throw PrintableError("Information for signed in user is incorrect.");
     }
+  }
+
+  static Future<void> deleteAccount(BuildContext context, FirebaseAuth auth) async {
+    await auth.currentUser?.delete().onError((FirebaseAuthException error, _) async {
+      if (error.code == 'requires-recent-login') {
+        final signedIn = await reauthenticate(context, auth);
+        if (signedIn) {
+          return await auth.currentUser?.delete();
+        }
+      }
+    });
+  }
+
+  static Future<bool> reauthenticate(BuildContext context, FirebaseAuth _auth) {
+    return showReauthenticateDialog(
+      context: context,
+      providerConfigs: providerConfigs,
+      auth: _auth,
+      onSignedIn: () => Navigator.of(context).pop(true),
+    );
   }
 }
