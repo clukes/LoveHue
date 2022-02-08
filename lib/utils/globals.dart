@@ -14,7 +14,7 @@ List<Widget> navigationBarItems = [
 List<IconData> navigationBarIcons = [
   Icons.person,
   Icons.favorite,
-  Icons.settings, //TODO: Change icon possibly
+  Icons.manage_accounts, //TODO: Change icon possibly
 ];
 
-const List<String> navigationBarLabels = ["You", "Partner", "Settings"];
+const List<String> navigationBarLabels = ["You", "Partner", "Account"];
