@@ -33,33 +33,41 @@ abstract class _BarSliderState extends State<BarSlider> {
   }
 
   Widget slider() {
-    return Slider(
-      value: _sliderValue.toDouble(),
-      min: 0,
-      max: 100,
-      divisions: 100,
-      label: _sliderValue.toString(),
-      onChanged: changed,
-      onChangeEnd: onChangeEnd,
-      activeColor: getSliderColor(_sliderValue)?.active, //TODO: Stop hardcoding colours and values. Add yellow colour, and maybe a lighter green. Maybe check sims colours rgb values?
-      inactiveColor: getSliderColor(_sliderValue)?.inactive,
+    final activeTrackColor = getSliderColor(_sliderValue)?.active;
+    final inactiveTrackColor = getSliderColor(_sliderValue)?.inactive;
+    const disabledAlpha = 175;
+    return SliderTheme(
+      data: SliderTheme.of(context).copyWith(
+        activeTrackColor: activeTrackColor,
+        inactiveTrackColor: inactiveTrackColor,
+        disabledActiveTrackColor: activeTrackColor?.withAlpha(disabledAlpha),
+        disabledInactiveTrackColor: inactiveTrackColor?.withAlpha(disabledAlpha),
+      ),
+      child: Slider(
+        value: _sliderValue.toDouble(),
+        min: 0,
+        max: 100,
+        divisions: 100,
+        label: _sliderValue.toString(),
+        onChanged: changed,
+        onChangeEnd: onChangeEnd,
+        activeColor: getSliderColor(_sliderValue)?.active,
+        inactiveColor: getSliderColor(_sliderValue)?.inactive,
+      ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(gradient: cardGradient, borderRadius: BorderRadius.circular(20)),
-      child: Card(
-          child: Column(children: [
-        ListTile(
-          title: sliderText(),
-        ),
-        ListTile(
-          title: slider(),
-        )
-      ])),
-    );
+    return Card(
+        child: Column(children: [
+      ListTile(
+        title: sliderText(),
+      ),
+      ListTile(
+        title: slider(),
+      )
+    ]));
   }
 }
 

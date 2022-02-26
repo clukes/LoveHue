@@ -41,13 +41,13 @@ class BarDocBuilder extends StatelessWidget {
       List<RelationshipBar>? bars = barDoc!.barList ?? [];
       return Column(children: [
         (barDoc?.timestamp != null)
-            ? Container(
-          height: appBarHeight,
-          // padding: const EdgeInsets.symmetric(vertical: 8),
-          color: appBarColor,
-              child: Center(
-                  child: Text("Last updated: ${formatTimestamp(barDoc!.timestamp!)}", style:Theme.of(context).primaryTextTheme.headline6?.copyWith(fontSize: 15), textAlign: TextAlign.center),
-                ),
+            ? AppBar(
+              title: Text(
+                "Last updated: ${formatTimestamp(barDoc!.timestamp!)}",
+                textScaleFactor: 0.9,
+              ),
+              centerTitle: true,
+              toolbarHeight: appBarHeight,
             )
             : const SizedBox.shrink(),
         Expanded(

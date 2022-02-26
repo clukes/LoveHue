@@ -9,13 +9,13 @@ final ThemeData themeData = ThemeData.light().copyWith(
         borderRadius: BorderRadius.circular(8),
       ),
     ),
-    sliderTheme: SliderThemeData(
+    sliderTheme: const SliderThemeData(
       trackHeight: 30.0,
-      activeTrackColor: Colors.green,
-      inactiveTrackColor: Colors.green[800],
+      // activeTrackColor: Colors.green,
+      // inactiveTrackColor: Colors.green[800],
       // disabledActiveTrackColor: primaryColorDark.withAlpha(disabledActiveTrackAlpha),
       // disabledInactiveTrackColor: primaryColorDark.withAlpha(disabledInactiveTrackAlpha),
-      // activeTickMarkColor: primaryColorLight.withAlpha(activeTickMarkAlpha),
+      // activeTickMarkColor: primaryColorLyight.withAlpha(activeTickMarkAlpha),
       // inactiveTickMarkColor: primaryColor.withAlpha(inactiveTickMarkAlpha),
       // disabledActiveTickMarkColor: primaryColorLight.withAlpha(disabledActiveTickMarkAlpha),
       // disabledInactiveTickMarkColor: primaryColorDark.withAlpha(disabledInactiveTickMarkAlpha),
@@ -24,7 +24,7 @@ final ThemeData themeData = ThemeData.light().copyWith(
       // disabledThumbColor: primaryColorDark.withAlpha(disabledThumbAlpha),
       // overlayColor: primaryColor.withAlpha(overlayAlpha),
       // valueIndicatorColor: primaryColor.withAlpha(valueIndicatorAlpha),
-      overlayShape: const RoundSliderOverlayShape(),
+      overlayShape: RoundSliderOverlayShape(),
       tickMarkShape: RoundSliderTickMarkShape(tickMarkRadius: 0),
       thumbShape: RoundSliderThumbShape(enabledThumbRadius: 0, elevation: 0),
       trackShape: RectangularSliderTrackShape(),
@@ -44,5 +44,7 @@ final ThemeData themeData = ThemeData.light().copyWith(
   ),
   appBarTheme: const AppBarTheme(
     // shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.elliptical(10, 5), bottomRight: Radius.elliptical(10, 5))),
+    backgroundColor: mobileBackgroundColor,
+    foregroundColor: Colors.black,
   ),
 );
