@@ -51,23 +51,23 @@ abstract class _BarSliderState extends State<BarSlider> {
         label: _sliderValue.toString(),
         onChanged: changed,
         onChangeEnd: onChangeEnd,
-        activeColor: getSliderColor(_sliderValue)?.active,
-        inactiveColor: getSliderColor(_sliderValue)?.inactive,
       ),
     );
   }
 
   @override
   Widget build(BuildContext context) {
-    return Card(
-        child: Column(children: [
+    const padding = EdgeInsets.symmetric(vertical: 0, horizontal: 32);
+    return Column(children: [
       ListTile(
+        contentPadding: padding,
         title: sliderText(),
       ),
       ListTile(
+        contentPadding: padding,
         title: slider(),
       )
-    ]));
+    ]);
   }
 }
 
