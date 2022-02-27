@@ -2,18 +2,11 @@ TODO:
 Bugs:
 / Partner name doesn't update instantly on partner's bars page.
 / Username editing bug seems to be flutter problem, hopefully flutter fixes soon.
+? Fix status bar not showing up
 
 For 1.0 Release:
-- Optimise slider colour picking. If theres 4 intervals, e.g. 0-25, 26-50, 51-75, 76-100, put colours in an array and do slider_colours[(slider_value-1 / 25)]
-
-- Have slider colours on partners bar page.
-
-/ Change profile page name to account. Change icon too.
-/ Separate Profile page and settings screen. Have settings button in top right instead of sign out.
-/ On settings screen, have delete account button, about this app, and theme switcher (dark/light mode).
-
 ? When pulling partners bars from online database, check if still linked to partner. If not, delete partner id from local storage.
-/ Put your bar numbers on partners bars screen (next to their numbers somewhere) for easy comparison.
+- Put your bar numbers on partners bars screen (next to their numbers somewhere) for easy comparison.
   [NOTE: Possibly not needed anymore now that scroll position persists when switching screens.
    Maybe put previous bar values on bars screen? At least until history is added.]
 
@@ -43,9 +36,8 @@ For 1.0 Release:
 - UI
     - Less space below Your bars/partner bars titles
     - Pick better colours for sliders and everything else.
-    - Add yellow colour to slider.
+    - Change dark green colour to something else.
 
-- Fix thin line between top app bar and timestamp display.
 - See if can call the bars needs, or something similar.
 
 - Improve error displays, display more errors on screen rather than printing, and log non display errors.
@@ -61,6 +53,8 @@ For 1.0 Release:
 - Check licenses of everything used, including UI and packages.
 - Write terms and conditions and license.
 - Write about app dialog info.
+
+- On settings screen, have delete account button, about this app, and theme switcher (dark/light mode).
 
 - Write database security rules
 - Optimise database access
@@ -140,3 +134,8 @@ For 1.0 Release
 - Test that bars are displayed in order from order field on your and partner screens.
 - Ensure partner's name shows up on partner's page and settings page.
 - When changing display name on profile screen, update name in userinfo database.
+
+- Optimise slider colour picking.
+- Have slider colours on partners bar page.
+- Change profile page name to account. Change icon too.
+- Separate Profile page and settings screen. Have settings button in top right instead of sign out.

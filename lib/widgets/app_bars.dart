@@ -18,7 +18,7 @@ class _BarsPageAppBarState extends State<BarsPageAppBar> {
       centerTitle: true,
       floating: false,
       pinned: false,
-      toolbarHeight: appBarHeight,
+      toolbarHeight: appBarHeight*1.5,
     );
   }
 }
