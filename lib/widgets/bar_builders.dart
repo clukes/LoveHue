@@ -52,9 +52,9 @@ class BarDocBuilder extends StatelessWidget {
             : const SizedBox.shrink(),
         Expanded(
           child: ListView.separated(
-            padding: const EdgeInsets.fromLTRB(16, 16, 16, kFloatingActionButtonMargin + 128),
+            padding: const EdgeInsets.only(top: 4, bottom: kFloatingActionButtonMargin + 64),
             itemCount: bars.length,
-            separatorBuilder: (BuildContext context, int index) => const Divider(),
+            separatorBuilder: (BuildContext context, int index) => const Divider(indent: 0, endIndent: 0, color: Colors.black),
             itemBuilder: (context, index) => itemBuilderFunction(context, bars[index]),
           ),
         )

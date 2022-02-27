@@ -23,7 +23,6 @@ class _WebScreenLayoutState extends ScreenLayoutState {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        backgroundColor: mobileBackgroundColor,
         actions: [
           IconButton(
             icon: Icon(
