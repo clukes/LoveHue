@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:relationship_bars/responsive/screen_layout.dart';
-import 'package:relationship_bars/utils/colors.dart';
 import 'package:relationship_bars/utils/globals.dart';
 
 class MobileScreenLayout extends ScreenLayout {
@@ -25,32 +24,41 @@ class _MobileScreenLayoutState extends ScreenLayoutState {
         controller: pageController,
         onPageChanged: onPageChanged,
       ),
-      bottomNavigationBar: BottomNavigationBar(
-        items: <BottomNavigationBarItem>[
-          BottomNavigationBarItem(
-            icon: Icon(
-              navigationBarIcons[0],
+      bottomNavigationBar: Container(
+        decoration: const BoxDecoration(
+          boxShadow: <BoxShadow>[
+            BoxShadow(
+                color: Color.fromARGB(38, 0, 0, 0),
+                blurRadius: 20,
+              offset: Offset(0, 0.75)
+            )
+          ],
+        ),
+        child: BottomNavigationBar(
+          items: <BottomNavigationBarItem>[
+            BottomNavigationBarItem(
+              icon: Icon(
+                navigationBarIcons[0],
+              ),
+              label: navigationBarLabels[0],
             ),
-            label: navigationBarLabels[0],
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              navigationBarIcons[1],
+            BottomNavigationBarItem(
+              icon: Icon(
+                navigationBarIcons[1],
+              ),
+              label: navigationBarLabels[1],
             ),
-            label: navigationBarLabels[1],
-          ),
-          BottomNavigationBarItem(
-            icon: Icon(
-              navigationBarIcons[2],
-            ),
-            label: navigationBarLabels[2],
-          )
-        ],
-        onTap: navigationTapped,
-        currentIndex: page,
-        selectedItemColor: activeNavigationColor,
-        unselectedItemColor: inactiveNavigationColor,
+            BottomNavigationBarItem(
+              icon: Icon(
+                navigationBarIcons[2],
+              ),
+              label: navigationBarLabels[2],
+            )
+          ],
+          onTap: navigationTapped,
+          currentIndex: page,
+        ),
       ),
-    );
+      );
   }
 }

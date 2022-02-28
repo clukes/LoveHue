@@ -42,19 +42,22 @@ class BarDocBuilder extends StatelessWidget {
       return Column(children: [
         (barDoc?.timestamp != null)
             ? AppBar(
-              title: Text(
-                "Last updated: ${formatTimestamp(barDoc!.timestamp!)}",
-                textScaleFactor: 0.9,
-              ),
-              centerTitle: true,
-              toolbarHeight: appBarHeight,
-            )
+                titleTextStyle: Theme.of(context).textTheme.subtitle2,
+                title: FittedBox(
+                  fit: BoxFit.scaleDown,
+                  child: Text(
+                    "Last updated at: ${formatTimestamp(barDoc!.timestamp!)}",
+                    textScaleFactor: 1.1,
+                  ),
+                ),
+                centerTitle: false,
+                toolbarHeight: appBarHeight / 2,
+              )
             : const SizedBox.shrink(),
         Expanded(
-          child: ListView.separated(
+          child: ListView.builder(
             padding: const EdgeInsets.only(top: 4, bottom: kFloatingActionButtonMargin + 64),
             itemCount: bars.length,
-            separatorBuilder: (BuildContext context, int index) => const Divider(indent: 0, endIndent: 0, color: Colors.black),
             itemBuilder: (context, index) => itemBuilderFunction(context, bars[index]),
           ),
         )
