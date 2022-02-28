@@ -1,21 +1,22 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 
-const mobileBackgroundColor = Colors.white;
+const mobileBackgroundColor = Color.fromARGB(255, 255, 248, 235);
 const primaryColor = Colors.white;
-const secondaryColor = Colors.blueGrey;
 const blueColor = Colors.blue;
 const redColor = Colors.red;
-const darkTextColor = Colors.black;
+const primaryTextColor = Color.fromARGB(255, 51, 51, 51);
+const secondaryTextColor = Color.fromARGB(255, 105, 105, 105);
 
-const activeNavigationColor = Colors.black;
-const inactiveNavigationColor = Colors.grey;
+const navigationBackgroundColor = Color.fromARGB(255, 253, 254, 255);
+const activeNavigationColor = Color.fromARGB(255, 42, 167, 223);
+const inactiveNavigationColor = Color.fromARGB(255, 176, 195, 206);
 
 const backgroundGradient = LinearGradient(
-    begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFFB5FFFC), Color(0xFFFFDEE9)]);
+    begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color.fromARGB(77, 81, 186, 212), Color.fromARGB(255, 255, 248, 235), Colors.white]);
 const cardGradient = LinearGradient(
-    begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0xFFB5FFFC), Color(0xFFFFDEE9)]);
+    begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x2144C5FF), Color(0x26B4E6FD)]);
+const navigationGradient = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.white, Color.fromARGB(
+    255, 42, 167, 223)]);
 
 const sliderColors = [
   SliderColor(

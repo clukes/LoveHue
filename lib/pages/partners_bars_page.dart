@@ -25,6 +25,7 @@ class _PartnersBarsState extends State<PartnersBars> with AutomaticKeepAliveClie
             child: Text("$value's Bars")));
     super.build(context);
     return Scaffold(
+      primary: false,
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
