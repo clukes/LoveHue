@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-const double appBarHeight = 40;
+const double appBarHeight = 70;
 
 class BarsPageAppBar extends StatefulWidget {
   final Widget barTitleWidget;
@@ -15,10 +15,10 @@ class _BarsPageAppBarState extends State<BarsPageAppBar> {
   Widget build(BuildContext context) {
     return SliverAppBar(
       title: widget.barTitleWidget,
-      centerTitle: true,
+      centerTitle: false,
       floating: false,
       pinned: false,
-      toolbarHeight: appBarHeight*1.5,
+      toolbarHeight: appBarHeight,
     );
   }
 }
