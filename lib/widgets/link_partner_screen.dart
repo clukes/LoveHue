@@ -101,7 +101,7 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
       child: Column(
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          const SizedBox(height: 64),
+          const SizedBox(height: 24),
           const Padding(
             padding: EdgeInsets.only(bottom: 16),
             child: Header(heading: 'Enter partners link code to connect.'),
@@ -111,28 +111,13 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
             decoration:
                 InputDecoration(hintText: 'Link code', errorText: _errorMsg, helperText: 'Codes are case sensitive.'),
             validator: (value) => _linkCodeValidator(value),
+            onEditingComplete: onLinkCodeSubmit,
           ),
           Container(
             width: double.infinity,
             padding: const EdgeInsets.only(top: 12),
             child: OutlinedButton.icon(
-              onPressed: () async {
-                if (_formKey.currentState!.validate()) {
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(content: Text('Linking...')),
-                  );
-                  String linkCode = _controller.text;
-                  await LinkCode.connectLinkCode(linkCode).then((_) {
-                    setState(() {});
-                  }).catchError((error) {
-                    setState(() {
-                      print(error);
-                      _errorMsg = "Error: $error";
-                    });
-                  });
-                }
-                ScaffoldMessenger.of(context).clearSnackBars();
-              },
+              onPressed: onLinkCodeSubmit,
               icon: const Icon(Icons.person_add_alt_1),
               label: const Text('Link'),
             ),
@@ -156,6 +141,24 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
       return "You can't be your own partner.";
     }
     return null;
+  }
+
+  void onLinkCodeSubmit() async {
+    if (_formKey.currentState!.validate()) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Linking...')),
+      );
+      String linkCode = _controller.text;
+      await LinkCode.connectLinkCode(linkCode).then((_) {
+        setState(() {});
+      }).catchError((error) {
+        setState(() {
+          print(error);
+          _errorMsg = "Error: $error";
+        });
+      });
+    }
+    ScaffoldMessenger.of(context).clearSnackBars();
   }
 }
 

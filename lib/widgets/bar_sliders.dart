@@ -57,17 +57,25 @@ abstract class _BarSliderState extends State<BarSlider> {
 
   @override
   Widget build(BuildContext context) {
-    const padding = EdgeInsets.symmetric(vertical: 0, horizontal: 32);
-    return Column(children: [
-      ListTile(
-        contentPadding: padding,
-        title: sliderText(),
+    const cardMargin = EdgeInsets.symmetric(vertical: 4, horizontal: 16);
+    const contentPadding = EdgeInsets.symmetric(vertical: 16, horizontal: 24);
+    return Card(
+      margin: cardMargin,
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: cardGradient,
+          borderRadius: BorderRadius.all(Radius.circular(24)),
+        ),
+        child: Column(
+            children: [
+          ListTile(
+            contentPadding: contentPadding,
+            title: Padding(padding: const EdgeInsets.only(bottom: 24), child: sliderText()),
+            subtitle: slider(),
+          )
+        ]),
       ),
-      ListTile(
-        contentPadding: padding,
-        title: slider(),
-      )
-    ]);
+    );
   }
 }
 
@@ -102,10 +110,15 @@ class _InteractableBarSliderState extends _BarSliderState {
 
   @override
   Widget sliderText() {
-    return Row(children: [
+    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
       Expanded(child: super.sliderText()),
       if (widget.relationshipBar.changed)
-        IconButton(onPressed: () => updateBar(widget.relationshipBar.resetValue()), icon: const Icon(Icons.undo)),
+        IconButton(
+          onPressed: () => updateBar(widget.relationshipBar.resetValue()),
+          icon: const Icon(Icons.undo),
+          padding: EdgeInsets.zero,
+          constraints: BoxConstraints.tightForFinite(),
+        ),
     ]);
   }
 

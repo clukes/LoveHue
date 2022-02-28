@@ -22,24 +22,22 @@ class _YourBarsState extends State<YourBars> with AutomaticKeepAliveClientMixin<
   Widget build(BuildContext context) {
     super.build(context);
     return Scaffold(
+      primary: false,
       body: NestedScrollView(
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             const BarsPageAppBar(barTitleWidget: Text("Your Bars")),
           ];
         },
-        body: Container(
-          // decoration: const BoxDecoration(gradient: backgroundGradient),
-          child: Consumer<UserInfoState>(
-            builder: (context, appState, _) =>
-                (ApplicationState.instance.loginState == ApplicationLoginState.loggedIn && appState.userExist)
-                    ? BarDocBuilder(
-                        barDoc: YourBarsState.instance.latestRelationshipBarDoc,
-                        itemBuilderFunction: interactableBarBuilder)
-                    : const Center(
-                        child: CircularProgressIndicator(),
-                      ),
-          ),
+        body: Consumer<UserInfoState>(
+          builder: (context, appState, _) =>
+              (ApplicationState.instance.loginState == ApplicationLoginState.loggedIn && appState.userExist)
+                  ? BarDocBuilder(
+                      barDoc: YourBarsState.instance.latestRelationshipBarDoc,
+                      itemBuilderFunction: interactableBarBuilder)
+                  : const Center(
+                      child: CircularProgressIndicator(),
+                    ),
         ),
       ),
       floatingActionButton: Consumer<YourBarsState>(
