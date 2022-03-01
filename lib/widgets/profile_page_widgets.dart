@@ -107,7 +107,7 @@ Future<void> showDeleteAlertDialog(BuildContext context) async {
     context: context,
     yesButtonText: const Text(yesButtonText),
     noButtonText: const Text(noButtonText),
-    alertTitle: const Text("Unlink from partner"),
+    alertTitle: const Text("Delete Account"),
     alertContent: StatefulBuilder(
         builder: (BuildContext context, StateSetter setState) {
           _setState = setState;
@@ -146,7 +146,7 @@ Future<void> showDeleteAlertDialog(BuildContext context) async {
 }
 
 Future<void> deleteAccount(BuildContext context) async {
-  UserInformation.deleteUserData(context).then((_) {
+  return UserInformation.deleteUserData(context).then((_) {
     FirebaseAuth.instance.currentUser?.delete();
   });
 }

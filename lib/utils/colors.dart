@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 
+
 const mobileBackgroundColor = Color.fromARGB(255, 255, 248, 235);
 const primaryColor = Colors.white;
 const blueColor = Colors.blue;
 const redColor = Colors.red;
 const primaryTextColor = Color.fromARGB(255, 51, 51, 51);
 const secondaryTextColor = Color.fromARGB(255, 105, 105, 105);
+
+final ColorScheme colorScheme = ColorScheme.fromSeed(seedColor: primaryColor);
 
 const navigationBackgroundColor = Color.fromARGB(255, 253, 254, 255);
 const activeNavigationColor = Color.fromARGB(255, 42, 167, 223);

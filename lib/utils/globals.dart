@@ -5,16 +5,24 @@ import 'package:relationship_bars/pages/your_bars_page.dart';
 
 const webScreenSize = 900;
 
-List<Widget> navigationBarItems = [
-  const YourBars(),
-  const PartnersBars(),
-  const ProfilePage(),
+const List<Widget> navigationBarItems = [
+  YourBars(),
+  PartnersBars(),
+  ProfilePage(),
 ];
 
-List<IconData> navigationBarIcons = [
+const List<IconData> navigationBarIcons = [
   Icons.person,
   Icons.favorite,
-  Icons.manage_accounts, //TODO: Change icon possibly
+  Icons.manage_accounts,
 ];
 
 const List<String> navigationBarLabels = ["You", "Partner", "Account"];
+
+const List<String> defaultBarLabels = [
+  "Words of Affirmation",
+  "Quality Time",
+  "Giving Gifts",
+  "Acts of Service",
+  "Physical Touch",
+];

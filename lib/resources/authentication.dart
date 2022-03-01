@@ -2,9 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 
-import '../responsive/mobile_screen_layout.dart';
 import '../responsive/responsive_screen_layout.dart';
-import '../responsive/web_screen_layout.dart';
 
 var acs = ActionCodeSettings(
     // URL you want to redirect back to. The domain (www.example.com) for this
@@ -37,13 +35,7 @@ Future<void> signInAnonymously(BuildContext context) async {
 
 void afterSignIn(BuildContext context) {
   Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-        builder: (context) => const ResponsiveLayout(
-          mobileScreenLayout: MobileScreenLayout(),
-          webScreenLayout: WebScreenLayout(),
-        ),
-      ),
-          (route) => false);
+      MaterialPageRoute(builder: (_) => responsiveLayout), (route) => false);
 }
 
 // Future<void> _linkCredentials(

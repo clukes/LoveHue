@@ -45,6 +45,7 @@ class CustomRoundedSliderTrackShape extends RoundedRectSliderTrackShape with Bas
     ColorTween(begin: sliderTheme.disabledInactiveTrackColor, end: sliderTheme.inactiveTrackColor);
     final Paint activePaint = Paint()..color = activeTrackColorTween.evaluate(enableAnimation)!;
     final Paint inactivePaint = Paint()..color = inactiveTrackColorTween.evaluate(enableAnimation)!;
+
     final Paint leftTrackPaint;
     final Paint rightTrackPaint;
     switch (textDirection) {
@@ -79,36 +80,49 @@ class CustomRoundedSliderTrackShape extends RoundedRectSliderTrackShape with Bas
       topRight: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
       bottomRight: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
     );
-    Rect leftRect = Rect.fromLTRB(
+    RRect leftRect = RRect.fromLTRBAndCorners(
       trackRect.left,
       (textDirection == TextDirection.ltr) ? trackRect.top - (additionalActiveTrackHeight / 2) : trackRect.top,
       thumbCenter.dx,
       (textDirection == TextDirection.ltr) ? trackRect.bottom + (additionalActiveTrackHeight / 2) : trackRect.bottom,
+      topLeft: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
+      bottomLeft: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
     );
-    Rect rightRect = Rect.fromLTRB(
+    RRect rightRect = RRect.fromLTRBAndCorners(
       trackRect.right,
       (textDirection == TextDirection.ltr) ? trackRect.top - (additionalActiveTrackHeight / 2) : trackRect.top,
       thumbCenter.dx,
       (textDirection == TextDirection.ltr) ? trackRect.bottom + (additionalActiveTrackHeight / 2) : trackRect.bottom,
+      topRight: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
+      bottomRight: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
     );
+    if(thumbCenter.dx >= trackRect.right - trackRadius.x || thumbCenter.dx <= trackRect.left + trackRadius.x) {
+      context.canvas.drawPath(
+        Path.combine(
+          PathOperation.intersect,
+          Path()
+            ..addRRect(leftRect),
+          Path()
+            ..addRRect(trackRRect),
+        ),
+        leftTrackPaint,
+      );
+      context.canvas.drawPath(
+        Path.combine(
+          PathOperation.intersect,
+          Path()
+            ..addRRect(rightRect),
+          Path()
+            ..addRRect(trackRRect),
+        ),
+        rightTrackPaint,
+      );
+    }
+    else {
+      context.canvas.drawRRect(leftRect, leftTrackPaint);
+      context.canvas.drawRRect(rightRect, rightTrackPaint);
+    }
 
-    context.canvas.drawPath(
-      Path.combine(
-        PathOperation.intersect,
-        Path()..addRect(leftRect),
-        Path()..addRRect(trackRRect),
-      ),
-      leftTrackPaint,
-    );
-
-    context.canvas.drawPath(
-      Path.combine(
-        PathOperation.intersect,
-        Path()..addRect(rightRect),
-        Path()..addRRect(trackRRect),
-      ),
-      rightTrackPaint,
-    );
   }
 
   @override

@@ -1,15 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:relationship_bars/providers/user_info_state.dart';
 import 'package:relationship_bars/resources/database_and_table_names.dart';
-
-List<String> defaultBarLabels = [
-  "Words of Affirmation",
-  "Quality Time",
-  "Giving Gifts",
-  "Acts of Service",
-  "Physical Touch",
-];
-
 CollectionReference<RelationshipBarDocument> userBarsFirestoreRef(String userID) => FirebaseFirestore.instance
     .collection(userBarsCollection)
     .doc(userID)
