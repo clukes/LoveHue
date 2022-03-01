@@ -52,8 +52,16 @@ class RelationshipBar {
 
   @override
   String toString() {
-    return label + ": " + value.toString();
+    return labelString() + valueString();
   }
+
+  String labelString() {
+    return label + ": ";
+  }
+  String valueString() {
+    return value.toString() + "%";
+  }
+
 
   //Firestore database info
   static const String columnOrder = 'order';

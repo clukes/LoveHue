@@ -3,6 +3,7 @@ Bugs:
 / Partner name doesn't update instantly on partner's bars page.
 / Username editing bug seems to be flutter problem, hopefully flutter fixes soon.
 ? Fix status bar not showing up
+- When signing out then signing back in, there is a gap between appbar title and subtitle.
 
 For 1.0 Release:
 ? When pulling partners bars from online database, check if still linked to partner. If not, delete partner id from local storage.
@@ -55,6 +56,7 @@ For 1.0 Release:
 - Write about app dialog info.
 
 - On settings screen, have delete account button, about this app, and theme switcher (dark/light mode).
+- Have welcome screen that showcases app before login.
 
 - Write database security rules
 - Optimise database access
