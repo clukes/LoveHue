@@ -15,20 +15,13 @@ import 'package:relationship_bars/providers/application_state.dart';
 import 'package:relationship_bars/providers/partners_info_state.dart';
 import 'package:relationship_bars/providers/user_info_state.dart';
 import 'package:relationship_bars/providers/your_bars_state.dart';
-import 'package:relationship_bars/responsive/mobile_screen_layout.dart';
 import 'package:relationship_bars/responsive/responsive_screen_layout.dart';
-import 'package:relationship_bars/responsive/web_screen_layout.dart';
 import 'package:relationship_bars/utils/theme_data.dart';
 
 /*
-TODO: Delete database data when delete account clicked.
 TODO: Explain what magic link is on sign in screen. Login is two words when verb.
 TODO: Show part of bottom slider to make it clear you can scroll.
-TODO: Partners app has to be restarted when you connect to them.
-TODO: Figure out why partners name doesn't show up on partners page and settings page.
 TODO: Clean up code.
-TODO: Accept/Reject incoming partner link request.
-TODO: Order bars so that they are always shown in the same order for each person. Have some order field to support reordering.
 TODO: Add loading indicators wherever awaiting async. Use listener.
 TODO: Show no internet connection message when trying to connect to FireStore and no connection error is given.
 TODO: When pulling partners bars from online database, check if still linked to partner. If not, delete partner id from local storage.
@@ -38,7 +31,6 @@ TODO: Allow convert an anonymous account to a permanent account https://firebase
 TODO: Store anonymous account details in sharedprefs to allow signing back in to anon account.
 TODO: Explain magic link better, and what happens if choose to skip login.
 TODO: Have cancel/back button on magic link screens.
-TODO: Beautify UI.
 TODO: Optimization, only update widgets that need updating.
  */
 
@@ -49,9 +41,12 @@ void main() async {
   );
   await ApplicationState.instance.init();
   LicenseRegistry.addLicense(() async* {
-    final license = await rootBundle.loadString('google_fonts/DMSansOFL.txt') + "\n\n\n" + await rootBundle.loadString('google_fonts/PoppinsOFL.txt');
+    String license = await rootBundle.loadString('assets/google_fonts/DMSansOFL.txt');
+    yield LicenseEntryWithLineBreaks(['google_fonts'], license);
+    license = await rootBundle.loadString('assets/google_fonts/PoppinsOFL.txt');
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
   });
+  // Only use the included google fonts, don't fetch from online
   GoogleFonts.config.allowRuntimeFetching = false;
   runApp(const RelationshipBarsApp());
 }
@@ -74,17 +69,14 @@ class RelationshipBarsApp extends StatelessWidget {
             title: 'Relationship Bars',
             theme: themeData,
             home: AnnotatedRegion<SystemUiOverlayStyle>(
-              value: SystemUiOverlayStyle.light,
+              value: SystemUiOverlayStyle.dark.copyWith(statusBarIconBrightness: Brightness.light),
               child: SafeArea(
                 child: StreamBuilder(
                     stream: FirebaseAuth.instance.authStateChanges(),
                     builder: (context, snapshot) {
                       if (snapshot.connectionState == ConnectionState.active) {
                         if (snapshot.hasData) {
-                          return const ResponsiveLayout(
-                            mobileScreenLayout: MobileScreenLayout(),
-                            webScreenLayout: WebScreenLayout(),
-                          );
+                          return responsiveLayout;
                         } else if (snapshot.hasError) {
                           return Center(
                             child: Text('Error: ${snapshot.error}'),
