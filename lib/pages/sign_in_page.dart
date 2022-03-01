@@ -9,7 +9,7 @@ class SignInPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SignInScreen(
-      headerMaxExtent: 250,
+      headerMaxExtent: 200,
       headerBuilder: (context, constraints, _) {
         return Padding(
           padding: const EdgeInsets.all(30),

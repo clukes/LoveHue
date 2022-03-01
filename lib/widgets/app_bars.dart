@@ -19,6 +19,7 @@ class _BarsPageAppBarState extends State<BarsPageAppBar> {
       floating: false,
       pinned: false,
       toolbarHeight: appBarHeight,
+      primary: true,
     );
   }
 }
