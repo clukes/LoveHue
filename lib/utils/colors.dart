@@ -11,30 +11,30 @@ const navigationBackgroundColor = Color.fromARGB(255, 253, 254, 255);
 const activeNavigationColor = Color.fromARGB(255, 42, 167, 223);
 const inactiveNavigationColor = Color.fromARGB(255, 176, 195, 206);
 
-const backgroundGradient = LinearGradient(
-    begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color.fromARGB(77, 81, 186, 212), Color.fromARGB(255, 255, 248, 235), Colors.white]);
 const cardGradient = LinearGradient(
-    begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x2144C5FF), Color(0x26B4E6FD)]);
-const navigationGradient = LinearGradient(begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Colors.white, Color.fromARGB(
-    255, 42, 167, 223)]);
+    begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x2482D6FF), Color(0x26D7F1FF)]);
 
+const alpha = 102;
 const sliderColors = [
   SliderColor(
-    Colors.red,
-    Color.fromARGB(255, 198, 40, 40),
+    Color.fromARGB(255, 235, 87, 87),
+    Color.fromARGB(alpha, 235, 87, 87),
   ),
   SliderColor(
-    Colors.orange,
-    Color.fromARGB(255, 239, 108, 0),
+    Color.fromARGB(255, 242, 153, 74),
+    Color.fromARGB(alpha, 242, 153, 74),
   ),
   SliderColor(
-    Colors.yellow,
-    Color.fromARGB(255, 249, 168, 37),
+    Color.fromARGB(255, 242, 201, 76),
+    Color.fromARGB(alpha, 242, 201, 76),
   ),
-  SliderColor(Colors.green, Color.fromARGB(255, 46, 125, 50)),
   SliderColor(
-    Color.fromARGB(255, 46, 125, 50),
-    Color.fromARGB(255, 20, 73, 26),
+    Color.fromARGB(255, 127, 217, 38),
+    Color.fromARGB(alpha, 127, 217, 38),
+  ),
+  SliderColor(
+    Color.fromARGB(255, 4, 196, 115),
+    Color.fromARGB(alpha, 4, 196, 115),
   ),
 ];
 
@@ -46,16 +46,7 @@ class SliderColor {
 }
 
 SliderColor? getSliderColor(int sliderValue) {
-  // Maps < 20 to 0 (red), < 40 to 1 (orange), < 60 to 2 (yellow) and <= 100 to 3 (green)
+  // Maps < 20 to 0 (red), < 40 to 1 (orange), etc.
   int mappedToRange = ((sliderValue / 101) * sliderColors.length).floor();
   return sliderColors[mappedToRange];
-  // if (sliderValue >= 60) {
-  //   return sliderColors['Green'];
-  // } else if (sliderValue >= 40) {
-  //   return sliderColors['Yellow'];
-  // } else if (sliderValue >= 20) {
-  //   return sliderColors['Orange'];
-  // } else {
-  //   return sliderColors['Red'];
-  // }
 }
