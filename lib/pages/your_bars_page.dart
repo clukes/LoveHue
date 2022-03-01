@@ -7,6 +7,8 @@ import 'package:relationship_bars/providers/your_bars_state.dart';
 import 'package:relationship_bars/widgets/app_bars.dart';
 import 'package:relationship_bars/widgets/bar_builders.dart';
 
+import '../widgets/buttons.dart';
+
 class YourBars extends StatefulWidget {
   const YourBars({Key? key}) : super(key: key);
 
@@ -48,35 +50,39 @@ class _YourBarsState extends State<YourBars> with AutomaticKeepAliveClientMixin<
               ? Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    FloatingActionButton(
-                      heroTag: "cancelButton",
-                      onPressed: () async {
-                        yourBarsState.latestRelationshipBarDoc =
-                            await yourBarsState.latestRelationshipBarDoc?.resetBars();
-                        setState(() {
-                          yourBarsState.resetBarChange();
-                          yourBarsState.barsReset = true;
-                        });
-                      },
-                      tooltip: 'Cancel',
-                      child: const Icon(Icons.cancel),
+                    BlurredCircle(
+                      child: FloatingActionButton(
+                        heroTag: "cancelButton",
+                        onPressed: () async {
+                          yourBarsState.latestRelationshipBarDoc =
+                              await yourBarsState.latestRelationshipBarDoc?.resetBars();
+                          setState(() {
+                            yourBarsState.resetBarChange();
+                            yourBarsState.barsReset = true;
+                          });
+                        },
+                        tooltip: 'Cancel',
+                        child: const Icon(Icons.cancel),
+                      ),
                     ),
                     const SizedBox(width: 10),
-                    FloatingActionButton(
-                      heroTag: "saveButton",
-                      onPressed: () async {
-                        String? userID = UserInfoState.instance.userID;
-                        if (userID != null && yourBarsState.barList != null) {
-                          RelationshipBarDocument barDoc = yourBarsState.latestRelationshipBarDoc!.resetBarsChanged();
-                          yourBarsState.resetBarChange();
-                          barDoc = await RelationshipBarDocument.firestoreAddBarList(userID, barDoc.barList!);
-                          setState(() {
-                            yourBarsState.latestRelationshipBarDoc = barDoc;
-                          });
-                        }
-                      },
-                      tooltip: 'Save',
-                      child: const Icon(Icons.save),
+                    BlurredCircle(
+                      child: FloatingActionButton(
+                        heroTag: "saveButton",
+                        onPressed: () async {
+                          String? userID = UserInfoState.instance.userID;
+                          if (userID != null && yourBarsState.barList != null) {
+                            RelationshipBarDocument barDoc = yourBarsState.latestRelationshipBarDoc!.resetBarsChanged();
+                            yourBarsState.resetBarChange();
+                            barDoc = await RelationshipBarDocument.firestoreAddBarList(userID, barDoc.barList!);
+                            setState(() {
+                              yourBarsState.latestRelationshipBarDoc = barDoc;
+                            });
+                          }
+                        },
+                        tooltip: 'Save',
+                        child: const Icon(Icons.save),
+                      ),
                     ),
                   ],
                 )

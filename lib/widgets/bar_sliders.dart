@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 import 'package:relationship_bars/models/relationship_bar_model.dart';
 import 'package:relationship_bars/providers/your_bars_state.dart';
@@ -11,7 +13,6 @@ abstract class BarSlider extends StatefulWidget {
 
 abstract class _BarSliderState extends State<BarSlider> {
   int _sliderValue = 100;
-  final TextStyle _biggerFont = const TextStyle(fontSize: 18.0);
 
   get changed => null;
   get onChangeEnd => null;
@@ -23,13 +24,26 @@ abstract class _BarSliderState extends State<BarSlider> {
   }
 
   Widget sliderText() {
-    return FittedBox(
+    double fontSize = 14;
+    return Row(children: [
+      Expanded(
+          child: FittedBox(
         fit: BoxFit.scaleDown,
-        alignment: Alignment.centerLeft,
+        alignment: AlignmentDirectional.centerStart,
         child: Text(
-          widget.relationshipBar.toString(),
-          style: _biggerFont,
-        ));
+          widget.relationshipBar.labelString(),
+          style: Theme.of(context).textTheme.subtitle1?.copyWith(fontSize: fontSize),
+        ),
+      )),
+      FittedBox(
+        fit: BoxFit.scaleDown,
+        alignment: AlignmentDirectional.centerEnd,
+        child: Text(
+          widget.relationshipBar.valueString(),
+          style: Theme.of(context).textTheme.subtitle2?.copyWith(fontSize: fontSize),
+        ),
+      ),
+    ]);
   }
 
   Widget slider() {
@@ -55,27 +69,35 @@ abstract class _BarSliderState extends State<BarSlider> {
     );
   }
 
+  Widget tile() {
+    const contentPadding = EdgeInsets.symmetric(vertical: 16, horizontal: 24);
+    return ListTile(
+      contentPadding: contentPadding,
+      title:
+          Padding(padding: const EdgeInsets.only(bottom: 16), child: sliderText()),
+      subtitle: slider(),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     const cardMargin = EdgeInsets.symmetric(vertical: 4, horizontal: 16);
-    const contentPadding = EdgeInsets.symmetric(vertical: 16, horizontal: 24);
     return Card(
-      margin: cardMargin,
-      child: Container(
-        decoration: const BoxDecoration(
-          gradient: cardGradient,
-          borderRadius: BorderRadius.all(Radius.circular(24)),
-        ),
-        child: Column(
-            children: [
-          ListTile(
-            contentPadding: contentPadding,
-            title: Padding(padding: const EdgeInsets.only(bottom: 24), child: sliderText()),
-            subtitle: slider(),
-          )
-        ]),
-      ),
-    );
+        margin: cardMargin,
+        color: Colors.transparent,
+        elevation: 0,
+        child: Container(
+            decoration: const BoxDecoration(
+              gradient: cardGradient,
+              borderRadius: BorderRadius.all(Radius.circular(24)),
+              boxShadow: [
+                BoxShadow(
+                  color: Color.fromARGB(64, 0, 0, 0),
+                  blurRadius: 5.0,
+                  blurStyle: BlurStyle.outer,
+                ),],
+            ),
+            child: tile()));
   }
 }
 
@@ -109,17 +131,24 @@ class _InteractableBarSliderState extends _BarSliderState {
   }
 
   @override
-  Widget sliderText() {
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Expanded(child: super.sliderText()),
-      if (widget.relationshipBar.changed)
-        IconButton(
-          onPressed: () => updateBar(widget.relationshipBar.resetValue()),
-          icon: const Icon(Icons.undo),
-          padding: EdgeInsets.zero,
-          constraints: BoxConstraints.tightForFinite(),
-        ),
-    ]);
+  Widget tile() {
+    return Stack(
+      children: [
+        super.tile(),
+        if (widget.relationshipBar.changed)
+          Positioned(
+            right: 12,
+            top: 0,
+            child: IconButton(
+              onPressed: () => updateBar(widget.relationshipBar.resetValue()),
+              icon: const Icon(Icons.undo),
+              padding: const EdgeInsets.symmetric(vertical: 4),
+              alignment: Alignment.topRight,
+              color: primaryTextColor,
+            ),
+          )
+      ],
+    );
   }
 
   @override

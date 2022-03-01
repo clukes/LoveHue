@@ -32,36 +32,24 @@ final ThemeData themeData = ThemeData.light().copyWith(
   ),
   sliderTheme: const SliderThemeData(
     trackHeight: 30.0,
-    // activeTrackColor: Colors.green,
-    // inactiveTrackColor: Colors.green[800],
-    // disabledActiveTrackColor: primaryColorDark.withAlpha(disabledActiveTrackAlpha),
-    // disabledInactiveTrackColor: primaryColorDark.withAlpha(disabledInactiveTrackAlpha),
-    // activeTickMarkColor: primaryColorLyight.withAlpha(activeTickMarkAlpha),
-    // inactiveTickMarkColor: primaryColor.withAlpha(inactiveTickMarkAlpha),
-    // disabledActiveTickMarkColor: primaryColorLight.withAlpha(disabledActiveTickMarkAlpha),
-    // disabledInactiveTickMarkColor: primaryColorDark.withAlpha(disabledInactiveTickMarkAlpha),
     thumbColor: null,
-    // overlappingShapeStrokeColor: Colors.white,
-    // disabledThumbColor: primaryColorDark.withAlpha(disabledThumbAlpha),
-    // overlayColor: primaryColor.withAlpha(overlayAlpha),
-    // valueIndicatorColor: primaryColor.withAlpha(valueIndicatorAlpha),
     overlayShape: RoundSliderOverlayShape(overlayRadius: 0),
     tickMarkShape: RoundSliderTickMarkShape(tickMarkRadius: 0),
     thumbShape: RoundSliderThumbShape(enabledThumbRadius: 0, elevation: 0, pressedElevation: 0),
     trackShape: CustomRoundedSliderTrackShape(),
-    // valueIndicatorShape: const PaddleSliderValueIndicatorShape(),
-    // rangeTickMarkShape: const RoundRangeSliderTickMarkShape(),
-    // rangeThumbShape: const RoundRangeSliderThumbShape(),
-    // rangeTrackShape: const RoundedRectRangeSliderTrackShape(),
-    // rangeValueIndicatorShape: const PaddleRangeSliderValueIndicatorShape(),
-    // valueIndicatorTextStyle: valueIndicatorTextStyle,
-    // showValueIndicator: ShowValueIndicator.onlyForDiscrete,
   ),
+  floatingActionButtonTheme: const FloatingActionButtonThemeData(
+    backgroundColor: Color.fromARGB(191, 0, 147, 233),
+    elevation: 0,
+    highlightElevation: 0,
+    hoverElevation: 0,
+    focusElevation: 0,
+  )
 );
 
 final TextTheme dmSansTextTheme = GoogleFonts.dmSansTextTheme(ThemeData.light().textTheme.copyWith(
-  headline6: TextStyle(fontWeight: FontWeight.w700, fontSize: 28, color: primaryTextColor),
-  subtitle1: TextStyle(fontWeight: FontWeight.w700, fontSize: 16, color: primaryTextColor),
+  headline6: const TextStyle(fontWeight: FontWeight.w700, fontSize: 28, color: primaryTextColor),
+  subtitle1: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16, color: primaryTextColor),
 ));
 
 //Allows for other fonts
