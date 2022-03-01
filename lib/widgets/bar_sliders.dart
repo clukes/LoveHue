@@ -1,5 +1,3 @@
-import 'dart:ui';
-
 import 'package:flutter/material.dart';
 import 'package:relationship_bars/models/relationship_bar_model.dart';
 import 'package:relationship_bars/providers/your_bars_state.dart';
@@ -49,13 +47,13 @@ abstract class _BarSliderState extends State<BarSlider> {
   Widget slider() {
     final activeTrackColor = getSliderColor(_sliderValue)?.active;
     final inactiveTrackColor = getSliderColor(_sliderValue)?.inactive;
-    const disabledAlpha = 175;
+    const disabledOpacityRatio = 0.75;
     return SliderTheme(
       data: SliderTheme.of(context).copyWith(
         activeTrackColor: activeTrackColor,
         inactiveTrackColor: inactiveTrackColor,
-        disabledActiveTrackColor: activeTrackColor?.withAlpha(disabledAlpha),
-        disabledInactiveTrackColor: inactiveTrackColor?.withAlpha(disabledAlpha),
+        disabledActiveTrackColor: activeTrackColor?.withOpacity(activeTrackColor.opacity * disabledOpacityRatio),
+        disabledInactiveTrackColor: inactiveTrackColor?.withOpacity(inactiveTrackColor.opacity * disabledOpacityRatio),
       ),
       child: Slider(
         value: _sliderValue.toDouble(),
@@ -73,8 +71,7 @@ abstract class _BarSliderState extends State<BarSlider> {
     const contentPadding = EdgeInsets.symmetric(vertical: 16, horizontal: 24);
     return ListTile(
       contentPadding: contentPadding,
-      title:
-          Padding(padding: const EdgeInsets.only(bottom: 16), child: sliderText()),
+      title: Padding(padding: const EdgeInsets.only(bottom: 16, right: 16), child: sliderText()),
       subtitle: slider(),
     );
   }
@@ -95,7 +92,8 @@ abstract class _BarSliderState extends State<BarSlider> {
                   color: Color.fromARGB(64, 0, 0, 0),
                   blurRadius: 5.0,
                   blurStyle: BlurStyle.outer,
-                ),],
+                ),
+              ],
             ),
             child: tile()));
   }
@@ -137,13 +135,11 @@ class _InteractableBarSliderState extends _BarSliderState {
         super.tile(),
         if (widget.relationshipBar.changed)
           Positioned(
-            right: 12,
+            right: 0,
             top: 0,
             child: IconButton(
               onPressed: () => updateBar(widget.relationshipBar.resetValue()),
-              icon: const Icon(Icons.undo),
-              padding: const EdgeInsets.symmetric(vertical: 4),
-              alignment: Alignment.topRight,
+              icon: const Icon(Icons.replay),
               color: primaryTextColor,
             ),
           )

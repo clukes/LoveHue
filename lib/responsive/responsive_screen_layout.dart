@@ -1,5 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:relationship_bars/responsive/mobile_screen_layout.dart';
 import 'package:relationship_bars/utils/globals.dart';
+
+const ResponsiveLayout responsiveLayout = ResponsiveLayout(
+  mobileScreenLayout: MobileScreenLayout(),
+  webScreenLayout: MobileScreenLayout(),
+);
 
 class ResponsiveLayout extends StatelessWidget {
   final Widget webScreenLayout;

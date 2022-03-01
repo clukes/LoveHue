@@ -10,6 +10,7 @@ import 'package:relationship_bars/providers/partners_info_state.dart';
 import 'package:relationship_bars/providers/user_info_state.dart';
 import 'package:relationship_bars/providers/your_bars_state.dart';
 import 'package:relationship_bars/resources/unique_link_code_generator.dart';
+import 'package:relationship_bars/utils/globals.dart';
 
 enum ApplicationLoginState {
   loggedOut,

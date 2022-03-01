@@ -1,21 +1,29 @@
 TODO:
 Bugs:
-/ Partner name doesn't update instantly on partner's bars page.
-/ Username editing bug seems to be flutter problem, hopefully flutter fixes soon.
-? Fix status bar not showing up
-- When signing out then signing back in, there is a gap between appbar title and subtitle.
+/ Username editing bug (not being able to enter text when editing username twice) seems to be flutter problem, hopefully flutter fixes soon. [Fix is done, waiting for it to reach release: https://github.com/flutter/engine/pull/30916]
 
 For 1.0 Release:
-? When pulling partners bars from online database, check if still linked to partner. If not, delete partner id from local storage.
+- Think of a name.
+    NAME IDEAS:
+        Something from mythology.
+        Rati is hindu god of love. Rati - Rating, play on that somehow.
+        Love, Relationship, Couple, Cupid
+        Connect, Rating, Valuation, Value, Compass, Tank, Fuel, Needs, Bond, Rate, Relate, Satisfaction, Link, Passion, Care, Check, Happy
+        PassionRate
+        LoveRati
+        Care
+
+- Make a logo.
+
+
 - Put your bar numbers on partners bars screen (next to their numbers somewhere) for easy comparison.
   [NOTE: Possibly not needed anymore now that scroll position persists when switching screens.
    Maybe put previous bar values on bars screen? At least until history is added.]
 
 - Add email sign in button to convert account when anonymously signed in. - Hoping flutterfire ui does this soon. If not will have to implement myself.
-/ Have clearer sign out button.
 
 - Put message stating that if you sign out with anonymous account you cannot sign back in to that account.
-- Delete account on anonymous sign out?
+- Delete account on anonymous sign out.
 
 - Add feedback form to settings page. Have options for bug report, feature request and other.
 
@@ -30,7 +38,7 @@ For 1.0 Release:
 
 - Add loading overlays for all async actions that require it, e.g. don't want user to click twice when saving bars or signing in.
     [Possibly use listener for this]
-
+- Blur behind loading overlay
 
 - Show part of bottom slider on bar screens to make it clear that you can scroll.
 - Improve UI theming/design.
@@ -38,6 +46,7 @@ For 1.0 Release:
     - Less space below Your bars/partner bars titles
     - Pick better colours for sliders and everything else.
     - Change dark green colour to something else.
+    - Add some animation
 
 - See if can call the bars needs, or something similar.
 
@@ -45,6 +54,7 @@ For 1.0 Release:
 - Show no internet connection message when trying to connect to FireStore with no internet.
 - Improve code comments/documentation.
 
+- Remove unnecessary font files
 - Check performance, see if can reduce storage.
 - Speed up performance where can. Reduce jank, use computes https://docs.flutter.dev/cookbook/networking/background-parsing.
 
@@ -68,12 +78,15 @@ For 1.0 Release:
     - Calculate database costs per user
     - Decide on monetisation: Figure out how to cover database costs with that monetisation method.
 
-- Setup production database with analytics
+- Setup new development database
+- Setup release database with analytics
 
 - Create App Name and Logo
 - Perform actions needed for release: Specify app ID and add signing config.
 
 - Write tests.
+
+- Have some sort of code evaluation. Display results on github.
 
 - Release on github, setup different branches with release and testing.
 - Release on play store
@@ -117,6 +130,9 @@ Notification reminders to set needs.
 DONE:
 Bugs
 - When accepting link request, error: shouldn't see this message appears until leave page.
+- When signing out then signing back in, there is a gap between appbar title and subtitle.
+- Fix status bar not showing up
+- Partner name doesn't update instantly on partner's bars page.
 
 
 For 1.0 Release
@@ -141,3 +157,6 @@ For 1.0 Release
 - Have slider colours on partners bar page.
 - Change profile page name to account. Change icon too.
 - Separate Profile page and settings screen. Have settings button in top right instead of sign out.
+
+- When pulling partners bars from online database, check if still linked to partner. If not, delete partner id from local storage.
+- Have clearer sign out button.

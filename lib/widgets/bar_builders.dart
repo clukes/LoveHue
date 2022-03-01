@@ -40,8 +40,9 @@ class BarDocBuilder extends StatelessWidget {
     if (barDoc != null) {
       List<RelationshipBar>? bars = barDoc!.barList ?? [];
       return Column(children: [
-        (barDoc?.timestamp != null)
-            ? AppBar(
+        if (barDoc?.timestamp != null)
+            AppBar(
+              primary: false,
                 titleTextStyle: Theme.of(context).textTheme.subtitle2,
                 title: FittedBox(
                   fit: BoxFit.scaleDown,
@@ -51,9 +52,8 @@ class BarDocBuilder extends StatelessWidget {
                   ),
                 ),
                 centerTitle: false,
-                toolbarHeight: appBarHeight / 2,
-              )
-            : const SizedBox.shrink(),
+                toolbarHeight: appBarHeight/2,
+            ),
         Expanded(
           child: ListView.builder(
             padding: const EdgeInsets.only(top: 4, bottom: kFloatingActionButtonMargin + 64),
