@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutterfire_ui/auth.dart';
-import 'package:relationship_bars/resources/authentication.dart';
+
+import '../resources/authentication.dart';
 
 class SignInPage extends StatelessWidget {
   const SignInPage({Key? key}) : super(key: key);

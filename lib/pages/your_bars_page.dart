@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:relationship_bars/models/relationship_bar_model.dart';
-import 'package:relationship_bars/providers/application_state.dart';
-import 'package:relationship_bars/providers/user_info_state.dart';
-import 'package:relationship_bars/providers/your_bars_state.dart';
-import 'package:relationship_bars/widgets/app_bars.dart';
-import 'package:relationship_bars/widgets/bar_builders.dart';
 
+import '../models/relationship_bar_model.dart';
+import '../providers/application_state.dart';
+import '../providers/user_info_state.dart';
+import '../providers/your_bars_state.dart';
+import '../widgets/app_bars.dart';
+import '../widgets/bar_builders.dart';
 import '../widgets/buttons.dart';
 
 class YourBars extends StatefulWidget {

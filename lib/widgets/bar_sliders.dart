@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:relationship_bars/models/relationship_bar_model.dart';
-import 'package:relationship_bars/providers/your_bars_state.dart';
-import 'package:relationship_bars/utils/colors.dart';
+
+import '../models/relationship_bar_model.dart';
+import '../providers/your_bars_state.dart';
+import '../utils/colors.dart';
 
 abstract class BarSlider extends StatefulWidget {
   final RelationshipBar relationshipBar;
@@ -57,9 +58,10 @@ abstract class _BarSliderState extends State<BarSlider> {
       ),
       child: Slider(
         value: _sliderValue.toDouble(),
-        min: 0,
-        max: 100,
-        divisions: 100,
+        min: RelationshipBar.minBarValue.toDouble(),
+        max: RelationshipBar.maxBarValue.toDouble(),
+        // Don't want to have decimals so divisions = range of ints.
+        divisions: RelationshipBar.maxBarValue - RelationshipBar.minBarValue,
         label: _sliderValue.toString(),
         onChanged: changed,
         onChangeEnd: onChangeEnd,
