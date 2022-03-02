@@ -9,6 +9,9 @@ import '../widgets/app_bars.dart';
 import '../widgets/bar_builders.dart';
 import '../widgets/buttons.dart';
 
+/// Partners Bars page builder.
+///
+/// Uses [AutomaticKeepAliveClientMixin] for persistent scroll state.
 class YourBars extends StatefulWidget {
   const YourBars({Key? key}) : super(key: key);
 
@@ -26,6 +29,7 @@ class _YourBarsState extends State<YourBars> with AutomaticKeepAliveClientMixin<
     return Scaffold(
       primary: false,
       body: NestedScrollView(
+        // App bar title that hides when scrolling.
         headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
           return <Widget>[
             const BarsPageAppBar(barTitleWidget: Text("Your Bars")),

@@ -19,7 +19,7 @@ class UserInfoState with ChangeNotifier {
 
   String? get userID => userInfo?.userID;
 
-  String? get linkCode => userInfo?.linkCode?.id;
+  String? get linkCode => userInfo?.linkCode.id;
 
   bool get userExist => (userInfo?.userID != null);
   bool get userPending => (userExist && (userInfo?.linkPending ?? false));

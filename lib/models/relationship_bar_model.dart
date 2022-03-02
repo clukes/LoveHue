@@ -170,7 +170,7 @@ class RelationshipBarDocument {
     return RelationshipBarDocument(
       id: res[columnID] as String,
       timestamp: res[columnTimestamp] as Timestamp,
-      barList: RelationshipBar.fromMapList(res[columnBarList] as List<Map<String, Object?>>),
+      barList: RelationshipBar.fromMapList(List<Map<String, Object?>>.from(res[columnBarList] as List)),
     );
   }
 
