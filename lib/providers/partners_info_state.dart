@@ -24,7 +24,7 @@ class PartnersInfoState with ChangeNotifier {
 
   UserInformation? get partnersInfo => _partnersInfo;
   String? get partnersID => _partnersInfo?.userID;
-  String? get linkCode => _partnersInfo?.linkCode?.id;
+  String? get linkCode => _partnersInfo?.linkCode.id;
   bool get partnerExist => (_partnersInfo?.userID != null);
   bool get partnerLinked =>
       (partnerExist && !(_partnersInfo?.linkPending ?? true) && !UserInfoState.instance.userPending);

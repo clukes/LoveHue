@@ -12,9 +12,8 @@ class SettingsPage extends StatelessWidget {
     final content = Column(
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
-        //TODO: Theme switcher: Light/Dark/Follow device mode.
         const SizedBox(height: 32),
-        //TODO: About dialog
+        // TODO: Write about dialog.
         OutlinedButton.icon(
             onPressed: () => showAboutDialog(context: context),
             icon: const Icon(Icons.info),
