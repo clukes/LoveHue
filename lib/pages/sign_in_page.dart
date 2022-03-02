@@ -4,6 +4,7 @@ import 'package:flutterfire_ui/auth.dart';
 
 import '../resources/authentication.dart';
 
+//TODO: LEFT OFF HERE, NEXT TO COMMENT/CLEANUP CODE.
 class SignInPage extends StatelessWidget {
   const SignInPage({Key? key}) : super(key: key);
 
