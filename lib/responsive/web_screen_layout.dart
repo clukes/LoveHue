@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:relationship_bars/responsive/screen_layout.dart';
-import 'package:relationship_bars/utils/colors.dart';
-import 'package:relationship_bars/utils/globals.dart';
+
+import '../responsive/screen_layout.dart';
+import '../utils/colors.dart';
+import '../utils/globals.dart';
 
 class WebScreenLayout extends ScreenLayout {
   const WebScreenLayout({Key? key}) : super(key: key);

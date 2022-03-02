@@ -1,7 +1,8 @@
 import 'dart:ui';
 
 import 'package:flutter/material.dart';
-import 'package:relationship_bars/utils/colors.dart';
+
+import '../utils/colors.dart';
 
 class StyledButton extends StatelessWidget {
   const StyledButton({Key? key, required this.child, required this.onPressed}) : super(key: key);
@@ -25,15 +26,15 @@ class BlurredCircle extends StatelessWidget {
 
   const BlurredCircle({Key? key, this.child}) : super(key: key);
 
-@override
-Widget build(BuildContext context) {
-  return Container(
-    clipBehavior: Clip.hardEdge,
-    decoration: const BoxDecoration(shape: BoxShape.circle),
-    child: BackdropFilter(
-      filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
-      child: child,
-    ),
-  );
-}
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      clipBehavior: Clip.hardEdge,
+      decoration: const BoxDecoration(shape: BoxShape.circle),
+      child: BackdropFilter(
+        filter: ImageFilter.blur(sigmaX: 2.0, sigmaY: 2.0),
+        child: child,
+      ),
+    );
+  }
 }

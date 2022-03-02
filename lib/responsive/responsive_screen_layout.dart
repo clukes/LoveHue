@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:relationship_bars/responsive/mobile_screen_layout.dart';
-import 'package:relationship_bars/utils/globals.dart';
+
+import '../responsive/mobile_screen_layout.dart';
+import '../utils/globals.dart';
 
 const ResponsiveLayout responsiveLayout = ResponsiveLayout(
   mobileScreenLayout: MobileScreenLayout(),

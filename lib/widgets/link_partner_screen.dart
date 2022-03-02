@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
-import 'package:relationship_bars/models/link_code_firestore_collection_model.dart';
-import 'package:relationship_bars/providers/partners_info_state.dart';
-import 'package:relationship_bars/providers/user_info_state.dart';
-import 'package:relationship_bars/resources/copy_to_clipboard.dart';
-import 'package:relationship_bars/resources/unique_link_code_generator.dart';
 
+import '../models/link_code_firestore_collection_model.dart';
+import '../providers/partners_info_state.dart';
+import '../providers/user_info_state.dart';
+import '../resources/copy_to_clipboard.dart';
+import '../resources/unique_link_code_generator.dart';
 import 'header.dart';
 
 class LinkPartnerScreen extends StatefulWidget {
@@ -149,7 +149,7 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
         const SnackBar(content: Text('Linking...')),
       );
       String linkCode = _controller.text;
-      await LinkCode.connectLinkCode(linkCode).then((_) {
+      await LinkCode.connectTo(linkCode).then((_) {
         setState(() {});
       }).catchError((error) {
         setState(() {
@@ -191,7 +191,7 @@ class _LinkRequestSentState extends State<LinkRequestSent> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Cancelling...')),
     );
-    await LinkCode.rejectLinkCode().catchError((error) {
+    await LinkCode.unlink().catchError((error) {
       print(error);
     });
     ScaffoldMessenger.of(context).clearSnackBars();
@@ -244,7 +244,7 @@ class _IncomingLinkRequestState extends State<IncomingLinkRequest> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Accepting...')),
     );
-    await LinkCode.acceptLinkCode().catchError((error) {
+    await LinkCode.acceptRequest().catchError((error) {
       print("ACCEPT ERROR: $error");
       print("ACCEPT");
       ScaffoldMessenger.of(context).clearSnackBars();
@@ -256,7 +256,7 @@ class _IncomingLinkRequestState extends State<IncomingLinkRequest> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Rejecting...')),
     );
-    await LinkCode.rejectLinkCode().catchError((error) {
+    await LinkCode.unlink().catchError((error) {
       print(error);
     }).then((_) => ScaffoldMessenger.of(context).clearSnackBars());
   }

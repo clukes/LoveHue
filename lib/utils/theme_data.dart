@@ -14,10 +14,10 @@ final ThemeData themeData = ThemeData.light().copyWith(
     textTheme: textTheme,
     primaryTextTheme: primaryTextTheme,
     appBarTheme: const AppBarTheme(
-        // shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.elliptical(10, 5), bottomRight: Radius.elliptical(10, 5))),
-        backgroundColor: mobileBackgroundColor,
-        foregroundColor: primaryTextColor,
-        elevation: 0.0,
+      // shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.elliptical(10, 5), bottomRight: Radius.elliptical(10, 5))),
+      backgroundColor: mobileBackgroundColor,
+      foregroundColor: primaryTextColor,
+      elevation: 0.0,
     ),
     bottomNavigationBarTheme: const BottomNavigationBarThemeData(
       backgroundColor: navigationBackgroundColor,

@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 
-
 const mobileBackgroundColor = Color.fromARGB(255, 255, 248, 235);
 const primaryColor = Colors.white;
 const blueColor = Colors.blue;

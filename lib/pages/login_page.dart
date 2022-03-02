@@ -2,8 +2,8 @@
 // import 'package:flutter/material.dart';
 // import 'package:flutter_svg/flutter_svg.dart';
 // import 'package:provider/provider.dart';
-// import 'package:relationship_bars/utils/colors.dart';
-// import 'package:relationship_bars/widgets/buttons.dart';
+// import '../utils/colors.dart';
+// import '../widgets/buttons.dart';
 //
 // import '../providers/application_state.dart';
 // import '../resources/authentication.dart';

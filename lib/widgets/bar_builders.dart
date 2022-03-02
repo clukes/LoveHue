@@ -1,10 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:relationship_bars/models/relationship_bar_model.dart';
-import 'package:relationship_bars/providers/your_bars_state.dart';
-import 'package:relationship_bars/resources/data_formatting.dart';
-import 'package:relationship_bars/widgets/bar_sliders.dart';
 
+import '../models/relationship_bar_model.dart';
+import '../providers/your_bars_state.dart';
+import '../resources/data_formatting.dart';
+import '../widgets/bar_sliders.dart';
 import 'app_bars.dart';
 
 Widget buildBars(BuildContext context, AsyncSnapshot<QuerySnapshot<RelationshipBarDocument>> snapshot,
@@ -41,19 +41,19 @@ class BarDocBuilder extends StatelessWidget {
       List<RelationshipBar>? bars = barDoc!.barList ?? [];
       return Column(children: [
         if (barDoc?.timestamp != null)
-            AppBar(
-              primary: false,
-                titleTextStyle: Theme.of(context).textTheme.subtitle2,
-                title: FittedBox(
-                  fit: BoxFit.scaleDown,
-                  child: Text(
-                    "Last updated at: ${formatTimestamp(barDoc!.timestamp!)}",
-                    textScaleFactor: 1.1,
-                  ),
-                ),
-                centerTitle: false,
-                toolbarHeight: appBarHeight/2,
+          AppBar(
+            primary: false,
+            titleTextStyle: Theme.of(context).textTheme.subtitle2,
+            title: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                "Last updated at: ${formatTimestamp(barDoc!.timestamp!)}",
+                textScaleFactor: 1.1,
+              ),
             ),
+            centerTitle: false,
+            toolbarHeight: appBarHeight / 2,
+          ),
         Expanded(
           child: ListView.builder(
             padding: const EdgeInsets.only(top: 4, bottom: kFloatingActionButtonMargin + 64),
@@ -81,7 +81,7 @@ Widget nonInteractableBarBuilder(BuildContext context, RelationshipBar bar) {
 Widget barStreamBuilder(String id, Widget Function(BuildContext context, RelationshipBar bar) itemBuilderFunction) {
   print("BUILDER");
   return StreamBuilder<QuerySnapshot<RelationshipBarDocument>>(
-      stream: userBarsFirestoreRef(id).orderBy(RelationshipBarDocument.columnTimestamp, descending: true).snapshots(),
+      stream: RelationshipBarDocument.getOrderedUserBarsFromID(id).snapshots(),
       builder: (context, snapshot) {
         return buildBars(context, snapshot, itemBuilderFunction);
       });

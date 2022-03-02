@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:relationship_bars/models/userinfo_firestore_collection_model.dart';
-import 'package:relationship_bars/providers/partners_info_state.dart';
+
+import '../models/userinfo_firestore_collection_model.dart';
+import '../providers/partners_info_state.dart';
 
 class UserInfoState with ChangeNotifier {
   static final UserInfoState _instance = UserInfoState._internal();
@@ -25,15 +26,16 @@ class UserInfoState with ChangeNotifier {
 
   void setupYourInfoSubscription() {
     if (userExist) {
-      yourInfoSubscription = userInfoFirestoreRef.doc(userID).snapshots().listen((snapshot) async {
+      yourInfoSubscription = UserInformation.getUserFromID(userID).snapshots().listen((snapshot) async {
         print("YOUR INFO SUB");
         UserInformation? yourUserInfo = snapshot.data();
         userInfo = yourUserInfo;
         String? partnerID = yourUserInfo?.partnerID;
-        if(partnerID != null && (!PartnersInfoState.instance.partnerExist || PartnersInfoState.instance.partnersID != partnerID)) {
+        if (partnerID != null &&
+            (!PartnersInfoState.instance.partnerExist || PartnersInfoState.instance.partnersID != partnerID)) {
           PartnersInfoState.instance.addPartner(await UserInformation.firestoreGet(partnerID));
         }
-        if(partnerID == null && PartnersInfoState.instance.partnerExist) {
+        if (partnerID == null && PartnersInfoState.instance.partnerExist) {
           PartnersInfoState.instance.removePartner();
         }
         notifyListeners();

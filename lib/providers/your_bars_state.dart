@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:relationship_bars/models/relationship_bar_model.dart';
+
+import '../models/relationship_bar_model.dart';
 
 class YourBarsState with ChangeNotifier {
   static final YourBarsState _instance = YourBarsState._internal();
@@ -16,7 +17,7 @@ class YourBarsState with ChangeNotifier {
   bool barsReset = false;
 
   void barChange() {
-    if(!barsChanged) {
+    if (!barsChanged) {
       barsChanged = true;
       print("NOTIFY BARS");
       notifyListeners();
@@ -24,7 +25,7 @@ class YourBarsState with ChangeNotifier {
   }
 
   void resetBarChange() {
-    if(barsChanged) {
+    if (barsChanged) {
       barsChanged = false;
       print("NOTIFY BARS");
       notifyListeners();
