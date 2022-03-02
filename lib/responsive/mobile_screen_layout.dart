@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:relationship_bars/responsive/screen_layout.dart';
-import 'package:relationship_bars/utils/globals.dart';
+
+import '../responsive/screen_layout.dart';
+import '../utils/globals.dart';
 
 class MobileScreenLayout extends ScreenLayout {
   const MobileScreenLayout({Key? key}) : super(key: key);
@@ -27,11 +28,7 @@ class _MobileScreenLayoutState extends ScreenLayoutState {
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
           boxShadow: <BoxShadow>[
-            BoxShadow(
-                color: Color.fromARGB(38, 0, 0, 0),
-                blurRadius: 20,
-              offset: Offset(0, 0.75)
-            )
+            BoxShadow(color: Color.fromARGB(38, 0, 0, 0), blurRadius: 20, offset: Offset(0, 0.75))
           ],
         ),
         child: BottomNavigationBar(
@@ -59,6 +56,6 @@ class _MobileScreenLayoutState extends ScreenLayoutState {
           currentIndex: page,
         ),
       ),
-      );
+    );
   }
 }

@@ -1,11 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:relationship_bars/widgets/profile_page_widgets.dart';
 
 import '../utils/colors.dart';
 import '../widgets/default_scaffold.dart';
+import '../widgets/profile_page_widgets.dart';
 
 class SettingsPage extends StatelessWidget {
-
   const SettingsPage({Key? key}) : super(key: key);
 
   @override

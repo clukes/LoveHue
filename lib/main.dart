@@ -9,14 +9,15 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
-import 'package:relationship_bars/firebase_options.dart';
-import 'package:relationship_bars/pages/sign_in_page.dart';
-import 'package:relationship_bars/providers/application_state.dart';
-import 'package:relationship_bars/providers/partners_info_state.dart';
-import 'package:relationship_bars/providers/user_info_state.dart';
-import 'package:relationship_bars/providers/your_bars_state.dart';
-import 'package:relationship_bars/responsive/responsive_screen_layout.dart';
-import 'package:relationship_bars/utils/theme_data.dart';
+
+import '../firebase_options.dart';
+import '../pages/sign_in_page.dart';
+import '../providers/application_state.dart';
+import '../providers/partners_info_state.dart';
+import '../providers/user_info_state.dart';
+import '../providers/your_bars_state.dart';
+import '../responsive/responsive_screen_layout.dart';
+import '../utils/theme_data.dart';
 
 /*
 TODO: Explain what magic link is on sign in screen. Login is two words when verb.

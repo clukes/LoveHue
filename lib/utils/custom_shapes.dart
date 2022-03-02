@@ -7,17 +7,17 @@ class CustomRoundedSliderTrackShape extends RoundedRectSliderTrackShape with Bas
   const CustomRoundedSliderTrackShape();
   @override
   void paint(
-      PaintingContext context,
-      Offset offset, {
-        required RenderBox parentBox,
-        required SliderThemeData sliderTheme,
-        required Animation<double> enableAnimation,
-        required TextDirection textDirection,
-        required Offset thumbCenter,
-        bool isDiscrete = false,
-        bool isEnabled = false,
-        double additionalActiveTrackHeight = 0,
-      }) {
+    PaintingContext context,
+    Offset offset, {
+    required RenderBox parentBox,
+    required SliderThemeData sliderTheme,
+    required Animation<double> enableAnimation,
+    required TextDirection textDirection,
+    required Offset thumbCenter,
+    bool isDiscrete = false,
+    bool isEnabled = false,
+    double additionalActiveTrackHeight = 0,
+  }) {
     assert(context != null);
     assert(offset != null);
     assert(parentBox != null);
@@ -40,9 +40,9 @@ class CustomRoundedSliderTrackShape extends RoundedRectSliderTrackShape with Bas
     // Assign the track segment paints, which are leading: active and
     // trailing: inactive.
     final ColorTween activeTrackColorTween =
-    ColorTween(begin: sliderTheme.disabledActiveTrackColor, end: sliderTheme.activeTrackColor);
+        ColorTween(begin: sliderTheme.disabledActiveTrackColor, end: sliderTheme.activeTrackColor);
     final ColorTween inactiveTrackColorTween =
-    ColorTween(begin: sliderTheme.disabledInactiveTrackColor, end: sliderTheme.inactiveTrackColor);
+        ColorTween(begin: sliderTheme.disabledInactiveTrackColor, end: sliderTheme.inactiveTrackColor);
     final Paint activePaint = Paint()..color = activeTrackColorTween.evaluate(enableAnimation)!;
     final Paint inactivePaint = Paint()..color = inactiveTrackColorTween.evaluate(enableAnimation)!;
 
@@ -96,33 +96,27 @@ class CustomRoundedSliderTrackShape extends RoundedRectSliderTrackShape with Bas
       topRight: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
       bottomRight: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
     );
-    if(thumbCenter.dx >= trackRect.right - trackRadius.x || thumbCenter.dx <= trackRect.left + trackRadius.x) {
+    if (thumbCenter.dx >= trackRect.right - trackRadius.x || thumbCenter.dx <= trackRect.left + trackRadius.x) {
       context.canvas.drawPath(
         Path.combine(
           PathOperation.intersect,
-          Path()
-            ..addRRect(leftRect),
-          Path()
-            ..addRRect(trackRRect),
+          Path()..addRRect(leftRect),
+          Path()..addRRect(trackRRect),
         ),
         leftTrackPaint,
       );
       context.canvas.drawPath(
         Path.combine(
           PathOperation.intersect,
-          Path()
-            ..addRRect(rightRect),
-          Path()
-            ..addRRect(trackRRect),
+          Path()..addRRect(rightRect),
+          Path()..addRRect(trackRRect),
         ),
         rightTrackPaint,
       );
-    }
-    else {
+    } else {
       context.canvas.drawRRect(leftRect, leftTrackPaint);
       context.canvas.drawRRect(rightRect, rightTrackPaint);
     }
-
   }
 
   @override
@@ -144,7 +138,7 @@ class CustomRoundedSliderTrackShape extends RoundedRectSliderTrackShape with Bas
     final double trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2;
     final double trackRight = trackLeft + parentBox.size.width;
     final double trackBottom = trackTop + trackHeight;
-    // If the parentBox'size less than slider's size the trackRight will be less than trackLeft, so switch them.
+    // If the parentBox's size less than slider's size the trackRight will be less than trackLeft, so switch them.
     return Rect.fromLTRB(min(trackLeft, trackRight), trackTop, max(trackLeft, trackRight), trackBottom);
   }
 }

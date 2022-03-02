@@ -2,13 +2,14 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:provider/provider.dart';
-import 'package:relationship_bars/pages/settings_page.dart';
-import 'package:relationship_bars/pages/sign_in_page.dart';
-import 'package:relationship_bars/providers/partners_info_state.dart';
-import 'package:relationship_bars/providers/user_info_state.dart';
-import 'package:relationship_bars/widgets/profile_page_widgets.dart';
 
+import '../pages/settings_page.dart';
+import '../pages/sign_in_page.dart';
+import '../providers/partners_info_state.dart';
+import '../providers/user_info_state.dart';
 import '../widgets/default_scaffold.dart';
+import '../widgets/profile_page_widgets.dart';
+
 //Sourced from flutterfire_ui ProfileScreen(). Edited code.
 class ProfilePage extends StatefulWidget {
   const ProfilePage({
