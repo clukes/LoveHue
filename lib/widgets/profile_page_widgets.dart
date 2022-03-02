@@ -55,30 +55,28 @@ Future<void> showUnlinkAlertDialog(BuildContext context, String partnerName, Str
     yesButtonText: const Text(yesButtonText),
     noButtonText: const Text(noButtonText),
     alertTitle: const Text("Unlink from partner"),
-    alertContent: StatefulBuilder(
-      builder: (BuildContext context, StateSetter setState) {
-        _setState = setState;
-        return SingleChildScrollView(
-          child: ListBody(
-            children: <Widget>[
-              const Text("Are you sure you would like to unlink from your partner?\n"),
+    alertContent: StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+      _setState = setState;
+      return SingleChildScrollView(
+        child: ListBody(
+          children: <Widget>[
+            const Text("Are you sure you would like to unlink from your partner?\n"),
+            Text(
+              "Partner Name: $partnerName\n"
+              "Partner Code: $partnerLinkCode",
+              textScaleFactor: partnerInfoScaleFactor,
+            ),
+            if (_errorMsg != null)
               Text(
-                "Partner Name: $partnerName\n"
-                    "Partner Code: $partnerLinkCode",
-                textScaleFactor: partnerInfoScaleFactor,
-              ),
-              if (_errorMsg != null)
-                Text(
-                  "\n${_errorMsg!}",
-                  textScaleFactor: errorScaleFactor,
-                )
-            ],
-          ),
-        );
-      }
-    ),
+                "\n${_errorMsg!}",
+                textScaleFactor: errorScaleFactor,
+              )
+          ],
+        ),
+      );
+    }),
     yesPressed: () async {
-      await LinkCode.unlinkLinkCode().then((_) {
+      await LinkCode.unlink().then((_) {
         Navigator.pop(context, yesButtonText);
       }).catchError((error) {
         print(error);
@@ -93,8 +91,6 @@ Future<void> showUnlinkAlertDialog(BuildContext context, String partnerName, Str
   );
 }
 
-
-
 Future<void> showDeleteAlertDialog(BuildContext context) async {
   const String yesButtonText = "Delete";
   const String noButtonText = "Cancel";
@@ -108,24 +104,22 @@ Future<void> showDeleteAlertDialog(BuildContext context) async {
     yesButtonText: const Text(yesButtonText),
     noButtonText: const Text(noButtonText),
     alertTitle: const Text("Delete Account"),
-    alertContent: StatefulBuilder(
-        builder: (BuildContext context, StateSetter setState) {
-          _setState = setState;
-          return SingleChildScrollView(
-            child: ListBody(
-              children: <Widget>[
-                const Text("Are you sure you would like to delete your account?\n"),
-                const Text("(All your data will be permanently deleted)", textScaleFactor: noteScaleFactor),
-                if (_errorMsg != null)
-                  Text(
-                    "\n${_errorMsg!}",
-                    textScaleFactor: errorScaleFactor,
-                  )
-              ],
-            ),
-          );
-        }
-    ),
+    alertContent: StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+      _setState = setState;
+      return SingleChildScrollView(
+        child: ListBody(
+          children: <Widget>[
+            const Text("Are you sure you would like to delete your account?\n"),
+            const Text("(All your data will be permanently deleted)", textScaleFactor: noteScaleFactor),
+            if (_errorMsg != null)
+              Text(
+                "\n${_errorMsg!}",
+                textScaleFactor: errorScaleFactor,
+              )
+          ],
+        ),
+      );
+    }),
     yesPressed: () async {
       await deleteAccount(context).then((_) {
         Navigator.pop(context, yesButtonText);

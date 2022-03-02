@@ -2,8 +2,9 @@ import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:relationship_bars/models/userinfo_firestore_collection_model.dart';
-import 'package:relationship_bars/providers/user_info_state.dart';
+
+import '../models/userinfo_firestore_collection_model.dart';
+import '../providers/user_info_state.dart';
 
 class PartnersInfoState with ChangeNotifier {
   static final PartnersInfoState _instance = PartnersInfoState._internal();
@@ -33,14 +34,14 @@ class PartnersInfoState with ChangeNotifier {
   void setupPartnerInfoSubscription() {
     print(partnersID);
     if (partnerExist) {
-      partnersInfoSubscription = userInfoFirestoreRef.doc(partnersID).snapshots().listen((snapshot) {
+      partnersInfoSubscription = UserInformation.getUserFromID(partnersID).snapshots().listen((snapshot) {
         print("PARTNER INFO");
         UserInformation? partnersUserInfo = snapshot.data();
         print(partnersUserInfo?.partnerID);
         print(partnersInfo);
         if (UserInfoState.instance.userID != null && partnersUserInfo?.partnerID == UserInfoState.instance.userID) {
           _partnersInfo = partnersUserInfo;
-          if(partnersName.value != partnersUserInfo?.displayName && partnersUserInfo?.displayName != null) {
+          if (partnersName.value != partnersUserInfo?.displayName && partnersUserInfo?.displayName != null) {
             partnersName.value = partnersUserInfo!.displayName!;
           }
         } else {
@@ -53,7 +54,7 @@ class PartnersInfoState with ChangeNotifier {
   }
 
   void addPartner(UserInformation? newPartnerInfo) {
-    if(newPartnerInfo != null) {
+    if (newPartnerInfo != null) {
       PartnersInfoState.instance._partnersInfo = newPartnerInfo;
       partnersName.value = newPartnerInfo.displayName ?? "Partner";
       PartnersInfoState.instance.setupPartnerInfoSubscription();

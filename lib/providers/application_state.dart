@@ -3,14 +3,14 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:relationship_bars/models/link_code_firestore_collection_model.dart';
-import 'package:relationship_bars/models/relationship_bar_model.dart';
-import 'package:relationship_bars/models/userinfo_firestore_collection_model.dart';
-import 'package:relationship_bars/providers/partners_info_state.dart';
-import 'package:relationship_bars/providers/user_info_state.dart';
-import 'package:relationship_bars/providers/your_bars_state.dart';
-import 'package:relationship_bars/resources/unique_link_code_generator.dart';
-import 'package:relationship_bars/utils/globals.dart';
+
+import '../models/link_code_firestore_collection_model.dart';
+import '../models/relationship_bar_model.dart';
+import '../models/userinfo_firestore_collection_model.dart';
+import '../providers/partners_info_state.dart';
+import '../providers/user_info_state.dart';
+import '../providers/your_bars_state.dart';
+import '../utils/globals.dart';
 
 enum ApplicationLoginState {
   loggedOut,
@@ -37,11 +37,12 @@ class ApplicationState with ChangeNotifier {
       if (user != null && _loginState == ApplicationLoginState.loggedOut) {
         await userLoggedInSetup(user, userInfoState, partnerInfoState);
         notifyListeners();
-      } else if(user != null && _loginState == ApplicationLoginState.loggedIn) {
+      } else if (user != null && _loginState == ApplicationLoginState.loggedIn) {
         //When something changes while user is logged in.
-        if(userInfoState.userExist && user.displayName != userInfoState.userInfo?.displayName) {
+        if (userInfoState.userExist && user.displayName != userInfoState.userInfo?.displayName) {
           //When user display name changes, update their userInfo display name.
-          await UserInformation.firestoreUpdateColumns(userInfoState.userID!, {UserInformation.columnDisplayName: user.displayName});
+          await UserInformation.firestoreUpdateColumns(
+              userInfoState.userID!, {UserInformation.columnDisplayName: user.displayName});
         }
       } else if (user == null && _loginState == ApplicationLoginState.loggedIn) {
         resetAppState(userInfoState, partnerInfoState);
@@ -57,16 +58,10 @@ class ApplicationState with ChangeNotifier {
     UserInformation? userInfo = userInfoState.userInfo ?? await UserInformation.firestoreGet(user.uid);
     if (userInfo == null) {
       print("NULL USERINFO");
-      DocumentReference<LinkCode?>? linkCode;
-      while (linkCode == null) {
-        linkCode = await linkCodeFirestoreRef
-            .doc(generateLinkCode())
-            .get()
-            .then((snapshot) => !snapshot.exists ? snapshot.reference : null);
-      }
+      DocumentReference<LinkCode?> linkCode = await LinkCode.create();
       userInfo = UserInformation(userID: user.uid, displayName: user.displayName, linkCode: linkCode);
       print("USERINFO: $userInfo");
-      DocumentReference<UserInformation?> userDoc = userInfoFirestoreRef.doc(userInfo.userID);
+      DocumentReference<UserInformation?> userDoc = UserInformation.getUserFromID(userInfo.userID);
       WriteBatch batch = FirebaseFirestore.instance.batch();
       batch.set(userDoc, userInfo);
       batch.set(linkCode, LinkCode(linkCode: linkCode.id, user: userDoc));

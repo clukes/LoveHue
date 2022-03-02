@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:relationship_bars/pages/partners_bars_page.dart';
-import 'package:relationship_bars/pages/profile_page.dart';
-import 'package:relationship_bars/pages/your_bars_page.dart';
+
+import '../pages/partners_bars_page.dart';
+import '../pages/profile_page.dart';
+import '../pages/your_bars_page.dart';
 
 const webScreenSize = 900;
 

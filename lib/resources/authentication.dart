@@ -34,8 +34,7 @@ Future<void> signInAnonymously(BuildContext context) async {
 }
 
 void afterSignIn(BuildContext context) {
-  Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(builder: (_) => responsiveLayout), (route) => false);
+  Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => responsiveLayout), (route) => false);
 }
 
 // Future<void> _linkCredentials(

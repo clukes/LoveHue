@@ -3,8 +3,10 @@ Bugs:
 / Username editing bug (not being able to enter text when editing username twice) seems to be flutter problem, hopefully flutter fixes soon. [Fix is done, waiting for it to reach release: https://github.com/flutter/engine/pull/30916]
 
 For 1.0 Release:
+Get Ready for GitHub release:
 - Think of a name.
     NAME IDEAS:
+	LoveDOT
         Something from mythology.
         Rati is hindu god of love. Rati - Rating, play on that somehow.
         Love, Relationship, Couple, Cupid
@@ -12,8 +14,37 @@ For 1.0 Release:
         PassionRate
         LoveRati
         Care
+	LoveLink
+	LoveCompass
+	CoupleCompass
+	LoveCheck
 
 - Make a logo.
+
+- Perform actions needed for release: Specify app ID and add signing config.
+
+- Improve code comments/documentation.
+- Generate dartdoc and include in github repo.
+
+- Write tests.
+
+- Have some sort of code evaluation, e.g. test code coverage. Display results on github.
+
+- Change default bars since 5 love languages is copyrighted.
+- Check licenses of everything used, including UI and packages.
+- Write terms and conditions and license.
+- Write about app dialog info.
+
+- Setup best .gitignore and also ensure there's a way to hide all confidential info in release repo.
+
+- Setup github readme doc.
+- Maybe setup project management in github, rather than just this todolist.
+
+- Setup automated pipeline.
+    - Have two github repos, one public and one private. Each has a development branch and release branch.
+    - Automatically push commits from the private repo to public repo, with any confidential info removed.
+- Release on github, setup different branches with release and testing.
+
 
 
 - Put your bar numbers on partners bars screen (next to their numbers somewhere) for easy comparison.
@@ -22,7 +53,7 @@ For 1.0 Release:
 
 - Add email sign in button to convert account when anonymously signed in. - Hoping flutterfire ui does this soon. If not will have to implement myself.
 
-- Put message stating that if you sign out with anonymous account you cannot sign back in to that account.
+- Put message stating that if you sign out with anonymous account you cannot sign back in to that account, account will be deleted.
 - Delete account on anonymous sign out.
 
 - Add feedback form to settings page. Have options for bug report, feature request and other.
@@ -43,27 +74,21 @@ For 1.0 Release:
 - Show part of bottom slider on bar screens to make it clear that you can scroll.
 - Improve UI theming/design.
 - UI
-    - Less space below Your bars/partner bars titles
-    - Pick better colours for sliders and everything else.
-    - Change dark green colour to something else.
+    \ Less space below Your bars/partner bars titles
+    \ Pick better colours for sliders and everything else.
+    \ Change dark green colour to something else.
     - Add some animation
 
 - See if can call the bars needs, or something similar.
 
 - Improve error displays, display more errors on screen rather than printing, and log non display errors.
 - Show no internet connection message when trying to connect to FireStore with no internet.
-- Improve code comments/documentation.
 
 - Remove unnecessary font files
 - Check performance, see if can reduce storage.
 - Speed up performance where can. Reduce jank, use computes https://docs.flutter.dev/cookbook/networking/background-parsing.
 
 - Test on many different devices and screen sizes.
-
-- Change default bars since 5 love languages is copyrighted.
-- Check licenses of everything used, including UI and packages.
-- Write terms and conditions and license.
-- Write about app dialog info.
 
 - On settings screen, have delete account button, about this app, and theme switcher (dark/light mode).
 - Have welcome screen that showcases app before login.
@@ -72,7 +97,9 @@ For 1.0 Release:
 - Optimise database access
 - Maybe use callable cloud functions to edit data in database.
 - Check best way to write to database. Is current way secure enough? Is there better option for production?
-- Look at what need to do for moving to production.
+- Look at what need to do for moving to release.
+
+- Check GDPR and other data privacy rules. Make sure user data is deleted after certain amount of time.
 
 - Work out business model:
     - Calculate database costs per user
@@ -81,14 +108,7 @@ For 1.0 Release:
 - Setup new development database
 - Setup release database with analytics
 
-- Create App Name and Logo
-- Perform actions needed for release: Specify app ID and add signing config.
-
-- Write tests.
-
-- Have some sort of code evaluation. Display results on github.
-
-- Release on github, setup different branches with release and testing.
+- Update github readme.
 - Release on play store
 
 
