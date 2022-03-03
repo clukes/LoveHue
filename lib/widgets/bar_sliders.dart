@@ -14,6 +14,7 @@ abstract class _BarSliderState extends State<BarSlider> {
   int _sliderValue = 100;
 
   get changed => null;
+
   get onChangeEnd => null;
 
   @override
@@ -173,7 +174,7 @@ class _NonInteractableBarSliderState extends _BarSliderState {
     return super.slider();
   }
 
-  /* TODO: When history is implemented, possibly display the previous bar values on partners screen?
+/* TODO: When history is implemented, possibly display the previous bar values on partners screen?
   @override
   Widget sliderText() {
     int prevValue = widget.relationshipBar.prevValue;
