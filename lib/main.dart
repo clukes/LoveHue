@@ -19,22 +19,6 @@ import '../providers/your_bars_state.dart';
 import '../responsive/responsive_screen_layout.dart';
 import '../utils/theme_data.dart';
 
-/*
-TODO: Explain what magic link is on sign in screen. Login is two words when verb.
-TODO: Show part of bottom slider to make it clear you can scroll.
-TODO: Clean up code.
-TODO: Add loading indicators wherever awaiting async. Use listener.
-TODO: Show no internet connection message when trying to connect to FireStore and no connection error is given.
-TODO: When pulling partners bars from online database, check if still linked to partner. If not, delete partner id from local storage.
-TODO: Pull down to refresh and refresh button on partners page.
-TODO: Settings Screen - Login, Logout, Connect to partner (Display user code), Change display name, etc.
-TODO: Allow convert an anonymous account to a permanent account https://firebase.google.com/docs/auth/android/anonymous-auth?authuser=0#convert-an-anonymous-account-to-a-permanent-account
-TODO: Store anonymous account details in sharedprefs to allow signing back in to anon account.
-TODO: Explain magic link better, and what happens if choose to skip login.
-TODO: Have cancel/back button on magic link screens.
-TODO: Optimization, only update widgets that need updating.
- */
-
 /// Entry point with initializers.
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
