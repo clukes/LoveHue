@@ -4,6 +4,7 @@ import '../models/relationship_bar_model.dart';
 import '../providers/your_bars_state.dart';
 import '../utils/colors.dart';
 
+/// Builds a [Card] for a [RelationshipBar].
 abstract class BarSlider extends StatefulWidget {
   final RelationshipBar relationshipBar;
 
@@ -11,11 +12,17 @@ abstract class BarSlider extends StatefulWidget {
 }
 
 abstract class _BarSliderState extends State<BarSlider> {
-  int _sliderValue = 100;
+  final double _sliderTextFontSize = 14.0;
+  // Ratio of how much less opacity a disabled bar has.
+  final double _disabledOpacityRatio = 0.75;
 
-  get changed => null;
+  int _sliderValue = RelationshipBar.defaultBarValue;
 
-  get onChangeEnd => null;
+  /// Function to call when slider value is changed. Default to null for disabled slider.
+  void Function(double)? get changed => null;
+
+  /// Function to call when slider value is finished changing. Default to null for disabled slider.
+  void Function(double)? get onChangeEnd => null;
 
   @override
   void initState() {
@@ -24,38 +31,38 @@ abstract class _BarSliderState extends State<BarSlider> {
   }
 
   Widget sliderText() {
-    double fontSize = 14;
     return Row(children: [
       Expanded(
-          child: FittedBox(
-        fit: BoxFit.scaleDown,
-        alignment: AlignmentDirectional.centerStart,
-        child: Text(
-          widget.relationshipBar.labelString(),
-          style: Theme.of(context).textTheme.subtitle1?.copyWith(fontSize: fontSize),
+        child: FittedBox(
+          fit: BoxFit.scaleDown,
+          alignment: AlignmentDirectional.centerStart,
+          child: Text(
+            widget.relationshipBar.labelString(),
+            style: Theme.of(context).textTheme.subtitle1?.copyWith(fontSize: _sliderTextFontSize),
+          ),
         ),
-      )),
+      ),
       FittedBox(
         fit: BoxFit.scaleDown,
         alignment: AlignmentDirectional.centerEnd,
         child: Text(
           widget.relationshipBar.valueString(),
-          style: Theme.of(context).textTheme.subtitle2?.copyWith(fontSize: fontSize),
+          style: Theme.of(context).textTheme.subtitle2?.copyWith(fontSize: _sliderTextFontSize),
         ),
       ),
     ]);
   }
 
   Widget slider() {
+    // Get slider color based on current value.
     final activeTrackColor = getSliderColor(_sliderValue)?.active;
     final inactiveTrackColor = getSliderColor(_sliderValue)?.inactive;
-    const disabledOpacityRatio = 0.75;
     return SliderTheme(
       data: SliderTheme.of(context).copyWith(
         activeTrackColor: activeTrackColor,
         inactiveTrackColor: inactiveTrackColor,
-        disabledActiveTrackColor: activeTrackColor?.withOpacity(activeTrackColor.opacity * disabledOpacityRatio),
-        disabledInactiveTrackColor: inactiveTrackColor?.withOpacity(inactiveTrackColor.opacity * disabledOpacityRatio),
+        disabledActiveTrackColor: activeTrackColor?.withOpacity(activeTrackColor.opacity * _disabledOpacityRatio),
+        disabledInactiveTrackColor: inactiveTrackColor?.withOpacity(inactiveTrackColor.opacity * _disabledOpacityRatio),
       ),
       child: Slider(
         value: _sliderValue.toDouble(),
@@ -74,6 +81,7 @@ abstract class _BarSliderState extends State<BarSlider> {
     const contentPadding = EdgeInsets.symmetric(vertical: 16, horizontal: 24);
     return ListTile(
       contentPadding: contentPadding,
+      // Padding on the bottom and right of slider text, to space it from slider and undo button.
       title: Padding(padding: const EdgeInsets.only(bottom: 16, right: 16), child: sliderText()),
       subtitle: slider(),
     );
@@ -83,25 +91,29 @@ abstract class _BarSliderState extends State<BarSlider> {
   Widget build(BuildContext context) {
     const cardMargin = EdgeInsets.symmetric(vertical: 4, horizontal: 16);
     return Card(
-        margin: cardMargin,
-        color: Colors.transparent,
-        elevation: 0,
-        child: Container(
-            decoration: const BoxDecoration(
-              gradient: cardGradient,
-              borderRadius: BorderRadius.all(Radius.circular(24)),
-              boxShadow: [
-                BoxShadow(
-                  color: Color.fromARGB(64, 0, 0, 0),
-                  blurRadius: 5.0,
-                  blurStyle: BlurStyle.outer,
-                ),
-              ],
+      margin: cardMargin,
+      // Make it transparent since we are adding a container with a gradient.
+      color: Colors.transparent,
+      elevation: 0,
+      child: Container(
+        decoration: const BoxDecoration(
+          gradient: cardGradient,
+          borderRadius: BorderRadius.all(Radius.circular(24)),
+          boxShadow: [
+            BoxShadow(
+              color: shadowColor,
+              blurRadius: 5.0,
+              blurStyle: BlurStyle.outer,
             ),
-            child: tile()));
+          ],
+        ),
+        child: tile(),
+      ),
+    );
   }
 }
 
+/// A [BarSlider] that is not disabled.
 class InteractableBarSlider extends BarSlider {
   const InteractableBarSlider({Key? key, required relationshipBar}) : super(key: key, relationshipBar: relationshipBar);
 
@@ -111,14 +123,12 @@ class InteractableBarSlider extends BarSlider {
 
 class _InteractableBarSliderState extends _BarSliderState {
   @override
-  get changed => (double value) {
-        setState(() {
-          _sliderValue = value.round();
-        });
-      };
+  void Function(double)? get changed => (double value) {
+    updateBar(value.round());
+  };
 
   @override
-  get onChangeEnd => (double value) {
+  void Function(double)? get onChangeEnd => (double value) {
         int iValue = value.round();
         widget.relationshipBar.setValue(iValue);
         YourBarsState.instance.barChange();
@@ -137,6 +147,7 @@ class _InteractableBarSliderState extends _BarSliderState {
       children: [
         super.tile(),
         if (widget.relationshipBar.changed)
+          // Add undo button if changed, in the top right corner of the card.
           Positioned(
             right: 0,
             top: 0,
@@ -159,6 +170,7 @@ class _InteractableBarSliderState extends _BarSliderState {
   }
 }
 
+/// A [BarSlider] that is disabled.
 class NonInteractableBarSlider extends BarSlider {
   const NonInteractableBarSlider({Key? key, required relationshipBar})
       : super(key: key, relationshipBar: relationshipBar);
