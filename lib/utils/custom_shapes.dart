@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 class CustomRoundedSliderTrackShape extends RoundedRectSliderTrackShape with BaseSliderTrackShape {
   /// Create a slider track that draws two rectangles that combine with a rounded rectangle via their intersection.
   const CustomRoundedSliderTrackShape();
+
   @override
   void paint(
     PaintingContext context,
