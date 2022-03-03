@@ -28,7 +28,7 @@ const _sliderRed = Color.fromARGB(255, 235, 87, 87);
 const _sliderOrange = Color.fromARGB(255, 242, 153, 74);
 const _sliderYellow = Color.fromARGB(255, 242, 201, 76);
 const _sliderGreen = Color.fromARGB(255, 127, 217, 38);
-const _sliderBrightGreen = Color.fromARGB(255, 4, 196, 115);
+const _sliderDeepGreen = Color.fromARGB(255, 4, 196, 115);
 
 /// List of colors for a slider.
 final sliderColors = [
@@ -36,7 +36,7 @@ final sliderColors = [
   SliderColor.fromActive(_sliderOrange),
   SliderColor.fromActive(_sliderYellow),
   SliderColor.fromActive(_sliderGreen),
-  SliderColor.fromActive(_sliderBrightGreen),
+  SliderColor.fromActive(_sliderDeepGreen),
 ];
 
 /// Color information for a slider.

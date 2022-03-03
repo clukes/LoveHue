@@ -5,6 +5,7 @@ import '../models/link_code_firestore_collection_model.dart';
 import '../models/userinfo_firestore_collection_model.dart';
 import '../pages/sign_in_page.dart';
 
+/// Shows an alert dialog with yes and no buttons.
 Future<void> showAlertDialog({
   required BuildContext context,
   Widget yesButtonText = const Text("Yes"),
@@ -43,20 +44,22 @@ Future<void> showAlertDialog({
   );
 }
 
+/// Shows an alert dialog with the unlink partner message.
 Future<void> showUnlinkAlertDialog(BuildContext context, String partnerName, String partnerLinkCode) async {
   const String yesButtonText = "Unlink";
   const String noButtonText = "Cancel";
   const double partnerInfoScaleFactor = 0.95;
   const double errorScaleFactor = 0.8;
-  String? _errorMsg;
-  StateSetter? _setState;
+  String? errorMsg;
+  StateSetter? setState;
+
   return showAlertDialog(
     context: context,
     yesButtonText: const Text(yesButtonText),
     noButtonText: const Text(noButtonText),
     alertTitle: const Text("Unlink from partner"),
     alertContent: StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
-      _setState = setState;
+      setState = setState;
       return SingleChildScrollView(
         child: ListBody(
           children: <Widget>[
@@ -66,9 +69,9 @@ Future<void> showUnlinkAlertDialog(BuildContext context, String partnerName, Str
               "Partner Code: $partnerLinkCode",
               textScaleFactor: partnerInfoScaleFactor,
             ),
-            if (_errorMsg != null)
+            if (errorMsg != null)
               Text(
-                "\n${_errorMsg!}",
+                "\n${errorMsg!}",
                 textScaleFactor: errorScaleFactor,
               )
           ],
@@ -79,18 +82,19 @@ Future<void> showUnlinkAlertDialog(BuildContext context, String partnerName, Str
       await LinkCode.unlink().then((_) {
         Navigator.pop(context, yesButtonText);
       }).catchError((error) {
-        print(error);
-        if (_setState != null) {
-          _setState!(() {
-            _errorMsg = "Error: $error";
+        if (setState != null) {
+          setState(() {
+            errorMsg = "Error: $error";
           });
         }
       });
     },
+    // Just close the alert dialog if no pressed.
     noPressed: () => Navigator.pop(context, noButtonText),
   );
 }
 
+/// Shows an alert dialog with the delete account message.
 Future<void> showDeleteAlertDialog(BuildContext context) async {
   const String yesButtonText = "Delete";
   const String noButtonText = "Cancel";
@@ -127,7 +131,6 @@ Future<void> showDeleteAlertDialog(BuildContext context) async {
           builder: (context) => const SignInPage(),
         ));
       }).catchError((error) {
-        print(error);
         if (_setState != null) {
           _setState!(() {
             _errorMsg = "Error: $error";
@@ -139,6 +142,7 @@ Future<void> showDeleteAlertDialog(BuildContext context) async {
   );
 }
 
+/// Deletes user data in database, then delete [FirebaseAuth] account with [User.delete]
 Future<void> deleteAccount(BuildContext context) async {
   return UserInformation.deleteUserData(context).then((_) {
     FirebaseAuth.instance.currentUser?.delete();
