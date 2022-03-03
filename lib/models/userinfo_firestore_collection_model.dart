@@ -113,7 +113,8 @@ class UserInformation {
     return await getUserFromID(userID)
         .update(data)
         .then((value) => debugPrint("UserInformation.firestoreUpdateColumns: User Info updated for userID: $userID."))
-        .catchError((error) => debugPrint("UserInformation.firestoreUpdateColumns: Failed to update user info: $error."));
+        .catchError(
+            (error) => debugPrint("UserInformation.firestoreUpdateColumns: Failed to update user info: $error."));
   }
 
   /// Deletes this [UserInformation] from the database.
