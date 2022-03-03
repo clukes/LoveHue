@@ -68,7 +68,7 @@ class RelationshipBarsApp extends StatelessWidget {
             debugShowCheckedModeBanner: false,
             showPerformanceOverlay: false,
             title: 'Relationship Bars',
-            theme: themeData,
+            theme: lightThemeData,
             home: AnnotatedRegion<SystemUiOverlayStyle>(
               value: SystemUiOverlayStyle.dark.copyWith(statusBarIconBrightness: Brightness.light),
               child: SafeArea(

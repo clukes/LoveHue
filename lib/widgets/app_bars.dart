@@ -1,11 +1,12 @@
 import 'package:flutter/material.dart';
 
-const double appBarHeight = 70;
+const double barsPageAppBarHeight = 70;
 
+/// [SliverAppBar] for YourBars and PartnersBars pages.
 class BarsPageAppBar extends StatefulWidget {
-  final Widget barTitleWidget;
-
   const BarsPageAppBar({Key? key, required this.barTitleWidget}) : super(key: key);
+
+  final Widget barTitleWidget;
 
   @override
   _BarsPageAppBarState createState() => _BarsPageAppBarState();
@@ -19,7 +20,7 @@ class _BarsPageAppBarState extends State<BarsPageAppBar> {
       centerTitle: false,
       floating: false,
       pinned: false,
-      toolbarHeight: appBarHeight,
+      toolbarHeight: barsPageAppBarHeight,
       primary: true,
     );
   }
