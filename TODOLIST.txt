@@ -205,3 +205,7 @@ For 1.0 Release
 - Improve code comments/documentation.
 
 - Generate dartdoc and include in github repo.
+
+- Improve code comments/documentation.
+
+- Generate dartdoc and include in github repo.
