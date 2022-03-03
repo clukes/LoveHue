@@ -29,8 +29,6 @@ Get Ready for GitHub release:
 - https://stackoverflow.com/questions/58679233/how-to-change-company-domain-name-in-flutter
 
 - Change default bars since 5 love languages is copyrighted.
-$ gem install license_finder
-- Write terms and conditions and license.
 - Write about app dialog info.
 - Put version number in about dialog
 
@@ -38,7 +36,7 @@ $ gem install license_finder
 - Hide all confidential info in public repo.
 
 - Setup github readme doc.
-- Link to api in readme.
+- Link to api doc in readme.
 - Maybe setup project management in github, rather than just this todolist.
 
 - Before Release: https://docs.flutter.dev/deployment/android
@@ -116,6 +114,8 @@ $ gem install license_finder
 - Look at what need to do for moving to release.
 
 - Check GDPR and other data privacy rules. Make sure user data is deleted after certain amount of time.
+
+- Write terms and conditions.
 
 - Work out business model:
     - Calculate database costs per user
