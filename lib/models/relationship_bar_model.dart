@@ -36,6 +36,7 @@ class RelationshipBar {
 
   /// Min is 0.
   static const minBarValue = 0;
+
   // Initial value, currently set to the max value which is 100. Thought it was more optimistic to default to max than min.
   static const _defaultBarValue = maxBarValue;
 

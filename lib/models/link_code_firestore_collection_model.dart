@@ -115,6 +115,7 @@ class LinkCode {
         PartnersInfoState.instance.addPartner(await UserInformation.firestoreGet(userInfo.partnerID!));
         debugPrint("LinkCode.acceptRequest: Updated partner info with partner id: ${userInfo.partnerID}.");
       } else {
+        // Notify listeners that partner has been connected.
         PartnersInfoState.instance.notify();
       }
     });

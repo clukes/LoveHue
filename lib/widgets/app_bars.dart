@@ -4,6 +4,7 @@ const double appBarHeight = 70;
 
 class BarsPageAppBar extends StatefulWidget {
   final Widget barTitleWidget;
+
   const BarsPageAppBar({Key? key, required this.barTitleWidget}) : super(key: key);
 
   @override

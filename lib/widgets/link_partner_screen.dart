@@ -10,6 +10,7 @@ import 'header.dart';
 
 class LinkPartnerScreen extends StatefulWidget {
   final PartnersInfoState partnersInfoState;
+
   const LinkPartnerScreen({Key? key, required this.partnersInfoState}) : super(key: key);
 
   @override

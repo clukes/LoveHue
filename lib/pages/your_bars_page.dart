@@ -9,7 +9,7 @@ import '../widgets/app_bars.dart';
 import '../widgets/bar_builders.dart';
 import '../widgets/buttons.dart';
 
-/// Partners Bars page builder.
+/// Your Bars page builder.
 ///
 /// Uses [AutomaticKeepAliveClientMixin] for persistent scroll state.
 class YourBars extends StatefulWidget {

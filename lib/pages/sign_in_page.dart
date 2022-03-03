@@ -4,7 +4,7 @@ import 'package:flutterfire_ui/auth.dart';
 
 import '../resources/authentication.dart';
 
-//TODO: LEFT OFF HERE, NEXT TO COMMENT/CLEANUP CODE.
+/// SignIn Page, using flutterfire_ui [SignInScreen].
 class SignInPage extends StatelessWidget {
   const SignInPage({Key? key}) : super(key: key);
 
@@ -84,7 +84,7 @@ class SignInPage extends StatelessWidget {
       providerConfigs: providerConfigs,
       actions: [
         AuthStateChangeAction<SignedIn>((context, _) async {
-          print("Signed in");
+          debugPrint("SignInPage: User signed in.");
           afterSignIn(context);
         }),
       ],

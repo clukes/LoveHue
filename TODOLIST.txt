@@ -22,6 +22,8 @@ Get Ready for GitHub release:
 - Make a logo.
 
 - Perform actions needed for release: Specify app ID and add signing config.
+- Change project name and domain name:
+- https://stackoverflow.com/questions/58679233/how-to-change-company-domain-name-in-flutter
 
 - Improve code comments/documentation.
 - Generate dartdoc and include in github repo.
@@ -34,13 +36,17 @@ Get Ready for GitHub release:
 - Check licenses of everything used, including UI and packages.
 - Write terms and conditions and license.
 - Write about app dialog info.
+- Put version number in about dialog
 
 - Setup best .gitignore and also ensure there's a way to hide all confidential info in release repo.
 
 - Setup github readme doc.
 - Maybe setup project management in github, rather than just this todolist.
 
+- Before Release: https://docs.flutter.dev/deployment/android
+
 - Setup automated pipeline.
+    - https://docs.flutter.dev/deployment/cd
     - Have two github repos, one public and one private. Each has a development branch and release branch.
     - Automatically push commits from the private repo to public repo, with any confidential info removed.
 - Release on github, setup different branches with release and testing.
