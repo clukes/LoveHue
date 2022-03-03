@@ -10,24 +10,23 @@ class SignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final AspectRatio _logo = AspectRatio(
+      aspectRatio: 1,
+      child: SvgPicture.asset('assets/logo.svg'),
+    );
+
     return SignInScreen(
       headerMaxExtent: 200,
       headerBuilder: (context, constraints, _) {
         return Padding(
           padding: const EdgeInsets.all(30),
-          child: AspectRatio(
-            aspectRatio: 1,
-            child: SvgPicture.asset('assets/logo.svg'),
-          ),
+          child: _logo,
         );
       },
       sideBuilder: (context, constraints) {
         return Padding(
           padding: const EdgeInsets.all(30),
-          child: AspectRatio(
-            aspectRatio: 1,
-            child: SvgPicture.asset('assets/logo.svg'),
-          ),
+          child: _logo,
         );
       },
       subtitleBuilder: (context, _) {

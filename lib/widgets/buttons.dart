@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 
 import '../utils/colors.dart';
 
+/// Rounded [OutlinedButton] with [blueColor].
 class StyledButton extends StatelessWidget {
   const StyledButton({Key? key, required this.child, required this.onPressed}) : super(key: key);
   final Widget child;
@@ -12,16 +13,20 @@ class StyledButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) => OutlinedButton(
         style: OutlinedButton.styleFrom(
-            primary: primaryColor,
-            backgroundColor: blueColor,
-            // side: const BorderSide(color: Colors.deepPurple),
-            shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4)))),
+          primary: primaryColor,
+          backgroundColor: blueColor,
+          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+        ),
         onPressed: onPressed,
         child: child,
       );
 }
 
+/// Circle shaped [Container] that blurs the backdrop behind it, and contains [child].
+///
+/// Useful for blurring behind a [FloatingActionButton].
 class BlurredCircle extends StatelessWidget {
+  /// Widget to place in the container.
   final Widget? child;
 
   const BlurredCircle({Key? key, this.child}) : super(key: key);

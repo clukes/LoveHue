@@ -4,16 +4,15 @@ import 'package:google_fonts/google_fonts.dart';
 import 'colors.dart';
 import 'custom_shapes.dart';
 
-final ThemeData themeData = ThemeData.light().copyWith(
+final ThemeData lightThemeData = ThemeData.light().copyWith(
     colorScheme: colorScheme,
     primaryColor: primaryColor,
     backgroundColor: mobileBackgroundColor,
     scaffoldBackgroundColor: mobileBackgroundColor,
     brightness: Brightness.light,
-    textTheme: textTheme,
-    primaryTextTheme: primaryTextTheme,
+    textTheme: _textTheme,
+    primaryTextTheme: _primaryTextTheme,
     appBarTheme: const AppBarTheme(
-      // shape: RoundedRectangleBorder(borderRadius: BorderRadius.only(bottomLeft: Radius.elliptical(10, 5), bottomRight: Radius.elliptical(10, 5))),
       backgroundColor: mobileBackgroundColor,
       foregroundColor: primaryTextColor,
       elevation: 0.0,
@@ -41,21 +40,23 @@ final ThemeData themeData = ThemeData.light().copyWith(
       trackShape: CustomRoundedSliderTrackShape(),
     ),
     floatingActionButtonTheme: const FloatingActionButtonThemeData(
-      backgroundColor: Color.fromARGB(191, 0, 147, 233),
+      backgroundColor: floatingButtonColor,
       elevation: 0,
       highlightElevation: 0,
       hoverElevation: 0,
       focusElevation: 0,
-    ));
+    ),
+);
 
-final TextTheme primaryTextTheme = GoogleFonts.dmSansTextTheme(ThemeData.from(colorScheme: colorScheme).textTheme);
+// Default theme for primary text.
+final TextTheme _primaryTextTheme = GoogleFonts.dmSansTextTheme(ThemeData.from(colorScheme: colorScheme).textTheme);
 
-final TextTheme dmSansTextTheme = primaryTextTheme.copyWith(
+
+final TextTheme _dmSansTextTheme = _primaryTextTheme.copyWith(
   headline6: const TextStyle(fontWeight: FontWeight.w700, fontSize: 28, color: primaryTextColor),
   subtitle1: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16, color: primaryTextColor),
 );
-
-//Allows for other fonts
-final TextTheme textTheme = dmSansTextTheme.copyWith(
+// Theme for non-primary text with a secondary font.
+final TextTheme _textTheme = _dmSansTextTheme.copyWith(
   subtitle2: GoogleFonts.poppins(fontWeight: FontWeight.normal, fontSize: 16, color: secondaryTextColor),
 );
