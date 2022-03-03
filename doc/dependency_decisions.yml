@@ -1,0 +1,150 @@
+---
+- - :permit
+  - MIT
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2022-03-03 21:10:02.656090000 Z
+- - :permit
+  - New
+  - &1
+    :who: 
+    :why: 
+    :versions: []
+    :when: 2022-03-03 21:13:50.105431000 Z
+- - :permit
+  - BSD
+  - *1
+- - :unpermit
+  - New
+  - &2
+    :who: 
+    :why: 
+    :versions: []
+    :when: 2022-03-03 21:14:04.135294000 Z
+- - :unpermit
+  - BSD
+  - *2
+- - :permit
+  - New BSD
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2022-03-03 21:14:10.380962000 Z
+- - :permit
+  - Simplified BSD
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2022-03-03 21:15:48.523238000 Z
+- - :license
+  - sky_engine
+  - New BSD
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2022-03-03 21:20:31.076812000 Z
+- - :permit
+  - Apache 2.0
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2022-03-03 21:21:43.829784000 Z
+- - :license
+  - flutter
+  - New BSD
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2022-03-03 21:23:17.674561000 Z
+- - :license
+  - flutter_web_plugins
+  - New BSD
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2022-03-03 21:23:30.495603000 Z
+- - :license
+  - flutter_test
+  - New BSD
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2022-03-03 21:24:05.619072000 Z
+- - :license
+  - flutter_localizations
+  - New BSD
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2022-03-03 21:24:19.296960000 Z
+- - :license
+  - cloud_firestore_web
+  - New BSD
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2022-03-03 21:25:01.865641000 Z
+- - :license
+  - firebase_dynamic_links
+  - New BSD
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2022-03-03 21:25:25.131246000 Z
+- - :license
+  - firebase_database_web
+  - New BSD
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2022-03-03 21:25:52.570923000 Z
+- - :license
+  - firebase_database
+  - New BSD
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2022-03-03 21:26:17.567933000 Z
+- - :license
+  - firebase_auth
+  - New BSD
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2022-03-03 21:26:33.521632000 Z
+- - :license
+  - firebase_auth_platform_interface
+  - New BSD
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2022-03-03 21:26:43.622887000 Z
+- - :license
+  - firebase_core
+  - New BSD
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2022-03-03 21:33:52.947328000 Z
+- - :license
+  - firebase_auth_web
+  - New BSD
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2022-03-03 21:34:00.950099000 Z
+- - :license
+  - firebase_core_platform_interface
+  - New BSD
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2022-03-03 21:34:10.143151000 Z
+- - :license
+  - firebase_core_web
+  - New BSD
+  - :who: 
+    :why: 
+    :versions: []
+    :when: 2022-03-03 21:34:20.480508000 Z
