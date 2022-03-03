@@ -8,6 +8,7 @@ import '../resources/copy_to_clipboard.dart';
 import '../resources/unique_link_code_generator.dart';
 import 'header.dart';
 
+/// Screen with link partner form to display when no partner linked.
 class LinkPartnerScreen extends StatefulWidget {
   final PartnersInfoState partnersInfoState;
 
@@ -22,47 +23,51 @@ class _LinkPartnerScreenState extends State<LinkPartnerScreen> {
   Widget build(BuildContext context) {
     TextStyle linkCodeTextStyle = DefaultTextStyle.of(context).style.copyWith(fontSize: 20);
     return Container(
-        padding: const EdgeInsets.symmetric(horizontal: 32),
-        child: SizedBox(
-            width: double.infinity,
-            child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-              Consumer<UserInfoState>(builder: (context, userInfoState, _) {
-                return getLinkStatusWidget(userInfoState, widget.partnersInfoState);
-              }),
-              const SizedBox(height: 64),
-              Text(
-                'Your link code is:',
-                style: linkCodeTextStyle,
-                textAlign: TextAlign.center,
-              ),
-              Consumer<UserInfoState>(builder: (BuildContext context, UserInfoState userInfoState, _) {
-                String linkCodeText = userInfoState.linkCode ?? 'Loading...';
-                return Row(
-                  children: [
-                    const Spacer(),
-                    Expanded(
-                      child: SelectableText(
-                        linkCodeText,
-                        style: linkCodeTextStyle.copyWith(fontWeight: FontWeight.bold),
-                        textAlign: TextAlign.center,
-                      ),
+      padding: const EdgeInsets.symmetric(horizontal: 32),
+      child: SizedBox(
+        width: double.infinity,
+        child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
+          Consumer<UserInfoState>(builder: (context, userInfoState, _) {
+            return getLinkStatusWidget(userInfoState, widget.partnersInfoState);
+          }),
+          const SizedBox(height: 64),
+          Text(
+            'Your link code is:',
+            style: linkCodeTextStyle,
+            textAlign: TextAlign.center,
+          ),
+          Consumer<UserInfoState>(builder: (BuildContext context, UserInfoState userInfoState, _) {
+            String linkCodeText = userInfoState.linkCode ?? 'Loading...';
+            return Row(
+              children: [
+                const Spacer(),
+                Expanded(
+                  child: SelectableText(
+                    linkCodeText,
+                    style: linkCodeTextStyle.copyWith(fontWeight: FontWeight.bold),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Expanded(
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: IconButton(
+                      icon: const Icon(Icons.copy),
+                      onPressed: () => copyToClipboard(linkCodeText, context),
                     ),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: IconButton(
-                          icon: const Icon(Icons.copy),
-                          onPressed: () => copyToClipboard(linkCodeText, context),
-                        ),
-                      ),
-                    ),
-                  ],
-                );
-              }),
-            ])));
+                  ),
+                ),
+              ],
+            );
+          }),
+        ]),
+      ),
+    );
   }
 
-  getLinkStatusWidget(UserInfoState userInfoState, PartnersInfoState partnersInfoState) {
+  // Return widget depending on the linking state.
+  Widget getLinkStatusWidget(UserInfoState userInfoState, PartnersInfoState partnersInfoState) {
+    ScaffoldMessenger.of(context).clearSnackBars();
     if (userInfoState.userPending) {
       return const IncomingLinkRequest();
     }
@@ -73,15 +78,15 @@ class _LinkPartnerScreenState extends State<LinkPartnerScreen> {
       return const LinkPartnerForm();
     }
     if (partnersInfoState.partnerLinked) {
-      ScaffoldMessenger.of(context).clearSnackBars();
       return const CircularProgressIndicator();
     }
     return const Center(
-      child: Text("Error: You shouldn't see this message"),
+      child: Text("Error: You shouldn't see this message."),
     );
   }
 }
 
+/// Form displayed when unlinked, to input a link code to link to.
 class LinkPartnerForm extends StatefulWidget {
   const LinkPartnerForm({Key? key}) : super(key: key);
 
@@ -89,7 +94,6 @@ class LinkPartnerForm extends StatefulWidget {
   _LinkPartnerForm createState() => _LinkPartnerForm();
 }
 
-/* TODO: FIX NEXT BUTTON GOING OFFSCREEN WHEN KEYBOARD POPS UP */
 class _LinkPartnerForm extends State<LinkPartnerForm> {
   final _formKey = GlobalKey<FormState>(debugLabel: '_LinkPartnerFormState');
   final _controller = TextEditingController();
@@ -129,6 +133,7 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
   }
 
   String? _linkCodeValidator(String? value) {
+    // Client side validating of link code. Further validation performed when accessing database.
     if (value == null || value.isEmpty) {
       return "Please enter a code.";
     }
@@ -151,10 +156,11 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
       );
       String linkCode = _controller.text;
       await LinkCode.connectTo(linkCode).then((_) {
-        setState(() {});
+        setState(() {
+          // Update page to reflect changes
+        });
       }).catchError((error) {
         setState(() {
-          print(error);
           _errorMsg = "Error: $error";
         });
       });
@@ -163,6 +169,7 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
   }
 }
 
+/// Waiting screen when a link request is sent.
 class LinkRequestSent extends StatefulWidget {
   const LinkRequestSent({Key? key}) : super(key: key);
 
@@ -176,15 +183,18 @@ class _LinkRequestSentState extends State<LinkRequestSent> {
     String code = PartnersInfoState.instance.linkCode ?? "[Error: no partner link code]";
     return Center(
       child: Padding(
-          padding: const EdgeInsets.only(bottom: 16),
-          child: Column(children: <Widget>[
+        padding: const EdgeInsets.only(bottom: 16),
+        child: Column(
+          children: <Widget>[
             Header(heading: "Link request sent to: $code."),
             const SizedBox(height: 16),
             OutlinedButton(
               onPressed: () async => await cancelRequest(context),
               child: const Text('Cancel'),
             ),
-          ])),
+          ],
+        ),
+      ),
     );
   }
 
@@ -193,12 +203,15 @@ class _LinkRequestSentState extends State<LinkRequestSent> {
       const SnackBar(content: Text('Cancelling...')),
     );
     await LinkCode.unlink().catchError((error) {
-      print(error);
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $error.')),
+      );
     });
     ScaffoldMessenger.of(context).clearSnackBars();
   }
 }
 
+/// Accept/Reject screen when a link request is received.
 class IncomingLinkRequest extends StatefulWidget {
   const IncomingLinkRequest({Key? key}) : super(key: key);
 
@@ -246,11 +259,11 @@ class _IncomingLinkRequestState extends State<IncomingLinkRequest> {
       const SnackBar(content: Text('Accepting...')),
     );
     await LinkCode.acceptRequest().catchError((error) {
-      print("ACCEPT ERROR: $error");
-      print("ACCEPT");
       ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $error.')),
+      );
     });
-    print("DONE ACCEPT");
   }
 
   Future<void> rejectRequest(BuildContext context) async {
@@ -258,7 +271,10 @@ class _IncomingLinkRequestState extends State<IncomingLinkRequest> {
       const SnackBar(content: Text('Rejecting...')),
     );
     await LinkCode.unlink().catchError((error) {
-      print(error);
-    }).then((_) => ScaffoldMessenger.of(context).clearSnackBars());
+      ScaffoldMessenger.of(context).clearSnackBars();
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Error: $error.')),
+      );
+    });
   }
 }
