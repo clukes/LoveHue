@@ -1,6 +1,5 @@
-// Copyright 2018 The Flutter team. All rights reserved.
-// Use of this source code is governed by a BSD-style license that can be
-// found in the LICENSE file.
+// Copyright (C) 2022 Conner Lukes <clukes@icloud.com>
+// All rights reserved.
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -10,7 +9,6 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 
-import '../firebase_options.dart';
 import '../pages/sign_in_page.dart';
 import '../providers/application_state.dart';
 import '../providers/partners_info_state.dart';
@@ -23,7 +21,7 @@ import '../utils/theme_data.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+    // options: DefaultFirebaseOptions.currentPlatform,
   );
   await ApplicationState.instance.init();
 
