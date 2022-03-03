@@ -11,8 +11,8 @@ class RelationshipBar {
   RelationshipBar({
     required this.order,
     required this.label,
-    this.prevValue = _defaultBarValue,
-    this.value = _defaultBarValue,
+    this.prevValue = defaultBarValue,
+    this.value = defaultBarValue,
     this.changed = false,
   });
 
@@ -38,7 +38,7 @@ class RelationshipBar {
   static const minBarValue = 0;
 
   // Initial value, currently set to the max value which is 100. Thought it was more optimistic to default to max than min.
-  static const _defaultBarValue = maxBarValue;
+  static const defaultBarValue = maxBarValue;
 
   // Column names for a RelationshipBar document in the FirebaseFirestore Database.
   static const String _columnOrder = 'order';
@@ -84,8 +84,8 @@ class RelationshipBar {
     return RelationshipBar(
       order: res[_columnOrder] as int,
       label: res[_columnLabel]! as String,
-      value: res[_columnValue] is int ? res[_columnValue] as int : _defaultBarValue,
-      prevValue: res[_columnValue] is int ? res[_columnValue] as int : _defaultBarValue,
+      value: res[_columnValue] is int ? res[_columnValue] as int : defaultBarValue,
+      prevValue: res[_columnValue] is int ? res[_columnValue] as int : defaultBarValue,
     );
   }
 
@@ -217,7 +217,7 @@ class RelationshipBarDocument {
     });
   }
 
-  /// Retrieve [RelationshipBarDocument] with the greatest timestamp from the FirebaseFirestore collection for given userID.
+  /// Retrieve ordered list of [RelationshipBarDocument] for user with given userID.
   static Query<RelationshipBarDocument> getOrderedUserBarsFromID(String userID) {
     return getUserBarsFromID(userID).orderBy(RelationshipBarDocument.columnTimestamp, descending: true);
   }

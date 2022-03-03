@@ -3,7 +3,9 @@ import 'package:flutter/material.dart';
 import '../responsive/screen_layout.dart';
 import '../utils/colors.dart';
 import '../utils/globals.dart';
+import '../utils/navigation.dart';
 
+/// Wider layout with [AppBar] navigation for screen size > [webScreenSize].
 class WebScreenLayout extends ScreenLayout {
   const WebScreenLayout({Key? key}) : super(key: key);
 
@@ -22,6 +24,7 @@ class _WebScreenLayoutState extends ScreenLayoutState {
 
   @override
   Widget build(BuildContext context) {
+    // TODO: Improve web screen layout navigation bar.
     return Scaffold(
       appBar: AppBar(
         actions: [
@@ -48,12 +51,7 @@ class _WebScreenLayoutState extends ScreenLayoutState {
           ),
         ],
       ),
-      body: PageView(
-        physics: const NeverScrollableScrollPhysics(),
-        children: navigationBarItems,
-        controller: pageController,
-        onPageChanged: onPageChanged,
-      ),
+      body: pageView,
     );
   }
 }

@@ -7,9 +7,73 @@ import '../resources/data_formatting.dart';
 import '../widgets/bar_sliders.dart';
 import 'app_bars.dart';
 
+/// Builder to build widgets for a [RelationshipBarDocument], including each [RelationshipBar].
+class BarDocBuilder extends StatelessWidget {
+  const BarDocBuilder({Key? key, this.barDoc, required this.itemBuilderFunction}) : super(key: key);
+
+  final RelationshipBarDocument? barDoc;
+
+  /// Function used to build a [RelationshipBar] widget.
+  final Widget Function(BuildContext context, RelationshipBar bar) itemBuilderFunction;
+
+  @override
+  Widget build(BuildContext context) {
+    if (barDoc != null) {
+      List<RelationshipBar>? bars = barDoc!.barList ?? [];
+      return Column(children: [
+        if (barDoc?.timestamp != null)
+          AppBar(
+            primary: false,
+            titleTextStyle: Theme
+                .of(context)
+                .textTheme
+                .subtitle2,
+            title: FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(
+                "Last updated at: ${formatTimestamp(barDoc!.timestamp!)}",
+                textScaleFactor: 1.1,
+              ),
+            ),
+            centerTitle: false,
+            toolbarHeight: barsPageAppBarHeight / 2,
+          ),
+        Expanded(
+          child: ListView.builder(
+            // kFloatingActionButtonMargin to give space at the bottom where floating action buttons don't overlap with bars.
+            padding: const EdgeInsets.only(top: 4, bottom: kFloatingActionButtonMargin + 64),
+            itemCount: bars.length,
+            itemBuilder: (context, index) => itemBuilderFunction(context, bars[index]),
+          ),
+        )
+      ]);
+    }
+    return const Center(child: CircularProgressIndicator());
+  }
+}
+
+/// Builder for a non-disabled [RelationshipBar], e.g. on YourBars page.
+Widget interactableBarBuilder(BuildContext context, RelationshipBar bar) {
+  WidgetsBinding.instance?.addPostFrameCallback((_) => YourBarsState.instance.barsReset = false);
+  return InteractableBarSlider(relationshipBar: bar);
+}
+
+/// Builder for a disabled [RelationshipBar], e.g. on PartnersBars page.
+Widget nonInteractableBarBuilder(BuildContext context, RelationshipBar bar) {
+  return NonInteractableBarSlider(relationshipBar: bar);
+}
+
+/// Returns a [StreamBuilder] that builds bars for a user with given userID.
+Widget barStreamBuilder(String userID, Widget Function(BuildContext context, RelationshipBar bar) itemBuilderFunction) {
+  return StreamBuilder<QuerySnapshot<RelationshipBarDocument>>(
+      stream: RelationshipBarDocument.getOrderedUserBarsFromID(userID).snapshots(),
+      builder: (context, snapshot) => buildBars(context, snapshot, itemBuilderFunction),
+  );
+}
+
+/// Builds bars from given QuerySnapshot using the builder function.
 Widget buildBars(BuildContext context, AsyncSnapshot<QuerySnapshot<RelationshipBarDocument>> snapshot,
     Widget Function(BuildContext context, RelationshipBar bar) itemBuilderFunction) {
-  print("Build");
   if (snapshot.hasError) {
     return Center(
       child: Text(snapshot.error.toString()),
@@ -20,69 +84,8 @@ Widget buildBars(BuildContext context, AsyncSnapshot<QuerySnapshot<RelationshipB
   }
   RelationshipBarDocument? latestBarDoc;
   List<RelationshipBarDocument> listBars = RelationshipBarDocument.fromQuerySnapshot(snapshot.requireData);
-  print(listBars);
   if (listBars.isNotEmpty) {
     latestBarDoc = listBars.first;
   }
-  print(latestBarDoc);
   return BarDocBuilder(barDoc: latestBarDoc, itemBuilderFunction: itemBuilderFunction);
-}
-
-class BarDocBuilder extends StatelessWidget {
-  final RelationshipBarDocument? barDoc;
-  final Widget Function(BuildContext context, RelationshipBar bar) itemBuilderFunction;
-
-  const BarDocBuilder({Key? key, this.barDoc, required this.itemBuilderFunction}) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    print("LISTBuilder");
-    if (barDoc != null) {
-      List<RelationshipBar>? bars = barDoc!.barList ?? [];
-      return Column(children: [
-        if (barDoc?.timestamp != null)
-          AppBar(
-            primary: false,
-            titleTextStyle: Theme.of(context).textTheme.subtitle2,
-            title: FittedBox(
-              fit: BoxFit.scaleDown,
-              child: Text(
-                "Last updated at: ${formatTimestamp(barDoc!.timestamp!)}",
-                textScaleFactor: 1.1,
-              ),
-            ),
-            centerTitle: false,
-            toolbarHeight: appBarHeight / 2,
-          ),
-        Expanded(
-          child: ListView.builder(
-            padding: const EdgeInsets.only(top: 4, bottom: kFloatingActionButtonMargin + 64),
-            itemCount: bars.length,
-            itemBuilder: (context, index) => itemBuilderFunction(context, bars[index]),
-          ),
-        )
-      ]);
-    }
-    return const Center(child: Text("No Relationship Bars"));
-  }
-}
-
-Widget interactableBarBuilder(BuildContext context, RelationshipBar bar) {
-  WidgetsBinding.instance?.addPostFrameCallback((_) => YourBarsState.instance.barsReset = false);
-  return InteractableBarSlider(relationshipBar: bar);
-}
-
-Widget nonInteractableBarBuilder(BuildContext context, RelationshipBar bar) {
-  print("BAR");
-
-  return NonInteractableBarSlider(relationshipBar: bar);
-}
-
-Widget barStreamBuilder(String id, Widget Function(BuildContext context, RelationshipBar bar) itemBuilderFunction) {
-  print("BUILDER");
-  return StreamBuilder<QuerySnapshot<RelationshipBarDocument>>(
-      stream: RelationshipBarDocument.getOrderedUserBarsFromID(id).snapshots(),
-      builder: (context, snapshot) {
-        return buildBars(context, snapshot, itemBuilderFunction);
-      });
 }

@@ -2,8 +2,10 @@ import 'dart:math';
 
 import 'package:flutter/material.dart';
 
+/// Create a slider track that draws two rectangles that combine with a rounded rectangle via their intersection.
+///
+/// Fixes the issue where a rounded rectangle track without a thumb ends up with flat edges when full/empty.
 class CustomRoundedSliderTrackShape extends RoundedRectSliderTrackShape with BaseSliderTrackShape {
-  /// Create a slider track that draws two rectangles that combine with a rounded rectangle via their intersection.
   const CustomRoundedSliderTrackShape();
 
   @override
@@ -19,27 +21,17 @@ class CustomRoundedSliderTrackShape extends RoundedRectSliderTrackShape with Bas
     bool isEnabled = false,
     double additionalActiveTrackHeight = 0,
   }) {
-    assert(context != null);
-    assert(offset != null);
-    assert(parentBox != null);
-    assert(sliderTheme != null);
     assert(sliderTheme.disabledActiveTrackColor != null);
     assert(sliderTheme.disabledInactiveTrackColor != null);
     assert(sliderTheme.activeTrackColor != null);
     assert(sliderTheme.inactiveTrackColor != null);
     assert(sliderTheme.thumbShape != null);
-    assert(enableAnimation != null);
-    assert(textDirection != null);
-    assert(thumbCenter != null);
-    // If the slider [SliderThemeData.trackHeight] is less than or equal to 0,
-    // then it makes no difference whether the track is painted or not,
-    // therefore the painting  can be a no-op.
-    if (sliderTheme.trackHeight == null || sliderTheme.trackHeight! <= 0) {
+    assert(sliderTheme.trackHeight != null);
+    if (sliderTheme.trackHeight! <= 0) {
+      // Don't need to paint if trackHeight is <= 0.
       return;
     }
 
-    // Assign the track segment paints, which are leading: active and
-    // trailing: inactive.
     final ColorTween activeTrackColorTween =
         ColorTween(begin: sliderTheme.disabledActiveTrackColor, end: sliderTheme.activeTrackColor);
     final ColorTween inactiveTrackColorTween =
@@ -49,6 +41,7 @@ class CustomRoundedSliderTrackShape extends RoundedRectSliderTrackShape with Bas
 
     final Paint leftTrackPaint;
     final Paint rightTrackPaint;
+    // Switch the left and right depending on text direction.
     switch (textDirection) {
       case TextDirection.ltr:
         leftTrackPaint = activePaint;
@@ -73,14 +66,15 @@ class CustomRoundedSliderTrackShape extends RoundedRectSliderTrackShape with Bas
     // Uses a Rounded Rectangle that covers the whole track to combine with left and right rects via intersection.
     RRect trackRRect = RRect.fromLTRBAndCorners(
       trackRect.left,
-      (textDirection == TextDirection.rtl) ? trackRect.top - (additionalActiveTrackHeight / 2) : trackRect.top,
+      trackRect.top + (additionalActiveTrackHeight / 2),
       trackRect.right,
-      (textDirection == TextDirection.rtl) ? trackRect.bottom + (additionalActiveTrackHeight / 2) : trackRect.bottom,
+      trackRect.bottom + (additionalActiveTrackHeight / 2),
       topLeft: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
       bottomLeft: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
       topRight: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
       bottomRight: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
     );
+
     RRect leftRect = RRect.fromLTRBAndCorners(
       trackRect.left,
       (textDirection == TextDirection.ltr) ? trackRect.top - (additionalActiveTrackHeight / 2) : trackRect.top,
@@ -97,7 +91,10 @@ class CustomRoundedSliderTrackShape extends RoundedRectSliderTrackShape with Bas
       topRight: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
       bottomRight: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
     );
+
     if (thumbCenter.dx >= trackRect.right - trackRadius.x || thumbCenter.dx <= trackRect.left + trackRadius.x) {
+      // If we get near the end of the track,
+      // we need to intersect the trackRRect with left and right to prevent flat edges.
       context.canvas.drawPath(
         Path.combine(
           PathOperation.intersect,
@@ -128,10 +125,6 @@ class CustomRoundedSliderTrackShape extends RoundedRectSliderTrackShape with Bas
     bool isEnabled = false,
     bool isDiscrete = false,
   }) {
-    assert(isEnabled != null);
-    assert(isDiscrete != null);
-    assert(parentBox != null);
-    assert(sliderTheme != null);
     final double trackHeight = sliderTheme.trackHeight!;
     assert(trackHeight >= 0);
 
@@ -139,7 +132,7 @@ class CustomRoundedSliderTrackShape extends RoundedRectSliderTrackShape with Bas
     final double trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2;
     final double trackRight = trackLeft + parentBox.size.width;
     final double trackBottom = trackTop + trackHeight;
-    // If the parentBox's size less than slider's size the trackRight will be less than trackLeft, so switch them.
+    // If the parentBox's size is less than slider's size the trackRight will be less than trackLeft, so switch them.
     return Rect.fromLTRB(min(trackLeft, trackRight), trackTop, max(trackLeft, trackRight), trackBottom);
   }
 }

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 
 import '../responsive/screen_layout.dart';
 import '../utils/globals.dart';
+import '../utils/navigation.dart';
 
+/// Vertical layout with [BottomNavigationBar] for screen size <= [webScreenSize].
 class MobileScreenLayout extends ScreenLayout {
   const MobileScreenLayout({Key? key}) : super(key: key);
 
@@ -19,12 +21,7 @@ class _MobileScreenLayoutState extends ScreenLayoutState {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
-        physics: const NeverScrollableScrollPhysics(),
-        children: navigationBarItems,
-        controller: pageController,
-        onPageChanged: onPageChanged,
-      ),
+      body: pageView,
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
           boxShadow: <BoxShadow>[
