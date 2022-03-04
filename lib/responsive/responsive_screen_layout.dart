@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:relationship_bars/responsive/web_screen_layout.dart';
+import 'package:lovehue/responsive/web_screen_layout.dart';
 
 import '../responsive/mobile_screen_layout.dart';
 import '../utils/globals.dart';

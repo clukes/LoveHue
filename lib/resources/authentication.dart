@@ -9,7 +9,7 @@ final actionCodeSettings = ActionCodeSettings(
     // URL you want to redirect back to. The domain (www.example.com) for this
     // URL must be whitelisted in the Firebase Console.
   // TODO: Change url with app name.
-    url: 'http://relationshipapp.page.link/',
+    url: 'http://lovehue.app/',
     // This must be true
     handleCodeInApp: true,
     // installIfNotAvailable

@@ -1,3 +1,4 @@
+// TODO: Setup new email and developer name
 // Copyright (C) 2022 Conner Lukes <clukes@icloud.com>
 // All rights reserved.
 
@@ -16,13 +17,17 @@ import '../providers/user_info_state.dart';
 import '../providers/your_bars_state.dart';
 import '../responsive/responsive_screen_layout.dart';
 import '../utils/theme_data.dart';
-import 'firebase_options.dart';
+import 'utils/app_info_class.dart';
+
+late final AppInfo appInfo;
 
 /// Entry point with initializers.
-void main() async {
+void mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo) async {
+  appInfo = flavorAppInfo;
+
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    options: DefaultFirebaseOptions.currentPlatform,
+    options: firebaseOptions,
   );
   await ApplicationState.instance.init();
 
@@ -55,7 +60,7 @@ class RelationshipBarsApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         showPerformanceOverlay: false,
-        title: 'Relationship Bars', //TODO: Set to correct name.
+        title: appInfo.appName, //TODO: Set to correct name.
         // Currently there is only one theme, a light one.
         theme: lightThemeData,
         home: AnnotatedRegion<SystemUiOverlayStyle>(

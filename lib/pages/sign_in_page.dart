@@ -2,7 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:flutterfire_ui/auth.dart';
 
+import '../main_common.dart';
 import '../resources/authentication.dart';
+
+/// Logo with set aspect ratio
+final AspectRatio logo = AspectRatio(
+  aspectRatio: 1,
+  child: SvgPicture.asset('assets/logo.svg'),
+);
 
 /// SignIn Page, using flutterfire_ui [SignInScreen].
 class SignInPage extends StatelessWidget {
@@ -10,29 +17,24 @@ class SignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AspectRatio _logo = AspectRatio(
-      aspectRatio: 1,
-      child: SvgPicture.asset('assets/logo.svg'),
-    );
-
     return SignInScreen(
       headerMaxExtent: 200,
       headerBuilder: (context, constraints, _) {
         return Padding(
           padding: const EdgeInsets.all(30),
-          child: _logo,
+          child: logo,
         );
       },
       sideBuilder: (context, constraints) {
         return Padding(
           padding: const EdgeInsets.all(30),
-          child: _logo,
+          child: logo,
         );
       },
       subtitleBuilder: (context, _) {
-        return const Padding(
-          padding: EdgeInsets.only(bottom: 8),
-          child: Text('Welcome to RelationshipApp!'),
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 8),
+          child: Text('Welcome to ${appInfo.appName}!'),
         );
       },
       footerBuilder: (context, _) {

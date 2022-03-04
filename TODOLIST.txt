@@ -22,6 +22,7 @@ Get Ready for GitHub release:
 	LoveChrome
     LoveHue
 
+- Think of developer name.
 - Make a logo.
 
 - Perform actions needed for release: Specify app ID and add signing config.
@@ -30,12 +31,9 @@ Get Ready for GitHub release:
 
 - Change default bars since 5 love languages is copyrighted.
 - Write about app dialog info.
-- Put version number in about dialog
-
-- Setup best .gitignore
-- Hide all confidential info in public repo.
 
 - Setup github readme doc.
+- Include roadmap/future features.
 - Link to api doc in readme.
 - Maybe setup project management in github, rather than just this todolist.
 
@@ -53,6 +51,11 @@ Get Ready for GitHub release:
 - Have some sort of code evaluation, e.g. test code coverage. Display results on github.
 
 
+- Have flavours:
+ - Prod - link to prod firebase project
+ - Dev - link to dev firebase project
+ - Emu - link to emulated firebase
+ - Demo - link to an emulated firebase with pre populated data? Design for web
 
 
 
@@ -120,6 +123,7 @@ Get Ready for GitHub release:
 - Work out business model:
     - Calculate database costs per user
     - Decide on monetisation: Figure out how to cover database costs with that monetisation method.
+- Write that monetisation is to cover database costs and not for profit, maybe accept donations.
 
 - Setup new development database
 - Setup release database with analytics
@@ -129,7 +133,9 @@ Get Ready for GitHub release:
 
 - Have demo version installed on phone, maybe need two versions that are connected to each other to properly showcase it.
 
-- Have nice website, use template, showing about app, link to from portfolio.
+- Have nice website, use template, showing about app, link to it from portfolio.
+- Set this up on google hosting, with same name as domain name.
+
 - Maybe have web version to demo with emulated database.
 
 
@@ -209,3 +215,7 @@ For 1.0 Release
 - Improve code comments/documentation.
 
 - Generate dartdoc and include in github repo.
+
+- Setup best .gitignore
+- Hide all confidential info in public repo.
+- Put version number in about dialog
