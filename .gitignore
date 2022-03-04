@@ -121,5 +121,5 @@ app.*.symbols
 !/dev/ci/**/Gemfile.lock
 
 # Private files
-lib/.firebase_options.dart
+lib/firebase_options.dart
 **/android/app/google-services.json

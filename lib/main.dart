@@ -16,12 +16,13 @@ import '../providers/user_info_state.dart';
 import '../providers/your_bars_state.dart';
 import '../responsive/responsive_screen_layout.dart';
 import '../utils/theme_data.dart';
+import 'firebase_options.dart';
 
 /// Entry point with initializers.
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp(
-    // options: DefaultFirebaseOptions.currentPlatform,
+    options: DefaultFirebaseOptions.currentPlatform,
   );
   await ApplicationState.instance.init();
 
