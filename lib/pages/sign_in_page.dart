@@ -8,7 +8,7 @@ import '../resources/authentication.dart';
 /// Logo with set aspect ratio
 final AspectRatio logo = AspectRatio(
   aspectRatio: 1,
-  child: SvgPicture.asset('assets/logo.svg'),
+  child: SvgPicture.asset('assets/images/logo.svg'),
 );
 
 /// SignIn Page, using flutterfire_ui [SignInScreen].
@@ -17,6 +17,7 @@ class SignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    debugPrint("${actionCodeSettings.androidPackageName}");
     return SignInScreen(
       headerMaxExtent: 200,
       headerBuilder: (context, constraints, _) {
@@ -85,7 +86,6 @@ class SignInPage extends StatelessWidget {
       providerConfigs: providerConfigs,
       actions: [
         AuthStateChangeAction<SignedIn>((context, _) async {
-          debugPrint("SignInPage: User signed in.");
           afterSignIn(context);
         }),
       ],

@@ -8,6 +8,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
 import '../pages/sign_in_page.dart';
@@ -20,12 +21,15 @@ import '../utils/theme_data.dart';
 import 'utils/app_info_class.dart';
 
 late final AppInfo appInfo;
+late final PackageInfo packageInfo;
 
 /// Entry point with initializers.
 void mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo) async {
-  appInfo = flavorAppInfo;
-
   WidgetsFlutterBinding.ensureInitialized();
+
+  appInfo = flavorAppInfo;
+  packageInfo = await PackageInfo.fromPlatform();
+  debugPrint("Bundle: ${packageInfo.packageName}");
   await Firebase.initializeApp(
     options: firebaseOptions,
   );

@@ -1,6 +1,7 @@
 TODO: Make better TODO list.
 Bugs:
 / Username editing bug (not being able to enter text when editing username twice) seems to be flutter problem, hopefully flutter fixes soon. [Fix is done, waiting for it to reach release: https://github.com/flutter/engine/pull/30916]
+- Trim whitespace in email input for magic link.
 
 For 1.0 Release:
 Get Ready for GitHub release:
@@ -24,6 +25,7 @@ Get Ready for GitHub release:
 
 - Think of developer name.
 - Make a logo.
+- Change icon: https://github.com/VeryGoodOpenSource/very_good_cli/blob/main/doc/very_good_core.md
 
 - Perform actions needed for release: Specify app ID and add signing config.
 - Change project name and domain name:
@@ -53,11 +55,12 @@ Get Ready for GitHub release:
 
 - Have flavours:
  - Prod - link to prod firebase project
+    - Setup prod firebase project
  - Dev - link to dev firebase project
  - Emu - link to emulated firebase
+    - Setup emulated firebase
  - Demo - link to an emulated firebase with pre populated data? Design for web
-
-
+    - Setup demo backend. Emulated firebase?
 
 - Put your bar numbers on partners bars screen (next to their numbers somewhere) for easy comparison.
   [NOTE: Possibly not needed anymore now that scroll position persists when switching screens.

@@ -50,7 +50,7 @@ android {
     defaultConfig {
         // TODO: Specify your own unique Application ID (https://developer.android.com/studio/build/application-id.html).
         applicationId "com.clukes.lovehue"
-        minSdkVersion 19
+        minSdkVersion 23
         targetSdkVersion flutter.targetSdkVersion
         versionCode flutterVersionCode.toInteger()
         versionName flutterVersionName
@@ -61,7 +61,7 @@ android {
     lintOptions {
         checkReleaseBuilds false
     }
-
+    // TODO: Add your own signing config for the release build.
     signingConfigs {
         if (System.getenv("ANDROID_KEYSTORE_PATH")) {
             release {
@@ -82,7 +82,7 @@ android {
 
     flavorDimensions "default"
     productFlavors { 
-        production {
+        prod {
             dimension "default"
             applicationIdSuffix ""
             manifestPlaceholders = [appName: "Lovehue"]
@@ -90,17 +90,17 @@ android {
         emu {
             dimension "default"
             applicationIdSuffix ".emu"
-            manifestPlaceholders = [appName: "[EMU] Lovehue"]
+            manifestPlaceholders = [appName: "Lovehue [EMU]"]
         }        
-        development {
+        dev {
             dimension "default"
             applicationIdSuffix ".dev"
-            manifestPlaceholders = [appName: "[DEV] Lovehue"]
+            manifestPlaceholders = [appName: "Lovehue [DEV]"]
         }
         demo {
             dimension "default"
             applicationIdSuffix ".demo"
-            manifestPlaceholders = [appName: "[DEMO] Lovehue"]
+            manifestPlaceholders = [appName: "Lovehue [DEMO]"]
         }
     }
 
@@ -123,4 +123,16 @@ flutter {
 
 dependencies {
     implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+    // Import the BoM for the Firebase platform
+    implementation platform('com.google.firebase:firebase-bom:29.0.3')
+
+    // Declare the dependency for the Firebase Authentication library
+    // When using the BoM, you don't specify versions in Firebase library dependencies
+    implementation 'com.google.firebase:firebase-auth-ktx'
+
+    // Also declare the dependency for the Google Play services library and specify its version
+    implementation 'com.google.android.gms:play-services-auth:20.0.1'
+
+    implementation "androidx.multidex:multidex:2.0.1"
 }
