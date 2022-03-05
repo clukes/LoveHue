@@ -2,7 +2,7 @@
     package="com.clukes.lovehue">
    <application
         android:label="${appName}"
-        android:icon="@mipmap/ic_launcher">
+        android:icon="@mipmap/lovehue">
         <activity
             android:name=".MainActivity"
             android:exported="true"
