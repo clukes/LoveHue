@@ -3,9 +3,11 @@ const webScreenSize = 900;
 
 /// Default bar labels for new user.
 const List<String> defaultBarLabels = [
-  "Words of Affirmation",
-  "Quality Time",
-  "Giving Gifts",
-  "Acts of Service",
-  "Physical Touch",
+  "Verbal Affection",
+  "Physical Affection",
+  "Undivided Attention",
+  "Shared Activities",
+  "Communication",
+  "Responsibilities",
+  "Gifts/Surprises/Planning things to do",
 ];

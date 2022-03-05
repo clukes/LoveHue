@@ -1,4 +1,4 @@
-package com.example.relationship_bars
+package com.example.lovehue
 
 import io.flutter.embedding.android.FlutterActivity
 
