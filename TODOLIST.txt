@@ -3,10 +3,11 @@ Bugs:
 / Username editing bug (not being able to enter text when editing username twice) seems to be flutter problem, hopefully flutter fixes soon. [Fix is done, waiting for it to reach release: https://github.com/flutter/engine/pull/30916]
 - Trim whitespace in email input for magic link.
 - Fix image too large on load screen.
+- Fix crashing on first open on my phone.
 
 NOTE:
 To build dev apk
-flutter build apk --flavor dev -t lib/main_development.dart --debug
+flutter build apk --flavor dev -t lib/main_development.dart
 
 
 For 1.0 Release:
@@ -34,6 +35,7 @@ Get Ready for GitHub release:
 - Change icon: https://github.com/VeryGoodOpenSource/very_good_cli/blob/main/doc/very_good_core.md
 https://icon.kitchen/
 https://icon.kitchen/i/H4sIAAAAAAAAA1VRy27CMBD8lWp7pRKkLYIc%2B64EUiW4VT1s4rWx6mRT2wFFiH%2Fv2ilItS%2Fe8Xhmdn2EPbqeApRH0GY7dAQl2AYNwUSATY3OtkawmtpIPoNrDN9QanSBUvmBSmXOESJ3UBbTCXhrdnE8VhwjN%2BPZkc7oSeCzmfGorIiLdGVez4WI1ezYz4RxvSjUXGshZKhIkNZ6QZVA2BonMkVxn0U3O8yq4ae3vpablPBZa6qj9Ahhh4oPAnZha2N6CCve01ufiF144dFaY2PdIJdP66sNtiFlY6cuTdsoY6n%2FSvHtwkOa0TXpJS4xS61w4F7EYJ%2FL95pbKKPv5bX4ZPZdkXZO%2BJgaG%2FuaykqYddRi8z9hhcrQhUvLGc1vQfwbVr1Ln%2Fgp81CerRKy5ZT7kKfUORxuQmRP8HX6BXSv1eT0AQAA
+- Change launcher icon to white background, with just a drop shadow.
 
 - Animated logo. https://icons8.com/icon/SHe9eWc1NTiF/half-heart
 Maybe have them split and go either side of the L in love, one in front one behind, and meet up on other side.

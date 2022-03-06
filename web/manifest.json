@@ -1,11 +1,11 @@
 {
-    "name": "Lovehue",
-    "short_name": "Lovehue",
+    "name": "LoveHue",
+    "short_name": "LoveHue",
     "start_url": ".",
     "display": "standalone",
     "background_color": "#0175C2",
     "theme_color": "#0175C2",
-    "description": "A Very Good Project created by Very Good CLI.",
+    "description": "A Relationship App.",
     "orientation": "portrait-primary",
     "prefer_related_applications": false,
     "icons": [
