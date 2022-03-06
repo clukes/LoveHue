@@ -1,3 +1,5 @@
+import 'package:flutter/material.dart';
+
 /// Screen width to switch layout.
 const webScreenSize = 900;
 
@@ -9,5 +11,11 @@ const List<String> defaultBarLabels = [
   "Shared Activities",
   "Communication",
   "Responsibilities",
-  "Gifts/Surprises/Planning things to do",
+  "Gifts and Experiences",
 ];
+
+/// App logo without text.
+const AssetImage appLogo = AssetImage('assets/images/lovehue.png');
+
+/// App logo with text.
+const AssetImage appTextLogo = AssetImage('assets/images/lovehuetext.png');

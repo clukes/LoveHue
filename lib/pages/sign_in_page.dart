@@ -1,15 +1,9 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:flutterfire_ui/auth.dart';
 
 import '../main_common.dart';
 import '../resources/authentication.dart';
-
-/// Logo with set aspect ratio
-final AspectRatio logo = AspectRatio(
-  aspectRatio: 1,
-  child: SvgPicture.asset('assets/images/logo.svg'),
-);
+import '../utils/globals.dart';
 
 /// SignIn Page, using flutterfire_ui [SignInScreen].
 class SignInPage extends StatelessWidget {
@@ -17,6 +11,10 @@ class SignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    AspectRatio logo = const AspectRatio(
+      aspectRatio: 1,
+      child: Image(image: appTextLogo,),
+    );
     debugPrint("${actionCodeSettings.androidPackageName}");
     return SignInScreen(
       headerMaxExtent: 200,
