@@ -29,7 +29,6 @@ void mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo) async {
 
   appInfo = flavorAppInfo;
   packageInfo = await PackageInfo.fromPlatform();
-  debugPrint("Bundle: ${packageInfo.packageName}");
   await Firebase.initializeApp(
     options: firebaseOptions,
   );

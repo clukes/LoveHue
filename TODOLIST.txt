@@ -31,21 +31,11 @@ Get Ready for GitHub release:
     LoveHue
 
 - Think of developer name.
-- Make a logo. 
-- Change icon: https://github.com/VeryGoodOpenSource/very_good_cli/blob/main/doc/very_good_core.md
-https://icon.kitchen/
-https://icon.kitchen/i/H4sIAAAAAAAAA1VRy27CMBD8lWp7pRKkLYIc%2B64EUiW4VT1s4rWx6mRT2wFFiH%2Fv2ilItS%2Fe8Xhmdn2EPbqeApRH0GY7dAQl2AYNwUSATY3OtkawmtpIPoNrDN9QanSBUvmBSmXOESJ3UBbTCXhrdnE8VhwjN%2BPZkc7oSeCzmfGorIiLdGVez4WI1ezYz4RxvSjUXGshZKhIkNZ6QZVA2BonMkVxn0U3O8yq4ae3vpablPBZa6qj9Ahhh4oPAnZha2N6CCve01ufiF144dFaY2PdIJdP66sNtiFlY6cuTdsoY6n%2FSvHtwkOa0TXpJS4xS61w4F7EYJ%2FL95pbKKPv5bX4ZPZdkXZO%2BJgaG%2FuaykqYddRi8z9hhcrQhUvLGc1vQfwbVr1Ln%2Fgp81CerRKy5ZT7kKfUORxuQmRP8HX6BXSv1eT0AQAA
-- Change launcher icon to white background, with just a drop shadow.
 
-- Animated logo. https://icons8.com/icon/SHe9eWc1NTiF/half-heart
-Maybe have them split and go either side of the L in love, one in front one behind, and meet up on other side.
-
-- Add license for icons8 https://icons8.com/license
 - Perform actions needed for release: Specify app ID and add signing config.
 - Change project name and domain name:
 - https://stackoverflow.com/questions/58679233/how-to-change-company-domain-name-in-flutter
 
-- Change default bars since 5 love languages is copyrighted.
 - Write about app dialog info.
 
 - Setup github readme doc.
@@ -156,6 +146,8 @@ Maybe have them split and go either side of the L in love, one in front one behi
 - Maybe have web version to demo with emulated database.
 
 
+- Animated logo. https://icons8.com/icon/SHe9eWc1NTiF/half-heart
+Maybe have them split and go either side of the L in love, one in front one behind, and meet up on other side.
 
 
 
