@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 
@@ -13,7 +14,9 @@ class SignInPage extends StatelessWidget {
   Widget build(BuildContext context) {
     AspectRatio logo = const AspectRatio(
       aspectRatio: 1,
-      child: Image(image: appTextLogo,),
+      child: Image(
+        image: appTextLogo,
+      ),
     );
     debugPrint("${actionCodeSettings.androidPackageName}");
     return SignInScreen(
@@ -33,18 +36,22 @@ class SignInPage extends StatelessWidget {
       subtitleBuilder: (context, _) {
         return Padding(
           padding: const EdgeInsets.only(bottom: 8),
-          child: Text('Welcome to ${appInfo.appName}!'),
+          child: Text('Welcome to ${appInfo.appName}.'),
         );
       },
       footerBuilder: (context, _) {
         return Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.only(top: 16),
-              child: Text(
-                'By signing in, you agree to our terms and conditions.',
-                style: TextStyle(color: Colors.grey),
-              ),
+            Padding(
+              padding: const EdgeInsets.only(top: 16),
+              child: Column(children: const [
+                if (!kIsWeb)
+                  Text('You can use magic link to sign in with a verification link sent to your email, no password required.\n'),
+                Text(
+                  'By using this app, you agree to our terms and conditions.',
+                  style: TextStyle(color: Colors.grey),
+                ),
+              ]),
             ),
             const SizedBox(height: 70),
             const Divider(
@@ -66,7 +73,7 @@ class SignInPage extends StatelessWidget {
                 Container(
                   padding: const EdgeInsets.only(bottom: 8),
                   child: const Text(
-                    'If you choose not to log in you can still create an account later.',
+                    'If you choose not to log in, you cannot sync data across devices. However, you can still create an account later.',
                     textScaleFactor: 0.9,
                     style: TextStyle(color: Colors.grey),
                   ),
