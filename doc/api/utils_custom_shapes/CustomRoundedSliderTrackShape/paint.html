@@ -1,0 +1,293 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the paint method from the CustomRoundedSliderTrackShape class, for the Dart programming language.">
+  <title>paint method - CustomRoundedSliderTrackShape class - custom_shapes library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../../"
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">lovehue</a></li>
+    <li><a href="../../utils_custom_shapes/utils_custom_shapes-library.html">custom_shapes</a></li>
+    <li><a href="../../utils_custom_shapes/CustomRoundedSliderTrackShape-class.html">CustomRoundedSliderTrackShape</a></li>
+    <li class="self-crumb">paint method</li>
+  </ol>
+  <div class="self-name">paint</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-method">paint</span> method 
+    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+<div>
+  <ol class="annotation-list">
+    <li>@<a href="https://api.flutter.dev/flutter/dart-core/override-constant.html">override</a></li>
+  </ol>
+</div>
+
+<span class="returntype">void</span>
+<span class="name ">paint</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="paint-param-context"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/rendering/PaintingContext-class.html">PaintingContext</a></span> <span class="parameter-name">context</span>, </span></li>
+<li><span class="parameter" id="paint-param-offset"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/Offset-class.html">Offset</a></span> <span class="parameter-name">offset</span>, </span></li>
+<li><span class="parameter" id="paint-param-parentBox">{<span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/rendering/RenderBox-class.html">RenderBox</a></span> <span class="parameter-name">parentBox</span>, </span></li>
+<li><span class="parameter" id="paint-param-sliderTheme"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/material/SliderThemeData-class.html">SliderThemeData</a></span> <span class="parameter-name">sliderTheme</span>, </span></li>
+<li><span class="parameter" id="paint-param-enableAnimation"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/animation/Animation-class.html">Animation</a><span class="signature">&lt;<wbr><span class="type-parameter"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span>&gt;</span></span> <span class="parameter-name">enableAnimation</span>, </span></li>
+<li><span class="parameter" id="paint-param-textDirection"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/TextDirection.html">TextDirection</a></span> <span class="parameter-name">textDirection</span>, </span></li>
+<li><span class="parameter" id="paint-param-thumbCenter"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/Offset-class.html">Offset</a></span> <span class="parameter-name">thumbCenter</span>, </span></li>
+<li><span class="parameter" id="paint-param-isDiscrete"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">isDiscrete</span> = <span class="default-value">false</span>, </span></li>
+<li><span class="parameter" id="paint-param-isEnabled"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">isEnabled</span> = <span class="default-value">false</span>, </span></li>
+<li><span class="parameter" id="paint-param-additionalActiveTrackHeight"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/double-class.html">double</a></span> <span class="parameter-name">additionalActiveTrackHeight</span> = <span class="default-value">0</span>}</span></li>
+</ol>)
+
+      <div class="features">override</div>
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Paints the track shape based on the state passed to it.</p>
+<p>The <code>context</code> argument is the same as the one that includes the <a href="https://api.flutter.dev/flutter/material/Slider-class.html">Slider</a>'s
+render box.</p>
+<p>The <code>offset</code> argument the offset of the origin of the <code>parentBox</code> to the
+origin of its <code>context</code> canvas. This shape must be painted relative to
+this offset. See <a href="https://api.flutter.dev/flutter/rendering/PaintingContextCallback.html">PaintingContextCallback</a>.</p>
+<p>The <code>parentBox</code> argument is the <a href="https://api.flutter.dev/flutter/rendering/RenderBox-class.html">RenderBox</a> of the <a href="https://api.flutter.dev/flutter/material/Slider-class.html">Slider</a>. Its attributes,
+such as size, can be used to assist in painting this shape.</p>
+<p>the <code>sliderTheme</code> argument is the theme assigned to the <a href="https://api.flutter.dev/flutter/material/Slider-class.html">Slider</a> that this
+shape belongs to.</p>
+<p>The <code>enableAnimation</code> argument is an animation triggered when the <a href="https://api.flutter.dev/flutter/material/Slider-class.html">Slider</a>
+is enabled, and it reverses when the slider is disabled. The <a href="https://api.flutter.dev/flutter/material/Slider-class.html">Slider</a> is
+enabled when <a href="https://api.flutter.dev/flutter/material/Slider/onChanged.html">Slider.onChanged</a> is not null.Use this to paint intermediate
+frames for this shape when the slider changes enabled state.</p>
+<p>The <code>thumbCenter</code> argument is the offset of the center of the thumb
+relative to the origin of the <a href="https://api.flutter.dev/flutter/rendering/PaintingContext/canvas.html">PaintingContext.canvas</a>. It can be used as
+the point that divides the track into 2 segments.</p>
+<p>The <code>isEnabled</code> argument is false when <a href="https://api.flutter.dev/flutter/material/Slider/onChanged.html">Slider.onChanged</a> is null and true
+otherwise. When true, the slider will respond to input.</p>
+<p>The <code>isDiscrete</code> argument is true if <a href="https://api.flutter.dev/flutter/material/Slider/divisions.html">Slider.divisions</a> is non-null. When
+true, the slider will render tick marks on top of the track.</p>
+<p>The <code>textDirection</code> argument can be used to determine how the track
+segments are painted depending on whether they are active or not.</p>
+<p>The track segment between the start of the slider and the thumb is the
+active track segment. The track segment between the thumb and the end of the
+slider is the inactive track segment. In <a href="https://api.flutter.dev/flutter/dart-ui/TextDirection.html">TextDirection.ltr</a>, the start of
+the slider is on the left, and in <a href="https://api.flutter.dev/flutter/dart-ui/TextDirection.html">TextDirection.rtl</a>, the start of the
+slider is on the right.</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">@override
+void paint(
+  PaintingContext context,
+  Offset offset, {
+  required RenderBox parentBox,
+  required SliderThemeData sliderTheme,
+  required Animation&lt;double&gt; enableAnimation,
+  required TextDirection textDirection,
+  required Offset thumbCenter,
+  bool isDiscrete = false,
+  bool isEnabled = false,
+  double additionalActiveTrackHeight = 0,
+}) {
+  assert(sliderTheme.disabledActiveTrackColor != null);
+  assert(sliderTheme.disabledInactiveTrackColor != null);
+  assert(sliderTheme.activeTrackColor != null);
+  assert(sliderTheme.inactiveTrackColor != null);
+  assert(sliderTheme.thumbShape != null);
+  assert(sliderTheme.trackHeight != null);
+  if (sliderTheme.trackHeight! &lt;= 0) {
+    &#47;&#47; Don&#39;t need to paint if trackHeight is &lt;= 0.
+    return;
+  }
+
+  final ColorTween activeTrackColorTween =
+      ColorTween(begin: sliderTheme.disabledActiveTrackColor, end: sliderTheme.activeTrackColor);
+  final ColorTween inactiveTrackColorTween =
+      ColorTween(begin: sliderTheme.disabledInactiveTrackColor, end: sliderTheme.inactiveTrackColor);
+  final Paint activePaint = Paint()..color = activeTrackColorTween.evaluate(enableAnimation)!;
+  final Paint inactivePaint = Paint()..color = inactiveTrackColorTween.evaluate(enableAnimation)!;
+
+  final Paint leftTrackPaint;
+  final Paint rightTrackPaint;
+  &#47;&#47; Switch the left and right depending on text direction.
+  switch (textDirection) {
+    case TextDirection.ltr:
+      leftTrackPaint = activePaint;
+      rightTrackPaint = inactivePaint;
+      break;
+    case TextDirection.rtl:
+      leftTrackPaint = inactivePaint;
+      rightTrackPaint = activePaint;
+      break;
+  }
+
+  final Rect trackRect = getPreferredRect(
+    parentBox: parentBox,
+    offset: offset,
+    sliderTheme: sliderTheme,
+    isEnabled: isEnabled,
+    isDiscrete: isDiscrete,
+  );
+  final Radius trackRadius = Radius.circular(trackRect.height &#47; 2);
+  final Radius activeTrackRadius = Radius.circular((trackRect.height + additionalActiveTrackHeight) &#47; 2);
+
+  &#47;&#47; Uses a Rounded Rectangle that covers the whole track to combine with left and right rects via intersection.
+  RRect trackRRect = RRect.fromLTRBAndCorners(
+    trackRect.left,
+    trackRect.top + (additionalActiveTrackHeight &#47; 2),
+    trackRect.right,
+    trackRect.bottom + (additionalActiveTrackHeight &#47; 2),
+    topLeft: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
+    bottomLeft: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
+    topRight: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
+    bottomRight: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
+  );
+
+  RRect leftRect = RRect.fromLTRBAndCorners(
+    trackRect.left,
+    (textDirection == TextDirection.ltr) ? trackRect.top - (additionalActiveTrackHeight &#47; 2) : trackRect.top,
+    thumbCenter.dx,
+    (textDirection == TextDirection.ltr) ? trackRect.bottom + (additionalActiveTrackHeight &#47; 2) : trackRect.bottom,
+    topLeft: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
+    bottomLeft: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
+  );
+  RRect rightRect = RRect.fromLTRBAndCorners(
+    trackRect.right,
+    (textDirection == TextDirection.ltr) ? trackRect.top - (additionalActiveTrackHeight &#47; 2) : trackRect.top,
+    thumbCenter.dx,
+    (textDirection == TextDirection.ltr) ? trackRect.bottom + (additionalActiveTrackHeight &#47; 2) : trackRect.bottom,
+    topRight: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
+    bottomRight: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
+  );
+
+  if (thumbCenter.dx &gt;= trackRect.right - trackRadius.x || thumbCenter.dx &lt;= trackRect.left + trackRadius.x) {
+    &#47;&#47; If we get near the end of the track,
+    &#47;&#47; we need to intersect the trackRRect with left and right to prevent flat edges.
+    context.canvas.drawPath(
+      Path.combine(
+        PathOperation.intersect,
+        Path()..addRRect(leftRect),
+        Path()..addRRect(trackRRect),
+      ),
+      leftTrackPaint,
+    );
+    context.canvas.drawPath(
+      Path.combine(
+        PathOperation.intersect,
+        Path()..addRRect(rightRect),
+        Path()..addRRect(trackRRect),
+      ),
+      rightTrackPaint,
+    );
+  } else {
+    context.canvas.drawRRect(leftRect, leftTrackPaint);
+    context.canvas.drawRRect(rightRect, rightTrackPaint);
+  }
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../../index.html">lovehue</a></li>
+  <li><a href="../../utils_custom_shapes/utils_custom_shapes-library.html">custom_shapes</a></li>
+  <li><a href="../../utils_custom_shapes/CustomRoundedSliderTrackShape-class.html">CustomRoundedSliderTrackShape</a></li>
+  <li class="self-crumb">paint method</li>
+</ol>
+
+
+    <h5>CustomRoundedSliderTrackShape class</h5>
+    <ol>
+
+    <li class="section-title"><a href="../../utils_custom_shapes/CustomRoundedSliderTrackShape-class.html#constructors">Constructors</a></li>
+    <li><a href="../../utils_custom_shapes/CustomRoundedSliderTrackShape/CustomRoundedSliderTrackShape.html">CustomRoundedSliderTrackShape</a></li>
+
+
+    <li class="section-title inherited">
+      <a href="../../utils_custom_shapes/CustomRoundedSliderTrackShape-class.html#instance-properties">Properties</a>
+    </li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
+
+    <li class="section-title"><a href="../../utils_custom_shapes/CustomRoundedSliderTrackShape-class.html#instance-methods">Methods</a></li>
+    <li><a href="../../utils_custom_shapes/CustomRoundedSliderTrackShape/getPreferredRect.html">getPreferredRect</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+    <li><a href="../../utils_custom_shapes/CustomRoundedSliderTrackShape/paint.html">paint</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+
+    <li class="section-title inherited"><a href="../../utils_custom_shapes/CustomRoundedSliderTrackShape-class.html#operators">Operators</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+
+
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    lovehue
+      0.5.0+1
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/script.js?v1"></script>
+
+
+
+</body>
+
+</html>
+

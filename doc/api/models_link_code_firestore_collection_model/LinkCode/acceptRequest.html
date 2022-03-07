@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the acceptRequest method from the LinkCode class, for the Dart programming language.">
+  <title>acceptRequest method - LinkCode class - link_code_firestore_collection_model library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../../"
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">lovehue</a></li>
+    <li><a href="../../models_link_code_firestore_collection_model/models_link_code_firestore_collection_model-library.html">link_code_firestore_collection_model</a></li>
+    <li><a href="../../models_link_code_firestore_collection_model/LinkCode-class.html">LinkCode</a></li>
+    <li class="self-crumb">acceptRequest method</li>
+  </ol>
+  <div class="self-name">acceptRequest</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-method">acceptRequest</span> method 
+    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+<span class="name ">acceptRequest</span>(<wbr>)
+
+      
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Updates <a href="../../models_link_code_firestore_collection_model/LinkCode-class.html">LinkCode</a> data in the LinkCode collection to connect a user and partner.</p>
+<p>Accepts link code request sent to the current <a href="../../models_link_code_firestore_collection_model/LinkCode/user.html">user</a>.
+Throws <a href="../../resources_printable_error/PrintableError-class.html">PrintableError</a> if user is already connected to a different partner,
+or there is no user or partner for the currently stored <a href="../../models_userinfo_firestore_collection_model/UserInformation-class.html">UserInformation</a>.</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">static Future&lt;void&gt; acceptRequest() async {
+  if (PartnersInfoState.instance.partnerExist &amp;&amp; !UserInfoState.instance.userPending) {
+    throw PrintableError(&quot;Already connected to a partner.&quot;);
+  }
+  UserInformation userInfo = _getCurrentUser();
+  DocumentReference&lt;UserInformation?&gt; currentUser = UserInformation.getUserFromID(userInfo.userID);
+  &#47;&#47; Update the user info in database first, then update locally stored information.
+  await currentUser.update({UserInformation.columnLinkPending: false}).then((_) async {
+    debugPrint(&quot;LinkCode.acceptRequest: Updated linkPending for user id: ${currentUser.id}.&quot;);
+    UserInfoState.instance.userInfo?.linkPending = false;
+    &#47;&#47; Pull local partner info from database if it isn&#39;t correct.
+    if (userInfo.partnerID != null &amp;&amp;
+        (!PartnersInfoState.instance.partnerExist || userInfo.partnerID != PartnersInfoState.instance.partnersID)) {
+      PartnersInfoState.instance.addPartner(await UserInformation.firestoreGet(userInfo.partnerID!));
+      debugPrint(&quot;LinkCode.acceptRequest: Updated partner info with partner id: ${userInfo.partnerID}.&quot;);
+    } else {
+      &#47;&#47; Notify listeners that partner has been connected.
+      PartnersInfoState.instance.notify();
+    }
+  });
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../../index.html">lovehue</a></li>
+  <li><a href="../../models_link_code_firestore_collection_model/models_link_code_firestore_collection_model-library.html">link_code_firestore_collection_model</a></li>
+  <li><a href="../../models_link_code_firestore_collection_model/LinkCode-class.html">LinkCode</a></li>
+  <li class="self-crumb">acceptRequest method</li>
+</ol>
+
+
+    <h5>LinkCode class</h5>
+    <ol>
+
+    <li class="section-title"><a href="../../models_link_code_firestore_collection_model/LinkCode-class.html#constructors">Constructors</a></li>
+    <li><a href="../../models_link_code_firestore_collection_model/LinkCode/LinkCode.html">LinkCode</a></li>
+
+
+    <li class="section-title">
+      <a href="../../models_link_code_firestore_collection_model/LinkCode-class.html#instance-properties">Properties</a>
+    </li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li><a href="../../models_link_code_firestore_collection_model/LinkCode/linkCode.html">linkCode</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
+    <li><a href="../../models_link_code_firestore_collection_model/LinkCode/user.html">user</a></li>
+
+    <li class="section-title"><a href="../../models_link_code_firestore_collection_model/LinkCode-class.html#instance-methods">Methods</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+    <li><a href="../../models_link_code_firestore_collection_model/LinkCode/toMap.html">toMap</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+
+    <li class="section-title inherited"><a href="../../models_link_code_firestore_collection_model/LinkCode-class.html#operators">Operators</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+
+
+
+    <li class="section-title"><a href="../../models_link_code_firestore_collection_model/LinkCode-class.html#static-methods">Static methods</a></li>
+    <li><a href="../../models_link_code_firestore_collection_model/LinkCode/acceptRequest.html">acceptRequest</a></li>
+    <li><a href="../../models_link_code_firestore_collection_model/LinkCode/connectTo.html">connectTo</a></li>
+    <li><a href="../../models_link_code_firestore_collection_model/LinkCode/create.html">create</a></li>
+    <li><a href="../../models_link_code_firestore_collection_model/LinkCode/fromMap.html">fromMap</a></li>
+    <li><a href="../../models_link_code_firestore_collection_model/LinkCode/unlink.html">unlink</a></li>
+
+    <li class="section-title"><a href="../../models_link_code_firestore_collection_model/LinkCode-class.html#constants">Constants</a></li>
+    <li><a href="../../models_link_code_firestore_collection_model/LinkCode/columnLinkCode-constant.html">columnLinkCode</a></li>
+    <li><a href="../../models_link_code_firestore_collection_model/LinkCode/columnUser-constant.html">columnUser</a></li>
+</ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    lovehue
+      0.5.0+1
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/script.js?v1"></script>
+
+
+
+</body>
+
+</html>
+
