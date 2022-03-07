@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the getPreferredRect method from the CustomRoundedSliderTrackShape class, for the Dart programming language.">
+  <title>getPreferredRect method - CustomRoundedSliderTrackShape class - custom_shapes library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../../static-assets/styles.css?v1">
+  <link rel="icon" href="../../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../../"
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../../index.html">lovehue</a></li>
+    <li><a href="../../utils_custom_shapes/utils_custom_shapes-library.html">custom_shapes</a></li>
+    <li><a href="../../utils_custom_shapes/CustomRoundedSliderTrackShape-class.html">CustomRoundedSliderTrackShape</a></li>
+    <li class="self-crumb">getPreferredRect method</li>
+  </ol>
+  <div class="self-name">getPreferredRect</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-method">getPreferredRect</span> method 
+    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
+</h1></div>
+
+    <section class="multi-line-signature">
+      
+<div>
+  <ol class="annotation-list">
+    <li>@<a href="https://api.flutter.dev/flutter/dart-core/override-constant.html">override</a></li>
+  </ol>
+</div>
+
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-ui/Rect-class.html">Rect</a></span>
+<span class="name ">getPreferredRect</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="getPreferredRect-param-parentBox">{<span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/rendering/RenderBox-class.html">RenderBox</a></span> <span class="parameter-name">parentBox</span>, </span></li>
+<li><span class="parameter" id="getPreferredRect-param-offset"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-ui/Offset-class.html">Offset</a></span> <span class="parameter-name">offset</span> = <span class="default-value">Offset.zero</span>, </span></li>
+<li><span class="parameter" id="getPreferredRect-param-sliderTheme"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/material/SliderThemeData-class.html">SliderThemeData</a></span> <span class="parameter-name">sliderTheme</span>, </span></li>
+<li><span class="parameter" id="getPreferredRect-param-isEnabled"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">isEnabled</span> = <span class="default-value">false</span>, </span></li>
+<li><span class="parameter" id="getPreferredRect-param-isDiscrete"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/dart-core/bool-class.html">bool</a></span> <span class="parameter-name">isDiscrete</span> = <span class="default-value">false</span>}</span></li>
+</ol>)
+
+      <div class="features">override</div>
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Returns the preferred bounds of the shape.</p>
+<p>It is used to provide horizontal boundaries for the thumb's position, and
+to help position the slider thumb and tick marks relative to the track.</p>
+<p>The <code>parentBox</code> argument can be used to help determine the preferredRect relative to
+attributes of the render box of the slider itself, such as size.</p>
+<p>The <code>offset</code> argument is relative to the caller's bounding box. It can be used to
+convert gesture coordinates from global to slider-relative coordinates.</p>
+<p>the <code>sliderTheme</code> argument is the theme assigned to the <a href="https://api.flutter.dev/flutter/material/Slider-class.html">Slider</a> that this
+shape belongs to.</p>
+<p>The <code>isEnabled</code> argument is false when <a href="https://api.flutter.dev/flutter/material/Slider/onChanged.html">Slider.onChanged</a> is null and true
+otherwise. When true, the slider will respond to input.</p>
+<p>The <code>isDiscrete</code> argument is true if <a href="https://api.flutter.dev/flutter/material/Slider/divisions.html">Slider.divisions</a> is non-null. When
+true, the slider will render tick marks on top of the track.</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">@override
+Rect getPreferredRect({
+  required RenderBox parentBox,
+  Offset offset = Offset.zero,
+  required SliderThemeData sliderTheme,
+  bool isEnabled = false,
+  bool isDiscrete = false,
+}) {
+  final double trackHeight = sliderTheme.trackHeight!;
+  assert(trackHeight &gt;= 0);
+
+  final double trackLeft = offset.dx;
+  final double trackTop = offset.dy + (parentBox.size.height - trackHeight) &#47; 2;
+  final double trackRight = trackLeft + parentBox.size.width;
+  final double trackBottom = trackTop + trackHeight;
+  &#47;&#47; If the parentBox&#39;s size is less than slider&#39;s size the trackRight will be less than trackLeft, so switch them.
+  return Rect.fromLTRB(min(trackLeft, trackRight), trackTop, max(trackLeft, trackRight), trackBottom);
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../../index.html">lovehue</a></li>
+  <li><a href="../../utils_custom_shapes/utils_custom_shapes-library.html">custom_shapes</a></li>
+  <li><a href="../../utils_custom_shapes/CustomRoundedSliderTrackShape-class.html">CustomRoundedSliderTrackShape</a></li>
+  <li class="self-crumb">getPreferredRect method</li>
+</ol>
+
+
+    <h5>CustomRoundedSliderTrackShape class</h5>
+    <ol>
+
+    <li class="section-title"><a href="../../utils_custom_shapes/CustomRoundedSliderTrackShape-class.html#constructors">Constructors</a></li>
+    <li><a href="../../utils_custom_shapes/CustomRoundedSliderTrackShape/CustomRoundedSliderTrackShape.html">CustomRoundedSliderTrackShape</a></li>
+
+
+    <li class="section-title inherited">
+      <a href="../../utils_custom_shapes/CustomRoundedSliderTrackShape-class.html#instance-properties">Properties</a>
+    </li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/hashCode.html">hashCode</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/runtimeType.html">runtimeType</a></li>
+
+    <li class="section-title"><a href="../../utils_custom_shapes/CustomRoundedSliderTrackShape-class.html#instance-methods">Methods</a></li>
+    <li><a href="../../utils_custom_shapes/CustomRoundedSliderTrackShape/getPreferredRect.html">getPreferredRect</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/noSuchMethod.html">noSuchMethod</a></li>
+    <li><a href="../../utils_custom_shapes/CustomRoundedSliderTrackShape/paint.html">paint</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/toString.html">toString</a></li>
+
+    <li class="section-title inherited"><a href="../../utils_custom_shapes/CustomRoundedSliderTrackShape-class.html#operators">Operators</a></li>
+    <li class="inherited"><a href="https://api.flutter.dev/flutter/dart-core/Object/operator_equals.html">operator ==</a></li>
+
+
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    lovehue
+      0.5.0+1
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../../static-assets/highlight.pack.js?v1"></script>
+<script src="../../static-assets/script.js?v1"></script>
+
+
+
+</body>
+
+</html>
+

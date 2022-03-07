@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, height=device-height, initial-scale=1, user-scalable=no">
+  <meta name="description" content="API docs for the showAlertDialog function from the profile_page_widgets library, for the Dart programming language.">
+  <title>showAlertDialog function - profile_page_widgets library - Dart API</title>
+
+
+  
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Roboto+Mono:ital,wght@0,300;0,400;0,500;0,700;1,400&display=swap" rel="stylesheet">
+  <link href="https://fonts.googleapis.com/icon?family=Material+Icons" rel="stylesheet">
+  
+  <link rel="stylesheet" href="../static-assets/github.css?v1">
+  <link rel="stylesheet" href="../static-assets/styles.css?v1">
+  <link rel="icon" href="../static-assets/favicon.png?v1">
+
+  
+</head>
+
+
+<body data-base-href="../"
+      data-using-base-href="false">
+
+<div id="overlay-under-drawer"></div>
+
+<header id="title">
+  <button id="sidenav-left-toggle" type="button">&nbsp;</button>
+  <ol class="breadcrumbs gt-separated dark hidden-xs">
+    <li><a href="../index.html">lovehue</a></li>
+    <li><a href="../widgets_profile_page_widgets/widgets_profile_page_widgets-library.html">profile_page_widgets</a></li>
+    <li class="self-crumb">showAlertDialog function</li>
+  </ol>
+  <div class="self-name">showAlertDialog</div>
+  <form class="search navbar-right" role="search">
+    <input type="text" id="search-box" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<main>
+
+
+  <div id="dartdoc-main-content" class="main-content">
+      <div>
+<h1><span class="kind-function">showAlertDialog</span> function 
+    <a href="https://dart.dev/null-safety" class="feature feature-null-safety" title="Supports the null safety language feature.">Null safety</a>
+ 
+</h1></div>
+
+    <section class="multi-line-signature">
+        
+
+<span class="returntype"><a href="https://api.flutter.dev/flutter/dart-async/Future-class.html">Future</a><span class="signature">&lt;<wbr><span class="type-parameter">void</span>&gt;</span></span>
+<span class="name ">showAlertDialog</span>(<wbr><ol class="parameter-list"><li><span class="parameter" id="showAlertDialog-param-context">{<span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/BuildContext-class.html">BuildContext</a></span> <span class="parameter-name">context</span>, </span></li>
+<li><span class="parameter" id="showAlertDialog-param-yesButtonText"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a></span> <span class="parameter-name">yesButtonText</span> = <span class="default-value">const Text(&quot;Yes&quot;)</span>, </span></li>
+<li><span class="parameter" id="showAlertDialog-param-noButtonText"><span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a></span> <span class="parameter-name">noButtonText</span> = <span class="default-value">const Text(&quot;No&quot;)</span>, </span></li>
+<li><span class="parameter" id="showAlertDialog-param-alertTitle"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a></span> <span class="parameter-name">alertTitle</span>, </span></li>
+<li><span class="parameter" id="showAlertDialog-param-alertContent"><span>required</span> <span class="type-annotation"><a href="https://api.flutter.dev/flutter/widgets/Widget-class.html">Widget</a></span> <span class="parameter-name">alertContent</span>, </span></li>
+<li><span class="parameter" id="showAlertDialog-param-yesPressed"><span class="type-annotation">void</span> <span class="parameter-name">yesPressed</span>(<ol class="parameter-list"></ol>
+)?, </span></li>
+<li><span class="parameter" id="showAlertDialog-param-noPressed"><span class="type-annotation">void</span> <span class="parameter-name">noPressed</span>(<ol class="parameter-list"></ol>
+)?}</span></li>
+</ol>)
+
+    </section>
+    
+<section class="desc markdown">
+  <p>Shows an alert dialog with yes and no buttons.</p>
+</section>
+
+
+    
+<section class="summary source-code" id="source">
+  <h2><span>Implementation</span></h2>
+  <pre class="language-dart"><code class="language-dart">Future&lt;void&gt; showAlertDialog({
+  required BuildContext context,
+  Widget yesButtonText = const Text(&quot;Yes&quot;),
+  Widget noButtonText = const Text(&quot;No&quot;),
+  required Widget alertTitle,
+  required Widget alertContent,
+  void Function()? yesPressed,
+  void Function()? noPressed,
+}) async {
+  Widget noButton = TextButton(
+    child: noButtonText,
+    onPressed: noPressed,
+  );
+
+  Widget yesButton = TextButton(
+    child: yesButtonText,
+    onPressed: yesPressed,
+  );
+
+  AlertDialog alert = AlertDialog(
+    title: alertTitle,
+    content: alertContent,
+    actions: [
+      noButton,
+      yesButton,
+    ],
+  );
+
+  &#47;&#47; show the dialog
+  return showDialog&lt;void&gt;(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) {
+      return alert;
+    },
+  );
+}</code></pre>
+</section>
+
+
+  </div> <!-- /.main-content -->
+
+  <div id="dartdoc-sidebar-left" class="sidebar sidebar-offcanvas-left">
+    <header id="header-search-sidebar" class="hidden-l">
+  <form class="search-sidebar" role="search">
+    <input type="text" id="search-sidebar" autocomplete="off" disabled class="form-control typeahead" placeholder="Loading search...">
+  </form>
+</header>
+
+<ol class="breadcrumbs gt-separated dark hidden-l" id="sidebar-nav">
+  <li><a href="../index.html">lovehue</a></li>
+  <li><a href="../widgets_profile_page_widgets/widgets_profile_page_widgets-library.html">profile_page_widgets</a></li>
+  <li class="self-crumb">showAlertDialog function</li>
+</ol>
+
+
+    <h5>profile_page_widgets library</h5>
+    <ol>
+
+
+
+
+
+  <li class="section-title"><a href="../widgets_profile_page_widgets/widgets_profile_page_widgets-library.html#functions">Functions</a></li>
+  <li><a href="../widgets_profile_page_widgets/deleteAccount.html">deleteAccount</a></li>
+  <li><a href="../widgets_profile_page_widgets/showAlertDialog.html">showAlertDialog</a></li>
+  <li><a href="../widgets_profile_page_widgets/showDeleteAlertDialog.html">showDeleteAlertDialog</a></li>
+  <li><a href="../widgets_profile_page_widgets/showUnlinkAlertDialog.html">showUnlinkAlertDialog</a></li>
+
+
+
+</ol>
+
+  </div><!--/.sidebar-offcanvas-left-->
+
+  <div id="dartdoc-sidebar-right" class="sidebar sidebar-offcanvas-right">
+  </div><!--/.sidebar-offcanvas-->
+
+</main>
+
+<footer>
+  <span class="no-break">
+    lovehue
+      0.5.0+1
+  </span>
+
+  
+</footer>
+
+
+
+<script src="../static-assets/highlight.pack.js?v1"></script>
+<script src="../static-assets/script.js?v1"></script>
+
+
+
+</body>
+
+</html>
+
