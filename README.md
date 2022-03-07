@@ -38,6 +38,26 @@ This can then open a conversation about why you each feel that way, moving the f
 
 <details open>
   <summary><h3>Screenshots</h3></summary>
+  
+  Sign-in | Email-Link | Link Sent 
+  :--: | :--: | :--: 
+  ![Sign-in](/doc/screenshots/Signin.png) | ![Email](/doc/screenshots/Email.png) | ![LinkSent](/doc/screenshots/LinkSent.png) 
+  
+  Home | Delete Account
+  :--: | :--: 
+  ![Home](/doc/screenshots/Home.png) | ![Delete Account](/doc/screenshots/DeleteAccount.png)
+
+  <h4>Gifs</h4>
+  
+  Linking | Updating values
+  :--: | :--: 
+  ![Linking](/doc/screenshots/Linking.gif) | ![Updating Values](/doc/screenshots/Updating.gif)
+  
+  Resetting values | Unlinking
+  :--: | :--: 
+  ![Resetting values](/doc/screenshots/Resetting.gif) | ![Unlinking](/doc/screenshots/Unlinking.gif)
+
+
 </details>
 
 ### Features
