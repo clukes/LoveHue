@@ -15,13 +15,10 @@
 
 - [About](#about)
   - [Screenshots](#screenshots)
+    - [Features](#features)
   - [Built With](#built-with)
-  - [Features](#features)
 - [Roadmap](#roadmap)
-- [Contributing](#contributing)
 - [Support](#support)
-- [License](#license)
-- [Acknowledgements](#acknowledgements)
 
 </details>
 
@@ -44,6 +41,15 @@ This can then open a conversation about why you each feel that way, moving the f
 </details>
 
 ### Features
+- Authorisation, with passwordless email link sign in or anonymous sign in.
+- Unique 5 character generated codes for each user, to easily link to partner.
+- 7 default relationship aspects.
+- Colour indicators for aspect values.
+- Realtime updating between partners.
+- Timestamps for last updates.
+- Undo one value change, or cancel all changes.
+- Display name changing.
+- Account and data deletion.
 
 ### Built With
 
@@ -64,6 +70,8 @@ Development Process for V1.0:
 - [ ] Beta Testing
 - [ ] Production
 
+Future updates:
+- [ ] Ability to add, delete and edit your own relationship aspects.
 
 ## Support
 
