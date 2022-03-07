@@ -5,8 +5,10 @@
   <h6>Stay connected with your partner by evaluating your satisfaction in various areas of the relationship.</h6>
   <strong>
     <a href="#about">View screenshots</a>
+    •
+    <a href="https://github.com/clukes/LoveHue/issues/new?assignees=&labels=enhancement&template=02_FEATURE_REQUEST.md&title=feat%3A+">Request a Feature</a>
     • 
-  <a href="https://github.com/clukes/LoveHue/issues/new?assignees=&labels=enhancement&template=02_FEATURE_REQUEST.md&title=feat%3A+">Request a Feature</a>
+    <a href="https://clukes.github.io/LoveHue/">View code documentation</a>
   </strong>
 </div>
 
