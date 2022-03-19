@@ -40,7 +40,7 @@ class _ProfilePageState extends State<ProfilePage> {
         Consumer<PartnersInfoState>(builder: (BuildContext context, PartnersInfoState partnersInfoState, _) {
           // Consumer that gives a column if partner linked, or just an empty SizedBox otherwise.
           if (partnersInfoState.partnerExist &&
-              !(partnersInfoState.partnerPending || UserInfoState.instance.userPending)) {
+              !(partnersInfoState.partnerPending || Provider.of<UserInfoState>(context, listen: false).userPending)) {
             String partnerName = partnersInfoState.partnersInfo?.displayName ?? '(No Name)';
             return Column(children: [
               Center(child: Text('Linked with: $partnerName')),

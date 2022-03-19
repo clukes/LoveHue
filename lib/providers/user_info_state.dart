@@ -3,19 +3,13 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../models/relationship_bar_model.dart';
 import '../models/userinfo_firestore_collection_model.dart';
 import '../providers/partners_info_state.dart';
 
 /// Handles current user state, dealing with users [UserInformation]
 class UserInfoState with ChangeNotifier {
-  // Singleton pattern
-  static final UserInfoState _instance = UserInfoState._internal();
-
-  static UserInfoState get instance => _instance;
-
-  UserInfoState._internal();
-
-  factory UserInfoState() => _instance;
+  UserInfoState();
 
   StreamSubscription<DocumentSnapshot>? _userInfoSubscription;
 
@@ -34,8 +28,20 @@ class UserInfoState with ChangeNotifier {
   /// True if [userExist] and there is a link pending.
   bool get userPending => (userExist && (userInfo?.linkPending ?? false));
 
+  /// Stores the most recent [RelationshipBarDocument].
+  RelationshipBarDocument? latestRelationshipBarDoc;
+
+  /// Gets the list of [RelationshipBar] from [latestRelationshipBarDoc].
+  List<RelationshipBar>? get barList => latestRelationshipBarDoc?.barList;
+
+  /// True if any bars have been changed since last [resetBarChange].
+  bool barsChanged = false;
+
+  /// True if all bars are to be reset to values in database.
+  bool barsReset = false;
+
   /// Setups listener for [UserInformation] changes of [userID] document.
-  void setupUserInfoSubscription() {
+  void setupUserInfoSubscription(PartnersInfoState partnersInfoState) {
     if (userExist) {
       _userInfoSubscription = UserInformation.getUserFromID(userID).snapshots().listen((snapshot) async {
         UserInformation? newUserInfo = snapshot.data();
@@ -43,14 +49,13 @@ class UserInfoState with ChangeNotifier {
 
         userInfo = newUserInfo;
         String? partnerID = newUserInfo?.partnerID;
-        if (partnerID != null &&
-            (!PartnersInfoState.instance.partnerExist || PartnersInfoState.instance.partnersID != partnerID)) {
+        if (partnerID != null && (!partnersInfoState.partnerExist || partnersInfoState.partnersID != partnerID)) {
           // If theres a new partner linked, setup partner info.
-          PartnersInfoState.instance.addPartner(await UserInformation.firestoreGet(partnerID));
+          partnersInfoState.addPartner(await UserInformation.firestoreGet(partnerID));
         }
-        if (partnerID == null && PartnersInfoState.instance.partnerExist) {
+        if (partnerID == null && partnersInfoState.partnerExist) {
           // Remove partner info if not linked.
-          PartnersInfoState.instance.removePartner();
+          partnersInfoState.removePartner();
         }
         notifyListeners();
       });
@@ -58,9 +63,9 @@ class UserInfoState with ChangeNotifier {
   }
 
   /// Setups local data for a new user.
-  void addUser(UserInformation newUserInfo) {
+  void addUser(UserInformation newUserInfo, PartnersInfoState partnersInfoState) {
     userInfo = newUserInfo;
-    setupUserInfoSubscription();
+    setupUserInfoSubscription(partnersInfoState);
     notifyListeners();
   }
 
@@ -69,5 +74,21 @@ class UserInfoState with ChangeNotifier {
     userInfo = null;
     _userInfoSubscription?.cancel();
     notifyListeners();
+  }
+
+  /// Set [barsChanged] to true, and [notifyListeners].
+  void barChange() {
+    if (!barsChanged) {
+      barsChanged = true;
+      notifyListeners();
+    }
+  }
+
+  /// Set [barsChanged] to false, and [notifyListeners].
+  void resetBarChange() {
+    if (barsChanged) {
+      barsChanged = false;
+      notifyListeners();
+    }
   }
 }

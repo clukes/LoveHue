@@ -9,7 +9,6 @@ import '../models/relationship_bar_model.dart';
 import '../models/userinfo_firestore_collection_model.dart';
 import '../providers/partners_info_state.dart';
 import '../providers/user_info_state.dart';
-import '../providers/your_bars_state.dart';
 import '../utils/globals.dart';
 
 /// The possible states of login: [loggedOut], [loading], [loggedIn].
@@ -25,15 +24,6 @@ enum ApplicationLoginState {
 ///
 /// Has [init] to setup app on startup.
 class ApplicationState with ChangeNotifier {
-  // Singleton pattern
-  static final ApplicationState _instance = ApplicationState._internal();
-
-  static ApplicationState get instance => _instance;
-
-  ApplicationState._internal();
-
-  factory ApplicationState() => _instance;
-
   // _loginState only changed in this class
   ApplicationLoginState _loginState = ApplicationLoginState.loggedOut;
 
@@ -41,13 +31,11 @@ class ApplicationState with ChangeNotifier {
   ApplicationLoginState get loginState => _loginState;
 
   /// Setups app state on startup. Setups listener for [FirebaseAuth.userChanges], dealing with login.
-  Future<void> init() async {
+  ApplicationState(UserInfoState userInfoState, PartnersInfoState partnersInfoState) {
     FirebaseAuth.instance.userChanges().listen((user) async {
-      UserInfoState userInfoState = UserInfoState.instance;
-      PartnersInfoState partnerInfoState = PartnersInfoState.instance;
       if (user != null && _loginState == ApplicationLoginState.loggedOut) {
         // The user has logged in, so run setup.
-        await userLoggedInSetup(user, userInfoState, partnerInfoState);
+        await userLoggedInSetup(user, userInfoState, partnersInfoState);
         notifyListeners();
       } else if (user != null && _loginState == ApplicationLoginState.loggedIn) {
         // When something changes while user is logged in.
@@ -58,7 +46,7 @@ class ApplicationState with ChangeNotifier {
         }
       } else if (user == null && _loginState == ApplicationLoginState.loggedIn) {
         // If user has been logged out, reset.
-        resetAppState(userInfoState, partnerInfoState);
+        resetAppState(userInfoState, partnersInfoState);
         notifyListeners();
       }
     });
@@ -68,7 +56,7 @@ class ApplicationState with ChangeNotifier {
   ///
   /// Sets [ApplicationLoginState.loading] until it is finished.
   /// Sets [ApplicationLoginState.loggedIn] on finish.
-  Future<void> userLoggedInSetup(User user, UserInfoState userInfoState, PartnersInfoState partnerInfoState) async {
+  Future<void> userLoggedInSetup(User user, UserInfoState userInfoState, PartnersInfoState partnersInfoState) async {
     _loginState = ApplicationLoginState.loading;
 
     // Retrieve userInfo if not locally stored.
@@ -84,18 +72,17 @@ class ApplicationState with ChangeNotifier {
       batch.set(userDoc, userInfo);
       batch.set(linkCode, LinkCode(linkCode: linkCode.id, user: userDoc));
       // Setup default bars.
-      YourBarsState.instance.latestRelationshipBarDoc = RelationshipBarDocument.firestoreAddBarListWithBatch(
+      userInfoState.latestRelationshipBarDoc = RelationshipBarDocument.firestoreAddBarListWithBatch(
           userInfo.userID, RelationshipBar.listFromLabels(defaultBarLabels), batch);
       await batch.commit().catchError((error) => debugPrint("ApplicationState.userLoggedInSetup: Batch Error: $error"));
     }
     if (userInfo.partnerID != null) {
-      partnerInfoState.addPartner(await UserInformation.firestoreGet(userInfo.partnerID!));
+      partnersInfoState.addPartner(await UserInformation.firestoreGet(userInfo.partnerID!));
     }
-    YourBarsState.instance.latestRelationshipBarDoc ??=
-        await RelationshipBarDocument.firestoreGetLatest(userInfo.userID);
-    userInfoState.addUser(userInfo);
+    userInfoState.latestRelationshipBarDoc ??= await RelationshipBarDocument.firestoreGetLatest(userInfo.userID);
+    userInfoState.addUser(userInfo, partnersInfoState);
     _loginState = ApplicationLoginState.loggedIn;
-    YourBarsState.instance.notifyListeners();
+    userInfoState.notifyListeners();
   }
 
   /// Sets app state variables to null on user logout.

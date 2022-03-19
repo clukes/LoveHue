@@ -15,7 +15,6 @@ import '../pages/sign_in_page.dart';
 import '../providers/application_state.dart';
 import '../providers/partners_info_state.dart';
 import '../providers/user_info_state.dart';
-import '../providers/your_bars_state.dart';
 import '../responsive/responsive_screen_layout.dart';
 import '../utils/theme_data.dart';
 import 'utils/app_info_class.dart';
@@ -32,7 +31,6 @@ void mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo) async {
   await Firebase.initializeApp(
     options: firebaseOptions,
   );
-  await ApplicationState.instance.init();
 
   // Add licenses for the fonts.
   LicenseRegistry.addLicense(() async* {
@@ -43,27 +41,36 @@ void mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo) async {
   });
   // Only uses the bundled google fonts, prevents fetching from online.
   GoogleFonts.config.allowRuntimeFetching = false;
-  runApp(const RelationshipBarsApp());
+
+  final UserInfoState userInfoState = UserInfoState();
+  final PartnersInfoState partnersInfoState = PartnersInfoState(userInfoState);
+  final ApplicationState applicationState = ApplicationState(userInfoState, partnersInfoState);
+
+  final List<ChangeNotifierProvider<ChangeNotifier>> providers = [
+    ChangeNotifierProvider<UserInfoState>.value(value: userInfoState),
+    ChangeNotifierProvider<PartnersInfoState>.value(value: partnersInfoState),
+    ChangeNotifierProvider<ApplicationState>.value(value: applicationState),
+  ];
+
+  runApp(RelationshipBarsApp(providers: providers));
 }
 
 /// Initial widget for the app.
 class RelationshipBarsApp extends StatelessWidget {
-  const RelationshipBarsApp({Key? key}) : super(key: key);
+  const RelationshipBarsApp({Key? key, required this.providers}) : super(key: key);
+
+  final List<ChangeNotifierProvider<ChangeNotifier>> providers;
 
   @override
   Widget build(BuildContext context) {
     return MultiProvider(
       // Setup providers for states.
-      providers: [
-        ChangeNotifierProvider<ApplicationState>.value(value: ApplicationState.instance),
-        ChangeNotifierProvider<UserInfoState>.value(value: UserInfoState.instance),
-        ChangeNotifierProvider<PartnersInfoState>.value(value: PartnersInfoState.instance),
-        ChangeNotifierProvider<YourBarsState>.value(value: YourBarsState.instance),
-      ],
+      providers: providers,
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         showPerformanceOverlay: false,
-        title: appInfo.appName, //TODO: Set to correct name.
+        title: appInfo.appName,
+        //TODO: Set to correct name.
         // Currently there is only one theme, a light one.
         theme: lightThemeData,
         home: AnnotatedRegion<SystemUiOverlayStyle>(
@@ -71,24 +78,24 @@ class RelationshipBarsApp extends StatelessWidget {
           value: SystemUiOverlayStyle.dark.copyWith(statusBarIconBrightness: Brightness.light),
           child: SafeArea(
             child: StreamBuilder(
-                stream: FirebaseAuth.instance.authStateChanges(),
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.active) {
-                    if (snapshot.hasData) {
-                      return responsiveLayout;
-                    } else if (snapshot.hasError) {
-                      return Center(
-                        child: Text('Error: ${snapshot.error}'),
-                      );
-                    }
-                  }
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return const Center(
-                      child: CircularProgressIndicator(),
+              stream: FirebaseAuth.instance.authStateChanges(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.active) {
+                  if (snapshot.hasData) {
+                    return responsiveLayout;
+                  } else if (snapshot.hasError) {
+                    return Center(
+                      child: Text('Error: ${snapshot.error}'),
                     );
                   }
-                  return const SignInPage();
-                },
+                }
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: CircularProgressIndicator(),
+                  );
+                }
+                return const SignInPage();
+              },
             ),
           ),
         ),

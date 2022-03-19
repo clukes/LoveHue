@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
 import '../models/relationship_bar_model.dart';
-import '../providers/your_bars_state.dart';
+import '../providers/user_info_state.dart';
 import '../utils/colors.dart';
 
 /// Builds a [Card] for a [RelationshipBar].
@@ -13,6 +14,7 @@ abstract class BarSlider extends StatefulWidget {
 
 abstract class _BarSliderState extends State<BarSlider> {
   final double _sliderTextFontSize = 14.0;
+
   // Ratio of how much less opacity a disabled bar has.
   final double _disabledOpacityRatio = 0.75;
 
@@ -124,14 +126,14 @@ class InteractableBarSlider extends BarSlider {
 class _InteractableBarSliderState extends _BarSliderState {
   @override
   void Function(double)? get changed => (double value) {
-    updateBar(value.round());
-  };
+        updateBar(value.round());
+      };
 
   @override
   void Function(double)? get onChangeEnd => (double value) {
         int iValue = value.round();
         widget.relationshipBar.setValue(iValue);
-        YourBarsState.instance.barChange();
+        Provider.of<UserInfoState>(context, listen: false).barChange();
         updateBar(iValue);
       };
 
@@ -163,7 +165,7 @@ class _InteractableBarSliderState extends _BarSliderState {
 
   @override
   Widget slider() {
-    if (YourBarsState.instance.barsReset) {
+    if (Provider.of<UserInfoState>(context, listen: false).barsReset) {
       _sliderValue = widget.relationshipBar.value;
     }
     return super.slider();

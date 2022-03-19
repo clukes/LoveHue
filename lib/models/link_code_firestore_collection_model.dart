@@ -56,10 +56,10 @@ class LinkCode {
   /// Throws [PrintableError] if user is already connected or pending with a different partner,
   /// or the given [linkCode] doesn't correspond to a [UserInformation] in the database,
   /// or the user with [linkCode] is already connected to a different user.
-  static Future<void> connectTo(String linkCode) async {
+  static Future<void> connectTo(String linkCode, String? userID, PartnersInfoState partnersInfoState) async {
     // Can only connect to a partner if user isn't already connected/pending to another partner.
-    if (PartnersInfoState.instance.partnerExist) {
-      PartnersInfoState.instance.partnerPending
+    if (partnersInfoState.partnerExist) {
+      partnersInfoState.partnerPending
           ? throw PrintableError("Partner link already pending.")
           : throw PrintableError("Already connected to a partner.");
     }
@@ -73,7 +73,7 @@ class LinkCode {
 
       String partnerID = partnerCodeSnapshot.get(LinkCode.columnUser).id;
       DocumentReference<UserInformation?> partner = UserInformation.getUserFromID(partnerID);
-      DocumentReference<UserInformation?> currentUser = UserInformation.getUserFromID(UserInfoState.instance.userID);
+      DocumentReference<UserInformation?> currentUser = UserInformation.getUserFromID(userID);
       DocumentSnapshot<UserInformation?> partnerSnapshot = await transaction.get(partner);
       if (!partnerSnapshot.exists || partnerSnapshot.data() == null) {
         throw PrintableError("Link code does not exist.");
@@ -90,7 +90,7 @@ class LinkCode {
       partnerInfo.partner = currentUser;
       return partnerInfo;
     }).then((partnerInfo) {
-      PartnersInfoState.instance.addPartner(partnerInfo);
+      partnersInfoState.addPartner(partnerInfo);
     });
   }
 
@@ -99,24 +99,24 @@ class LinkCode {
   /// Accepts link code request sent to the current [user].
   /// Throws [PrintableError] if user is already connected to a different partner,
   /// or there is no user or partner for the currently stored [UserInformation].
-  static Future<void> acceptRequest() async {
-    if (PartnersInfoState.instance.partnerExist && !UserInfoState.instance.userPending) {
+  static Future<void> acceptRequest(UserInfoState userInfoState, PartnersInfoState partnersInfoState) async {
+    if (partnersInfoState.partnerExist && !userInfoState.userPending) {
       throw PrintableError("Already connected to a partner.");
     }
-    UserInformation userInfo = _getCurrentUser();
+    UserInformation userInfo = _getCurrentUser(userInfoState);
     DocumentReference<UserInformation?> currentUser = UserInformation.getUserFromID(userInfo.userID);
     // Update the user info in database first, then update locally stored information.
     await currentUser.update({UserInformation.columnLinkPending: false}).then((_) async {
       debugPrint("LinkCode.acceptRequest: Updated linkPending for user id: ${currentUser.id}.");
-      UserInfoState.instance.userInfo?.linkPending = false;
+      userInfoState.userInfo?.linkPending = false;
       // Pull local partner info from database if it isn't correct.
       if (userInfo.partnerID != null &&
-          (!PartnersInfoState.instance.partnerExist || userInfo.partnerID != PartnersInfoState.instance.partnersID)) {
-        PartnersInfoState.instance.addPartner(await UserInformation.firestoreGet(userInfo.partnerID!));
+          (!partnersInfoState.partnerExist || userInfo.partnerID != partnersInfoState.partnersID)) {
+        partnersInfoState.addPartner(await UserInformation.firestoreGet(userInfo.partnerID!));
         debugPrint("LinkCode.acceptRequest: Updated partner info with partner id: ${userInfo.partnerID}.");
       } else {
         // Notify listeners that partner has been connected.
-        PartnersInfoState.instance.notify();
+        partnersInfoState.notify();
       }
     });
   }
@@ -125,15 +125,15 @@ class LinkCode {
   ///
   /// Used to unlink current connection or reject request, between [user] and their partner.
   /// Throws [PrintableError] if there is no user or partner for the currently stored [UserInformation].
-  static Future<void> unlink() async {
-    UserInformation userInfo = _getCurrentUser();
+  static Future<void> unlink(UserInfoState userInfoState, PartnersInfoState partnersInfoState) async {
+    UserInformation userInfo = _getCurrentUser(userInfoState);
     await FirebaseFirestore.instance.runTransaction((transaction) async {
-      DocumentReference<UserInformation?> currentUser = UserInformation.getUserFromID(UserInfoState.instance.userID);
+      DocumentReference<UserInformation?> currentUser = UserInformation.getUserFromID(userInfoState.userID);
       transaction.update(currentUser, {UserInformation.columnPartner: null, UserInformation.columnLinkPending: false});
       transaction
           .update(userInfo.partner!, {UserInformation.columnPartner: null, UserInformation.columnLinkPending: false});
     }).then((_) {
-      PartnersInfoState.instance.removePartner();
+      partnersInfoState.removePartner();
     });
   }
 
@@ -151,8 +151,8 @@ class LinkCode {
   }
 
   /// Throws [PrintableError] if there is no user or partner for the currently stored [UserInformation].
-  static UserInformation _getCurrentUser() {
-    UserInformation? userInfo = UserInfoState.instance.userInfo;
+  static UserInformation _getCurrentUser(UserInfoState userInfoState) {
+    UserInformation? userInfo = userInfoState.userInfo;
     if (userInfo == null) {
       throw PrintableError("No user in database for current user.");
     }

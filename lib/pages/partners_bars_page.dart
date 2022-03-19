@@ -25,7 +25,7 @@ class _PartnersBarsState extends State<PartnersBars> with AutomaticKeepAliveClie
   Widget build(BuildContext context) {
     // Listener to update page title in app bar when partner's name changes.
     ValueListenableBuilder<String> listenableTitle = ValueListenableBuilder<String>(
-      valueListenable: PartnersInfoState.instance.partnersName,
+      valueListenable: Provider.of<PartnersInfoState>(context, listen: false).partnersName,
       builder: (BuildContext context, String partnersName, Widget? child) => FittedBox(
         // Scale text down if it becomes too big for app bar.
         fit: BoxFit.scaleDown,

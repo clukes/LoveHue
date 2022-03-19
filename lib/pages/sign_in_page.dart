@@ -46,7 +46,8 @@ class SignInPage extends StatelessWidget {
               padding: const EdgeInsets.only(top: 16),
               child: Column(children: const [
                 if (!kIsWeb)
-                  Text('You can use magic link to sign in with a verification link sent to your email, no password required.\n'),
+                  Text(
+                      'You can use magic link to sign in with a verification link sent to your email, no password required.\n'),
                 Text(
                   'By using this app, you agree to our terms and conditions.',
                   style: TextStyle(color: Colors.grey),

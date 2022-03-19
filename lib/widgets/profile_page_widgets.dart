@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lovehue/providers/partners_info_state.dart';
+import 'package:provider/provider.dart';
 
 import '../models/link_code_firestore_collection_model.dart';
 import '../models/userinfo_firestore_collection_model.dart';
 import '../pages/sign_in_page.dart';
+import '../providers/user_info_state.dart';
 
 /// Shows an alert dialog with yes and no buttons.
 Future<void> showAlertDialog({
@@ -79,7 +82,9 @@ Future<void> showUnlinkAlertDialog(BuildContext context, String partnerName, Str
       );
     }),
     yesPressed: () async {
-      await LinkCode.unlink().then((_) {
+      await LinkCode.unlink(Provider.of<UserInfoState>(context, listen: false),
+              Provider.of<PartnersInfoState>(context, listen: false))
+          .then((_) {
         Navigator.pop(context, yesButtonText);
       }).catchError((error) {
         if (setState != null) {
@@ -144,7 +149,7 @@ Future<void> showDeleteAlertDialog(BuildContext context) async {
 
 /// Deletes user data in database, then delete [FirebaseAuth] account with [User.delete]
 Future<void> deleteAccount(BuildContext context) async {
-  return UserInformation.deleteUserData(context).then((_) {
+  return UserInformation.deleteUserData(context, Provider.of<UserInfoState>(context, listen: false).userInfo).then((_) {
     FirebaseAuth.instance.currentUser?.delete();
   });
 }

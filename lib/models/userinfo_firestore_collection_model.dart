@@ -4,7 +4,6 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutterfire_ui/auth.dart';
 
 import '../models/relationship_bar_model.dart';
-import '../providers/user_info_state.dart';
 import '../resources/authentication.dart';
 import '../resources/database_and_table_names.dart';
 import '../resources/delete_firestore_collection.dart';
@@ -134,10 +133,9 @@ class UserInformation {
   /// Throws [PrintableError] if there is no userID stored for currentUser,
   /// or the userID for currentUser doesn't match the locally stored UserInformation,
   /// or if an error occurs during deletion.
-  static Future<void> deleteUserData(BuildContext context) async {
+  static Future<void> deleteUserData(BuildContext context, UserInformation? userInfo) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     String? userID = auth.currentUser?.uid;
-    UserInformation? userInfo = UserInfoState.instance.userInfo;
     if (userID != null && userID == userInfo?.userID) {
       try {
         WriteBatch batch = FirebaseFirestore.instance.batch();

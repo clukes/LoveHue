@@ -7,16 +7,16 @@ import '../responsive/responsive_screen_layout.dart';
 
 /// [ActionCodeSettings] for the email link login.
 final actionCodeSettings = ActionCodeSettings(
-    // URL you want to redirect back to. The domain (www.example.com) for this
-    // URL must be whitelisted in the Firebase Console.
-    url: 'http://lovehue.page.link/',
-    // This must be true
-    handleCodeInApp: true,
-    // installIfNotAvailable
-    androidInstallApp: true,
-    androidPackageName: packageInfo.packageName,
-    iOSBundleId: packageInfo.packageName,
-  );
+  // URL you want to redirect back to. The domain (www.example.com) for this
+  // URL must be whitelisted in the Firebase Console.
+  url: 'http://lovehue.page.link/',
+  // This must be true
+  handleCodeInApp: true,
+  // installIfNotAvailable
+  androidInstallApp: true,
+  androidPackageName: packageInfo.packageName,
+  iOSBundleId: packageInfo.packageName,
+);
 
 /// Configs for different auth providers.
 final providerConfigs = <ProviderConfiguration>[

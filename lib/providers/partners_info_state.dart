@@ -10,14 +10,9 @@ const String defaultPartnerName = "Partner";
 
 /// Handles partner state, dealing with partners [UserInformation]
 class PartnersInfoState with ChangeNotifier {
-  // Singleton pattern
-  static final PartnersInfoState _instance = PartnersInfoState._internal();
+  PartnersInfoState(this.userInfoState);
 
-  static PartnersInfoState get instance => _instance;
-
-  PartnersInfoState._internal();
-
-  factory PartnersInfoState() => _instance;
+  UserInfoState userInfoState;
 
   StreamSubscription<DocumentSnapshot>? _partnersInfoSubscription;
   UserInformation? _partnersInfo;
@@ -35,8 +30,7 @@ class PartnersInfoState with ChangeNotifier {
   bool get partnerExist => (partnersID != null);
 
   /// True if [partnerExist] and there isn't a link pending.
-  bool get partnerLinked =>
-      (partnerExist && !(_partnersInfo?.linkPending ?? true) && !UserInfoState.instance.userPending);
+  bool get partnerLinked => (partnerExist && !(_partnersInfo?.linkPending ?? true) && !userInfoState.userPending);
 
   /// True if [partnerExist] and there is a link pending.
   bool get partnerPending => (partnerExist && (_partnersInfo?.linkPending ?? false));
@@ -54,7 +48,7 @@ class PartnersInfoState with ChangeNotifier {
         UserInformation? partnersUserInfo = snapshot.data();
         debugPrint("PartnersInfoState.setupPartnerInfoSubscription: Partner Info Change: $partnersUserInfo");
 
-        if (UserInfoState.instance.userID != null && partnersUserInfo?.partnerID == UserInfoState.instance.userID) {
+        if (userInfoState.userID != null && partnersUserInfo?.partnerID == userInfoState.userID) {
           // Check that user and partner are linked to each other
           _partnersInfo = partnersUserInfo;
           if (partnersName.value != partnersUserInfo?.displayName && partnersUserInfo?.displayName != null) {
@@ -73,19 +67,19 @@ class PartnersInfoState with ChangeNotifier {
   /// Setups local data for a new partner.
   void addPartner(UserInformation? newPartnerInfo) {
     if (newPartnerInfo != null) {
-      PartnersInfoState.instance._partnersInfo = newPartnerInfo;
+      _partnersInfo = newPartnerInfo;
       partnersName.value = newPartnerInfo.displayName ?? defaultPartnerName;
-      PartnersInfoState.instance.setupPartnerInfoSubscription();
+      setupPartnerInfoSubscription();
       notifyListeners();
     }
   }
 
   /// Removes local data for current partner.
   void removePartner() {
-    PartnersInfoState.instance._partnersInfo = null;
-    PartnersInfoState.instance._partnersInfoSubscription?.cancel();
-    UserInfoState.instance.userInfo?.linkPending = false;
-    UserInfoState.instance.userInfo?.partner = null;
+    _partnersInfo = null;
+    _partnersInfoSubscription?.cancel();
+    userInfoState.userInfo?.linkPending = false;
+    userInfoState.userInfo?.partner = null;
     notifyListeners();
   }
 }

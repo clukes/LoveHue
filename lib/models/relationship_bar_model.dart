@@ -1,7 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../providers/user_info_state.dart';
 import '../resources/database_and_table_names.dart';
 
 /// Holds information for a single [RelationshipBar].
@@ -149,8 +148,8 @@ class RelationshipBarDocument {
   }
 
   /// Replaces [barList] with the list of [RelationshipBar] stored in the database.
-  Future<RelationshipBarDocument> resetBars() async {
-    barList = (await firestoreGet(UserInfoState.instance.userID!, id))!.barList;
+  Future<RelationshipBarDocument> resetBars(String userID) async {
+    barList = (await firestoreGet(userID, id))!.barList;
     return resetBarsChanged();
   }
 

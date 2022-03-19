@@ -115,7 +115,8 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
             controller: _controller,
             decoration:
                 InputDecoration(hintText: 'Link code', errorText: _errorMsg, helperText: 'Codes are case sensitive.'),
-            validator: (value) => _linkCodeValidator(value),
+            validator: (value) =>
+                _linkCodeValidator(value, Provider.of<UserInfoState>(context, listen: false).linkCode),
             onEditingComplete: onLinkCodeSubmit,
           ),
           Container(
@@ -132,7 +133,7 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
     );
   }
 
-  String? _linkCodeValidator(String? value) {
+  String? _linkCodeValidator(String? value, String? userLinkCode) {
     // Client side validating of link code. Further validation performed when accessing database.
     if (value == null || value.isEmpty) {
       return "Please enter a code.";
@@ -143,7 +144,7 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
     if (value.length > linkCodeLength) {
       return "Code too long. Should be $linkCodeLength characters.";
     }
-    if (value == UserInfoState.instance.linkCode) {
+    if (value == userLinkCode) {
       return "You can't be your own partner.";
     }
     return null;
@@ -155,7 +156,9 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
         const SnackBar(content: Text('Linking...')),
       );
       String linkCode = _controller.text;
-      await LinkCode.connectTo(linkCode).then((_) {
+      await LinkCode.connectTo(linkCode, Provider.of<UserInfoState>(context, listen: false).userID,
+              Provider.of<PartnersInfoState>(context, listen: false))
+          .then((_) {
         setState(() {
           // Update page to reflect changes
         });
@@ -180,7 +183,7 @@ class LinkRequestSent extends StatefulWidget {
 class _LinkRequestSentState extends State<LinkRequestSent> {
   @override
   Widget build(BuildContext context) {
-    String code = PartnersInfoState.instance.linkCode ?? "[Error: no partner link code]";
+    String code = Provider.of<PartnersInfoState>(context, listen: false).linkCode ?? "[Error: no partner link code]";
     return Center(
       child: Padding(
         padding: const EdgeInsets.only(bottom: 16),
@@ -202,7 +205,10 @@ class _LinkRequestSentState extends State<LinkRequestSent> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Cancelling...')),
     );
-    await LinkCode.unlink().catchError((error) {
+    await LinkCode.unlink(
+      Provider.of<UserInfoState>(context, listen: false),
+      Provider.of<PartnersInfoState>(context, listen: false),
+    ).catchError((error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $error.')),
       );
@@ -222,6 +228,8 @@ class IncomingLinkRequest extends StatefulWidget {
 class _IncomingLinkRequestState extends State<IncomingLinkRequest> {
   @override
   Widget build(BuildContext context) {
+    UserInfoState userInfoState = Provider.of<UserInfoState>(context, listen: false);
+    PartnersInfoState partnersInfoState = Provider.of<PartnersInfoState>(context, listen: false);
     return Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
       const SizedBox(height: 64),
       Padding(
@@ -243,22 +251,23 @@ class _IncomingLinkRequestState extends State<IncomingLinkRequest> {
       const SizedBox(height: 16),
       Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: <Widget>[
         OutlinedButton(
-          onPressed: () async => await acceptRequest(context),
+          onPressed: () async => await acceptRequest(context, userInfoState, partnersInfoState),
           child: const Text('Accept'),
         ),
         OutlinedButton(
-          onPressed: () async => await rejectRequest(context),
+          onPressed: () async => await rejectRequest(context, userInfoState, partnersInfoState),
           child: const Text('Reject'),
         )
       ]),
     ]);
   }
 
-  Future<void> acceptRequest(BuildContext context) async {
+  Future<void> acceptRequest(
+      BuildContext context, UserInfoState userInfoState, PartnersInfoState partnersInfoState) async {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Accepting...')),
     );
-    await LinkCode.acceptRequest().catchError((error) {
+    await LinkCode.acceptRequest(userInfoState, partnersInfoState).catchError((error) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $error.')),
@@ -266,11 +275,12 @@ class _IncomingLinkRequestState extends State<IncomingLinkRequest> {
     });
   }
 
-  Future<void> rejectRequest(BuildContext context) async {
+  Future<void> rejectRequest(
+      BuildContext context, UserInfoState userInfoState, PartnersInfoState partnersInfoState) async {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Rejecting...')),
     );
-    await LinkCode.unlink().catchError((error) {
+    await LinkCode.unlink(userInfoState, partnersInfoState).catchError((error) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $error.')),
