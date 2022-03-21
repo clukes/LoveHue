@@ -79,7 +79,7 @@ class _YourBarsState extends State<YourBars> with AutomaticKeepAliveClientMixin<
                                     RelationshipBarDocument barDoc =
                                         userInfoState.latestRelationshipBarDoc!.resetBarsChanged();
                                     userInfoState.resetBarChange();
-                                    barDoc = await RelationshipBarDocument.firestoreAddBarList(userID, barDoc.barList!);
+                                    barDoc = await RelationshipBarDocument.firestoreAddBarList(userID, barDoc.barList!, userInfoState.firestore);
                                     setState(() {
                                       userInfoState.latestRelationshipBarDoc = barDoc;
                                     });

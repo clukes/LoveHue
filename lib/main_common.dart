@@ -2,6 +2,7 @@
 // Copyright (C) 2022 Conner Lukes <clukes@icloud.com>
 // All rights reserved.
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
@@ -42,9 +43,11 @@ void mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo) async {
   // Only uses the bundled google fonts, prevents fetching from online.
   GoogleFonts.config.allowRuntimeFetching = false;
 
-  final UserInfoState userInfoState = UserInfoState();
-  final PartnersInfoState partnersInfoState = PartnersInfoState(userInfoState);
-  final ApplicationState applicationState = ApplicationState(userInfoState, partnersInfoState);
+  FirebaseFirestore firestore = FirebaseFirestore.instance;
+
+  final PartnersInfoState partnersInfoState = PartnersInfoState();
+  final UserInfoState userInfoState = UserInfoState(firestore, partnersInfoState);
+  final ApplicationState applicationState = ApplicationState(userInfoState, partnersInfoState, firestore);
 
   final List<ChangeNotifierProvider<ChangeNotifier>> providers = [
     ChangeNotifierProvider<UserInfoState>.value(value: userInfoState),

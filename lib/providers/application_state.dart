@@ -9,7 +9,6 @@ import '../models/relationship_bar_model.dart';
 import '../models/userinfo_firestore_collection_model.dart';
 import '../providers/partners_info_state.dart';
 import '../providers/user_info_state.dart';
-import '../utils/globals.dart';
 
 /// The possible states of login: [loggedOut], [loading], [loggedIn].
 enum ApplicationLoginState {
@@ -27,26 +26,33 @@ class ApplicationState with ChangeNotifier {
   // _loginState only changed in this class
   ApplicationLoginState _loginState = ApplicationLoginState.loggedOut;
 
+  final UserInfoState userInfoState;
+  final PartnersInfoState partnersInfoState;
+  final FirebaseFirestore firestore;
+
   /// Returns current [ApplicationLoginState].
   ApplicationLoginState get loginState => _loginState;
 
   /// Setups app state on startup. Setups listener for [FirebaseAuth.userChanges], dealing with login.
-  ApplicationState(UserInfoState userInfoState, PartnersInfoState partnersInfoState) {
+  ApplicationState(this.userInfoState, this.partnersInfoState, this.firestore) {
+    _setupUserChangersListener();
+  }
+
+  void _setupUserChangersListener() {
     FirebaseAuth.instance.userChanges().listen((user) async {
       if (user != null && _loginState == ApplicationLoginState.loggedOut) {
         // The user has logged in, so run setup.
-        await userLoggedInSetup(user, userInfoState, partnersInfoState);
+        await userLoggedInSetup(user);
         notifyListeners();
       } else if (user != null && _loginState == ApplicationLoginState.loggedIn) {
         // When something changes while user is logged in.
         if (userInfoState.userExist && user.displayName != userInfoState.userInfo?.displayName) {
           // If user display name has changed, update their userInfo display name in database.
-          await UserInformation.firestoreUpdateColumns(
-              userInfoState.userID!, {UserInformation.columnDisplayName: user.displayName});
+          await userInfoState.userInfo?.firestoreUpdateColumns({UserInformation.columnDisplayName: user.displayName});
         }
       } else if (user == null && _loginState == ApplicationLoginState.loggedIn) {
         // If user has been logged out, reset.
-        resetAppState(userInfoState, partnersInfoState);
+        resetAppState();
         notifyListeners();
       }
     });
@@ -56,31 +62,25 @@ class ApplicationState with ChangeNotifier {
   ///
   /// Sets [ApplicationLoginState.loading] until it is finished.
   /// Sets [ApplicationLoginState.loggedIn] on finish.
-  Future<void> userLoggedInSetup(User user, UserInfoState userInfoState, PartnersInfoState partnersInfoState) async {
+  Future<void> userLoggedInSetup(User user) async {
     _loginState = ApplicationLoginState.loading;
 
     // Retrieve userInfo if not locally stored.
-    UserInformation? userInfo = userInfoState.userInfo ?? await UserInformation.firestoreGet(user.uid);
+    UserInformation? userInfo = userInfoState.userInfo ?? await UserInformation.firestoreGet(user.uid, firestore);
     if (userInfo == null) {
       // If there is no UserInformation in the database for the current user, i.e. they are a new user, setup their data.
-      DocumentReference<LinkCode?> linkCode = await LinkCode.create();
-      userInfo = UserInformation(userID: user.uid, displayName: user.displayName, linkCode: linkCode);
+      DocumentReference<LinkCode?> linkCode = await LinkCode.create(firestore);
+      userInfo = UserInformation(userID: user.uid, displayName: user.displayName, linkCode: linkCode, firestore: firestore);
       debugPrint("ApplicationState.userLoggedInSetup: New user setup: $userInfo.");
 
-      DocumentReference<UserInformation?> userDoc = UserInformation.getUserFromID(userInfo.userID);
-      WriteBatch batch = FirebaseFirestore.instance.batch();
-      batch.set(userDoc, userInfo);
-      batch.set(linkCode, LinkCode(linkCode: linkCode.id, user: userDoc));
-      // Setup default bars.
-      userInfoState.latestRelationshipBarDoc = RelationshipBarDocument.firestoreAddBarListWithBatch(
-          userInfo.userID, RelationshipBar.listFromLabels(defaultBarLabels), batch);
-      await batch.commit().catchError((error) => debugPrint("ApplicationState.userLoggedInSetup: Batch Error: $error"));
+      DocumentReference<UserInformation?> userDoc = userInfo.getUserInDatabase();
+      await userInfo.setupUserInDatabase(userDoc, linkCode, userInfoState);
     }
     if (userInfo.partnerID != null) {
-      partnersInfoState.addPartner(await UserInformation.firestoreGet(userInfo.partnerID!));
+      partnersInfoState.addPartner(await UserInformation.firestoreGet(userInfo.partnerID!, firestore), userInfo);
     }
-    userInfoState.latestRelationshipBarDoc ??= await RelationshipBarDocument.firestoreGetLatest(userInfo.userID);
-    userInfoState.addUser(userInfo, partnersInfoState);
+    userInfoState.latestRelationshipBarDoc ??= await RelationshipBarDocument.firestoreGetLatest(userInfo.userID, firestore);
+    userInfoState.addUser(userInfo);
     _loginState = ApplicationLoginState.loggedIn;
     userInfoState.notifyListeners();
   }
@@ -89,9 +89,9 @@ class ApplicationState with ChangeNotifier {
   ///
   /// Sets [ApplicationLoginState.loading] until it is finished.
   /// Sets [ApplicationLoginState.loggedOut] on finish.
-  void resetAppState(UserInfoState userInfoState, PartnersInfoState partnerInfoState) {
+  void resetAppState() {
     _loginState = ApplicationLoginState.loading;
-    partnerInfoState.removePartner();
+    partnersInfoState.removePartner(userInfoState.userInfo);
     userInfoState.removeUser();
     _loginState = ApplicationLoginState.loggedOut;
   }

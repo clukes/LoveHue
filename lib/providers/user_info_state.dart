@@ -9,7 +9,10 @@ import '../providers/partners_info_state.dart';
 
 /// Handles current user state, dealing with users [UserInformation]
 class UserInfoState with ChangeNotifier {
-  UserInfoState();
+  UserInfoState(this.firestore, this.partnersInfoState);
+
+  final PartnersInfoState partnersInfoState;
+  final FirebaseFirestore firestore;
 
   StreamSubscription<DocumentSnapshot>? _userInfoSubscription;
 
@@ -28,6 +31,9 @@ class UserInfoState with ChangeNotifier {
   /// True if [userExist] and there is a link pending.
   bool get userPending => (userExist && (userInfo?.linkPending ?? false));
 
+  /// True if [partnerExist] and there isn't a link pending.
+  bool partnerLinked() => (partnersInfoState.partnerExist && !partnersInfoState.partnerPending && !userPending);
+
   /// Stores the most recent [RelationshipBarDocument].
   RelationshipBarDocument? latestRelationshipBarDoc;
 
@@ -41,21 +47,24 @@ class UserInfoState with ChangeNotifier {
   bool barsReset = false;
 
   /// Setups listener for [UserInformation] changes of [userID] document.
-  void setupUserInfoSubscription(PartnersInfoState partnersInfoState) {
-    if (userExist) {
-      _userInfoSubscription = UserInformation.getUserFromID(userID).snapshots().listen((snapshot) async {
+  void setupUserInfoSubscription() {
+    if (userInfo != null) {
+      _userInfoSubscription = userInfo!.getUserInDatabase().snapshots().listen((snapshot) async {
         UserInformation? newUserInfo = snapshot.data();
         debugPrint("UserInfoState.setupYourInfoSubscription: User Info Change: $newUserInfo");
 
-        userInfo = newUserInfo;
+        if(newUserInfo != null) {
+          userInfo = newUserInfo;
+        }
         String? partnerID = newUserInfo?.partnerID;
         if (partnerID != null && (!partnersInfoState.partnerExist || partnersInfoState.partnersID != partnerID)) {
           // If theres a new partner linked, setup partner info.
-          partnersInfoState.addPartner(await UserInformation.firestoreGet(partnerID));
+          UserInformation? partnerInfo = await UserInformation.firestoreGet(partnerID, firestore);
+          partnersInfoState.addPartner(partnerInfo, userInfo!);
         }
         if (partnerID == null && partnersInfoState.partnerExist) {
           // Remove partner info if not linked.
-          partnersInfoState.removePartner();
+          partnersInfoState.removePartner(userInfo!);
         }
         notifyListeners();
       });
@@ -63,9 +72,9 @@ class UserInfoState with ChangeNotifier {
   }
 
   /// Setups local data for a new user.
-  void addUser(UserInformation newUserInfo, PartnersInfoState partnersInfoState) {
+  void addUser(UserInformation newUserInfo) {
     userInfo = newUserInfo;
-    setupUserInfoSubscription(partnersInfoState);
+    setupUserInfoSubscription();
     notifyListeners();
   }
 

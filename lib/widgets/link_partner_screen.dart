@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lovehue/models/userinfo_firestore_collection_model.dart';
 import 'package:provider/provider.dart';
 
 import '../models/link_code_firestore_collection_model.dart';
@@ -77,7 +78,7 @@ class _LinkPartnerScreenState extends State<LinkPartnerScreen> {
     if (!partnersInfoState.partnerExist) {
       return const LinkPartnerForm();
     }
-    if (partnersInfoState.partnerLinked) {
+    if (userInfoState.partnerLinked()) {
       return const CircularProgressIndicator();
     }
     return const Center(
@@ -156,17 +157,21 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
         const SnackBar(content: Text('Linking...')),
       );
       String linkCode = _controller.text;
-      await LinkCode.connectTo(linkCode, Provider.of<UserInfoState>(context, listen: false).userID,
-              Provider.of<PartnersInfoState>(context, listen: false))
-          .then((_) {
-        setState(() {
-          // Update page to reflect changes
+      UserInfoState userInfoState = Provider.of<UserInfoState>(context, listen: false);
+      UserInformation? userInfo = userInfoState.userInfo;
+      if (userInfo != null) {
+        await LinkCode.connectTo(linkCode, userInfo,
+                Provider.of<PartnersInfoState>(context, listen: false), userInfoState.firestore)
+            .then((_) {
+          setState(() {
+            // Update page to reflect changes
+          });
+        }).catchError((error) {
+          setState(() {
+            _errorMsg = "Error: $error";
+          });
         });
-      }).catchError((error) {
-        setState(() {
-          _errorMsg = "Error: $error";
-        });
-      });
+      }
     }
     ScaffoldMessenger.of(context).clearSnackBars();
   }

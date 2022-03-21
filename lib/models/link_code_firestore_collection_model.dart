@@ -12,10 +12,7 @@ import '../resources/unique_link_code_generator.dart';
 ///
 /// A [LinkCode] holds a [linkCode] for a [user].
 class LinkCode {
-  LinkCode({
-    required this.linkCode,
-    this.user,
-  });
+  LinkCode({required this.linkCode, this.user});
 
   /// [String] holding uniquely identifying generated code.
   final String linkCode;
@@ -24,8 +21,8 @@ class LinkCode {
   final DocumentReference<UserInformation?>? user;
 
   // Reference to the linkCode collection in FirebaseFirestore database.
-  static final CollectionReference<LinkCode?> _linkCodeFirestoreRef =
-      FirebaseFirestore.instance.collection(linkCodesCollection).withConverter<LinkCode?>(
+  static CollectionReference<LinkCode?> _setupFirestoreConverter(FirebaseFirestore firestore) =>
+      firestore.collection(linkCodesCollection).withConverter<LinkCode?>(
             fromFirestore: (snapshots, _) => LinkCode.fromMap(snapshots.data()!),
             toFirestore: (linkCode, _) => linkCode!.toMap(),
           );
@@ -56,7 +53,8 @@ class LinkCode {
   /// Throws [PrintableError] if user is already connected or pending with a different partner,
   /// or the given [linkCode] doesn't correspond to a [UserInformation] in the database,
   /// or the user with [linkCode] is already connected to a different user.
-  static Future<void> connectTo(String linkCode, String? userID, PartnersInfoState partnersInfoState) async {
+  static Future<void> connectTo(
+      String linkCode, UserInformation currentUserInfo, PartnersInfoState partnersInfoState, FirebaseFirestore firestore) async {
     // Can only connect to a partner if user isn't already connected/pending to another partner.
     if (partnersInfoState.partnerExist) {
       partnersInfoState.partnerPending
@@ -64,16 +62,18 @@ class LinkCode {
           : throw PrintableError("Already connected to a partner.");
     }
 
-    await FirebaseFirestore.instance.runTransaction((transaction) async {
-      DocumentReference<LinkCode?> partnerCodeReference = _linkCodeFirestoreRef.doc(linkCode);
+    await firestore.runTransaction((transaction) async {
+      DocumentReference<LinkCode?> partnerCodeReference = _setupFirestoreConverter(firestore).doc(linkCode);
       DocumentSnapshot partnerCodeSnapshot = await transaction.get(partnerCodeReference);
       if (!partnerCodeSnapshot.exists) {
         throw PrintableError("Link code does not exist.");
       }
-
+      if(partnerCodeSnapshot.get(LinkCode.columnUser) == null) {
+        throw PrintableError("No user for that link code.");
+      }
       String partnerID = partnerCodeSnapshot.get(LinkCode.columnUser).id;
-      DocumentReference<UserInformation?> partner = UserInformation.getUserFromID(partnerID);
-      DocumentReference<UserInformation?> currentUser = UserInformation.getUserFromID(userID);
+      DocumentReference<UserInformation?> partner = UserInformation.getUserInDatabaseFromID(partnerID, firestore);
+      DocumentReference<UserInformation?> currentUser = UserInformation.getUserInDatabaseFromID(currentUserInfo.userID, firestore);
       DocumentSnapshot<UserInformation?> partnerSnapshot = await transaction.get(partner);
       if (!partnerSnapshot.exists || partnerSnapshot.data() == null) {
         throw PrintableError("Link code does not exist.");
@@ -90,7 +90,7 @@ class LinkCode {
       partnerInfo.partner = currentUser;
       return partnerInfo;
     }).then((partnerInfo) {
-      partnersInfoState.addPartner(partnerInfo);
+      partnersInfoState.addPartner(partnerInfo, currentUserInfo);
     });
   }
 
@@ -104,7 +104,7 @@ class LinkCode {
       throw PrintableError("Already connected to a partner.");
     }
     UserInformation userInfo = _getCurrentUser(userInfoState);
-    DocumentReference<UserInformation?> currentUser = UserInformation.getUserFromID(userInfo.userID);
+    DocumentReference<UserInformation?> currentUser = userInfo.getUserInDatabase();
     // Update the user info in database first, then update locally stored information.
     await currentUser.update({UserInformation.columnLinkPending: false}).then((_) async {
       debugPrint("LinkCode.acceptRequest: Updated linkPending for user id: ${currentUser.id}.");
@@ -112,7 +112,8 @@ class LinkCode {
       // Pull local partner info from database if it isn't correct.
       if (userInfo.partnerID != null &&
           (!partnersInfoState.partnerExist || userInfo.partnerID != partnersInfoState.partnersID)) {
-        partnersInfoState.addPartner(await UserInformation.firestoreGet(userInfo.partnerID!));
+        UserInformation? newPartnerInfo = await UserInformation.firestoreGet(userInfo.partnerID!, userInfoState.firestore);
+        partnersInfoState.addPartner(newPartnerInfo, userInfo);
         debugPrint("LinkCode.acceptRequest: Updated partner info with partner id: ${userInfo.partnerID}.");
       } else {
         // Notify listeners that partner has been connected.
@@ -127,22 +128,22 @@ class LinkCode {
   /// Throws [PrintableError] if there is no user or partner for the currently stored [UserInformation].
   static Future<void> unlink(UserInfoState userInfoState, PartnersInfoState partnersInfoState) async {
     UserInformation userInfo = _getCurrentUser(userInfoState);
-    await FirebaseFirestore.instance.runTransaction((transaction) async {
-      DocumentReference<UserInformation?> currentUser = UserInformation.getUserFromID(userInfoState.userID);
+    await userInfoState.firestore.runTransaction((transaction) async {
+      DocumentReference<UserInformation?> currentUser = userInfo.getUserInDatabase();
       transaction.update(currentUser, {UserInformation.columnPartner: null, UserInformation.columnLinkPending: false});
       transaction
           .update(userInfo.partner!, {UserInformation.columnPartner: null, UserInformation.columnLinkPending: false});
     }).then((_) {
-      partnersInfoState.removePartner();
+      partnersInfoState.removePartner(userInfo);
     });
   }
 
   /// Creates new uniquely generated [LinkCode] in the database and returns a [DocumentReference] to it.
-  static Future<DocumentReference<LinkCode?>> create() async {
+  static Future<DocumentReference<LinkCode?>> create(FirebaseFirestore firestore) async {
     DocumentReference<LinkCode?>? linkCode;
     do {
       // Generate a new link code, and check if it already exists in the database, to ensure uniqueness.
-      linkCode = await _linkCodeFirestoreRef
+      linkCode = await _setupFirestoreConverter(firestore)
           .doc(generateLinkCode())
           .get()
           .then((snapshot) => !snapshot.exists ? snapshot.reference : null);

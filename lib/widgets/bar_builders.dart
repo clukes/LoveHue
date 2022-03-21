@@ -63,9 +63,9 @@ Widget nonInteractableBarBuilder(BuildContext context, RelationshipBar bar) {
 }
 
 /// Returns a [StreamBuilder] that builds bars for a user with given userID.
-Widget barStreamBuilder(String userID, Widget Function(BuildContext context, RelationshipBar bar) itemBuilderFunction) {
+Widget barStreamBuilder(String userID, Widget Function(BuildContext context, RelationshipBar bar) itemBuilderFunction, FirebaseFirestore firestore) {
   return StreamBuilder<QuerySnapshot<RelationshipBarDocument>>(
-    stream: RelationshipBarDocument.getOrderedUserBarsFromID(userID).snapshots(),
+    stream: RelationshipBarDocument.getOrderedUserBarsFromID(userID, firestore).snapshots(),
     builder: (context, snapshot) => buildBars(context, snapshot, itemBuilderFunction),
   );
 }

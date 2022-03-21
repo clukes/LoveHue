@@ -10,9 +10,7 @@ const String defaultPartnerName = "Partner";
 
 /// Handles partner state, dealing with partners [UserInformation]
 class PartnersInfoState with ChangeNotifier {
-  PartnersInfoState(this.userInfoState);
-
-  UserInfoState userInfoState;
+  PartnersInfoState();
 
   StreamSubscription<DocumentSnapshot>? _partnersInfoSubscription;
   UserInformation? _partnersInfo;
@@ -29,9 +27,6 @@ class PartnersInfoState with ChangeNotifier {
   /// True if [partnersID] is not null.
   bool get partnerExist => (partnersID != null);
 
-  /// True if [partnerExist] and there isn't a link pending.
-  bool get partnerLinked => (partnerExist && !(_partnersInfo?.linkPending ?? true) && !userInfoState.userPending);
-
   /// True if [partnerExist] and there is a link pending.
   bool get partnerPending => (partnerExist && (_partnersInfo?.linkPending ?? false));
 
@@ -42,13 +37,13 @@ class PartnersInfoState with ChangeNotifier {
   void notify() => notifyListeners();
 
   /// Setups listener for [UserInformation] changes of [partnersID] document.
-  void setupPartnerInfoSubscription() {
-    if (partnerExist) {
-      _partnersInfoSubscription = UserInformation.getUserFromID(partnersID).snapshots().listen((snapshot) {
+  void setupPartnerInfoSubscription(UserInformation currentUserInfo) {
+    if (_partnersInfo != null) {
+      _partnersInfoSubscription = _partnersInfo!.getUserInDatabase().snapshots().listen((snapshot) {
         UserInformation? partnersUserInfo = snapshot.data();
         debugPrint("PartnersInfoState.setupPartnerInfoSubscription: Partner Info Change: $partnersUserInfo");
 
-        if (userInfoState.userID != null && partnersUserInfo?.partnerID == userInfoState.userID) {
+        if (partnersUserInfo?.partnerID == currentUserInfo.userID) {
           // Check that user and partner are linked to each other
           _partnersInfo = partnersUserInfo;
           if (partnersName.value != partnersUserInfo?.displayName && partnersUserInfo?.displayName != null) {
@@ -65,21 +60,21 @@ class PartnersInfoState with ChangeNotifier {
   }
 
   /// Setups local data for a new partner.
-  void addPartner(UserInformation? newPartnerInfo) {
+  void addPartner(UserInformation? newPartnerInfo, UserInformation currentUserInfo) {
     if (newPartnerInfo != null) {
       _partnersInfo = newPartnerInfo;
       partnersName.value = newPartnerInfo.displayName ?? defaultPartnerName;
-      setupPartnerInfoSubscription();
+      setupPartnerInfoSubscription(currentUserInfo);
       notifyListeners();
     }
   }
 
   /// Removes local data for current partner.
-  void removePartner() {
+  void removePartner(UserInformation? currentUserInfo) {
     _partnersInfo = null;
     _partnersInfoSubscription?.cancel();
-    userInfoState.userInfo?.linkPending = false;
-    userInfoState.userInfo?.partner = null;
+    currentUserInfo?.linkPending = false;
+    currentUserInfo?.partner = null;
     notifyListeners();
   }
 }

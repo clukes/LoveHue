@@ -149,7 +149,7 @@ Future<void> showDeleteAlertDialog(BuildContext context) async {
 
 /// Deletes user data in database, then delete [FirebaseAuth] account with [User.delete]
 Future<void> deleteAccount(BuildContext context) async {
-  return UserInformation.deleteUserData(context, Provider.of<UserInfoState>(context, listen: false).userInfo).then((_) {
+  return Provider.of<UserInfoState>(context, listen: false).userInfo?.deleteUserData(context).then((_) {
     FirebaseAuth.instance.currentUser?.delete();
   });
 }

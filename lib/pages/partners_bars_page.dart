@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/partners_info_state.dart';
+import '../providers/user_info_state.dart';
 import '../widgets/app_bars.dart';
 import '../widgets/bar_builders.dart';
 import '../widgets/link_partner_screen.dart';
@@ -45,9 +46,9 @@ class _PartnersBarsState extends State<PartnersBars> with AutomaticKeepAliveClie
           ];
         },
         body: Consumer<PartnersInfoState>(builder: (BuildContext context, PartnersInfoState partnersInfoState, _) {
-          if (partnersInfoState.partnerLinked) {
+          if (Provider.of<UserInfoState>(context).partnerLinked()) {
             debugPrint("_PartnersBarsState: Linked partner id: ${partnersInfoState.partnersInfo?.partnerID}");
-            return barStreamBuilder(partnersInfoState.partnersID!, nonInteractableBarBuilder);
+            return barStreamBuilder(partnersInfoState.partnersID!, nonInteractableBarBuilder, Provider.of<UserInfoState>(context, listen: false).firestore);
           }
           debugPrint("_PartnersBarsState: Not linked to a partner.");
           return LinkPartnerScreen(partnersInfoState: partnersInfoState);
