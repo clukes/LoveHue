@@ -215,7 +215,7 @@ class UserInformation {
     batch.set(userDoc, this);
     batch.set(linkCode, LinkCode(linkCode: linkCode.id, user: userDoc));
     // Setup default bars.
-    List<RelationshipBar> defaultBars = RelationshipBar.listFromLabels(defaultBarLabels, firestore);
+    List<RelationshipBar> defaultBars = RelationshipBar.listFromLabels(defaultBarLabels);
     userInfoState.latestRelationshipBarDoc =
         RelationshipBarDocument.firestoreAddBarListWithBatch(userID, defaultBars, batch, firestore);
     await batch.commit().catchError((error) => debugPrint("ApplicationState.userLoggedInSetup: Batch Error: $error"));

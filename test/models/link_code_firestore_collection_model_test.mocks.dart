@@ -358,3 +358,21 @@ class MockUserInformation extends _i1.Mock implements _i6.UserInformation {
           returnValue: Future<void>.value(),
           returnValueForMissingStub: Future<void>.value()) as _i9.Future<void>);
 }
+
+/// A class which mocks [LinkCode].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockLinkCode extends _i1.Mock implements _i10.LinkCode {
+  MockLinkCode() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  String get linkCode =>
+      (super.noSuchMethod(Invocation.getter(#linkCode), returnValue: '')
+          as String);
+  @override
+  Map<String, Object?> toMap() =>
+      (super.noSuchMethod(Invocation.method(#toMap, []),
+          returnValue: <String, Object?>{}) as Map<String, Object?>);
+}

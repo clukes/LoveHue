@@ -13,10 +13,7 @@ class RelationshipBar {
     this.prevValue = defaultBarValue,
     this.value = defaultBarValue,
     this.changed = false,
-    this.firestore,
   });
-
-  final FirebaseFirestore? firestore;
 
   /// Gives the ordering it should be placed in the set of bars.
   int order;
@@ -82,13 +79,12 @@ class RelationshipBar {
   }
 
   /// Converts a given [Map] to the returned [RelationshipBar].
-  static RelationshipBar fromMap(Map<String, Object?> res, FirebaseFirestore firestore) {
+  static RelationshipBar fromMap(Map<String, Object?> res) {
     return RelationshipBar(
       order: res[_columnOrder] as int,
       label: res[_columnLabel]! as String,
       value: res[_columnValue] is int ? res[_columnValue] as int : defaultBarValue,
       prevValue: res[_columnValue] is int ? res[_columnValue] as int : defaultBarValue,
-      firestore: firestore,
     );
   }
 
@@ -108,15 +104,15 @@ class RelationshipBar {
   }
 
   /// Calls [fromMap] on a list of [Map].
-  static List<RelationshipBar>? fromMapList(List<Map<String, Object?>> maps, FirebaseFirestore firestore) {
+  static List<RelationshipBar>? fromMapList(List<Map<String, Object?>> maps) {
     maps.sort((a, b) => (a[_columnOrder] as int).compareTo(b[_columnOrder] as int));
-    return maps.map((e) => fromMap(e, firestore)).toList();
+    return maps.map((e) => fromMap(e)).toList();
   }
 
   /// Creates a [RelationshipBar] with default values and given label for each String in labels.
-  static List<RelationshipBar> listFromLabels(List<String> labels, FirebaseFirestore firestore) {
+  static List<RelationshipBar> listFromLabels(List<String> labels) {
     return List<RelationshipBar>.generate(
-        labels.length, (index) => RelationshipBar(order: index, label: labels[index], firestore: firestore));
+        labels.length, (index) => RelationshipBar(order: index, label: labels[index]));
   }
 }
 
@@ -176,8 +172,8 @@ class RelationshipBarDocument {
   static RelationshipBarDocument fromMap(Map<String, Object?> res, FirebaseFirestore firestore) {
     return RelationshipBarDocument(
       id: res[columnID] as String,
-      timestamp: res[columnTimestamp] as Timestamp,
-      barList: RelationshipBar.fromMapList(List<Map<String, Object?>>.from(res[columnBarList] as List), firestore),
+      timestamp: res[columnTimestamp] as Timestamp?,
+      barList: res[columnBarList] != null ? RelationshipBar.fromMapList(List<Map<String, Object?>>.from(res[columnBarList] as List)) : null,
       firestore: firestore,
     );
   }

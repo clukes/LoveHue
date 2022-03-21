@@ -138,15 +138,18 @@ class LinkCode {
     });
   }
 
-  /// Creates new uniquely generated [LinkCode] in the database and returns a [DocumentReference] to it.
-  static Future<DocumentReference<LinkCode?>> create(FirebaseFirestore firestore) async {
+  /// Generates id for a new uniquely generated [LinkCode], and returns a [DocumentReference] to it.
+  ///
+  /// If newCode is supplied, will check if it exists in the database, and generate a different code if so.
+  static Future<DocumentReference<LinkCode?>> create(FirebaseFirestore firestore, {String? newCode}) async {
     DocumentReference<LinkCode?>? linkCode;
     do {
       // Generate a new link code, and check if it already exists in the database, to ensure uniqueness.
       linkCode = await _setupFirestoreConverter(firestore)
-          .doc(generateLinkCode())
+          .doc(newCode ?? generateLinkCode())
           .get()
           .then((snapshot) => !snapshot.exists ? snapshot.reference : null);
+      newCode = null;
     } while (linkCode == null);
     return linkCode;
   }
@@ -158,7 +161,7 @@ class LinkCode {
       throw PrintableError("No user in database for current user.");
     }
     if (userInfo.partner == null) {
-      throw PrintableError("No partner pending connection to current user.");
+      throw PrintableError("No partner with connection to current user.");
     }
     return userInfo;
   }
