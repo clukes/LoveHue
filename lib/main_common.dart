@@ -47,7 +47,7 @@ void mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo) async {
 
   final PartnersInfoState partnersInfoState = PartnersInfoState();
   final UserInfoState userInfoState = UserInfoState(firestore, partnersInfoState);
-  final ApplicationState applicationState = ApplicationState(userInfoState, partnersInfoState, firestore);
+  final ApplicationState applicationState = ApplicationState(userInfoState, partnersInfoState, firestore, FirebaseAuth.instance);
 
   final List<ChangeNotifierProvider<ChangeNotifier>> providers = [
     ChangeNotifierProvider<UserInfoState>.value(value: userInfoState),

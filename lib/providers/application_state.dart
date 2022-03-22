@@ -23,36 +23,31 @@ enum ApplicationLoginState {
 ///
 /// Has [init] to setup app on startup.
 class ApplicationState with ChangeNotifier {
-  // _loginState only changed in this class
-  ApplicationLoginState _loginState = ApplicationLoginState.loggedOut;
-
+  ApplicationLoginState loginState = ApplicationLoginState.loggedOut;
   final UserInfoState userInfoState;
   final PartnersInfoState partnersInfoState;
   final FirebaseFirestore firestore;
 
-  /// Returns current [ApplicationLoginState].
-  ApplicationLoginState get loginState => _loginState;
-
   /// Setups app state on startup. Setups listener for [FirebaseAuth.userChanges], dealing with login.
-  ApplicationState(this.userInfoState, this.partnersInfoState, this.firestore) {
-    _setupUserChangersListener();
+  ApplicationState(this.userInfoState, this.partnersInfoState, this.firestore, FirebaseAuth auth) {
+    _setupUserChangersListener(auth);
   }
 
-  void _setupUserChangersListener() {
-    FirebaseAuth.instance.userChanges().listen((user) async {
-      if (user != null && _loginState == ApplicationLoginState.loggedOut) {
+  StreamSubscription _setupUserChangersListener(FirebaseAuth auth) {
+    return auth.userChanges().listen((user) async {
+      if (user != null && loginState == ApplicationLoginState.loggedOut) {
         // The user has logged in, so run setup.
-        await userLoggedInSetup(user);
+        await _userLoggedInSetup(user);
         notifyListeners();
-      } else if (user != null && _loginState == ApplicationLoginState.loggedIn) {
+      } else if (user != null && loginState == ApplicationLoginState.loggedIn) {
         // When something changes while user is logged in.
         if (userInfoState.userExist && user.displayName != userInfoState.userInfo?.displayName) {
           // If user display name has changed, update their userInfo display name in database.
           await userInfoState.userInfo?.firestoreUpdateColumns({UserInformation.columnDisplayName: user.displayName});
         }
-      } else if (user == null && _loginState == ApplicationLoginState.loggedIn) {
+      } else if (user == null && loginState == ApplicationLoginState.loggedIn) {
         // If user has been logged out, reset.
-        resetAppState();
+        _resetAppState();
         notifyListeners();
       }
     });
@@ -62,8 +57,8 @@ class ApplicationState with ChangeNotifier {
   ///
   /// Sets [ApplicationLoginState.loading] until it is finished.
   /// Sets [ApplicationLoginState.loggedIn] on finish.
-  Future<void> userLoggedInSetup(User user) async {
-    _loginState = ApplicationLoginState.loading;
+  Future<void> _userLoggedInSetup(User user) async {
+    loginState = ApplicationLoginState.loading;
 
     // Retrieve userInfo if not locally stored.
     UserInformation? userInfo = userInfoState.userInfo ?? await UserInformation.firestoreGetFromID(user.uid, firestore);
@@ -80,7 +75,7 @@ class ApplicationState with ChangeNotifier {
     }
     userInfoState.latestRelationshipBarDoc ??= await RelationshipBarDocument.firestoreGetLatest(userInfo.userID, firestore);
     userInfoState.addUser(userInfo);
-    _loginState = ApplicationLoginState.loggedIn;
+    loginState = ApplicationLoginState.loggedIn;
     userInfoState.notifyListeners();
   }
 
@@ -88,10 +83,10 @@ class ApplicationState with ChangeNotifier {
   ///
   /// Sets [ApplicationLoginState.loading] until it is finished.
   /// Sets [ApplicationLoginState.loggedOut] on finish.
-  void resetAppState() {
-    _loginState = ApplicationLoginState.loading;
+  void _resetAppState() {
+    loginState = ApplicationLoginState.loading;
     partnersInfoState.removePartner(userInfoState.userInfo);
     userInfoState.removeUser();
-    _loginState = ApplicationLoginState.loggedOut;
+    loginState = ApplicationLoginState.loggedOut;
   }
 }

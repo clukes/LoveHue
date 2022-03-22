@@ -54,6 +54,7 @@ dev_dependencies:
   test:
   build_runner:
   fake_cloud_firestore:
+  firebase_auth_mocks:
 
   # The "flutter_lints" package below contains a set of recommended lints to
   # encourage good coding practices. The lint set provided by the package is
