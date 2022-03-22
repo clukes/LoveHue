@@ -3,14 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutterfire_ui/auth.dart';
 
-import '../models/relationship_bar_model.dart';
+import '../models/relationship_bar.dart';
+import '../models/relationship_bar_document.dart';
 import '../providers/user_info_state.dart';
 import '../resources/authentication.dart';
 import '../resources/database_and_table_names.dart';
 import '../resources/delete_firestore_collection.dart';
 import '../resources/printable_error.dart';
 import '../utils/globals.dart';
-import 'link_code_firestore_collection_model.dart';
+import 'link_code.dart';
 
 /// Holds information for a [UserInformation].
 ///
@@ -23,9 +24,7 @@ class UserInformation {
     required this.linkCode,
     this.linkPending = false,
     required this.firestore,
-  }) {
-    _userInfoFirestoreRef = _setupFirestoreConverter(firestore);
-  }
+  });
 
   /// ID in the database for the user.
   final String userID;
@@ -56,9 +55,7 @@ class UserInformation {
   static const String columnLinkPending = 'linkPending';
 
   // Reference to the UserInformation collection in FirebaseFirestore database.
-  late final CollectionReference<UserInformation?> _userInfoFirestoreRef;
-
-  static CollectionReference<UserInformation?> _setupFirestoreConverter(FirebaseFirestore firestore) =>
+  static CollectionReference<UserInformation?> _firestoreConverter(FirebaseFirestore firestore) =>
       firestore.collection(userInfoCollection).withConverter<UserInformation?>(
             fromFirestore: (snapshots, _) => UserInformation.fromMap(snapshots.data()!, firestore),
             toFirestore: (userInfo, _) => userInfo!.toMap(),
@@ -71,7 +68,7 @@ class UserInformation {
       displayName: res[columnDisplayName] as String?,
       partner: res[columnPartner] as DocumentReference?,
       linkCode: res[columnLinkCode] as DocumentReference,
-      linkPending: res[columnLinkPending] as bool,
+      linkPending: res[columnLinkPending] != null ? res[columnLinkPending] as bool : false,
       firestore: firestore,
     );
   }
@@ -88,23 +85,23 @@ class UserInformation {
   }
 
   /// Calls [toMap] on a list of [UserInformation].
-  static List<Map<String, Object?>> userInfoToList(List<UserInformation> info) {
+  static List<Map<String, Object?>> toMapList(List<UserInformation> info) {
     return info.map((e) => e.toMap()).toList();
   }
 
   /// Calls [fromMap] on a list of [Map].
-  List<UserInformation> userInfoFromList(List<Map<String, Object?>> query) {
+  static List<UserInformation> fromMapList(List<Map<String, Object?>> query, FirebaseFirestore firestore) {
     return query.map((e) => fromMap(e, firestore)).toList();
   }
 
   /// Gets a reference to the [UserInformation] document for user in Firestore.
   DocumentReference<UserInformation?> getUserInDatabase() {
-    return _userInfoFirestoreRef.doc(userID);
+    return _firestoreConverter(firestore).doc(userID);
   }
 
   /// Gets a reference to the [UserInformation] document for user with given id in Firestore.
   static DocumentReference<UserInformation?> getUserInDatabaseFromID(String userID, FirebaseFirestore firestore) {
-    return _setupFirestoreConverter(firestore).doc(userID);
+    return _firestoreConverter(firestore).doc(userID);
   }
 
   /// Retrieve [UserInformation] from the FirebaseFirestore collection for given userID.

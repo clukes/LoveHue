@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:lovehue/models/userinfo_firestore_collection_model.dart';
+import 'package:lovehue/models/user_information.dart';
 import 'package:provider/provider.dart';
 
-import '../models/link_code_firestore_collection_model.dart';
+import '../models/link_code.dart';
 import '../providers/partners_info_state.dart';
 import '../providers/user_info_state.dart';
 import '../resources/copy_to_clipboard.dart';

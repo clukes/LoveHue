@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../models/userinfo_firestore_collection_model.dart';
+import '../models/user_information.dart';
 import '../providers/partners_info_state.dart';
 import '../providers/user_info_state.dart';
 import '../resources/database_and_table_names.dart';
@@ -21,7 +21,7 @@ class LinkCode {
   final DocumentReference<UserInformation?>? user;
 
   // Reference to the linkCode collection in FirebaseFirestore database.
-  static CollectionReference<LinkCode?> _setupFirestoreConverter(FirebaseFirestore firestore) =>
+  static CollectionReference<LinkCode?> _firestoreConverter(FirebaseFirestore firestore) =>
       firestore.collection(linkCodesCollection).withConverter<LinkCode?>(
             fromFirestore: (snapshots, _) => LinkCode.fromMap(snapshots.data()!),
             toFirestore: (linkCode, _) => linkCode!.toMap(),
@@ -63,7 +63,7 @@ class LinkCode {
     }
 
     await firestore.runTransaction((transaction) async {
-      DocumentReference<LinkCode?> partnerCodeReference = _setupFirestoreConverter(firestore).doc(linkCode);
+      DocumentReference<LinkCode?> partnerCodeReference = _firestoreConverter(firestore).doc(linkCode);
       DocumentSnapshot partnerCodeSnapshot = await transaction.get(partnerCodeReference);
       if (!partnerCodeSnapshot.exists) {
         throw PrintableError("Link code does not exist.");
@@ -145,7 +145,7 @@ class LinkCode {
     DocumentReference<LinkCode?>? linkCode;
     do {
       // Generate a new link code, and check if it already exists in the database, to ensure uniqueness.
-      linkCode = await _setupFirestoreConverter(firestore)
+      linkCode = await _firestoreConverter(firestore)
           .doc(newCode ?? generateLinkCode())
           .get()
           .then((snapshot) => !snapshot.exists ? snapshot.reference : null);

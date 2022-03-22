@@ -3,8 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:lovehue/providers/partners_info_state.dart';
 import 'package:provider/provider.dart';
 
-import '../models/link_code_firestore_collection_model.dart';
-import '../models/userinfo_firestore_collection_model.dart';
+import '../models/link_code.dart';
 import '../pages/sign_in_page.dart';
 import '../providers/user_info_state.dart';
 

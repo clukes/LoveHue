@@ -3,8 +3,9 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../models/relationship_bar_model.dart';
-import '../models/userinfo_firestore_collection_model.dart';
+import '../models/relationship_bar.dart';
+import '../models/relationship_bar_document.dart';
+import '../models/user_information.dart';
 import '../providers/partners_info_state.dart';
 
 /// Handles current user state, dealing with users [UserInformation]

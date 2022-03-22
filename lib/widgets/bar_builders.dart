@@ -2,7 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/relationship_bar_model.dart';
+import '../models/relationship_bar.dart';
+import '../models/relationship_bar_document.dart';
 import '../providers/user_info_state.dart';
 import '../resources/data_formatting.dart';
 import '../widgets/bar_sliders.dart';

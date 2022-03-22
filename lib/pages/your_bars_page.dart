@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/relationship_bar_model.dart';
+import '../models/relationship_bar_document.dart';
 import '../providers/application_state.dart';
 import '../providers/user_info_state.dart';
 import '../widgets/app_bars.dart';

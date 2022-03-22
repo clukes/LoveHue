@@ -1,16 +1,7 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:lovehue/models/relationship_bar_model.dart';
-import 'package:mockito/annotations.dart';
+import 'package:lovehue/models/relationship_bar.dart';
 
-@GenerateMocks([])
 void main() {
-  relationshipBar();
-  relationshipBarDocument();
-}
-
-void relationshipBar() {
   setUp(() {});
   tearDown(() {});
 
@@ -80,7 +71,7 @@ void relationshipBar() {
       List<RelationshipBar> bars = [RelationshipBar(label: '1', order: 1), RelationshipBar(label: '2', order: 2)];
       List<Map<String, Object?>>? result = RelationshipBar.toMapList(bars);
       expect(result, isNotNull);
-      for(int i = 0; i < bars.length; i++) {
+      for (int i = 0; i < bars.length; i++) {
         expect(result![i]['label'], equals(expected[i]['label']));
         expect(result[i]['order'], equals(expected[i]['order']));
       }
@@ -92,7 +83,7 @@ void relationshipBar() {
       List<RelationshipBar> expected = [RelationshipBar(label: '1', order: 1), RelationshipBar(label: '2', order: 2)];
       List<Map<String, Object?>> maps = [{'label': '1', 'order': 1}, {'label': '2', 'order': 2}];
       List<RelationshipBar>? result = RelationshipBar.fromMapList(maps);
-      for(int i = 0; i < maps.length; i++) {
+      for (int i = 0; i < maps.length; i++) {
         expect(result![i].label, equals(expected[i].label));
         expect(result[i].order, equals(expected[i].order));
       }
@@ -106,99 +97,4 @@ void relationshipBar() {
       expect(result.map((element) => element.label), orderedEquals(labels));
     });
   });
-}
-
-
-
-void relationshipBarDocument() {
-  setUp(() {});
-  tearDown(() {});
-
-
-  group('resetBarsChanged', () {
-    test('all bars in list changed is false', () {
-      List<RelationshipBar> bars = [RelationshipBar(label: '1', order: 1, changed: true), RelationshipBar(label: '2', order: 2, changed: true)];
-      RelationshipBarDocument barDocument = RelationshipBarDocument(barList: bars, id: '1', firestore: FakeFirebaseFirestore());
-      barDocument.resetBarsChanged();
-      expect(barDocument.barList, isNotNull);
-      for (var element in barDocument.barList!) {
-        expect(element.changed, isFalse);
-      }
-    });
-  });
-
-  group('resetBars', () {
-    final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-
-    test('barList should match bars in database', () async {
-      String userID = '1234';
-      List<RelationshipBar> bars = [RelationshipBar(label: '1', order: 1, changed: true), RelationshipBar(label: '2', order: 2, changed: true)];
-      RelationshipBarDocument barDocument = RelationshipBarDocument(barList: bars, timestamp: Timestamp.now(), id: '1', firestore: firestore);
-      await RelationshipBarDocument.getUserBarsFromID(userID, firestore).doc('1').set(barDocument);
-
-      barDocument.barList = null;
-      await barDocument.resetBars(userID);
-      List<RelationshipBar>? result = barDocument.barList;
-      expect(barDocument.barList, isNotNull);
-      for(int i = 0; i < bars.length; i++) {
-        expect(result![i].label, equals(bars[i].label));
-        expect(result[i].order, equals(bars[i].order));
-      }
-    });
-  });
-
-  group('fromMap', () {
-    test('valid map should return RelationshipBarDocument', () {
-      FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-      RelationshipBarDocument expected = RelationshipBarDocument(id: '1234', firestore: firestore);
-      Map<String, Object?> map = {'id': '1234'};
-      RelationshipBarDocument result = RelationshipBarDocument.fromMap(map, firestore);
-      expect(result.id, equals(expected.id));
-    });
-  });
-
-  group('toMap', () {
-    test('valid RelationshipBarDocument should return map', () {
-      FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-      Map<String, Object?> expected = {'id': '1234'};
-      RelationshipBarDocument barDoc = RelationshipBarDocument(id: '1234', firestore: firestore);
-      Map<String, Object?> result = barDoc.toMap();
-      expect(result['id'], equals(expected['id']));
-    });
-  });
-
-  group('firestoreGet', () {
-    final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-
-    test('should get correct barDoc', () async {
-      String userID = '1234';
-      List<RelationshipBar> bars = [RelationshipBar(label: '1', order: 1, changed: true), RelationshipBar(label: '2', order: 2, changed: true)];
-      RelationshipBarDocument barDocument = RelationshipBarDocument(barList: bars, timestamp: Timestamp.now(), id: '1', firestore: firestore);
-      await RelationshipBarDocument.getUserBarsFromID(userID, firestore).doc('1').set(barDocument);
-      RelationshipBarDocument? result = await barDocument.firestoreGet(userID);
-
-      expect(result, isNotNull);
-      expect(result!.id, equals(barDocument.id));
-    });
-  });
-
-  group('firestoreGetLatest', () {
-    final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-
-    test('should get barDoc with greatest timestamp', () async {
-      String userID = '1234';
-      List<RelationshipBar> bars = [RelationshipBar(label: '1', order: 1, changed: true), RelationshipBar(label: '2', order: 2, changed: true)];
-      RelationshipBarDocument barDocument = RelationshipBarDocument(barList: bars, timestamp: Timestamp.fromMillisecondsSinceEpoch(10000), id: '1', firestore: firestore);
-      RelationshipBarDocument expected = RelationshipBarDocument(barList: bars, timestamp: Timestamp.fromMillisecondsSinceEpoch(20000), id: '2', firestore: firestore);
-      await RelationshipBarDocument.getUserBarsFromID(userID, firestore).doc('1').set(barDocument);
-      await RelationshipBarDocument.getUserBarsFromID(userID, firestore).doc('2').set(expected);
-      RelationshipBarDocument? result = await RelationshipBarDocument.firestoreGetLatest(userID, firestore);
-
-      expect(result, isNotNull);
-      expect(result!.id, equals(expected.id));
-    });
-  });
-
-
-
 }

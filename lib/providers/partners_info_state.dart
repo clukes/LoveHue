@@ -3,8 +3,7 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../models/userinfo_firestore_collection_model.dart';
-import '../providers/user_info_state.dart';
+import '../models/user_information.dart';
 
 const String defaultPartnerName = "Partner";
 

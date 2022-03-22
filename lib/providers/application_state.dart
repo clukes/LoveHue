@@ -4,9 +4,9 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 
-import '../models/link_code_firestore_collection_model.dart';
-import '../models/relationship_bar_model.dart';
-import '../models/userinfo_firestore_collection_model.dart';
+import '../models/link_code.dart';
+import '../models/relationship_bar_document.dart';
+import '../models/user_information.dart';
 import '../providers/partners_info_state.dart';
 import '../providers/user_info_state.dart';
 

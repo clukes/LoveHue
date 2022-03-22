@@ -94,7 +94,7 @@ Current stage TODO:
 Development Process for V1.0:
 - [x] Design
 - [x] Development
-- [x] Unit testing
+- [ ] Unit testing (20% coverage so far)
 - [ ] Beta Testing
 - [ ] Production
 

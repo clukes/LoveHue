@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/relationship_bar_model.dart';
+import '../models/relationship_bar.dart';
 import '../providers/user_info_state.dart';
 import '../utils/colors.dart';
 

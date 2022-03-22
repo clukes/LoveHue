@@ -1,120 +1,8 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
+import '../models/relationship_bar.dart';
 import '../resources/database_and_table_names.dart';
-
-/// Holds information for a single [RelationshipBar].
-///
-/// A [RelationshipBar] holds an [order] number, [label] text, [prevValue] number, [value] number and [changed] check.
-class RelationshipBar {
-  RelationshipBar({
-    required this.order,
-    required this.label,
-    this.prevValue = defaultBarValue,
-    this.value = defaultBarValue,
-    this.changed = false,
-  });
-
-  /// Gives the ordering it should be placed in the set of bars.
-  int order;
-
-  /// The text to display with the bar.
-  String label;
-
-  /// The previous value that it was set to, from 0 to 100.
-  int prevValue;
-
-  /// The current value that it is set to, from 0 to 100.
-  int value;
-
-  /// Whether it has been changed since the last save to the database.
-  bool changed;
-
-  /// Max is 100.
-  static const maxBarValue = 100;
-
-  /// Min is 0.
-  static const minBarValue = 0;
-
-  // Initial value, currently set to the max value which is 100. Thought it was more optimistic to default to max than min.
-  static const defaultBarValue = maxBarValue;
-
-  // Column names for a RelationshipBar document in the FirebaseFirestore Database.
-  static const String _columnOrder = 'order';
-  static const String _columnLabel = 'label';
-  static const String _columnValue = 'value';
-  static const String _columnPrevValue = 'prevValue';
-
-  /// Sets [value] to the given value, and sets [prevValue] and [changed] to true, if [value] has changed.
-  int setValue(int newValue) {
-    if (newValue != value) {
-      prevValue = value;
-      value = newValue;
-      changed = true;
-    }
-    return value;
-  }
-
-  /// Resets [value] to the [prevValue], and sets [changed] to false.
-  int resetValue() {
-    value = prevValue;
-    changed = false;
-    return value;
-  }
-
-  /// Returns [label] and [value] with format 'label: value%'.
-  @override
-  String toString() {
-    return labelString() + valueString();
-  }
-
-  /// Returns [label] with format 'label: '.
-  String labelString() {
-    return label + ": ";
-  }
-
-  /// Returns [value] with format 'value: %'.
-  String valueString() {
-    return value.toString() + "%";
-  }
-
-  /// Converts a given [Map] to the returned [RelationshipBar].
-  static RelationshipBar fromMap(Map<String, Object?> res) {
-    return RelationshipBar(
-      order: res[_columnOrder] as int,
-      label: res[_columnLabel]! as String,
-      value: res[_columnValue] is int ? res[_columnValue] as int : defaultBarValue,
-      prevValue: res[_columnValue] is int ? res[_columnValue] as int : defaultBarValue,
-    );
-  }
-
-  /// Converts this [RelationshipBar] to the returned [Map].
-  Map<String, Object?> toMap() {
-    return <String, Object?>{
-      _columnOrder: order,
-      _columnLabel: label,
-      _columnPrevValue: prevValue,
-      _columnValue: value,
-    };
-  }
-
-  /// Calls [toMap] on a list of [RelationshipBar].
-  static List<Map<String, Object?>>? toMapList(List<RelationshipBar>? info) {
-    return info?.map((e) => e.toMap()).toList();
-  }
-
-  /// Calls [fromMap] on a list of [Map].
-  static List<RelationshipBar>? fromMapList(List<Map<String, Object?>> maps) {
-    maps.sort((a, b) => (a[_columnOrder] as int).compareTo(b[_columnOrder] as int));
-    return maps.map((e) => fromMap(e)).toList();
-  }
-
-  /// Creates a [RelationshipBar] with default values and given label for each String in labels.
-  static List<RelationshipBar> listFromLabels(List<String> labels) {
-    return List<RelationshipBar>.generate(
-        labels.length, (index) => RelationshipBar(order: index, label: labels[index]));
-  }
-}
 
 /// Holds information for a [RelationshipBarDocument] containing a list of [RelationshipBar].
 class RelationshipBarDocument {
@@ -123,12 +11,15 @@ class RelationshipBarDocument {
     this.timestamp,
     this.barList,
     required this.firestore,
+    required this.userID,
   });
 
   final FirebaseFirestore firestore;
 
   /// id in database for this document.
   final String id;
+
+  String userID;
 
   /// Timestamp when document was last changed.
   Timestamp? timestamp;
@@ -152,7 +43,7 @@ class RelationshipBarDocument {
 
   /// Replaces [barList] with the list of [RelationshipBar] stored in the database.
   Future<RelationshipBarDocument> resetBars(String userID) async {
-    barList = (await firestoreGet(userID))!.barList;
+    barList = (await firestoreGet())!.barList;
     return resetBarsChanged();
   }
 
@@ -163,18 +54,19 @@ class RelationshipBarDocument {
         .doc(userID)
         .collection(specificUserBarsCollection)
         .withConverter<RelationshipBarDocument>(
-          fromFirestore: (snapshots, _) => RelationshipBarDocument.fromMap(snapshots.data()!, firestore),
-          toFirestore: (relationshipBarDocument, _) => relationshipBarDocument.toMap(),
-        );
+      fromFirestore: (snapshots, _) => RelationshipBarDocument.fromMap(snapshots.data()!, userID, firestore),
+      toFirestore: (relationshipBarDocument, _) => relationshipBarDocument.toMap(),
+    );
   }
 
   /// Converts a given [Map] to the returned [RelationshipBarDocument].
-  static RelationshipBarDocument fromMap(Map<String, Object?> res, FirebaseFirestore firestore) {
+  static RelationshipBarDocument fromMap(Map<String, Object?> res, String userID, FirebaseFirestore firestore) {
     return RelationshipBarDocument(
       id: res[columnID] as String,
       timestamp: res[columnTimestamp] as Timestamp?,
       barList: res[columnBarList] != null ? RelationshipBar.fromMapList(List<Map<String, Object?>>.from(res[columnBarList] as List)) : null,
       firestore: firestore,
+      userID: userID,
     );
   }
 
@@ -192,8 +84,8 @@ class RelationshipBarDocument {
     return snapshot.docs.map((e) => e.data()).toList();
   }
 
-  /// Retrieve specific [RelationshipBarDocument] from the FirebaseFirestore collection for given userID.
-  Future<RelationshipBarDocument?> firestoreGet(String userID, [GetOptions? options]) async {
+  /// Retrieve specific [RelationshipBarDocument] from the FirebaseFirestore collection.
+  Future<RelationshipBarDocument?> firestoreGet([GetOptions? options]) async {
     debugPrint("RelationshipBarDocument.firestoreGet: Get doc with barDocID: $id.");
     RelationshipBarDocument? doc = await getUserBarsFromID(userID, firestore)
         .doc(id)
@@ -227,7 +119,7 @@ class RelationshipBarDocument {
   }
 
   /// Retrieve list of [RelationshipBarDocument] from the FirebaseFirestore collection for given userID.
-  static Future<List<RelationshipBarDocument>?> firestoreGetAll(String userID, FirebaseFirestore firestore,
+  static Future<List<RelationshipBarDocument?>> firestoreGetAll(String userID, FirebaseFirestore firestore,
       [GetOptions? options]) async {
     debugPrint("RelationshipBarDocument.firestoreGetAll: Get docs for userID: $userID.");
     return await getUserBarsFromID(userID, firestore)
@@ -240,15 +132,15 @@ class RelationshipBarDocument {
   }
 
   /// Creates/updates this [RelationshipBarDocument] in given userID's RelationshipBarDocument FirebaseFirestore collection.
-  Future<void> firestoreSet(String userID) async {
+  Future<void> firestoreSet() async {
     debugPrint("RelationshipBarDocument.firestoreSet: Set doc with id: $id, for userID: $userID.");
     return await getUserBarsFromID(userID, firestore)
         .doc(id)
         .set(this, SetOptions(merge: true))
         .then((value) => debugPrint(
-            "RelationshipBarDocument.firestoreSet: Relationship Bar Document Added with id: $id, for userID: $userID."))
+        "RelationshipBarDocument.firestoreSet: Relationship Bar Document Added with id: $id, for userID: $userID."))
         .catchError((error) =>
-            debugPrint("RelationshipBarDocument.firestoreSet: Failed to add relationship bar document: $error"));
+        debugPrint("RelationshipBarDocument.firestoreSet: Failed to add relationship bar document: $error"));
   }
 
   /// Creates/merges each [RelationshipBarDocument] in list to given userID's RelationshipBarDocument FirebaseFirestore collection.
@@ -264,8 +156,8 @@ class RelationshipBarDocument {
     await batch.commit();
   }
 
-  /// Updates columns of [RelationshipBarDocument] with given userID and barDocID, using the given data Map, in the RelationshipBarDocument FirebaseFirestore collection.
-  Future<void> firestoreUpdateColumns(String userID, Map<String, Object?> data) async {
+  /// Updates columns of [RelationshipBarDocument] with given userID, using the given data Map, in the RelationshipBarDocument FirebaseFirestore collection.
+  Future<void> firestoreUpdateColumns(Map<String, Object?> data) async {
     debugPrint("RelationshipBarDocument.firestoreUpdateColumns: Update doc with id: $id.");
     await getUserBarsFromID(userID, firestore)
         .doc(id)
@@ -273,11 +165,11 @@ class RelationshipBarDocument {
         .then(
             (value) => debugPrint("RelationshipBarDocument.firestoreUpdateColumns: Relationship Bar Document Updated."))
         .catchError((error) => debugPrint(
-            "RelationshipBarDocument.firestoreUpdateColumns: Failed to update relationship bar document: $error."));
+        "RelationshipBarDocument.firestoreUpdateColumns: Failed to update relationship bar document: $error."));
   }
 
   /// Deletes this [RelationshipBarDocument] from given userID's RelationshipBarDocument FirebaseFirestore collection.
-  Future<void> firestoreDelete(String userID) async {
+  Future<void> firestoreDelete() async {
     debugPrint("RelationshipBarDocument.firestoreDelete: Delete doc with id: $id.");
     await getUserBarsFromID(userID, firestore)
         .doc(id)
@@ -309,7 +201,7 @@ class RelationshipBarDocument {
     final CollectionReference<RelationshipBarDocument> ref = getUserBarsFromID(userID, firestore);
     DocumentReference<RelationshipBarDocument> docRef = ref.doc();
     RelationshipBarDocument barDoc =
-        RelationshipBarDocument(id: docRef.id, timestamp: Timestamp.now(), barList: barList, firestore: firestore);
+    RelationshipBarDocument(id: docRef.id, timestamp: Timestamp.now(), barList: barList, userID: userID, firestore: firestore);
     batch.set(docRef, barDoc, SetOptions(merge: true));
     batch.update(docRef, {columnTimestamp: FieldValue.serverTimestamp()});
     return barDoc;

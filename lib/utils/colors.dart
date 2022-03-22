@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lovehue/models/relationship_bar_model.dart';
+import 'package:lovehue/models/relationship_bar.dart';
 
 /// Various colors to use in the app.
 const mobileBackgroundColor = Color.fromARGB(255, 255, 248, 235);
