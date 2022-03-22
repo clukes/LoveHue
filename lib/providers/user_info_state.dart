@@ -60,7 +60,7 @@ class UserInfoState with ChangeNotifier {
         String? partnerID = newUserInfo?.partnerID;
         if (partnerID != null && (!partnersInfoState.partnerExist || partnersInfoState.partnersID != partnerID)) {
           // If theres a new partner linked, setup partner info.
-          UserInformation? partnerInfo = await UserInformation.firestoreGet(partnerID, firestore);
+          UserInformation? partnerInfo = await UserInformation.firestoreGetFromID(partnerID, firestore);
           partnersInfoState.addPartner(partnerInfo, userInfo!);
         }
         if (partnerID == null && partnersInfoState.partnerExist) {

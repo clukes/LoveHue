@@ -66,18 +66,17 @@ class ApplicationState with ChangeNotifier {
     _loginState = ApplicationLoginState.loading;
 
     // Retrieve userInfo if not locally stored.
-    UserInformation? userInfo = userInfoState.userInfo ?? await UserInformation.firestoreGet(user.uid, firestore);
+    UserInformation? userInfo = userInfoState.userInfo ?? await UserInformation.firestoreGetFromID(user.uid, firestore);
     if (userInfo == null) {
       // If there is no UserInformation in the database for the current user, i.e. they are a new user, setup their data.
       DocumentReference<LinkCode?> linkCode = await LinkCode.create(firestore);
       userInfo = UserInformation(userID: user.uid, displayName: user.displayName, linkCode: linkCode, firestore: firestore);
       debugPrint("ApplicationState.userLoggedInSetup: New user setup: $userInfo.");
 
-      DocumentReference<UserInformation?> userDoc = userInfo.getUserInDatabase();
-      await userInfo.setupUserInDatabase(userDoc, linkCode, userInfoState);
+      await userInfo.setupUserInDatabase(userInfoState);
     }
     if (userInfo.partnerID != null) {
-      partnersInfoState.addPartner(await UserInformation.firestoreGet(userInfo.partnerID!, firestore), userInfo);
+      partnersInfoState.addPartner(await UserInformation.firestoreGetFromID(userInfo.partnerID!, firestore), userInfo);
     }
     userInfoState.latestRelationshipBarDoc ??= await RelationshipBarDocument.firestoreGetLatest(userInfo.userID, firestore);
     userInfoState.addUser(userInfo);

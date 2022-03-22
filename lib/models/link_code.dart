@@ -112,7 +112,7 @@ class LinkCode {
       // Pull local partner info from database if it isn't correct.
       if (userInfo.partnerID != null &&
           (!partnersInfoState.partnerExist || userInfo.partnerID != partnersInfoState.partnersID)) {
-        UserInformation? newPartnerInfo = await UserInformation.firestoreGet(userInfo.partnerID!, userInfoState.firestore);
+        UserInformation? newPartnerInfo = await UserInformation.firestoreGetFromID(userInfo.partnerID!, userInfoState.firestore);
         partnersInfoState.addPartner(newPartnerInfo, userInfo);
         debugPrint("LinkCode.acceptRequest: Updated partner info with partner id: ${userInfo.partnerID}.");
       } else {

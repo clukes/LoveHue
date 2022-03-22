@@ -1,12 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutterfire_ui/auth.dart';
 
 import '../models/relationship_bar.dart';
 import '../models/relationship_bar_document.dart';
 import '../providers/user_info_state.dart';
-import '../resources/authentication.dart';
+import '../resources/authenticationInfo.dart';
 import '../resources/database_and_table_names.dart';
 import '../resources/delete_firestore_collection.dart';
 import '../resources/printable_error.dart';
@@ -105,7 +104,7 @@ class UserInformation {
   }
 
   /// Retrieve [UserInformation] from the FirebaseFirestore collection for given userID.
-  static Future<UserInformation?> firestoreGet(String userID, FirebaseFirestore firestore) async {
+  static Future<UserInformation?> firestoreGetFromID(String userID, FirebaseFirestore firestore) async {
     debugPrint("UserInformation.firestoreGet: Get doc with userID: $userID.");
     UserInformation? info =
         await getUserInDatabaseFromID(userID, firestore).get().then((snapshot) => snapshot.data()).catchError((error) {
@@ -148,11 +147,13 @@ class UserInformation {
   /// Throws [PrintableError] if there is no userID stored for currentUser,
   /// or the userID for currentUser doesn't match the locally stored UserInformation,
   /// or if an error occurs during deletion.
-  Future<void> deleteUserData(BuildContext context) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
+  Future<void> deleteUserData(BuildContext context, FirebaseAuth auth, AuthenticationInfo authenticationInfo) async {
     String? userID = auth.currentUser?.uid;
     if (userID != null && userID == this.userID) {
       try {
+        List<Future<void>> batchPromises = [];
+        batchPromises.add(_deleteAccount(context, auth, authenticationInfo));
+
         WriteBatch batch = firestore.batch();
         if (partner != null) {
           batch.update(partner!, {UserInformation.columnPartner: null});
@@ -163,15 +164,13 @@ class UserInformation {
         // Add batch commit promises for all RelationshipBars for user, split in chunks of 500.
         // Max operations in a batch is 500, thus the split. This is necessary since:
         // "When you delete a document, Cloud Firestore does not automatically delete the documents within its subcollections".
-        List<Future<void>> batchPromises =
-            await deleteCollection(firestore, RelationshipBarDocument.getUserBarsFromID(userID, firestore), 500);
+        batchPromises.addAll(await deleteCollection(firestore, RelationshipBarDocument.getUserBarsFromID(userID, firestore), 500));
 
         batch.delete(firestore.collection(userBarsCollection).doc(userID));
-        batchPromises.add(batch.commit());
 
+        batchPromises.add(batch.commit());
         // Commit all batch commits at once.
         await Future.wait(batchPromises);
-        await _deleteAccount(context, auth);
         debugPrint("UserInformation.deleteUserData: Deleted user with id: $userID, ${this.userID}.");
       } catch (error) {
         throw PrintableError(error.toString());
@@ -184,30 +183,22 @@ class UserInformation {
   }
 
   // Deletes the account for currently signed in user, from [FirebaseAuth], reauthenticating if required.
-  static Future<void> _deleteAccount(BuildContext context, FirebaseAuth auth) async {
-    await auth.currentUser?.delete().onError((FirebaseAuthException error, _) async {
+  Future<void> _deleteAccount(BuildContext context, FirebaseAuth auth, AuthenticationInfo authenticationInfo) async {
+    return auth.currentUser?.delete().onError((FirebaseAuthException error, _) async {
       if (error.code == 'requires-recent-login') {
-        final signedIn = await _reauthenticate(context, auth);
+        final bool signedIn = await authenticationInfo.reauthenticate(context, auth);
         if (signedIn) {
-          return await auth.currentUser?.delete();
+          return auth.currentUser?.delete();
         }
       }
       throw error;
     });
   }
 
-  static Future<bool> _reauthenticate(BuildContext context, FirebaseAuth _auth) {
-    return showReauthenticateDialog(
-      context: context,
-      providerConfigs: providerConfigs,
-      auth: _auth,
-      onSignedIn: () => Navigator.of(context).pop(true),
-    );
-  }
-
   /// Adds new user to database with default info.
-  Future<void> setupUserInDatabase(DocumentReference<UserInformation?> userDoc, DocumentReference<LinkCode?> linkCode,
-      UserInfoState userInfoState) async {
+  Future<void> setupUserInDatabase(UserInfoState userInfoState) async {
+    DocumentReference<UserInformation?> userDoc = getUserInDatabase();
+
     WriteBatch batch = firestore.batch();
     batch.set(userDoc, this);
     batch.set(linkCode, LinkCode(linkCode: linkCode.id, user: userDoc));

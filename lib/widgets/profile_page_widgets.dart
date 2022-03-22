@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../models/link_code.dart';
 import '../pages/sign_in_page.dart';
 import '../providers/user_info_state.dart';
+import '../resources/authenticationInfo.dart';
 
 /// Shows an alert dialog with yes and no buttons.
 Future<void> showAlertDialog({
@@ -148,7 +149,8 @@ Future<void> showDeleteAlertDialog(BuildContext context) async {
 
 /// Deletes user data in database, then delete [FirebaseAuth] account with [User.delete]
 Future<void> deleteAccount(BuildContext context) async {
-  return Provider.of<UserInfoState>(context, listen: false).userInfo?.deleteUserData(context).then((_) {
+  FirebaseAuth auth = FirebaseAuth.instance;
+  return Provider.of<UserInfoState>(context, listen: false).userInfo?.deleteUserData(context, auth, globalAuthenticationInfo).then((_) {
     FirebaseAuth.instance.currentUser?.delete();
   });
 }
