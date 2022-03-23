@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:lovehue/models/relationship_bar_model.dart';
+import 'package:lovehue/models/relationship_bar.dart';
 
 /// Various colors to use in the app.
 const mobileBackgroundColor = Color.fromARGB(255, 255, 248, 235);
@@ -43,6 +43,7 @@ final sliderColors = [
 class SliderColor {
   /// Color for the active side of the slider.
   final Color active;
+
   /// Color for the inactive side of the slider.
   final Color inactive;
 
@@ -57,6 +58,9 @@ class SliderColor {
 /// Gets slider color for a given value.
 SliderColor? getSliderColor(int sliderValue) {
   // Maps x < 20 to 0 (red), 20 < x < 40 to 1 (orange), etc.
-  int mappedToRange = ((sliderValue / (RelationshipBar.maxBarValue+1)) * sliderColors.length).floor();
-  return sliderColors[mappedToRange];
+  int mappedToRange = ((sliderValue / (RelationshipBar.maxBarValue + 1)) * sliderColors.length).floor();
+  if(0 <= mappedToRange && mappedToRange < sliderColors.length) {
+    return sliderColors[mappedToRange];
+  }
+  return null;
 }

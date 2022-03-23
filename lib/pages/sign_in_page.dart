@@ -1,9 +1,10 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 
 import '../main_common.dart';
-import '../resources/authentication.dart';
+import '../resources/authentication_info.dart';
 import '../utils/globals.dart';
 
 /// SignIn Page, using flutterfire_ui [SignInScreen].
@@ -18,7 +19,7 @@ class SignInPage extends StatelessWidget {
         image: appTextLogo,
       ),
     );
-    debugPrint("${actionCodeSettings.androidPackageName}");
+    debugPrint("${globalAuthenticationInfo.actionCodeSettings.androidPackageName}");
     return SignInScreen(
       headerMaxExtent: 200,
       headerBuilder: (context, constraints, _) {
@@ -46,7 +47,8 @@ class SignInPage extends StatelessWidget {
               padding: const EdgeInsets.only(top: 16),
               child: Column(children: const [
                 if (!kIsWeb)
-                  Text('You can use magic link to sign in with a verification link sent to your email, no password required.\n'),
+                  Text(
+                      'You can use magic link to sign in with a verification link sent to your email, no password required.\n'),
                 Text(
                   'By using this app, you agree to our terms and conditions.',
                   style: TextStyle(color: Colors.grey),
@@ -66,7 +68,7 @@ class SignInPage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   width: double.infinity,
                   child: OutlinedButton(
-                    onPressed: () async => await signInAnonymously(context),
+                    onPressed: () async => await globalAuthenticationInfo.signInAnonymously(context, FirebaseAuth.instance),
                     child: const Text('Skip Login'),
                   ),
                 ),
@@ -88,10 +90,10 @@ class SignInPage extends StatelessWidget {
           ],
         );
       },
-      providerConfigs: providerConfigs,
+      providerConfigs: globalAuthenticationInfo.providerConfigs,
       actions: [
         AuthStateChangeAction<SignedIn>((context, _) async {
-          afterSignIn(context);
+          globalAuthenticationInfo.afterSignIn(context);
         }),
       ],
       showAuthActionSwitch: false,

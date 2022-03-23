@@ -1,14 +1,16 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutterfire_ui/auth.dart';
 
-import '../models/relationship_bar_model.dart';
+import '../models/relationship_bar.dart';
+import '../models/relationship_bar_document.dart';
 import '../providers/user_info_state.dart';
-import '../resources/authentication.dart';
+import '../resources/authentication_info.dart';
 import '../resources/database_and_table_names.dart';
 import '../resources/delete_firestore_collection.dart';
 import '../resources/printable_error.dart';
+import '../utils/globals.dart';
+import 'link_code.dart';
 
 /// Holds information for a [UserInformation].
 ///
@@ -20,6 +22,7 @@ class UserInformation {
     this.partner,
     required this.linkCode,
     this.linkPending = false,
+    required this.firestore,
   });
 
   /// ID in the database for the user.
@@ -37,8 +40,11 @@ class UserInformation {
   /// True if this user currently has a link request pending from another user.
   bool linkPending;
 
-  /// Get's the ID for this user's partner if there is one connected.
+  /// Gets the ID for this user's partner if there is one connected.
   String? get partnerID => partner?.id;
+
+  /// Firestore instance.
+  final FirebaseFirestore firestore;
 
   /// Column names for a UserInformation document in the FirebaseFirestore Database.
   static const String columnUserID = 'id';
@@ -48,20 +54,21 @@ class UserInformation {
   static const String columnLinkPending = 'linkPending';
 
   // Reference to the UserInformation collection in FirebaseFirestore database.
-  static final CollectionReference<UserInformation?> _userInfoFirestoreRef =
-      FirebaseFirestore.instance.collection(userInfoCollection).withConverter<UserInformation?>(
-            fromFirestore: (snapshots, _) => UserInformation.fromMap(snapshots.data()!),
+  static CollectionReference<UserInformation?> _firestoreConverter(FirebaseFirestore firestore) =>
+      firestore.collection(userInfoCollection).withConverter<UserInformation?>(
+            fromFirestore: (snapshots, _) => UserInformation.fromMap(snapshots.data()!, firestore),
             toFirestore: (userInfo, _) => userInfo!.toMap(),
           );
 
   /// Converts a given [Map] to the returned [UserInformation].
-  static UserInformation fromMap(Map<String, Object?> res) {
+  static UserInformation fromMap(Map<String, Object?> res, FirebaseFirestore firestore) {
     return UserInformation(
       userID: res[columnUserID]! as String,
       displayName: res[columnDisplayName] as String?,
       partner: res[columnPartner] as DocumentReference?,
       linkCode: res[columnLinkCode] as DocumentReference,
-      linkPending: res[columnLinkPending] as bool,
+      linkPending: res[columnLinkPending] != null ? res[columnLinkPending] as bool : false,
+      firestore: firestore,
     );
   }
 
@@ -77,24 +84,30 @@ class UserInformation {
   }
 
   /// Calls [toMap] on a list of [UserInformation].
-  static List<Map<String, Object?>> userInfoToList(List<UserInformation> info) {
+  static List<Map<String, Object?>> toMapList(List<UserInformation> info) {
     return info.map((e) => e.toMap()).toList();
   }
 
   /// Calls [fromMap] on a list of [Map].
-  List<UserInformation> userInfoFromList(List<Map<String, Object?>> query) {
-    return query.map((e) => fromMap(e)).toList();
+  static List<UserInformation> fromMapList(List<Map<String, Object?>> query, FirebaseFirestore firestore) {
+    return query.map((e) => fromMap(e, firestore)).toList();
   }
 
-  /// Gets a reference to the [UserInformation] document for user with the given id.
-  static DocumentReference<UserInformation?> getUserFromID(String? userID) {
-    return _userInfoFirestoreRef.doc(userID);
+  /// Gets a reference to the [UserInformation] document for user in Firestore.
+  DocumentReference<UserInformation?> getUserInDatabase() {
+    return _firestoreConverter(firestore).doc(userID);
+  }
+
+  /// Gets a reference to the [UserInformation] document for user with given id in Firestore.
+  static DocumentReference<UserInformation?> getUserInDatabaseFromID(String userID, FirebaseFirestore firestore) {
+    return _firestoreConverter(firestore).doc(userID);
   }
 
   /// Retrieve [UserInformation] from the FirebaseFirestore collection for given userID.
-  static Future<UserInformation?> firestoreGet(String userID) async {
+  static Future<UserInformation?> firestoreGetFromID(String userID, FirebaseFirestore firestore) async {
     debugPrint("UserInformation.firestoreGet: Get doc with userID: $userID.");
-    UserInformation? info = await getUserFromID(userID).get().then((snapshot) => snapshot.data()).catchError((error) {
+    UserInformation? info =
+        await getUserInDatabaseFromID(userID, firestore).get().then((snapshot) => snapshot.data()).catchError((error) {
       debugPrint("UserInformation.firestoreGet: Failed to retrieve user info: $error.");
     });
     return info;
@@ -102,15 +115,15 @@ class UserInformation {
 
   /// Creates/updates this [UserInformation] in database.
   Future<void> firestoreSet() async {
-    return await getUserFromID(userID)
+    return await getUserInDatabase()
         .set(this, SetOptions(merge: true))
         .then((value) => debugPrint("UserInformation.firestoreSet: User Info added for userID: $userID."))
         .catchError((error) => debugPrint("UserInformation.firestoreSet: Failed to add user info: $error."));
   }
 
-  /// Updates columns of [UserInformation] with given userID, using the given data Map, in the database.
-  static Future<void> firestoreUpdateColumns(String userID, Map<String, Object?> data) async {
-    return await getUserFromID(userID)
+  /// Updates columns of [UserInformation] for user, using the given data Map, in the database.
+  Future<void> firestoreUpdateColumns(Map<String, Object?> data) async {
+    return await getUserInDatabase()
         .update(data)
         .then((value) => debugPrint("UserInformation.firestoreUpdateColumns: User Info updated for userID: $userID."))
         .catchError(
@@ -119,7 +132,7 @@ class UserInformation {
 
   /// Deletes this [UserInformation] from the database.
   Future<void> firestoreDelete() async {
-    return await getUserFromID(userID)
+    return await getUserInDatabase()
         .delete()
         .then((value) => debugPrint("UserInformation.firestoreDelete: User Info deleted for userID: $userID."))
         .catchError((error) => debugPrint("UserInformation.firestoreDelete: Failed to delete user info: $error."));
@@ -134,34 +147,31 @@ class UserInformation {
   /// Throws [PrintableError] if there is no userID stored for currentUser,
   /// or the userID for currentUser doesn't match the locally stored UserInformation,
   /// or if an error occurs during deletion.
-  static Future<void> deleteUserData(BuildContext context) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
+  Future<void> deleteUserData(BuildContext context, FirebaseAuth auth, AuthenticationInfo authenticationInfo) async {
     String? userID = auth.currentUser?.uid;
-    UserInformation? userInfo = UserInfoState.instance.userInfo;
-    if (userID != null && userID == userInfo?.userID) {
+    if (userID != null && userID == this.userID) {
       try {
-        WriteBatch batch = FirebaseFirestore.instance.batch();
-        if (userInfo?.partner != null) {
-          batch.update(userInfo!.partner!, {UserInformation.columnPartner: null});
+        List<Future<void>> batchPromises = [];
+        batchPromises.add(_deleteAccount(context, auth, authenticationInfo));
+
+        WriteBatch batch = firestore.batch();
+        if (partner != null) {
+          batch.update(partner!, {UserInformation.columnPartner: null});
         }
-        DocumentReference userDoc = getUserFromID(userID);
+        DocumentReference userDoc = getUserInDatabase();
         batch.delete(userDoc);
-        if (userInfo?.linkCode != null) {
-          batch.delete(userInfo!.linkCode);
-        }
+        batch.delete(linkCode);
         // Add batch commit promises for all RelationshipBars for user, split in chunks of 500.
         // Max operations in a batch is 500, thus the split. This is necessary since:
         // "When you delete a document, Cloud Firestore does not automatically delete the documents within its subcollections".
-        List<Future<void>> batchPromises =
-            await deleteCollection(RelationshipBarDocument.getUserBarsFromID(userID), 500);
+        batchPromises.addAll(await deleteCollection(firestore, RelationshipBarDocument.getUserBarsFromID(userID, firestore)));
 
-        batch.delete(FirebaseFirestore.instance.collection(userBarsCollection).doc(userID));
+        batch.delete(firestore.collection(userBarsCollection).doc(userID));
+
         batchPromises.add(batch.commit());
-
         // Commit all batch commits at once.
         await Future.wait(batchPromises);
-        await _deleteAccount(context, auth);
-        debugPrint("UserInformation.deleteUserData: Deleted user with id: $userID, ${userInfo?.userID}.");
+        debugPrint("UserInformation.deleteUserData: Deleted user with id: $userID, ${this.userID}.");
       } catch (error) {
         throw PrintableError(error.toString());
       }
@@ -173,24 +183,29 @@ class UserInformation {
   }
 
   // Deletes the account for currently signed in user, from [FirebaseAuth], reauthenticating if required.
-  static Future<void> _deleteAccount(BuildContext context, FirebaseAuth auth) async {
-    await auth.currentUser?.delete().onError((FirebaseAuthException error, _) async {
+  Future<void> _deleteAccount(BuildContext context, FirebaseAuth auth, AuthenticationInfo authenticationInfo) async {
+    return auth.currentUser?.delete().onError((FirebaseAuthException error, _) async {
       if (error.code == 'requires-recent-login') {
-        final signedIn = await _reauthenticate(context, auth);
+        final bool signedIn = await authenticationInfo.reauthenticate(context, auth);
         if (signedIn) {
-          return await auth.currentUser?.delete();
+          return auth.currentUser?.delete();
         }
       }
       throw error;
     });
   }
 
-  static Future<bool> _reauthenticate(BuildContext context, FirebaseAuth _auth) {
-    return showReauthenticateDialog(
-      context: context,
-      providerConfigs: providerConfigs,
-      auth: _auth,
-      onSignedIn: () => Navigator.of(context).pop(true),
-    );
+  /// Adds new user to database with default info.
+  Future<void> setupUserInDatabase(UserInfoState userInfoState) async {
+    DocumentReference<UserInformation?> userDoc = getUserInDatabase();
+
+    WriteBatch batch = firestore.batch();
+    batch.set(userDoc, this);
+    batch.set(linkCode, LinkCode(linkCode: linkCode.id, user: userDoc));
+    // Setup default bars.
+    List<RelationshipBar> defaultBars = RelationshipBar.listFromLabels(defaultBarLabels);
+    userInfoState.latestRelationshipBarDoc =
+        RelationshipBarDocument.firestoreAddBarListWithBatch(userID, defaultBars, batch, firestore);
+    await batch.commit().catchError((error) => debugPrint("ApplicationState.userLoggedInSetup: Batch Error: $error"));
   }
 }

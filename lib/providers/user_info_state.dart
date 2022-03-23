@@ -3,19 +3,17 @@ import 'dart:async';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
-import '../models/userinfo_firestore_collection_model.dart';
+import '../models/relationship_bar.dart';
+import '../models/relationship_bar_document.dart';
+import '../models/user_information.dart';
 import '../providers/partners_info_state.dart';
 
 /// Handles current user state, dealing with users [UserInformation]
 class UserInfoState with ChangeNotifier {
-  // Singleton pattern
-  static final UserInfoState _instance = UserInfoState._internal();
+  UserInfoState(this.firestore, this.partnersInfoState);
 
-  static UserInfoState get instance => _instance;
-
-  UserInfoState._internal();
-
-  factory UserInfoState() => _instance;
+  final PartnersInfoState partnersInfoState;
+  final FirebaseFirestore firestore;
 
   StreamSubscription<DocumentSnapshot>? _userInfoSubscription;
 
@@ -34,25 +32,43 @@ class UserInfoState with ChangeNotifier {
   /// True if [userExist] and there is a link pending.
   bool get userPending => (userExist && (userInfo?.linkPending ?? false));
 
+  /// True if [partnerExist] and there isn't a link pending.
+  bool get partnerLinked => (partnersInfoState.partnerExist && !partnersInfoState.partnerPending && !userPending);
+
+  /// Stores the most recent [RelationshipBarDocument].
+  RelationshipBarDocument? latestRelationshipBarDoc;
+
+  /// Gets the list of [RelationshipBar] from [latestRelationshipBarDoc].
+  List<RelationshipBar>? get barList => latestRelationshipBarDoc?.barList;
+
+  /// True if any bars have been changed since last [resetBarChange].
+  bool barsChanged = false;
+
+  /// True if all bars are to be reset to values in database.
+  bool barsReset = false;
+
   /// Setups listener for [UserInformation] changes of [userID] document.
   void setupUserInfoSubscription() {
-    if (userExist) {
-      _userInfoSubscription = UserInformation.getUserFromID(userID).snapshots().listen((snapshot) async {
+    if (userInfo != null) {
+      _userInfoSubscription = userInfo!.getUserInDatabase().snapshots().listen((snapshot) async {
         UserInformation? newUserInfo = snapshot.data();
         debugPrint("UserInfoState.setupYourInfoSubscription: User Info Change: $newUserInfo");
 
-        userInfo = newUserInfo;
-        String? partnerID = newUserInfo?.partnerID;
-        if (partnerID != null &&
-            (!PartnersInfoState.instance.partnerExist || PartnersInfoState.instance.partnersID != partnerID)) {
-          // If theres a new partner linked, setup partner info.
-          PartnersInfoState.instance.addPartner(await UserInformation.firestoreGet(partnerID));
+        if(newUserInfo != null) {
+          userInfo = newUserInfo;
+
+          String? partnerID = newUserInfo.partnerID;
+          if (partnerID != null && (!partnersInfoState.partnerExist || partnersInfoState.partnersID != partnerID)) {
+            // If theres a new partner linked, setup partner info.
+            UserInformation? partnerInfo = await UserInformation.firestoreGetFromID(partnerID, firestore);
+            partnersInfoState.addPartner(partnerInfo, userInfo!);
+          }
+          else if (partnerID == null && partnersInfoState.partnerExist) {
+            // Remove partner info if not linked.
+            partnersInfoState.removePartner(userInfo!);
+          }
+          notifyListeners();
         }
-        if (partnerID == null && PartnersInfoState.instance.partnerExist) {
-          // Remove partner info if not linked.
-          PartnersInfoState.instance.removePartner();
-        }
-        notifyListeners();
       });
     }
   }
@@ -69,5 +85,21 @@ class UserInfoState with ChangeNotifier {
     userInfo = null;
     _userInfoSubscription?.cancel();
     notifyListeners();
+  }
+
+  /// Set [barsChanged] to true, and [notifyListeners].
+  void barChange() {
+    if (!barsChanged) {
+      barsChanged = true;
+      notifyListeners();
+    }
+  }
+
+  /// Set [barsChanged] to false, and [notifyListeners].
+  void resetBarChange() {
+    if (barsChanged) {
+      barsChanged = false;
+      notifyListeners();
+    }
   }
 }

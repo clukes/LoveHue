@@ -1,8 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 
-import '../models/relationship_bar_model.dart';
-import '../providers/your_bars_state.dart';
+import '../models/relationship_bar.dart';
+import '../models/relationship_bar_document.dart';
+import '../providers/user_info_state.dart';
 import '../resources/data_formatting.dart';
 import '../widgets/bar_sliders.dart';
 import 'app_bars.dart';
@@ -24,10 +26,7 @@ class BarDocBuilder extends StatelessWidget {
         if (barDoc?.timestamp != null)
           AppBar(
             primary: false,
-            titleTextStyle: Theme
-                .of(context)
-                .textTheme
-                .subtitle2,
+            titleTextStyle: Theme.of(context).textTheme.subtitle2,
             title: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(
@@ -54,7 +53,8 @@ class BarDocBuilder extends StatelessWidget {
 
 /// Builder for a non-disabled [RelationshipBar], e.g. on YourBars page.
 Widget interactableBarBuilder(BuildContext context, RelationshipBar bar) {
-  WidgetsBinding.instance?.addPostFrameCallback((_) => YourBarsState.instance.barsReset = false);
+  WidgetsBinding.instance
+      ?.addPostFrameCallback((_) => Provider.of<UserInfoState>(context, listen: false).barsReset = false);
   return InteractableBarSlider(relationshipBar: bar);
 }
 
@@ -64,10 +64,10 @@ Widget nonInteractableBarBuilder(BuildContext context, RelationshipBar bar) {
 }
 
 /// Returns a [StreamBuilder] that builds bars for a user with given userID.
-Widget barStreamBuilder(String userID, Widget Function(BuildContext context, RelationshipBar bar) itemBuilderFunction) {
+Widget barStreamBuilder(String userID, Widget Function(BuildContext context, RelationshipBar bar) itemBuilderFunction, FirebaseFirestore firestore) {
   return StreamBuilder<QuerySnapshot<RelationshipBarDocument>>(
-      stream: RelationshipBarDocument.getOrderedUserBarsFromID(userID).snapshots(),
-      builder: (context, snapshot) => buildBars(context, snapshot, itemBuilderFunction),
+    stream: RelationshipBarDocument.getOrderedUserBarsFromID(userID, firestore).snapshots(),
+    builder: (context, snapshot) => buildBars(context, snapshot, itemBuilderFunction),
   );
 }
 

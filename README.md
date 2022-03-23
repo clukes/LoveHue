@@ -87,15 +87,14 @@ This can then open a conversation about why you each feel that way, moving the f
 
 ## Roadmap
 Current stage TODO:
-- [ ] Minor bug fixes 
-- [ ] Some extra touches to app before release
-- [ ] Finalising production database setup
-- [ ] Optimisation
+- [ ] Unit Tests
+- [ ] Widget Tests
+- [ ] Integration Tests
 
 Development Process for V1.0:
 - [x] Design
-- [ ] Development (Almost complete)
-- [ ] Unit testing
+- [x] Development
+- [ ] Unit testing (20% coverage so far)
 - [ ] Beta Testing
 - [ ] Production
 
