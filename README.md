@@ -87,14 +87,14 @@ This can then open a conversation about why you each feel that way, moving the f
 
 ## Roadmap
 Current stage TODO:
-- [ ] Unit Tests
+- [x] Unit Tests
 - [ ] Widget Tests
 - [ ] Integration Tests
 
 Development Process for V1.0:
 - [x] Design
 - [x] Development
-- [ ] Unit testing (20% coverage so far)
+- [ ] Unit testing (35% coverage so far)
 - [ ] Beta Testing
 - [ ] Production
 
