@@ -2,8 +2,6 @@
 // in lovehue/test/mocker.dart.
 // Do not manually edit this file.
 
-// ignore_for_file: subtype_of_sealed_class
-
 import 'dart:async' as _i11;
 import 'dart:ui' as _i10;
 
@@ -122,13 +120,13 @@ class MockUserInfoState extends _i1.Mock implements _i7.UserInfoState {
       (super.noSuchMethod(Invocation.getter(#userPending), returnValue: false)
           as bool);
   @override
+  bool get partnerLinked =>
+      (super.noSuchMethod(Invocation.getter(#partnerLinked), returnValue: false)
+          as bool);
+  @override
   bool get hasListeners =>
       (super.noSuchMethod(Invocation.getter(#hasListeners), returnValue: false)
           as bool);
-  @override
-  bool partnerLinked() =>
-      (super.noSuchMethod(Invocation.method(#partnerLinked, []),
-          returnValue: false) as bool);
   @override
   void setupUserInfoSubscription() =>
       super.noSuchMethod(Invocation.method(#setupUserInfoSubscription, []),

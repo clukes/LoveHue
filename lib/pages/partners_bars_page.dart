@@ -46,7 +46,7 @@ class _PartnersBarsState extends State<PartnersBars> with AutomaticKeepAliveClie
           ];
         },
         body: Consumer<PartnersInfoState>(builder: (BuildContext context, PartnersInfoState partnersInfoState, _) {
-          if (Provider.of<UserInfoState>(context).partnerLinked()) {
+          if (Provider.of<UserInfoState>(context).partnerLinked) {
             debugPrint("_PartnersBarsState: Linked partner id: ${partnersInfoState.partnersInfo?.partnerID}");
             return barStreamBuilder(partnersInfoState.partnersID!, nonInteractableBarBuilder, Provider.of<UserInfoState>(context, listen: false).firestore);
           }

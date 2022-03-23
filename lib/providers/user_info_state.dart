@@ -33,7 +33,7 @@ class UserInfoState with ChangeNotifier {
   bool get userPending => (userExist && (userInfo?.linkPending ?? false));
 
   /// True if [partnerExist] and there isn't a link pending.
-  bool partnerLinked() => (partnersInfoState.partnerExist && !partnersInfoState.partnerPending && !userPending);
+  bool get partnerLinked => (partnersInfoState.partnerExist && !partnersInfoState.partnerPending && !userPending);
 
   /// Stores the most recent [RelationshipBarDocument].
   RelationshipBarDocument? latestRelationshipBarDoc;

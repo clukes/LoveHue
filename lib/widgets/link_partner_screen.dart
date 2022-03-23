@@ -78,7 +78,7 @@ class _LinkPartnerScreenState extends State<LinkPartnerScreen> {
     if (!partnersInfoState.partnerExist) {
       return const LinkPartnerForm();
     }
-    if (userInfoState.partnerLinked()) {
+    if (userInfoState.partnerLinked) {
       return const CircularProgressIndicator();
     }
     return const Center(

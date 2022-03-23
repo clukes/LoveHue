@@ -59,5 +59,8 @@ class SliderColor {
 SliderColor? getSliderColor(int sliderValue) {
   // Maps x < 20 to 0 (red), 20 < x < 40 to 1 (orange), etc.
   int mappedToRange = ((sliderValue / (RelationshipBar.maxBarValue + 1)) * sliderColors.length).floor();
-  return sliderColors[mappedToRange];
+  if(0 <= mappedToRange && mappedToRange < sliderColors.length) {
+    return sliderColors[mappedToRange];
+  }
+  return null;
 }

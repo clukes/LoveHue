@@ -164,7 +164,7 @@ class UserInformation {
         // Add batch commit promises for all RelationshipBars for user, split in chunks of 500.
         // Max operations in a batch is 500, thus the split. This is necessary since:
         // "When you delete a document, Cloud Firestore does not automatically delete the documents within its subcollections".
-        batchPromises.addAll(await deleteCollection(firestore, RelationshipBarDocument.getUserBarsFromID(userID, firestore), 500));
+        batchPromises.addAll(await deleteCollection(firestore, RelationshipBarDocument.getUserBarsFromID(userID, firestore)));
 
         batch.delete(firestore.collection(userBarsCollection).doc(userID));
 
