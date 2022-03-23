@@ -56,18 +56,19 @@ class UserInfoState with ChangeNotifier {
 
         if(newUserInfo != null) {
           userInfo = newUserInfo;
+
+          String? partnerID = newUserInfo.partnerID;
+          if (partnerID != null && (!partnersInfoState.partnerExist || partnersInfoState.partnersID != partnerID)) {
+            // If theres a new partner linked, setup partner info.
+            UserInformation? partnerInfo = await UserInformation.firestoreGetFromID(partnerID, firestore);
+            partnersInfoState.addPartner(partnerInfo, userInfo!);
+          }
+          else if (partnerID == null && partnersInfoState.partnerExist) {
+            // Remove partner info if not linked.
+            partnersInfoState.removePartner(userInfo!);
+          }
+          notifyListeners();
         }
-        String? partnerID = newUserInfo?.partnerID;
-        if (partnerID != null && (!partnersInfoState.partnerExist || partnersInfoState.partnersID != partnerID)) {
-          // If theres a new partner linked, setup partner info.
-          UserInformation? partnerInfo = await UserInformation.firestoreGetFromID(partnerID, firestore);
-          partnersInfoState.addPartner(partnerInfo, userInfo!);
-        }
-        if (partnerID == null && partnersInfoState.partnerExist) {
-          // Remove partner info if not linked.
-          partnersInfoState.removePartner(userInfo!);
-        }
-        notifyListeners();
       });
     }
   }

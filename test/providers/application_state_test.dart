@@ -6,12 +6,10 @@ import 'package:lovehue/models/link_code.dart';
 import 'package:lovehue/models/user_information.dart';
 import 'package:lovehue/providers/application_state.dart';
 import 'package:lovehue/resources/database_and_table_names.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import '../models/link_code_test.mocks.dart';
+import '../mocker.mocks.dart';
 
-@GenerateMocks([])
 void main() {
   setUp(() {});
   tearDown(() {});
@@ -133,8 +131,9 @@ void main() {
         expect(appState.loginState, equals(ApplicationLoginState.loading));
         verify(partnersInfoState.removePartner(captureAny));
       });
-      await untilCalled(userInfoState.removeUser()).then((value) =>
-        verify(userInfoState.removeUser())).timeout(timeout);
+      await untilCalled(userInfoState.removeUser())
+          .then((value) => verify(userInfoState.removeUser()))
+          .timeout(timeout);
       expect(appState.loginState, equals(ApplicationLoginState.loggedOut));
     });
   });

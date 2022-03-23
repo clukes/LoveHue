@@ -6,7 +6,7 @@ import 'package:provider/provider.dart';
 import '../models/link_code.dart';
 import '../pages/sign_in_page.dart';
 import '../providers/user_info_state.dart';
-import '../resources/authenticationInfo.dart';
+import '../resources/authentication_info.dart';
 
 /// Shows an alert dialog with yes and no buttons.
 Future<void> showAlertDialog({

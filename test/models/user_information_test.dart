@@ -1,23 +1,20 @@
-import 'dart:async';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lovehue/models/link_code.dart';
 import 'package:lovehue/models/relationship_bar_document.dart';
 import 'package:lovehue/models/user_information.dart';
-import 'package:lovehue/resources/authenticationInfo.dart';
 import 'package:lovehue/resources/database_and_table_names.dart';
 import 'package:lovehue/resources/printable_error.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'link_code_test.mocks.dart';
+import '../mocker.mocks.dart';
 import 'user_information_test.mocks.dart';
 
-@GenerateMocks([BuildContext, FirebaseAuth, User, AuthenticationInfo])
+// Have to generate these manually, can't use Firebase_Auth_Mocks as they don't implement user.delete().
+@GenerateMocks([User, FirebaseAuth])
 void main() {
   setUp(() {});
   tearDown(() {});

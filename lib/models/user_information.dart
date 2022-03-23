@@ -5,7 +5,7 @@ import 'package:flutter/cupertino.dart';
 import '../models/relationship_bar.dart';
 import '../models/relationship_bar_document.dart';
 import '../providers/user_info_state.dart';
-import '../resources/authenticationInfo.dart';
+import '../resources/authentication_info.dart';
 import '../resources/database_and_table_names.dart';
 import '../resources/delete_firestore_collection.dart';
 import '../resources/printable_error.dart';

@@ -3,16 +3,13 @@ import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lovehue/models/link_code.dart';
 import 'package:lovehue/models/user_information.dart';
-import 'package:lovehue/providers/partners_info_state.dart';
 import 'package:lovehue/providers/user_info_state.dart';
 import 'package:lovehue/resources/database_and_table_names.dart';
 import 'package:lovehue/resources/printable_error.dart';
-import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
-import 'link_code_test.mocks.dart';
+import '../mocker.mocks.dart';
 
-@GenerateMocks([UserInfoState, PartnersInfoState, DocumentReference, UserInformation])
 void main() {
   setUp(() {});
   tearDown(() {});
