@@ -13,31 +13,34 @@ class MockFunction extends Mock {
 }
 
 void main() {
-  setUp(() {});
-  tearDown(() {});
-
   const Duration timeout = Duration(seconds: 5);
 
-  group('setupUserInfoSubscription', () {
-    final MockDocumentReference<LinkCode> linkCodeRef = MockDocumentReference<LinkCode>();
+  late FakeFirebaseFirestore firestore;
+  late MockDocumentReference<LinkCode> linkCodeRef;
+  late MockPartnersInfoState partnersInfoState;
+  late UserInfoState userInfoState;
+  late UserInformation currentUserInfo;
+  late MockFunction notifyListenerCallback;
 
+  setUp(() {
+    firestore = FakeFirebaseFirestore();
+    linkCodeRef = MockDocumentReference<LinkCode>();
+    partnersInfoState = MockPartnersInfoState();
+    userInfoState = UserInfoState(firestore, partnersInfoState);
+    currentUserInfo = UserInformation(userID: '1234', linkCode: linkCodeRef, firestore: firestore);
+    notifyListenerCallback = MockFunction();
+    userInfoState.addListener(notifyListenerCallback);
+  });
+
+  group('setupUserInfoSubscription', () {
     test('setups partner info if new partner is added to user info', () async {
-      final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-      final UserInformation currentUserInfo =
-      UserInformation(userID: '1234', linkCode: linkCodeRef, firestore: firestore);
-      final UserInformation partnersInfo =
-      UserInformation(userID: '5678', linkCode: linkCodeRef, firestore: firestore);
-      final MockPartnersInfoState partnersInfoState = MockPartnersInfoState();
-      final UserInfoState userInfoState = UserInfoState(firestore, partnersInfoState);
+      final UserInformation partnersInfo = UserInformation(userID: '5678', linkCode: linkCodeRef, firestore: firestore);
 
       currentUserInfo.partner = firestore.collection(userInfoCollection).doc(partnersInfo.userID);
       partnersInfo.partner = firestore.collection(userInfoCollection).doc(currentUserInfo.userID);
       userInfoState.userInfo = currentUserInfo;
 
       when(partnersInfoState.partnerExist).thenReturn(false);
-
-      final notifyListenerCallback = MockFunction();
-      userInfoState.addListener(notifyListenerCallback);
 
       await firestore
           .collection(userInfoCollection)
@@ -53,10 +56,6 @@ void main() {
     });
 
     test('does nothing if user info is null', () async {
-      final MockPartnersInfoState partnersInfoState = MockPartnersInfoState();
-      final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-      final UserInfoState userInfoState = UserInfoState(firestore, partnersInfoState);
-
       userInfoState.userInfo = null;
       userInfoState.setupUserInfoSubscription();
 
@@ -64,18 +63,9 @@ void main() {
     });
 
     test('removes partner info if no partner in user info', () async {
-      final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-      final UserInformation currentUserInfo =
-      UserInformation(userID: '1234', linkCode: linkCodeRef, firestore: firestore);
-      final MockPartnersInfoState partnersInfoState = MockPartnersInfoState();
-      final UserInfoState userInfoState = UserInfoState(firestore, partnersInfoState);
-
       userInfoState.userInfo = currentUserInfo;
 
       when(partnersInfoState.partnerExist).thenReturn(true);
-
-      final notifyListenerCallback = MockFunction();
-      userInfoState.addListener(notifyListenerCallback);
 
       await firestore
           .collection(userInfoCollection)
@@ -92,17 +82,7 @@ void main() {
   });
 
   group('addUser', () {
-    final MockDocumentReference<LinkCode> linkCodeRef = MockDocumentReference<LinkCode>();
-
     test('sets user info', () async {
-      final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-      final UserInformation currentUserInfo = UserInformation(userID: '1234', linkCode: linkCodeRef, firestore: firestore);
-      final MockPartnersInfoState partnersInfoState = MockPartnersInfoState();
-      final UserInfoState userInfoState = UserInfoState(firestore, partnersInfoState);
-
-      final notifyListenerCallback = MockFunction();
-      userInfoState.addListener(notifyListenerCallback);
-
       userInfoState.addUser(currentUserInfo);
       await untilCalled(notifyListenerCallback.call()).timeout(timeout).then((value) {
         expect(userInfoState.userInfo, isNotNull);
@@ -112,18 +92,8 @@ void main() {
   });
 
   group('removesUser', () {
-    final MockDocumentReference<LinkCode> linkCodeRef = MockDocumentReference<LinkCode>();
-
     test('removes user info', () async {
-      final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-      final UserInformation currentUserInfo = UserInformation(userID: '1234', linkCode: linkCodeRef, firestore: firestore);
-      final MockPartnersInfoState partnersInfoState = MockPartnersInfoState();
-      final UserInfoState userInfoState = UserInfoState(firestore, partnersInfoState);
-
       userInfoState.userInfo = currentUserInfo;
-
-      final notifyListenerCallback = MockFunction();
-      userInfoState.addListener(notifyListenerCallback);
 
       userInfoState.removeUser();
       await untilCalled(notifyListenerCallback.call()).timeout(timeout).then((value) {
@@ -134,14 +104,7 @@ void main() {
 
   group('barChange', () {
     test('sets bars changed to true and notifies listeners', () async {
-      final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-      final MockPartnersInfoState partnersInfoState = MockPartnersInfoState();
-      final UserInfoState userInfoState = UserInfoState(firestore, partnersInfoState);
-
       userInfoState.barsChanged = false;
-
-      final notifyListenerCallback = MockFunction();
-      userInfoState.addListener(notifyListenerCallback);
 
       userInfoState.barChange();
 
@@ -151,14 +114,7 @@ void main() {
     });
 
     test("doesn't notify listeners if bars changed already true", () async {
-      final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-      final MockPartnersInfoState partnersInfoState = MockPartnersInfoState();
-      final UserInfoState userInfoState = UserInfoState(firestore, partnersInfoState);
-
       userInfoState.barsChanged = true;
-
-      final notifyListenerCallback = MockFunction();
-      userInfoState.addListener(notifyListenerCallback);
 
       userInfoState.barChange();
 
@@ -168,14 +124,7 @@ void main() {
 
   group('resetBarChange', () {
     test('sets bars changed to false and notifies listeners', () async {
-      final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-      final MockPartnersInfoState partnersInfoState = MockPartnersInfoState();
-      final UserInfoState userInfoState = UserInfoState(firestore, partnersInfoState);
-
       userInfoState.barsChanged = true;
-
-      final notifyListenerCallback = MockFunction();
-      userInfoState.addListener(notifyListenerCallback);
 
       userInfoState.resetBarChange();
 
@@ -185,14 +134,7 @@ void main() {
     });
 
     test("doesn't notify listeners if bars changed already false", () async {
-      final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-      final MockPartnersInfoState partnersInfoState = MockPartnersInfoState();
-      final UserInfoState userInfoState = UserInfoState(firestore, partnersInfoState);
-
       userInfoState.barsChanged = false;
-
-      final notifyListenerCallback = MockFunction();
-      userInfoState.addListener(notifyListenerCallback);
 
       userInfoState.resetBarChange();
 

@@ -15,5 +15,5 @@ import 'package:mockito/annotations.dart';
   AuthenticationInfo,
 ])
 void main() {
-
+  // Uses build runner to generate mocks for tests.
 }

@@ -6,29 +6,31 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lovehue/resources/delete_firestore_collection.dart';
 
 void main() {
+  late FakeFirebaseFirestore firestore;
+  late CollectionReference collection;
+
+  setUp(() {
+    firestore = FakeFirebaseFirestore();
+    collection = firestore.collection('collection');
+  });
+
   test('deletes all documents in a collection', () async {
-    FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-    CollectionReference collection = firestore.collection('collection');
     WriteBatch batch = firestore.batch();
-    for(int i = 0; i < 500; i++) {
+    for (int i = 0; i < 500; i++) {
       batch.set(collection.doc('$i'), {'id': i});
     }
     await batch.commit();
-    for(int i = 500; i < 1000; i++) {
+    for (int i = 500; i < 1000; i++) {
       batch.set(collection.doc('$i'), {'id': i});
     }
     await batch.commit();
     expect(await collection.get().then((value) => value.docs.length), greaterThan(0));
     await deleteCollection(firestore, collection);
-
   });
 
   test('no expection thrown if collection is empty', () async {
-    FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-    CollectionReference collection = firestore.collection('collection');
     expect(await collection.get().then((value) => value.docs.length), equals(0));
     await deleteCollection(firestore, collection);
     expect(await collection.get().then((value) => value.docs.length), equals(0));
   });
-
 }

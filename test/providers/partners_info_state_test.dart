@@ -13,31 +13,37 @@ class MockFunction extends Mock {
 }
 
 void main() {
-  setUp(() {});
-  tearDown(() {});
-
   const Duration timeout = Duration(seconds: 5);
+  const String displayName = 'Test';
+
+  late MockDocumentReference<LinkCode> linkCodeRef;
+  late FakeFirebaseFirestore firestore;
+  late UserInformation currentUserInfo;
+  late UserInformation partnersInfo;
+  late PartnersInfoState partnersInfoState;
+
+  setUp(() {
+    linkCodeRef = MockDocumentReference<LinkCode>();
+    firestore = FakeFirebaseFirestore();
+    currentUserInfo = UserInformation(userID: '1234', linkCode: linkCodeRef, firestore: firestore);
+    partnersInfo =
+        UserInformation(displayName: displayName, userID: '5678', linkCode: linkCodeRef, firestore: firestore);
+    partnersInfoState = PartnersInfoState();
+  });
 
   group('setupPartnerInfoSubscription', () {
-    final MockDocumentReference<LinkCode> linkCodeRef = MockDocumentReference<LinkCode>();
+    MockFunction notifyListenerCallback = MockFunction();
+
+    setUp(() {
+      notifyListenerCallback = MockFunction();
+      partnersInfoState.addListener(notifyListenerCallback);
+    });
 
     test('partner name changed updates partner name in state', () async {
-      String displayName = 'Test';
-
-      final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-      final UserInformation currentUserInfo =
-          UserInformation(userID: '1234', linkCode: linkCodeRef, firestore: firestore);
-      final UserInformation partnersInfo =
-          UserInformation(displayName: displayName, userID: '5678', linkCode: linkCodeRef, firestore: firestore);
-      final PartnersInfoState partnersInfoState = PartnersInfoState();
-
       currentUserInfo.partner = firestore.collection(userInfoCollection).doc(partnersInfo.userID);
       partnersInfo.partner = firestore.collection(userInfoCollection).doc(currentUserInfo.userID);
       partnersInfoState.partnersInfo = partnersInfo;
       partnersInfoState.partnersName.value = '';
-
-      final notifyListenerCallback = MockFunction();
-      partnersInfoState.addListener(notifyListenerCallback);
 
       await firestore
           .collection(userInfoCollection)
@@ -54,9 +60,6 @@ void main() {
     });
 
     test('does nothing if partner info is null', () async {
-      final MockUserInformation currentUserInfo = MockUserInformation();
-      final PartnersInfoState partnersInfoState = PartnersInfoState();
-
       partnersInfoState.partnersInfo = null;
       partnersInfoState.setupPartnerInfoSubscription(currentUserInfo);
 
@@ -65,16 +68,10 @@ void main() {
 
     test('if partners info id does not match current user partner id, set partner info to null', () async {
       final MockUserInformation currentUserInfo = MockUserInformation();
-      final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-      final UserInformation partnersInfo = UserInformation(userID: '5678', linkCode: linkCodeRef, firestore: firestore);
-      final PartnersInfoState partnersInfoState = PartnersInfoState();
 
       partnersInfoState.partnersInfo = partnersInfo;
 
       when(currentUserInfo.userID).thenReturn('1234');
-
-      final notifyListenerCallback = MockFunction();
-      partnersInfoState.addListener(notifyListenerCallback);
 
       await firestore
           .collection(userInfoCollection)
@@ -89,18 +86,7 @@ void main() {
   });
 
   group('addPartner', () {
-    final MockDocumentReference<LinkCode> linkCodeRef = MockDocumentReference<LinkCode>();
-
     test('sets partner info and display name', () async {
-      String displayName = 'Test';
-
-      final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-      final UserInformation currentUserInfo =
-          UserInformation(userID: '1234', linkCode: linkCodeRef, firestore: firestore);
-      final UserInformation partnersInfo =
-          UserInformation(displayName: displayName, userID: '5678', linkCode: linkCodeRef, firestore: firestore);
-      final PartnersInfoState partnersInfoState = PartnersInfoState();
-
       partnersInfoState.addPartner(partnersInfo, currentUserInfo);
 
       expect(partnersInfoState.partnersInfo, isNotNull);
@@ -110,14 +96,7 @@ void main() {
   });
 
   group('removePartner', () {
-    final MockDocumentReference<LinkCode> linkCodeRef = MockDocumentReference<LinkCode>();
-
     test('removes partner info from state and current user info', () async {
-      final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-      final UserInformation currentUserInfo =
-          UserInformation(userID: '1234', linkCode: linkCodeRef, firestore: firestore);
-      final PartnersInfoState partnersInfoState = PartnersInfoState();
-
       partnersInfoState.removePartner(currentUserInfo);
 
       expect(partnersInfoState.partnersInfo, isNull);

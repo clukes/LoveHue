@@ -13,62 +13,42 @@ import 'package:mockito/mockito.dart';
 import '../mocker.mocks.dart';
 import 'user_information_test.mocks.dart';
 
-// Have to generate these manually, can't use Firebase_Auth_Mocks as they don't implement user.delete().
+// Have to generate these manually; can't use Firebase_Auth_Mocks as they don't implement user.delete().
 @GenerateMocks([User, FirebaseAuth])
 void main() {
-  setUp(() {});
-  tearDown(() {});
+  const String userID = '1234';
+
+  late FakeFirebaseFirestore firestore;
+  late MockDocumentReference<LinkCode?> linkCodeRef;
+  late UserInformation userInfo;
+
+  setUp(() {
+    firestore = FakeFirebaseFirestore();
+    linkCodeRef = MockDocumentReference<LinkCode?>();
+    userInfo = UserInformation(firestore: firestore, userID: userID, displayName: 'Test', linkCode: linkCodeRef);
+  });
 
   group('fromMap', () {
-    final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-    final MockDocumentReference<LinkCode?> ref = MockDocumentReference<LinkCode?>();
-
     test('valid map should return UserInformation', () {
-      UserInformation expected =
-          UserInformation(firestore: firestore, userID: '1234', displayName: 'Test', linkCode: ref);
       Map<String, Object?> map = {
         UserInformation.columnUserID: '1234',
         UserInformation.columnDisplayName: 'Test',
-        UserInformation.columnLinkCode: ref
+        UserInformation.columnLinkCode: linkCodeRef
       };
       UserInformation result = UserInformation.fromMap(map, firestore);
-      expect(result.userID, equals(expected.userID));
-      expect(result.linkCode, equals(expected.linkCode));
-      expect(result.displayName, equals(expected.displayName));
+      expect(result.userID, equals(userInfo.userID));
+      expect(result.linkCode, equals(userInfo.linkCode));
+      expect(result.displayName, equals(userInfo.displayName));
     });
   });
 
   group('toMap', () {
-    final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-    final MockDocumentReference<LinkCode?> ref = MockDocumentReference<LinkCode?>();
-
     test('valid UserInformation should return map', () {
       Map<String, Object?> expected = {
         UserInformation.columnUserID: '1234',
         UserInformation.columnDisplayName: 'Test',
-        UserInformation.columnLinkCode: ref
+        UserInformation.columnLinkCode: linkCodeRef
       };
-      UserInformation userInfo =
-          UserInformation(firestore: firestore, userID: '1234', displayName: 'Test', linkCode: ref);
-      Map<String, Object?> result = userInfo.toMap();
-      expect(result[UserInformation.columnUserID], equals(expected[UserInformation.columnUserID]));
-      expect(result[UserInformation.columnLinkCode], equals(expected[UserInformation.columnLinkCode]));
-      expect(result[UserInformation.columnDisplayName], equals(expected[UserInformation.columnDisplayName]));
-    });
-  });
-
-  group('toMap', () {
-    final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-    final MockDocumentReference<LinkCode?> ref = MockDocumentReference<LinkCode?>();
-
-    test('valid UserInformation should return map', () {
-      Map<String, Object?> expected = {
-        UserInformation.columnUserID: '1234',
-        UserInformation.columnDisplayName: 'Test',
-        UserInformation.columnLinkCode: ref
-      };
-      UserInformation userInfo =
-          UserInformation(firestore: firestore, userID: '1234', displayName: 'Test', linkCode: ref);
       Map<String, Object?> result = userInfo.toMap();
       expect(result[UserInformation.columnUserID], equals(expected[UserInformation.columnUserID]));
       expect(result[UserInformation.columnLinkCode], equals(expected[UserInformation.columnLinkCode]));
@@ -77,34 +57,21 @@ void main() {
   });
 
   group('getUserInDatabase', () {
-    final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-    final MockDocumentReference<LinkCode?> ref = MockDocumentReference<LinkCode?>();
-
     test('gets correct document reference for valid user info', () async {
-      UserInformation userInfo = UserInformation(firestore: firestore, userID: '1234', linkCode: ref);
       DocumentReference<UserInformation?> result = userInfo.getUserInDatabase();
       expect(result.id, equals(userInfo.userID));
     });
   });
 
   group('getUserInDatabaseFromID', () {
-    final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-
     test('gets correct document reference with user id', () async {
-      String userID = '1234';
       DocumentReference<UserInformation?> result = UserInformation.getUserInDatabaseFromID(userID, firestore);
       expect(result.id, equals(userID));
     });
   });
 
   group('firestoreGetFromID', () {
-    final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-    final MockDocumentReference<LinkCode?> ref = MockDocumentReference<LinkCode?>();
-
     test('should get correct UserInformation', () async {
-      String userID = '1234';
-      UserInformation userInfo =
-          UserInformation(firestore: firestore, userID: '1234', displayName: 'Test', linkCode: ref);
       await firestore.collection(userInfoCollection).doc(userID).set(userInfo.toMap());
       UserInformation? result = await UserInformation.firestoreGetFromID(userID, firestore);
 
@@ -115,65 +82,45 @@ void main() {
   });
 
   group('firestoreSet', () {
-    final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-    final MockDocumentReference<LinkCode?> ref = MockDocumentReference<LinkCode?>();
-
     test('should create new UserInformation in database if not exist', () async {
-      String userID = '1234';
-      UserInformation expected =
-          UserInformation(firestore: firestore, userID: '1234', displayName: 'Test', linkCode: ref);
-      await expected.firestoreSet();
+      await userInfo.firestoreSet();
       Map<String, dynamic>? result =
           await firestore.collection(userInfoCollection).doc(userID).get().then((value) => value.data());
       expect(result, isNotNull);
-      expect(result![UserInformation.columnUserID], equals(expected.userID));
-      expect(result[UserInformation.columnDisplayName], equals(expected.displayName));
+      expect(result![UserInformation.columnUserID], equals(userInfo.userID));
+      expect(result[UserInformation.columnDisplayName], equals(userInfo.displayName));
     });
 
     test('should update barDoc in database if exist', () async {
-      String userID = '1234';
-      UserInformation expected =
-          UserInformation(firestore: firestore, userID: '1234', displayName: 'Test', linkCode: ref);
-      await firestore.collection(userInfoCollection).doc(userID).set(expected.toMap());
-      expected.displayName = 'Foo';
-      await expected.firestoreSet();
+      await firestore.collection(userInfoCollection).doc(userID).set(userInfo.toMap());
+      userInfo.displayName = 'Foo';
+      await userInfo.firestoreSet();
       Map<String, dynamic>? result =
           await firestore.collection(userInfoCollection).doc(userID).get().then((value) => value.data());
       expect(result, isNotNull);
-      expect(result![UserInformation.columnUserID], equals(expected.userID));
-      expect(result[UserInformation.columnDisplayName], equals(expected.displayName));
+      expect(result![UserInformation.columnUserID], equals(userInfo.userID));
+      expect(result[UserInformation.columnDisplayName], equals(userInfo.displayName));
     });
   });
 
   group('firestoreUpdateColumns', () {
-    final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-    final MockDocumentReference<LinkCode?> ref = MockDocumentReference<LinkCode?>();
-
     test('should update UserInformation in database', () async {
-      String userID = '1234';
       String expectedDisplayName = 'Foo';
-      UserInformation expected =
-          UserInformation(firestore: firestore, userID: '1234', displayName: 'Test', linkCode: ref);
-      await firestore.collection(userInfoCollection).doc(userID).set(expected.toMap());
-      await expected.firestoreUpdateColumns({UserInformation.columnDisplayName: expectedDisplayName});
+
+      await firestore.collection(userInfoCollection).doc(userID).set(userInfo.toMap());
+      await userInfo.firestoreUpdateColumns({UserInformation.columnDisplayName: expectedDisplayName});
       Map<String, dynamic>? result =
           await firestore.collection(userInfoCollection).doc(userID).get().then((value) => value.data());
       expect(result, isNotNull);
-      expect(result![UserInformation.columnUserID], equals(expected.userID));
+      expect(result![UserInformation.columnUserID], equals(userInfo.userID));
       expect(result[UserInformation.columnDisplayName], equals(expectedDisplayName));
     });
   });
 
   group('firestoreDelete', () {
-    final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-    final MockDocumentReference<LinkCode?> ref = MockDocumentReference<LinkCode?>();
-
     test('should remove UserInformation from database', () async {
-      String userID = '1234';
-      UserInformation expected =
-          UserInformation(firestore: firestore, userID: '1234', displayName: 'Test', linkCode: ref);
-      await firestore.collection(userInfoCollection).doc(userID).set(expected.toMap());
-      await expected.firestoreDelete();
+      await firestore.collection(userInfoCollection).doc(userID).set(userInfo.toMap());
+      await userInfo.firestoreDelete();
       Map<String, dynamic>? result =
           await firestore.collection(userInfoCollection).doc(userID).get().then((value) => value.data());
       expect(result, isNull);
@@ -181,16 +128,20 @@ void main() {
   });
 
   group('deleteUserData', () {
-    final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-    final MockDocumentReference<LinkCode?> ref = MockDocumentReference<LinkCode?>();
-    final MockBuildContext context = MockBuildContext();
-    final MockUser user = MockUser();
-    final MockFirebaseAuth firebaseAuth = MockFirebaseAuth();
-    final MockAuthenticationInfo authenticationInfo = MockAuthenticationInfo();
+    late MockBuildContext context;
+    late MockUser user;
+    late MockFirebaseAuth firebaseAuth;
+    late MockAuthenticationInfo authenticationInfo;
+
+    setUp(() {
+      context = MockBuildContext();
+      user = MockUser();
+      firebaseAuth = MockFirebaseAuth();
+      authenticationInfo = MockAuthenticationInfo();
+    });
 
     test("should remove UserInformation from database, delete account in auth, and set partner's partner to null",
         () async {
-      String userID = '1234';
       String partnerID = '5678';
 
       when(user.uid).thenReturn(userID);
@@ -200,9 +151,9 @@ void main() {
       DocumentReference userDoc = firestore.collection(userInfoCollection).doc(user.uid);
       DocumentReference partnerDoc = firestore.collection(userInfoCollection).doc(partnerID);
       UserInformation partner =
-          UserInformation(firestore: firestore, userID: partnerID, partner: userDoc, linkCode: ref);
+          UserInformation(firestore: firestore, userID: partnerID, partner: userDoc, linkCode: linkCodeRef);
       UserInformation currentUser =
-          UserInformation(firestore: firestore, userID: userID, partner: partnerDoc, linkCode: ref);
+          UserInformation(firestore: firestore, userID: userID, partner: partnerDoc, linkCode: linkCodeRef);
 
       await partnerDoc.set(partner.toMap());
       await userDoc.set(currentUser.toMap());
@@ -217,7 +168,6 @@ void main() {
     });
 
     test("no recent sign in reauthenticates then deletes", () async {
-      String userID = '1234';
       String partnerID = '5678';
 
       when(user.uid).thenReturn(userID);
@@ -236,13 +186,12 @@ void main() {
       DocumentReference userDoc = firestore.collection(userInfoCollection).doc(user.uid);
       DocumentReference partnerDoc = firestore.collection(userInfoCollection).doc(partnerID);
       UserInformation partner =
-          UserInformation(firestore: firestore, userID: partnerID, partner: userDoc, linkCode: ref);
-      UserInformation currentUser =
-          UserInformation(firestore: firestore, userID: userID, partner: partnerDoc, linkCode: ref);
+          UserInformation(firestore: firestore, userID: partnerID, partner: userDoc, linkCode: linkCodeRef);
+      userInfo.partner = partnerDoc;
 
       await partnerDoc.set(partner.toMap());
-      await userDoc.set(currentUser.toMap());
-      await currentUser.deleteUserData(context, firebaseAuth, authenticationInfo);
+      await userDoc.set(userInfo.toMap());
+      await userInfo.deleteUserData(context, firebaseAuth, authenticationInfo);
       Map<String, dynamic>? result =
           await firestore.collection(userInfoCollection).doc(userID).get().then((value) => value.data());
       Map<String, dynamic>? partnerResult =
@@ -255,59 +204,55 @@ void main() {
     });
 
     test("no recent sign and failed reauthentication throws error", () async {
-      String userID = '1234';
-
       when(user.uid).thenReturn(userID);
       when(firebaseAuth.currentUser).thenReturn(user);
       when(user.delete()).thenAnswer((_) async {
-          throw FirebaseAuthException(code: 'requires-recent-login');
+        throw FirebaseAuthException(code: 'requires-recent-login');
       });
-      when(authenticationInfo.reauthenticate(context, firebaseAuth)).thenAnswer((realInvocation) => Future.value(false));
+      when(authenticationInfo.reauthenticate(context, firebaseAuth))
+          .thenAnswer((realInvocation) => Future.value(false));
 
       DocumentReference userDoc = firestore.collection(userInfoCollection).doc(user.uid);
-      UserInformation currentUser =
-      UserInformation(firestore: firestore, userID: userID, linkCode: ref);
 
-      await userDoc.set(currentUser.toMap());
-      await expectLater(currentUser.deleteUserData(context, firebaseAuth, authenticationInfo), throwsA(isA<PrintableError>()));
+      await userDoc.set(userInfo.toMap());
+      await expectLater(
+          userInfo.deleteUserData(context, firebaseAuth, authenticationInfo), throwsA(isA<PrintableError>()));
       verify(authenticationInfo.reauthenticate(context, firebaseAuth));
     });
 
     test("no user signed in throws error", () async {
       when(firebaseAuth.currentUser).thenReturn(null);
 
-      UserInformation currentUser = UserInformation(firestore: firestore, userID: '1234', linkCode: ref);
-
-      expectLater(currentUser.deleteUserData(context, firebaseAuth, authenticationInfo), throwsA(isA<PrintableError>()));
+      expectLater(
+          userInfo.deleteUserData(context, firebaseAuth, authenticationInfo), throwsA(isA<PrintableError>()));
     });
 
     test("incorrect current user throws error", () async {
-      String userID = '1234';
-
       when(user.uid).thenReturn('5678');
       when(firebaseAuth.currentUser).thenReturn(user);
 
-      UserInformation currentUser = UserInformation(firestore: firestore, userID: userID, linkCode: ref);
-
-      expectLater(currentUser.deleteUserData(context, firebaseAuth, authenticationInfo), throwsA(isA<PrintableError>()));
+      expectLater(
+          userInfo.deleteUserData(context, firebaseAuth, authenticationInfo), throwsA(isA<PrintableError>()));
     });
   });
 
   group('setupUserInDatabase', () {
-    final FakeFirebaseFirestore firestore = FakeFirebaseFirestore();
-    final MockDocumentReference<LinkCode?> ref = MockDocumentReference<LinkCode?>();
-    final MockUserInfoState userInfoState = MockUserInfoState();
+    late MockUserInfoState userInfoState;
 
+    setUp(() {
+      userInfoState = MockUserInfoState();
+    });
     test('should create new UserInformation in database with default bars', () async {
-      when(ref.id).thenReturn('1');
-      String userID = '1234';
-      UserInformation expected = UserInformation(firestore: firestore, userID: userID, displayName: 'Test', linkCode: ref);
-      await expected.setupUserInDatabase(userInfoState);
-      Map<String, dynamic>? result = await firestore.collection(userInfoCollection).doc(userID).get().then((value) => value.data());
-      List<RelationshipBarDocument> bars = await RelationshipBarDocument.getUserBarsFromID(userID, firestore).get().then((value) => value.docs.map((doc) => doc.data()).toList());
+      when(linkCodeRef.id).thenReturn('1');
+      await userInfo.setupUserInDatabase(userInfoState);
+      Map<String, dynamic>? result =
+          await firestore.collection(userInfoCollection).doc(userID).get().then((value) => value.data());
+      List<RelationshipBarDocument> bars = await RelationshipBarDocument.getUserBarsFromID(userID, firestore)
+          .get()
+          .then((value) => value.docs.map((doc) => doc.data()).toList());
       expect(result, isNotNull);
-      expect(result![UserInformation.columnUserID], equals(expected.userID));
-      expect(result[UserInformation.columnDisplayName], equals(expected.displayName));
+      expect(result![UserInformation.columnUserID], equals(userInfo.userID));
+      expect(result[UserInformation.columnDisplayName], equals(userInfo.displayName));
       expect(bars, isNotEmpty);
     });
   });

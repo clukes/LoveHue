@@ -8,9 +8,9 @@ void main() {
     SliderColor? color = getSliderColor(0);
     expect(color, equals(sliderColors[0]));
 
-    for(int i = 0; i <= 4; i++) {
+    for (int i = 0; i <= 4; i++) {
       // Get 1, 21, 41, 61, 81
-      int value = (i*20)+1;
+      int value = (i * 20) + 1;
       SliderColor? color = getSliderColor(value);
       expect(color, equals(sliderColors[i]));
 
@@ -31,5 +31,4 @@ void main() {
     color = getSliderColor(500);
     expect(color, isNull);
   });
-
 }
