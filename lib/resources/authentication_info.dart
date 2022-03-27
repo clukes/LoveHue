@@ -5,11 +5,9 @@ import 'package:flutterfire_ui/auth.dart';
 import '../main_common.dart';
 import '../responsive/responsive_screen_layout.dart';
 
-late final AuthenticationInfo globalAuthenticationInfo;
-
 class AuthenticationInfo {
   AuthenticationInfo() {
-    final ActionCodeSettings actionCodeSettings = ActionCodeSettings(
+    ActionCodeSettings actionCodeSettings = ActionCodeSettings(
       // URL you want to redirect back to. The domain (www.example.com) for this
       // URL must be whitelisted in the Firebase Console.
       url: 'http://lovehue.page.link/',

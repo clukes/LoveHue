@@ -53,8 +53,8 @@ class LinkCode {
   /// Throws [PrintableError] if user is already connected or pending with a different partner,
   /// or the given [linkCode] doesn't correspond to a [UserInformation] in the database,
   /// or the user with [linkCode] is already connected to a different user.
-  static Future<void> connectTo(
-      String linkCode, UserInformation currentUserInfo, PartnersInfoState partnersInfoState, FirebaseFirestore firestore) async {
+  static Future<void> connectTo(String linkCode, UserInformation currentUserInfo, PartnersInfoState partnersInfoState,
+      FirebaseFirestore firestore) async {
     // Can only connect to a partner if user isn't already connected/pending to another partner.
     if (partnersInfoState.partnerExist) {
       partnersInfoState.partnerPending
@@ -68,12 +68,13 @@ class LinkCode {
       if (!partnerCodeSnapshot.exists) {
         throw PrintableError("Link code does not exist.");
       }
-      if(partnerCodeSnapshot.get(LinkCode.columnUser) == null) {
+      if (partnerCodeSnapshot.get(LinkCode.columnUser) == null) {
         throw PrintableError("No user for that link code.");
       }
       String partnerID = partnerCodeSnapshot.get(LinkCode.columnUser).id;
       DocumentReference<UserInformation?> partner = UserInformation.getUserInDatabaseFromID(partnerID, firestore);
-      DocumentReference<UserInformation?> currentUser = UserInformation.getUserInDatabaseFromID(currentUserInfo.userID, firestore);
+      DocumentReference<UserInformation?> currentUser =
+          UserInformation.getUserInDatabaseFromID(currentUserInfo.userID, firestore);
       DocumentSnapshot<UserInformation?> partnerSnapshot = await transaction.get(partner);
       if (!partnerSnapshot.exists || partnerSnapshot.data() == null) {
         throw PrintableError("Link code does not exist.");
@@ -112,7 +113,8 @@ class LinkCode {
       // Pull local partner info from database if it isn't correct.
       if (userInfo.partnerID != null &&
           (!partnersInfoState.partnerExist || userInfo.partnerID != partnersInfoState.partnersID)) {
-        UserInformation? newPartnerInfo = await UserInformation.firestoreGetFromID(userInfo.partnerID!, userInfoState.firestore);
+        UserInformation? newPartnerInfo =
+            await UserInformation.firestoreGetFromID(userInfo.partnerID!, userInfoState.firestore);
         partnersInfoState.addPartner(newPartnerInfo, userInfo);
         debugPrint("LinkCode.acceptRequest: Updated partner info with partner id: ${userInfo.partnerID}.");
       } else {

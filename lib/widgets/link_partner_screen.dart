@@ -160,8 +160,8 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
       UserInfoState userInfoState = Provider.of<UserInfoState>(context, listen: false);
       UserInformation? userInfo = userInfoState.userInfo;
       if (userInfo != null) {
-        await LinkCode.connectTo(linkCode, userInfo,
-                Provider.of<PartnersInfoState>(context, listen: false), userInfoState.firestore)
+        await LinkCode.connectTo(
+                linkCode, userInfo, Provider.of<PartnersInfoState>(context, listen: false), userInfoState.firestore)
             .then((_) {
           setState(() {
             // Update page to reflect changes

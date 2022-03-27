@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 import 'package:lovehue/providers/partners_info_state.dart';
 import 'package:provider/provider.dart';
 
+import '../main_common.dart';
 import '../models/link_code.dart';
 import '../pages/sign_in_page.dart';
 import '../providers/user_info_state.dart';
-import '../resources/authentication_info.dart';
 
 /// Shows an alert dialog with yes and no buttons.
 Future<void> showAlertDialog({
@@ -150,7 +150,10 @@ Future<void> showDeleteAlertDialog(BuildContext context) async {
 /// Deletes user data in database, then delete [FirebaseAuth] account with [User.delete]
 Future<void> deleteAccount(BuildContext context) async {
   FirebaseAuth auth = FirebaseAuth.instance;
-  return Provider.of<UserInfoState>(context, listen: false).userInfo?.deleteUserData(context, auth, globalAuthenticationInfo).then((_) {
+  return Provider.of<UserInfoState>(context, listen: false)
+      .userInfo
+      ?.deleteUserData(context, auth, globalAuthenticationInfo)
+      .then((_) {
     FirebaseAuth.instance.currentUser?.delete();
   });
 }

@@ -54,9 +54,9 @@ class RelationshipBarDocument {
         .doc(userID)
         .collection(specificUserBarsCollection)
         .withConverter<RelationshipBarDocument>(
-      fromFirestore: (snapshots, _) => RelationshipBarDocument.fromMap(snapshots.data()!, userID, firestore),
-      toFirestore: (relationshipBarDocument, _) => relationshipBarDocument.toMap(),
-    );
+          fromFirestore: (snapshots, _) => RelationshipBarDocument.fromMap(snapshots.data()!, userID, firestore),
+          toFirestore: (relationshipBarDocument, _) => relationshipBarDocument.toMap(),
+        );
   }
 
   /// Converts a given [Map] to the returned [RelationshipBarDocument].
@@ -64,7 +64,9 @@ class RelationshipBarDocument {
     return RelationshipBarDocument(
       id: res[columnID] as String,
       timestamp: res[columnTimestamp] as Timestamp?,
-      barList: res[columnBarList] != null ? RelationshipBar.fromMapList(List<Map<String, Object?>>.from(res[columnBarList] as List)) : null,
+      barList: res[columnBarList] != null
+          ? RelationshipBar.fromMapList(List<Map<String, Object?>>.from(res[columnBarList] as List))
+          : null,
       firestore: firestore,
       userID: userID,
     );
@@ -138,9 +140,9 @@ class RelationshipBarDocument {
         .doc(id)
         .set(this, SetOptions(merge: true))
         .then((value) => debugPrint(
-        "RelationshipBarDocument.firestoreSet: Relationship Bar Document Added with id: $id, for userID: $userID."))
+            "RelationshipBarDocument.firestoreSet: Relationship Bar Document Added with id: $id, for userID: $userID."))
         .catchError((error) =>
-        debugPrint("RelationshipBarDocument.firestoreSet: Failed to add relationship bar document: $error"));
+            debugPrint("RelationshipBarDocument.firestoreSet: Failed to add relationship bar document: $error"));
   }
 
   /// Creates/merges each [RelationshipBarDocument] in list to given userID's RelationshipBarDocument FirebaseFirestore collection.
@@ -165,7 +167,7 @@ class RelationshipBarDocument {
         .then(
             (value) => debugPrint("RelationshipBarDocument.firestoreUpdateColumns: Relationship Bar Document Updated."))
         .catchError((error) => debugPrint(
-        "RelationshipBarDocument.firestoreUpdateColumns: Failed to update relationship bar document: $error."));
+            "RelationshipBarDocument.firestoreUpdateColumns: Failed to update relationship bar document: $error."));
   }
 
   /// Deletes this [RelationshipBarDocument] from given userID's RelationshipBarDocument FirebaseFirestore collection.
@@ -200,8 +202,8 @@ class RelationshipBarDocument {
     debugPrint("RelationshipBarDocument.firestoreAddBarListWithBatch: Add list: $barList.");
     final CollectionReference<RelationshipBarDocument> ref = getUserBarsFromID(userID, firestore);
     DocumentReference<RelationshipBarDocument> docRef = ref.doc();
-    RelationshipBarDocument barDoc =
-    RelationshipBarDocument(id: docRef.id, timestamp: Timestamp.now(), barList: barList, userID: userID, firestore: firestore);
+    RelationshipBarDocument barDoc = RelationshipBarDocument(
+        id: docRef.id, timestamp: Timestamp.now(), barList: barList, userID: userID, firestore: firestore);
     batch.set(docRef, barDoc, SetOptions(merge: true));
     batch.update(docRef, {columnTimestamp: FieldValue.serverTimestamp()});
     return barDoc;

@@ -54,7 +54,7 @@ class UserInfoState with ChangeNotifier {
         UserInformation? newUserInfo = snapshot.data();
         debugPrint("UserInfoState.setupYourInfoSubscription: User Info Change: $newUserInfo");
 
-        if(newUserInfo != null) {
+        if (newUserInfo != null) {
           userInfo = newUserInfo;
 
           String? partnerID = newUserInfo.partnerID;
@@ -62,8 +62,7 @@ class UserInfoState with ChangeNotifier {
             // If theres a new partner linked, setup partner info.
             UserInformation? partnerInfo = await UserInformation.firestoreGetFromID(partnerID, firestore);
             partnersInfoState.addPartner(partnerInfo, userInfo!);
-          }
-          else if (partnerID == null && partnersInfoState.partnerExist) {
+          } else if (partnerID == null && partnersInfoState.partnerExist) {
             // Remove partner info if not linked.
             partnersInfoState.removePartner(userInfo!);
           }

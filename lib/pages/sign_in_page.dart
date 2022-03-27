@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
 
 import '../main_common.dart';
-import '../resources/authentication_info.dart';
 import '../utils/globals.dart';
 
 /// SignIn Page, using flutterfire_ui [SignInScreen].
@@ -68,7 +67,8 @@ class SignInPage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   width: double.infinity,
                   child: OutlinedButton(
-                    onPressed: () async => await globalAuthenticationInfo.signInAnonymously(context, FirebaseAuth.instance),
+                    onPressed: () async =>
+                        await globalAuthenticationInfo.signInAnonymously(context, FirebaseAuth.instance),
                     child: const Text('Skip Login'),
                   ),
                 ),

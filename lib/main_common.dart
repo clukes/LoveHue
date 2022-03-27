@@ -12,16 +12,18 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
-import '../pages/sign_in_page.dart';
-import '../providers/application_state.dart';
-import '../providers/partners_info_state.dart';
-import '../providers/user_info_state.dart';
-import '../responsive/responsive_screen_layout.dart';
-import '../utils/theme_data.dart';
+import 'pages/sign_in_page.dart';
+import 'providers/application_state.dart';
+import 'providers/partners_info_state.dart';
+import 'providers/user_info_state.dart';
+import 'resources/authentication_info.dart';
+import 'responsive/responsive_screen_layout.dart';
 import 'utils/app_info_class.dart';
+import 'utils/theme_data.dart';
 
 late final AppInfo appInfo;
 late final PackageInfo packageInfo;
+late final AuthenticationInfo globalAuthenticationInfo;
 
 /// Entry point with initializers.
 void mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo) async {
@@ -29,6 +31,8 @@ void mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo) async {
 
   appInfo = flavorAppInfo;
   packageInfo = await PackageInfo.fromPlatform();
+  globalAuthenticationInfo = AuthenticationInfo();
+
   await Firebase.initializeApp(
     options: firebaseOptions,
   );
@@ -47,7 +51,8 @@ void mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo) async {
 
   final PartnersInfoState partnersInfoState = PartnersInfoState();
   final UserInfoState userInfoState = UserInfoState(firestore, partnersInfoState);
-  final ApplicationState applicationState = ApplicationState(userInfoState, partnersInfoState, firestore, FirebaseAuth.instance);
+  final ApplicationState applicationState =
+      ApplicationState(userInfoState, partnersInfoState, firestore, FirebaseAuth.instance);
 
   final List<ChangeNotifierProvider<ChangeNotifier>> providers = [
     ChangeNotifierProvider<UserInfoState>.value(value: userInfoState),
@@ -73,7 +78,6 @@ class RelationshipBarsApp extends StatelessWidget {
         debugShowCheckedModeBanner: false,
         showPerformanceOverlay: false,
         title: appInfo.appName,
-        //TODO: Set to correct name.
         // Currently there is only one theme, a light one.
         theme: lightThemeData,
         home: AnnotatedRegion<SystemUiOverlayStyle>(

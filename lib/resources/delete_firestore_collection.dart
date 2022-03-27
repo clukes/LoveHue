@@ -2,8 +2,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 
 //Source: https://firebase.google.com/docs/firestore/manage-data/delete-data
 /// Returns a list of commit promises, that delete a whole collection by deleting all it's contained documents.
-Future<List<Future<void>>> deleteCollection(
-    FirebaseFirestore firestore, CollectionReference collectionReference, {int batchSize = 500}) async {
+Future<List<Future<void>>> deleteCollection(FirebaseFirestore firestore, CollectionReference collectionReference,
+    {int batchSize = 500}) async {
   //TODO: Perform this with a callable cloud function instead. https://firebase.google.com/docs/firestore/solutions/delete-collections
   QuerySnapshot snapshot = await collectionReference.limit(batchSize).get();
   List<DocumentSnapshot> documents = snapshot.docs;
