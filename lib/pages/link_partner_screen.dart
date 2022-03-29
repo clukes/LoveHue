@@ -2,12 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:lovehue/models/user_information.dart';
 import 'package:provider/provider.dart';
 
-import '../models/link_code.dart';
 import '../providers/partners_info_state.dart';
 import '../providers/user_info_state.dart';
 import '../resources/copy_to_clipboard.dart';
 import '../resources/unique_link_code_generator.dart';
-import 'header.dart';
+import '../widgets/header.dart';
 
 /// Screen with link partner form to display when no partner linked.
 class LinkPartnerScreen extends StatefulWidget {
@@ -160,9 +159,7 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
       UserInfoState userInfoState = Provider.of<UserInfoState>(context, listen: false);
       UserInformation? userInfo = userInfoState.userInfo;
       if (userInfo != null) {
-        await LinkCode.connectTo(
-                linkCode, userInfo, Provider.of<PartnersInfoState>(context, listen: false), userInfoState.firestore)
-            .then((_) {
+        await userInfoState.connectTo(linkCode).then((_) {
           setState(() {
             // Update page to reflect changes
           });
@@ -210,10 +207,8 @@ class _LinkRequestSentState extends State<LinkRequestSent> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Cancelling...')),
     );
-    await LinkCode.unlink(
-      Provider.of<UserInfoState>(context, listen: false),
-      Provider.of<PartnersInfoState>(context, listen: false),
-    ).catchError((error) {
+    UserInfoState userInfoState = Provider.of<UserInfoState>(context, listen: false);
+    await userInfoState.unlink().catchError((error) {
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $error.')),
       );
@@ -272,7 +267,7 @@ class _IncomingLinkRequestState extends State<IncomingLinkRequest> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Accepting...')),
     );
-    await LinkCode.acceptRequest(userInfoState, partnersInfoState).catchError((error) {
+    await userInfoState.acceptRequest().catchError((error) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $error.')),
@@ -285,7 +280,7 @@ class _IncomingLinkRequestState extends State<IncomingLinkRequest> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Rejecting...')),
     );
-    await LinkCode.unlink(userInfoState, partnersInfoState).catchError((error) {
+    await userInfoState.unlink().catchError((error) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
         SnackBar(content: Text('Error: $error.')),

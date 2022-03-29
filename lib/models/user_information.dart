@@ -22,8 +22,10 @@ class UserInformation {
     this.partner,
     required this.linkCode,
     this.linkPending = false,
-    required this.firestore,
-  });
+    FirebaseFirestore? firestore,
+  }) {
+    this.firestore = (firestore == null) ? FirebaseFirestore.instance : firestore;
+  }
 
   /// ID in the database for the user.
   final String userID;
@@ -44,7 +46,7 @@ class UserInformation {
   String? get partnerID => partner?.id;
 
   /// Firestore instance.
-  final FirebaseFirestore firestore;
+  late final FirebaseFirestore firestore;
 
   /// Column names for a UserInformation document in the FirebaseFirestore Database.
   static const String columnUserID = 'id';
@@ -54,14 +56,16 @@ class UserInformation {
   static const String columnLinkPending = 'linkPending';
 
   // Reference to the UserInformation collection in FirebaseFirestore database.
-  static CollectionReference<UserInformation?> _firestoreConverter(FirebaseFirestore firestore) =>
-      firestore.collection(userInfoCollection).withConverter<UserInformation?>(
-            fromFirestore: (snapshots, _) => UserInformation.fromMap(snapshots.data()!, firestore),
-            toFirestore: (userInfo, _) => userInfo!.toMap(),
-          );
+  static CollectionReference<UserInformation?> _firestoreConverter(FirebaseFirestore? firestore) {
+    firestore ??= FirebaseFirestore.instance;
+    return firestore.collection(userInfoCollection).withConverter<UserInformation?>(
+          fromFirestore: (snapshots, _) => UserInformation.fromMap(snapshots.data()!, firestore),
+          toFirestore: (userInfo, _) => userInfo!.toMap(),
+        );
+  }
 
   /// Converts a given [Map] to the returned [UserInformation].
-  static UserInformation fromMap(Map<String, Object?> res, FirebaseFirestore firestore) {
+  static UserInformation fromMap(Map<String, Object?> res, FirebaseFirestore? firestore) {
     return UserInformation(
       userID: res[columnUserID]! as String,
       displayName: res[columnDisplayName] as String?,
@@ -89,7 +93,7 @@ class UserInformation {
   }
 
   /// Calls [fromMap] on a list of [Map].
-  static List<UserInformation> fromMapList(List<Map<String, Object?>> query, FirebaseFirestore firestore) {
+  static List<UserInformation> fromMapList(List<Map<String, Object?>> query, FirebaseFirestore? firestore) {
     return query.map((e) => fromMap(e, firestore)).toList();
   }
 
@@ -99,12 +103,12 @@ class UserInformation {
   }
 
   /// Gets a reference to the [UserInformation] document for user with given id in Firestore.
-  static DocumentReference<UserInformation?> getUserInDatabaseFromID(String userID, FirebaseFirestore firestore) {
+  static DocumentReference<UserInformation?> getUserInDatabaseFromID(String userID, FirebaseFirestore? firestore) {
     return _firestoreConverter(firestore).doc(userID);
   }
 
   /// Retrieve [UserInformation] from the FirebaseFirestore collection for given userID.
-  static Future<UserInformation?> firestoreGetFromID(String userID, FirebaseFirestore firestore) async {
+  static Future<UserInformation?> firestoreGetFromID(String userID, FirebaseFirestore? firestore) async {
     debugPrint("UserInformation.firestoreGet: Get doc with userID: $userID.");
     UserInformation? info =
         await getUserInDatabaseFromID(userID, firestore).get().then((snapshot) => snapshot.data()).catchError((error) {
@@ -164,8 +168,8 @@ class UserInformation {
         // Add batch commit promises for all RelationshipBars for user, split in chunks of 500.
         // Max operations in a batch is 500, thus the split. This is necessary since:
         // "When you delete a document, Cloud Firestore does not automatically delete the documents within its subcollections".
-        batchPromises
-            .addAll(await deleteCollection(firestore, RelationshipBarDocument.getUserBarsFromID(userID, firestore)));
+        batchPromises.addAll(
+            await deleteCollection(RelationshipBarDocument.getUserBarsFromID(userID, firestore), firestore: firestore));
 
         batch.delete(firestore.collection(userBarsCollection).doc(userID));
 

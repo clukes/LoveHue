@@ -27,7 +27,14 @@ void main() {
     user = MockUser(uid: '1234', isAnonymous: true);
     userInfoState = MockUserInfoState();
     auth = MockFirebaseAuth(mockUser: user);
-    appState = ApplicationState(userInfoState, partnersInfoState, firestore, auth);
+    appState = ApplicationState(
+      userInfoState: userInfoState,
+      partnersInfoState: partnersInfoState,
+      auth: auth,
+      firestore: firestore,
+      authenticationInfo: MockAuthenticationInfo(),
+      appInfo: MockAppInfo(),
+    );
     linkCodeRef = MockDocumentReference<LinkCode>();
   });
 
@@ -54,13 +61,12 @@ void main() {
     when(userInfoState.userInfo).thenReturn(null);
     when(userInfoState.latestRelationshipBarDoc).thenReturn(null);
 
-    UserInformation partnersInfo =
-        UserInformation(userID: '6789', firestore: firestore, linkCode: linkCodeRef);
+    UserInformation partnersInfo = UserInformation(userID: '6789', firestore: firestore, linkCode: linkCodeRef);
     DocumentReference partnersDoc = firestore.collection(userInfoCollection).doc(partnersInfo.userID);
     await partnersDoc.set(partnersInfo.toMap());
 
-    UserInformation userInfo = UserInformation(
-        userID: user.uid, partner: partnersDoc, firestore: firestore, linkCode: linkCodeRef);
+    UserInformation userInfo =
+        UserInformation(userID: user.uid, partner: partnersDoc, firestore: firestore, linkCode: linkCodeRef);
     await firestore.collection(userInfoCollection).doc(user.uid).set(userInfo.toMap());
 
     expect(appState.loginState, equals(ApplicationLoginState.loggedOut));
@@ -86,18 +92,22 @@ void main() {
     user = MockUser(uid: '1234');
     auth = MockFirebaseAuth(mockUser: user, signedIn: true);
 
-    UserInformation userInfo = UserInformation(
-        userID: user.uid,
-        displayName: user.displayName,
-        firestore: firestore,
-        linkCode: linkCodeRef);
+    UserInformation userInfo =
+        UserInformation(userID: user.uid, displayName: user.displayName, firestore: firestore, linkCode: linkCodeRef);
     await firestore.collection(userInfoCollection).doc(user.uid).set(userInfo.toMap());
 
     when(userInfoState.userExist).thenReturn(true);
     when(userInfoState.userInfo).thenReturn(userInfo);
     when(userInfoState.latestRelationshipBarDoc).thenReturn(null);
 
-    ApplicationState appState = ApplicationState(userInfoState, partnersInfoState, firestore, auth);
+    appState = ApplicationState(
+      userInfoState: userInfoState,
+      partnersInfoState: partnersInfoState,
+      auth: auth,
+      firestore: firestore,
+      authenticationInfo: MockAuthenticationInfo(),
+      appInfo: MockAppInfo(),
+    );
     appState.loginState = ApplicationLoginState.loggedIn;
 
     String displayName = 'Test';
@@ -112,18 +122,22 @@ void main() {
     user = MockUser(uid: '1234');
     auth = MockFirebaseAuth(mockUser: user, signedIn: true);
 
-    UserInformation userInfo = UserInformation(
-        userID: user.uid,
-        displayName: user.displayName,
-        firestore: firestore,
-        linkCode: linkCodeRef);
+    UserInformation userInfo =
+        UserInformation(userID: user.uid, displayName: user.displayName, firestore: firestore, linkCode: linkCodeRef);
     await firestore.collection(userInfoCollection).doc(user.uid).set(userInfo.toMap());
 
     when(userInfoState.userExist).thenReturn(true);
     when(userInfoState.userInfo).thenReturn(userInfo);
     when(userInfoState.latestRelationshipBarDoc).thenReturn(null);
 
-    ApplicationState appState = ApplicationState(userInfoState, partnersInfoState, firestore, auth);
+    appState = ApplicationState(
+      userInfoState: userInfoState,
+      partnersInfoState: partnersInfoState,
+      auth: auth,
+      firestore: firestore,
+      authenticationInfo: MockAuthenticationInfo(),
+      appInfo: MockAppInfo(),
+    );
     appState.loginState = ApplicationLoginState.loggedIn;
 
     await auth.signOut();

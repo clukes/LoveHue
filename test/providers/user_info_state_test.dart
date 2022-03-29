@@ -1,19 +1,20 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lovehue/models/link_code.dart';
 import 'package:lovehue/models/user_information.dart';
 import 'package:lovehue/providers/user_info_state.dart';
 import 'package:lovehue/resources/database_and_table_names.dart';
+import 'package:lovehue/resources/printable_error.dart';
 import 'package:mockito/mockito.dart';
 
+import '../mocker.dart';
 import '../mocker.mocks.dart';
-
-class MockFunction extends Mock {
-  call();
-}
 
 void main() {
   const Duration timeout = Duration(seconds: 5);
+  const String userID = '1234';
+  const String linkCodeID = '123';
 
   late FakeFirebaseFirestore firestore;
   late MockDocumentReference<LinkCode> linkCodeRef;
@@ -27,7 +28,7 @@ void main() {
     linkCodeRef = MockDocumentReference<LinkCode>();
     partnersInfoState = MockPartnersInfoState();
     userInfoState = UserInfoState(firestore, partnersInfoState);
-    currentUserInfo = UserInformation(userID: '1234', linkCode: linkCodeRef, firestore: firestore);
+    currentUserInfo = UserInformation(userID: userID, linkCode: linkCodeRef, firestore: firestore);
     notifyListenerCallback = MockFunction();
     userInfoState.addListener(notifyListenerCallback);
   });
@@ -139,6 +140,165 @@ void main() {
       userInfoState.resetBarChange();
 
       verifyNever(notifyListenerCallback.call());
+    });
+  });
+
+  group('connectTo', () {
+    late DocumentReference<LinkCode?> linkCodeRef;
+    late UserInformation partnerInfo;
+    late UserInformation userInfo;
+    late MockDocumentReference<UserInformation?> userRef;
+    late LinkCode linkCode;
+
+    setUp(() async {
+      userRef = MockDocumentReference<UserInformation?>();
+      linkCode = LinkCode(linkCode: linkCodeID, user: userRef);
+      linkCodeRef = LinkCode.getDocumentReference(linkCodeID, firestore);
+      partnerInfo = UserInformation(userID: userID, linkCode: linkCodeRef, firestore: firestore);
+      userInfo = UserInformation(userID: '9876', linkCode: linkCodeRef, firestore: firestore);
+      userInfoState.userInfo = userInfo;
+
+      partnerInfo.linkCode = linkCodeRef;
+
+      when(userRef.id).thenReturn(userID);
+      await linkCodeRef.set(linkCode);
+      await firestore.collection(userInfoCollection).doc(userRef.id).set(partnerInfo.toMap());
+      await firestore.collection(userInfoCollection).doc(userInfo.userID).set(userInfo.toMap());
+      when(partnersInfoState.partnerExist).thenReturn(false);
+      when(partnersInfoState.partnerPending).thenReturn(false);
+    });
+
+    test('valid user adds partner to state', () async {
+      when(partnersInfoState.addPartner(partnerInfo, userInfo)).thenAnswer(
+          (realInvocation) => expect(realInvocation.positionalArguments.first['userID'], partnerInfo.userID));
+      await userInfoState.connectTo(linkCodeID);
+    });
+
+    test('pending partner throws error', () async {
+      when(partnersInfoState.partnerExist).thenReturn(true);
+      when(partnersInfoState.partnerPending).thenReturn(true);
+      expectLater(userInfoState.connectTo(linkCodeID), throwsA(isA<PrintableError>()));
+    });
+
+    test('linked partner throws error', () async {
+      when(partnersInfoState.partnerExist).thenReturn(true);
+      when(partnersInfoState.partnerPending).thenReturn(false);
+      expectLater(userInfoState.connectTo(linkCodeID), throwsA(isA<PrintableError>()));
+    });
+
+    test('link code not in database throws error', () async {
+      await firestore.collection(linkCodesCollection).doc(linkCodeID).delete();
+      expectLater(userInfoState.connectTo(linkCodeID), throwsA(isA<PrintableError>()));
+    });
+
+    test('link code has no user throws error', () async {
+      LinkCode linkCode = LinkCode(linkCode: linkCodeID);
+      await firestore.collection(linkCodesCollection).doc(linkCodeID).set(linkCode.toMap());
+      expectLater(userInfoState.connectTo(linkCodeID), throwsA(isA<PrintableError>()));
+    });
+
+    test('no user with link code throws error', () async {
+      await firestore.collection(userInfoCollection).doc(userRef.id).delete();
+      expectLater(userInfoState.connectTo(linkCodeID), throwsA(isA<PrintableError>()));
+    });
+
+    test('user with link code already has partner throws error', () async {
+      partnerInfo = UserInformation(userID: userID, partner: userRef, linkCode: linkCodeRef, firestore: firestore);
+      await firestore.collection(userInfoCollection).doc(userRef.id).set(partnerInfo.toMap());
+      expectLater(userInfoState.connectTo(linkCodeID), throwsA(isA<PrintableError>()));
+    });
+  });
+
+  group('acceptRequest', () {
+    late MockDocumentReference<UserInformation?> userRef;
+    late UserInformation userInfo;
+    late UserInformation partnerInfo;
+
+    setUp(() async {
+      userRef = MockDocumentReference<UserInformation?>();
+      userInfo = UserInformation(userID: userID, linkCode: linkCodeRef, firestore: firestore);
+      partnerInfo = UserInformation(userID: '9876', linkCode: linkCodeRef, firestore: firestore);
+
+      userInfo.partner = userRef;
+      userInfo.linkPending = true;
+
+      userInfoState.userInfo = userInfo;
+      when(partnersInfoState.partnerExist).thenReturn(false);
+      when(userRef.id).thenReturn(userID);
+      await firestore.collection(userInfoCollection).doc(userInfo.userID).set(userInfo.toMap());
+    });
+
+    test('valid request with incorrect local partner info adds partner to state', () async {
+      await userInfoState.acceptRequest();
+      when(partnersInfoState.addPartner(partnerInfo, userInfo)).thenAnswer(
+          (realInvocation) => expect(realInvocation.positionalArguments.first['userID'], partnerInfo.userID));
+    });
+
+    test('valid request with correct local partner info notifies listeners', () async {
+      when(partnersInfoState.partnersID).thenReturn(userInfo.partnerID);
+      when(partnersInfoState.partnerExist).thenReturn(true);
+      await userInfoState.acceptRequest();
+      when(partnersInfoState.notify()).thenReturn(null);
+      verify(partnersInfoState.notify());
+    });
+
+    test('user already connected to partner throws error', () async {
+      when(partnersInfoState.partnerExist).thenReturn(true);
+      userInfoState.userInfo?.linkPending = false;
+      expectLater(userInfoState.acceptRequest(), throwsA(isA<PrintableError>()));
+    });
+
+    test('no user info in state throws error', () async {
+      userInfoState.userInfo = null;
+      expectLater(userInfoState.acceptRequest(), throwsA(isA<PrintableError>()));
+    });
+
+    test('no partner in user info throws error', () async {
+      UserInformation thisUserInfo =
+          UserInformation(userID: linkCodeID, linkCode: MockDocumentReference(), firestore: firestore);
+      userInfoState.userInfo = thisUserInfo;
+      expectLater(userInfoState.acceptRequest(), throwsA(isA<PrintableError>()));
+    });
+  });
+
+  group('unlink', () {
+    late UserInfoState userInfoState;
+    late UserInformation userInfo;
+    late MockDocumentReference<UserInformation?> userRef;
+    late UserInformation partnerInfo;
+
+    setUp(() async {
+      userInfoState = UserInfoState(firestore, partnersInfoState);
+      userInfo = UserInformation(userID: userID, linkCode: linkCodeRef, firestore: firestore);
+      partnerInfo = UserInformation(userID: '9876', linkCode: linkCodeRef, firestore: firestore);
+      userRef = MockDocumentReference<UserInformation?>();
+
+      userInfo.partner = userRef;
+      userInfoState.userInfo = userInfo;
+      when(userRef.id).thenReturn(userID);
+      await firestore.collection(userInfoCollection).doc(userInfo.userID).set(userInfo.toMap());
+      await firestore.collection(userInfoCollection).doc(partnerInfo.userID).set(partnerInfo.toMap());
+    });
+
+    test('valid user and partner infos updates infos and removes partner from state', () async {
+      await userInfoState.unlink();
+      when(partnersInfoState.removePartner(userInfo))
+          .thenAnswer((realInvocation) => expect(realInvocation.positionalArguments.first['userID'], userInfo.userID));
+      DocumentSnapshot user = await firestore.collection(userInfoCollection).doc(userInfo.userID).get();
+      DocumentSnapshot partner = await firestore.collection(userInfoCollection).doc(partnerInfo.userID).get();
+      expectLater(user.get('partner'), isNull);
+      expectLater(partner.get('partner'), isNull);
+    });
+
+    test('no user info in state throws error', () async {
+      userInfoState.userInfo = null;
+      expectLater(userInfoState.unlink(), throwsA(isA<PrintableError>()));
+    });
+
+    test('no partner in user info throws error', () async {
+      userInfoState.userInfo =
+          UserInformation(userID: linkCodeID, linkCode: MockDocumentReference(), firestore: firestore);
+      expectLater(userInfoState.unlink(), throwsA(isA<PrintableError>()));
     });
   });
 }

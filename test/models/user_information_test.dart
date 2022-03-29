@@ -223,16 +223,14 @@ void main() {
     test("no user signed in throws error", () async {
       when(firebaseAuth.currentUser).thenReturn(null);
 
-      expectLater(
-          userInfo.deleteUserData(context, firebaseAuth, authenticationInfo), throwsA(isA<PrintableError>()));
+      expectLater(userInfo.deleteUserData(context, firebaseAuth, authenticationInfo), throwsA(isA<PrintableError>()));
     });
 
     test("incorrect current user throws error", () async {
       when(user.uid).thenReturn('5678');
       when(firebaseAuth.currentUser).thenReturn(user);
 
-      expectLater(
-          userInfo.deleteUserData(context, firebaseAuth, authenticationInfo), throwsA(isA<PrintableError>()));
+      expectLater(userInfo.deleteUserData(context, firebaseAuth, authenticationInfo), throwsA(isA<PrintableError>()));
     });
   });
 

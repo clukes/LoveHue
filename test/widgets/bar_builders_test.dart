@@ -75,7 +75,8 @@ void main() {
   group('buildBars', () {
     testWidgets('displays error on snapshot error', (WidgetTester tester) async {
       const errorString = 'ERROR_TEST';
-      const AsyncSnapshot<QuerySnapshot<RelationshipBarDocument>> snapshot = AsyncSnapshot.withError(ConnectionState.done, errorString);
+      const AsyncSnapshot<QuerySnapshot<RelationshipBarDocument>> snapshot =
+          AsyncSnapshot.withError(ConnectionState.done, errorString);
       final Widget testWidget = buildBars(MockBuildContext(), snapshot, nonInteractableBarBuilder);
 
       final testWidgetBuild = MaterialApp(home: testWidget);
@@ -98,14 +99,17 @@ void main() {
       const userID = '1234';
       final Timestamp timestamp = Timestamp.fromMillisecondsSinceEpoch(2000);
       final firestore = FakeFirebaseFirestore();
-      final RelationshipBarDocument barDoc1 = RelationshipBarDocument(id: '1', timestamp: timestamp, firestore: firestore, userID: userID);
-      final RelationshipBarDocument barDoc2 = RelationshipBarDocument(id: '2', timestamp: Timestamp.fromMillisecondsSinceEpoch(1000), firestore: firestore, userID: userID);
+      final RelationshipBarDocument barDoc1 =
+          RelationshipBarDocument(id: '1', timestamp: timestamp, firestore: firestore, userID: userID);
+      final RelationshipBarDocument barDoc2 = RelationshipBarDocument(
+          id: '2', timestamp: Timestamp.fromMillisecondsSinceEpoch(1000), firestore: firestore, userID: userID);
       final collection = RelationshipBarDocument.getUserBarsFromID(userID, firestore);
       await collection.add(barDoc1);
       await collection.add(barDoc2);
       QuerySnapshot<RelationshipBarDocument> querySnapshot = await collection.get();
 
-      final AsyncSnapshot<QuerySnapshot<RelationshipBarDocument>> snapshot = AsyncSnapshot.withData(ConnectionState.done, querySnapshot);
+      final AsyncSnapshot<QuerySnapshot<RelationshipBarDocument>> snapshot =
+          AsyncSnapshot.withData(ConnectionState.done, querySnapshot);
       final Widget testWidget = buildBars(MockBuildContext(), snapshot, nonInteractableBarBuilder);
 
       final testWidgetBuild = MaterialApp(home: testWidget);

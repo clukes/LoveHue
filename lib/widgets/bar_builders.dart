@@ -20,8 +20,6 @@ class BarDocBuilder extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    print(barDoc);
-    print(barDoc?.timestamp);
     if (barDoc != null) {
       List<RelationshipBar>? bars = barDoc!.barList ?? [];
       return Column(children: [
@@ -55,7 +53,8 @@ class BarDocBuilder extends StatelessWidget {
 
 /// Builder for a non-disabled [RelationshipBar], e.g. on YourBars page.
 Widget interactableBarBuilder(BuildContext context, RelationshipBar bar) {
-  WidgetsBinding.instance?.addPostFrameCallback((_) => Provider.of<UserInfoState>(context, listen: false).barsReset = false);
+  WidgetsBinding.instance
+      ?.addPostFrameCallback((_) => Provider.of<UserInfoState>(context, listen: false).barsReset = false);
   return InteractableBarSlider(relationshipBar: bar);
 }
 
@@ -66,9 +65,8 @@ Widget nonInteractableBarBuilder(BuildContext context, RelationshipBar bar) {
 
 /// Returns a [StreamBuilder] that builds bars for a user with given userID.
 Widget barStreamBuilder(String userID, Widget Function(BuildContext context, RelationshipBar bar) itemBuilderFunction,
-    FirebaseFirestore firestore) {
+    {FirebaseFirestore? firestore}) {
   final stream = RelationshipBarDocument.getOrderedUserBarsFromID(userID, firestore).snapshots();
-  print(stream);
   return StreamBuilder<QuerySnapshot<RelationshipBarDocument>>(
     stream: stream,
     builder: (context, snapshot) => buildBars(context, snapshot, itemBuilderFunction),

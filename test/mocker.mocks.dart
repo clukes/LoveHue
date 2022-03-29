@@ -2,20 +2,23 @@
 // in lovehue/test/mocker.dart.
 // Do not manually edit this file.
 
-import 'dart:async' as _i11;
-import 'dart:ui' as _i10;
+import 'dart:async' as _i15;
+import 'dart:ui' as _i12;
 
-import 'package:cloud_firestore/cloud_firestore.dart' as _i3;
-import 'package:firebase_auth/firebase_auth.dart' as _i6;
-import 'package:flutter/material.dart' as _i4;
-import 'package:flutter/src/foundation/diagnostics.dart' as _i5;
-import 'package:flutterfire_ui/auth.dart' as _i13;
-import 'package:lovehue/models/relationship_bar_document.dart' as _i9;
-import 'package:lovehue/models/user_information.dart' as _i8;
-import 'package:lovehue/providers/partners_info_state.dart' as _i2;
-import 'package:lovehue/providers/user_info_state.dart' as _i7;
-import 'package:lovehue/resources/authentication_info.dart' as _i12;
+import 'package:cloud_firestore/cloud_firestore.dart' as _i4;
+import 'package:firebase_auth/firebase_auth.dart' as _i7;
+import 'package:flutter/material.dart' as _i8;
+import 'package:flutter/src/foundation/diagnostics.dart' as _i9;
+import 'package:flutterfire_ui/auth.dart' as _i16;
+import 'package:lovehue/models/relationship_bar_document.dart' as _i14;
+import 'package:lovehue/models/user_information.dart' as _i13;
+import 'package:lovehue/providers/application_state.dart' as _i11;
+import 'package:lovehue/providers/partners_info_state.dart' as _i3;
+import 'package:lovehue/providers/user_info_state.dart' as _i2;
+import 'package:lovehue/resources/authentication_info.dart' as _i6;
+import 'package:lovehue/utils/app_info_class.dart' as _i5;
 import 'package:mockito/mockito.dart' as _i1;
+import 'package:package_info_plus/package_info_plus.dart' as _i10;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -27,70 +30,145 @@ import 'package:mockito/mockito.dart' as _i1;
 // ignore_for_file: unnecessary_parenthesis
 // ignore_for_file: camel_case_types
 
-class _FakePartnersInfoState_0 extends _i1.Fake
-    implements _i2.PartnersInfoState {}
+class _FakeUserInfoState_0 extends _i1.Fake implements _i2.UserInfoState {}
 
-class _FakeFirebaseFirestore_1 extends _i1.Fake
-    implements _i3.FirebaseFirestore {}
+class _FakePartnersInfoState_1 extends _i1.Fake
+    implements _i3.PartnersInfoState {}
 
-class _FakeValueNotifier_2<T> extends _i1.Fake implements _i4.ValueNotifier<T> {
+class _FakeFirebaseFirestore_2 extends _i1.Fake
+    implements _i4.FirebaseFirestore {}
+
+class _FakeAppInfo_3 extends _i1.Fake implements _i5.AppInfo {}
+
+class _FakeAuthenticationInfo_4 extends _i1.Fake
+    implements _i6.AuthenticationInfo {}
+
+class _FakeFirebaseAuth_5 extends _i1.Fake implements _i7.FirebaseAuth {}
+
+class _FakeValueNotifier_6<T> extends _i1.Fake implements _i8.ValueNotifier<T> {
 }
 
-class _FakeCollectionReference_3<T extends Object?> extends _i1.Fake
-    implements _i3.CollectionReference<T> {}
+class _FakeCollectionReference_7<T extends Object?> extends _i1.Fake
+    implements _i4.CollectionReference<T> {}
 
-class _FakeDocumentSnapshot_4<T extends Object?> extends _i1.Fake
-    implements _i3.DocumentSnapshot<T> {}
+class _FakeDocumentSnapshot_8<T extends Object?> extends _i1.Fake
+    implements _i4.DocumentSnapshot<T> {}
 
-class _FakeDocumentReference_5<T extends Object?> extends _i1.Fake
-    implements _i3.DocumentReference<T> {}
+class _FakeDocumentReference_9<T extends Object?> extends _i1.Fake
+    implements _i4.DocumentReference<T> {}
 
-class _FakeWidget_6 extends _i1.Fake implements _i4.Widget {
+class _FakeWidget_10 extends _i1.Fake implements _i8.Widget {
   @override
-  String toString({_i4.DiagnosticLevel? minLevel = _i4.DiagnosticLevel.info}) =>
+  String toString({_i8.DiagnosticLevel? minLevel = _i8.DiagnosticLevel.info}) =>
       super.toString();
 }
 
-class _FakeInheritedWidget_7 extends _i1.Fake implements _i4.InheritedWidget {
+class _FakeInheritedWidget_11 extends _i1.Fake implements _i8.InheritedWidget {
   @override
-  String toString({_i4.DiagnosticLevel? minLevel = _i4.DiagnosticLevel.info}) =>
+  String toString({_i8.DiagnosticLevel? minLevel = _i8.DiagnosticLevel.info}) =>
       super.toString();
 }
 
-class _FakeDiagnosticsNode_8 extends _i1.Fake implements _i4.DiagnosticsNode {
+class _FakeDiagnosticsNode_12 extends _i1.Fake implements _i8.DiagnosticsNode {
   @override
   String toString(
-          {_i5.TextTreeConfiguration? parentConfiguration,
-          _i4.DiagnosticLevel? minLevel = _i4.DiagnosticLevel.info}) =>
+          {_i9.TextTreeConfiguration? parentConfiguration,
+          _i8.DiagnosticLevel? minLevel = _i8.DiagnosticLevel.info}) =>
       super.toString();
 }
 
-class _FakeActionCodeSettings_9 extends _i1.Fake
-    implements _i6.ActionCodeSettings {}
+class _FakeActionCodeSettings_13 extends _i1.Fake
+    implements _i7.ActionCodeSettings {}
+
+class _FakePackageInfo_14 extends _i1.Fake implements _i10.PackageInfo {}
+
+/// A class which mocks [ApplicationState].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockApplicationState extends _i1.Mock implements _i11.ApplicationState {
+  MockApplicationState() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i11.ApplicationLoginState get loginState =>
+      (super.noSuchMethod(Invocation.getter(#loginState),
+              returnValue: _i11.ApplicationLoginState.loggedOut)
+          as _i11.ApplicationLoginState);
+  @override
+  set loginState(_i11.ApplicationLoginState? _loginState) =>
+      super.noSuchMethod(Invocation.setter(#loginState, _loginState),
+          returnValueForMissingStub: null);
+  @override
+  _i2.UserInfoState get userInfoState =>
+      (super.noSuchMethod(Invocation.getter(#userInfoState),
+          returnValue: _FakeUserInfoState_0()) as _i2.UserInfoState);
+  @override
+  _i3.PartnersInfoState get partnersInfoState =>
+      (super.noSuchMethod(Invocation.getter(#partnersInfoState),
+          returnValue: _FakePartnersInfoState_1()) as _i3.PartnersInfoState);
+  @override
+  _i4.FirebaseFirestore get firestore =>
+      (super.noSuchMethod(Invocation.getter(#firestore),
+          returnValue: _FakeFirebaseFirestore_2()) as _i4.FirebaseFirestore);
+  @override
+  _i5.AppInfo get appInfo => (super.noSuchMethod(Invocation.getter(#appInfo),
+      returnValue: _FakeAppInfo_3()) as _i5.AppInfo);
+  @override
+  _i6.AuthenticationInfo get authenticationInfo =>
+      (super.noSuchMethod(Invocation.getter(#authenticationInfo),
+          returnValue: _FakeAuthenticationInfo_4()) as _i6.AuthenticationInfo);
+  @override
+  _i7.FirebaseAuth get auth => (super.noSuchMethod(Invocation.getter(#auth),
+      returnValue: _FakeFirebaseAuth_5()) as _i7.FirebaseAuth);
+  @override
+  bool get hasListeners =>
+      (super.noSuchMethod(Invocation.getter(#hasListeners), returnValue: false)
+          as bool);
+  @override
+  void addListener(_i12.VoidCallback? listener) =>
+      super.noSuchMethod(Invocation.method(#addListener, [listener]),
+          returnValueForMissingStub: null);
+  @override
+  void removeListener(_i12.VoidCallback? listener) =>
+      super.noSuchMethod(Invocation.method(#removeListener, [listener]),
+          returnValueForMissingStub: null);
+  @override
+  void dispose() => super.noSuchMethod(Invocation.method(#dispose, []),
+      returnValueForMissingStub: null);
+  @override
+  void notifyListeners() =>
+      super.noSuchMethod(Invocation.method(#notifyListeners, []),
+          returnValueForMissingStub: null);
+}
 
 /// A class which mocks [UserInfoState].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockUserInfoState extends _i1.Mock implements _i7.UserInfoState {
+class MockUserInfoState extends _i1.Mock implements _i2.UserInfoState {
   MockUserInfoState() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i2.PartnersInfoState get partnersInfoState =>
+  _i3.PartnersInfoState get partnersInfoState =>
       (super.noSuchMethod(Invocation.getter(#partnersInfoState),
-          returnValue: _FakePartnersInfoState_0()) as _i2.PartnersInfoState);
+          returnValue: _FakePartnersInfoState_1()) as _i3.PartnersInfoState);
   @override
-  _i3.FirebaseFirestore get firestore =>
+  _i4.FirebaseFirestore get firestore =>
       (super.noSuchMethod(Invocation.getter(#firestore),
-          returnValue: _FakeFirebaseFirestore_1()) as _i3.FirebaseFirestore);
+          returnValue: _FakeFirebaseFirestore_2()) as _i4.FirebaseFirestore);
   @override
-  set userInfo(_i8.UserInformation? _userInfo) =>
+  set firestore(_i4.FirebaseFirestore? _firestore) =>
+      super.noSuchMethod(Invocation.setter(#firestore, _firestore),
+          returnValueForMissingStub: null);
+  @override
+  set userInfo(_i13.UserInformation? _userInfo) =>
       super.noSuchMethod(Invocation.setter(#userInfo, _userInfo),
           returnValueForMissingStub: null);
   @override
   set latestRelationshipBarDoc(
-          _i9.RelationshipBarDocument? _latestRelationshipBarDoc) =>
+          _i14.RelationshipBarDocument? _latestRelationshipBarDoc) =>
       super.noSuchMethod(
           Invocation.setter(
               #latestRelationshipBarDoc, _latestRelationshipBarDoc),
@@ -132,7 +210,7 @@ class MockUserInfoState extends _i1.Mock implements _i7.UserInfoState {
       super.noSuchMethod(Invocation.method(#setupUserInfoSubscription, []),
           returnValueForMissingStub: null);
   @override
-  void addUser(_i8.UserInformation? newUserInfo) =>
+  void addUser(_i13.UserInformation? newUserInfo) =>
       super.noSuchMethod(Invocation.method(#addUser, [newUserInfo]),
           returnValueForMissingStub: null);
   @override
@@ -146,11 +224,26 @@ class MockUserInfoState extends _i1.Mock implements _i7.UserInfoState {
       super.noSuchMethod(Invocation.method(#resetBarChange, []),
           returnValueForMissingStub: null);
   @override
-  void addListener(_i10.VoidCallback? listener) =>
+  _i15.Future<void> connectTo(String? linkCode) => (super.noSuchMethod(
+      Invocation.method(#connectTo, [linkCode]),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value()) as _i15.Future<void>);
+  @override
+  _i15.Future<void> acceptRequest() => (super.noSuchMethod(
+      Invocation.method(#acceptRequest, []),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value()) as _i15.Future<void>);
+  @override
+  _i15.Future<void> unlink() => (super.noSuchMethod(
+      Invocation.method(#unlink, []),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value()) as _i15.Future<void>);
+  @override
+  void addListener(_i12.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#addListener, [listener]),
           returnValueForMissingStub: null);
   @override
-  void removeListener(_i10.VoidCallback? listener) =>
+  void removeListener(_i12.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#removeListener, [listener]),
           returnValueForMissingStub: null);
   @override
@@ -165,22 +258,22 @@ class MockUserInfoState extends _i1.Mock implements _i7.UserInfoState {
 /// A class which mocks [PartnersInfoState].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockPartnersInfoState extends _i1.Mock implements _i2.PartnersInfoState {
+class MockPartnersInfoState extends _i1.Mock implements _i3.PartnersInfoState {
   MockPartnersInfoState() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  set partnersInfo(_i8.UserInformation? _partnersInfo) =>
+  set partnersInfo(_i13.UserInformation? _partnersInfo) =>
       super.noSuchMethod(Invocation.setter(#partnersInfo, _partnersInfo),
           returnValueForMissingStub: null);
   @override
-  _i4.ValueNotifier<String> get partnersName =>
+  _i8.ValueNotifier<String> get partnersName =>
       (super.noSuchMethod(Invocation.getter(#partnersName),
-              returnValue: _FakeValueNotifier_2<String>())
-          as _i4.ValueNotifier<String>);
+              returnValue: _FakeValueNotifier_6<String>())
+          as _i8.ValueNotifier<String>);
   @override
-  set partnersName(_i4.ValueNotifier<String>? _partnersName) =>
+  set partnersName(_i8.ValueNotifier<String>? _partnersName) =>
       super.noSuchMethod(Invocation.setter(#partnersName, _partnersName),
           returnValueForMissingStub: null);
   @override
@@ -199,26 +292,26 @@ class MockPartnersInfoState extends _i1.Mock implements _i2.PartnersInfoState {
   void notify() => super.noSuchMethod(Invocation.method(#notify, []),
       returnValueForMissingStub: null);
   @override
-  void setupPartnerInfoSubscription(_i8.UserInformation? currentUserInfo) =>
+  void setupPartnerInfoSubscription(_i13.UserInformation? currentUserInfo) =>
       super.noSuchMethod(
           Invocation.method(#setupPartnerInfoSubscription, [currentUserInfo]),
           returnValueForMissingStub: null);
   @override
-  void addPartner(_i8.UserInformation? newPartnerInfo,
-          _i8.UserInformation? currentUserInfo) =>
+  void addPartner(_i13.UserInformation? newPartnerInfo,
+          _i13.UserInformation? currentUserInfo) =>
       super.noSuchMethod(
           Invocation.method(#addPartner, [newPartnerInfo, currentUserInfo]),
           returnValueForMissingStub: null);
   @override
-  void removePartner(_i8.UserInformation? currentUserInfo) =>
+  void removePartner(_i13.UserInformation? currentUserInfo) =>
       super.noSuchMethod(Invocation.method(#removePartner, [currentUserInfo]),
           returnValueForMissingStub: null);
   @override
-  void addListener(_i10.VoidCallback? listener) =>
+  void addListener(_i12.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#addListener, [listener]),
           returnValueForMissingStub: null);
   @override
-  void removeListener(_i10.VoidCallback? listener) =>
+  void removeListener(_i12.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#removeListener, [listener]),
           returnValueForMissingStub: null);
   @override
@@ -235,77 +328,77 @@ class MockPartnersInfoState extends _i1.Mock implements _i2.PartnersInfoState {
 /// See the documentation for Mockito's code generation for more information.
 // ignore: must_be_immutable
 class MockDocumentReference<T extends Object?> extends _i1.Mock
-    implements _i3.DocumentReference<T> {
+    implements _i4.DocumentReference<T> {
   MockDocumentReference() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i3.FirebaseFirestore get firestore =>
+  _i4.FirebaseFirestore get firestore =>
       (super.noSuchMethod(Invocation.getter(#firestore),
-          returnValue: _FakeFirebaseFirestore_1()) as _i3.FirebaseFirestore);
+          returnValue: _FakeFirebaseFirestore_2()) as _i4.FirebaseFirestore);
   @override
   String get id =>
       (super.noSuchMethod(Invocation.getter(#id), returnValue: '') as String);
   @override
-  _i3.CollectionReference<T> get parent =>
+  _i4.CollectionReference<T> get parent =>
       (super.noSuchMethod(Invocation.getter(#parent),
-              returnValue: _FakeCollectionReference_3<T>())
-          as _i3.CollectionReference<T>);
+              returnValue: _FakeCollectionReference_7<T>())
+          as _i4.CollectionReference<T>);
   @override
   String get path =>
       (super.noSuchMethod(Invocation.getter(#path), returnValue: '') as String);
   @override
-  _i3.CollectionReference<Map<String, dynamic>> collection(
+  _i4.CollectionReference<Map<String, dynamic>> collection(
           String? collectionPath) =>
       (super.noSuchMethod(Invocation.method(#collection, [collectionPath]),
-              returnValue: _FakeCollectionReference_3<Map<String, dynamic>>())
-          as _i3.CollectionReference<Map<String, dynamic>>);
+              returnValue: _FakeCollectionReference_7<Map<String, dynamic>>())
+          as _i4.CollectionReference<Map<String, dynamic>>);
   @override
-  _i11.Future<void> delete() => (super.noSuchMethod(
+  _i15.Future<void> delete() => (super.noSuchMethod(
       Invocation.method(#delete, []),
       returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i11.Future<void>);
+      returnValueForMissingStub: Future<void>.value()) as _i15.Future<void>);
   @override
-  _i11.Future<void> update(Map<String, Object?>? data) => (super.noSuchMethod(
+  _i15.Future<void> update(Map<String, Object?>? data) => (super.noSuchMethod(
       Invocation.method(#update, [data]),
       returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i11.Future<void>);
+      returnValueForMissingStub: Future<void>.value()) as _i15.Future<void>);
   @override
-  _i11.Future<_i3.DocumentSnapshot<T>> get([_i3.GetOptions? options]) =>
+  _i15.Future<_i4.DocumentSnapshot<T>> get([_i4.GetOptions? options]) =>
       (super.noSuchMethod(Invocation.method(#get, [options]),
-              returnValue: Future<_i3.DocumentSnapshot<T>>.value(
-                  _FakeDocumentSnapshot_4<T>()))
-          as _i11.Future<_i3.DocumentSnapshot<T>>);
+              returnValue: Future<_i4.DocumentSnapshot<T>>.value(
+                  _FakeDocumentSnapshot_8<T>()))
+          as _i15.Future<_i4.DocumentSnapshot<T>>);
   @override
-  _i11.Stream<_i3.DocumentSnapshot<T>> snapshots(
+  _i15.Stream<_i4.DocumentSnapshot<T>> snapshots(
           {bool? includeMetadataChanges = false}) =>
       (super.noSuchMethod(
               Invocation.method(#snapshots, [],
                   {#includeMetadataChanges: includeMetadataChanges}),
-              returnValue: Stream<_i3.DocumentSnapshot<T>>.empty())
-          as _i11.Stream<_i3.DocumentSnapshot<T>>);
+              returnValue: Stream<_i4.DocumentSnapshot<T>>.empty())
+          as _i15.Stream<_i4.DocumentSnapshot<T>>);
   @override
-  _i11.Future<void> set(T? data, [_i3.SetOptions? options]) =>
+  _i15.Future<void> set(T? data, [_i4.SetOptions? options]) =>
       (super.noSuchMethod(Invocation.method(#set, [data, options]),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-          as _i11.Future<void>);
+          as _i15.Future<void>);
   @override
-  _i3.DocumentReference<R> withConverter<R>(
-          {_i3.FromFirestore<R>? fromFirestore,
-          _i3.ToFirestore<R>? toFirestore}) =>
+  _i4.DocumentReference<R> withConverter<R>(
+          {_i4.FromFirestore<R>? fromFirestore,
+          _i4.ToFirestore<R>? toFirestore}) =>
       (super.noSuchMethod(
               Invocation.method(#withConverter, [],
                   {#fromFirestore: fromFirestore, #toFirestore: toFirestore}),
-              returnValue: _FakeDocumentReference_5<R>())
-          as _i3.DocumentReference<R>);
+              returnValue: _FakeDocumentReference_9<R>())
+          as _i4.DocumentReference<R>);
 }
 
 /// A class which mocks [UserInformation].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockUserInformation extends _i1.Mock implements _i8.UserInformation {
+class MockUserInformation extends _i1.Mock implements _i13.UserInformation {
   MockUserInformation() {
     _i1.throwOnMissingStub(this);
   }
@@ -319,16 +412,16 @@ class MockUserInformation extends _i1.Mock implements _i8.UserInformation {
       super.noSuchMethod(Invocation.setter(#displayName, _displayName),
           returnValueForMissingStub: null);
   @override
-  set partner(_i3.DocumentReference<Object?>? _partner) =>
+  set partner(_i4.DocumentReference<Object?>? _partner) =>
       super.noSuchMethod(Invocation.setter(#partner, _partner),
           returnValueForMissingStub: null);
   @override
-  _i3.DocumentReference<Object?> get linkCode =>
+  _i4.DocumentReference<Object?> get linkCode =>
       (super.noSuchMethod(Invocation.getter(#linkCode),
-              returnValue: _FakeDocumentReference_5<Object?>())
-          as _i3.DocumentReference<Object?>);
+              returnValue: _FakeDocumentReference_9<Object?>())
+          as _i4.DocumentReference<Object?>);
   @override
-  set linkCode(_i3.DocumentReference<Object?>? _linkCode) =>
+  set linkCode(_i4.DocumentReference<Object?>? _linkCode) =>
       super.noSuchMethod(Invocation.setter(#linkCode, _linkCode),
           returnValueForMissingStub: null);
   @override
@@ -340,152 +433,180 @@ class MockUserInformation extends _i1.Mock implements _i8.UserInformation {
       super.noSuchMethod(Invocation.setter(#linkPending, _linkPending),
           returnValueForMissingStub: null);
   @override
-  _i3.FirebaseFirestore get firestore =>
+  _i4.FirebaseFirestore get firestore =>
       (super.noSuchMethod(Invocation.getter(#firestore),
-          returnValue: _FakeFirebaseFirestore_1()) as _i3.FirebaseFirestore);
+          returnValue: _FakeFirebaseFirestore_2()) as _i4.FirebaseFirestore);
+  @override
+  set firestore(_i4.FirebaseFirestore? _firestore) =>
+      super.noSuchMethod(Invocation.setter(#firestore, _firestore),
+          returnValueForMissingStub: null);
   @override
   Map<String, Object?> toMap() =>
       (super.noSuchMethod(Invocation.method(#toMap, []),
           returnValue: <String, Object?>{}) as Map<String, Object?>);
   @override
-  _i3.DocumentReference<_i8.UserInformation?> getUserInDatabase() =>
+  _i4.DocumentReference<_i13.UserInformation?> getUserInDatabase() =>
       (super.noSuchMethod(Invocation.method(#getUserInDatabase, []),
-              returnValue: _FakeDocumentReference_5<_i8.UserInformation?>())
-          as _i3.DocumentReference<_i8.UserInformation?>);
+              returnValue: _FakeDocumentReference_9<_i13.UserInformation?>())
+          as _i4.DocumentReference<_i13.UserInformation?>);
   @override
-  _i11.Future<void> firestoreSet() => (super.noSuchMethod(
+  _i15.Future<void> firestoreSet() => (super.noSuchMethod(
       Invocation.method(#firestoreSet, []),
       returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i11.Future<void>);
+      returnValueForMissingStub: Future<void>.value()) as _i15.Future<void>);
   @override
-  _i11.Future<void> firestoreUpdateColumns(Map<String, Object?>? data) =>
+  _i15.Future<void> firestoreUpdateColumns(Map<String, Object?>? data) =>
       (super.noSuchMethod(Invocation.method(#firestoreUpdateColumns, [data]),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-          as _i11.Future<void>);
+          as _i15.Future<void>);
   @override
-  _i11.Future<void> firestoreDelete() => (super.noSuchMethod(
+  _i15.Future<void> firestoreDelete() => (super.noSuchMethod(
       Invocation.method(#firestoreDelete, []),
       returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i11.Future<void>);
+      returnValueForMissingStub: Future<void>.value()) as _i15.Future<void>);
   @override
-  _i11.Future<void> deleteUserData(
-          _i4.BuildContext? context,
-          _i6.FirebaseAuth? auth,
-          _i12.AuthenticationInfo? authenticationInfo) =>
+  _i15.Future<void> deleteUserData(_i8.BuildContext? context,
+          _i7.FirebaseAuth? auth, _i6.AuthenticationInfo? authenticationInfo) =>
       (super.noSuchMethod(
               Invocation.method(
                   #deleteUserData, [context, auth, authenticationInfo]),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-          as _i11.Future<void>);
+          as _i15.Future<void>);
   @override
-  _i11.Future<void> setupUserInDatabase(_i7.UserInfoState? userInfoState) =>
+  _i15.Future<void> setupUserInDatabase(_i2.UserInfoState? userInfoState) =>
       (super.noSuchMethod(
               Invocation.method(#setupUserInDatabase, [userInfoState]),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-          as _i11.Future<void>);
+          as _i15.Future<void>);
 }
 
 /// A class which mocks [BuildContext].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockBuildContext extends _i1.Mock implements _i4.BuildContext {
+class MockBuildContext extends _i1.Mock implements _i8.BuildContext {
   MockBuildContext() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i4.Widget get widget => (super.noSuchMethod(Invocation.getter(#widget),
-      returnValue: _FakeWidget_6()) as _i4.Widget);
+  _i8.Widget get widget => (super.noSuchMethod(Invocation.getter(#widget),
+      returnValue: _FakeWidget_10()) as _i8.Widget);
   @override
   bool get debugDoingBuild => (super
           .noSuchMethod(Invocation.getter(#debugDoingBuild), returnValue: false)
       as bool);
   @override
-  _i4.InheritedWidget dependOnInheritedElement(_i4.InheritedElement? ancestor,
+  _i8.InheritedWidget dependOnInheritedElement(_i8.InheritedElement? ancestor,
           {Object? aspect}) =>
       (super.noSuchMethod(
           Invocation.method(
               #dependOnInheritedElement, [ancestor], {#aspect: aspect}),
-          returnValue: _FakeInheritedWidget_7()) as _i4.InheritedWidget);
+          returnValue: _FakeInheritedWidget_11()) as _i8.InheritedWidget);
   @override
-  void visitAncestorElements(bool Function(_i4.Element)? visitor) =>
+  void visitAncestorElements(bool Function(_i8.Element)? visitor) =>
       super.noSuchMethod(Invocation.method(#visitAncestorElements, [visitor]),
           returnValueForMissingStub: null);
   @override
-  void visitChildElements(_i4.ElementVisitor? visitor) =>
+  void visitChildElements(_i8.ElementVisitor? visitor) =>
       super.noSuchMethod(Invocation.method(#visitChildElements, [visitor]),
           returnValueForMissingStub: null);
   @override
-  _i4.DiagnosticsNode describeElement(String? name,
-          {_i5.DiagnosticsTreeStyle? style =
-              _i5.DiagnosticsTreeStyle.errorProperty}) =>
+  _i8.DiagnosticsNode describeElement(String? name,
+          {_i9.DiagnosticsTreeStyle? style =
+              _i9.DiagnosticsTreeStyle.errorProperty}) =>
       (super.noSuchMethod(
           Invocation.method(#describeElement, [name], {#style: style}),
-          returnValue: _FakeDiagnosticsNode_8()) as _i4.DiagnosticsNode);
+          returnValue: _FakeDiagnosticsNode_12()) as _i8.DiagnosticsNode);
   @override
-  _i4.DiagnosticsNode describeWidget(String? name,
-          {_i5.DiagnosticsTreeStyle? style =
-              _i5.DiagnosticsTreeStyle.errorProperty}) =>
+  _i8.DiagnosticsNode describeWidget(String? name,
+          {_i9.DiagnosticsTreeStyle? style =
+              _i9.DiagnosticsTreeStyle.errorProperty}) =>
       (super.noSuchMethod(
           Invocation.method(#describeWidget, [name], {#style: style}),
-          returnValue: _FakeDiagnosticsNode_8()) as _i4.DiagnosticsNode);
+          returnValue: _FakeDiagnosticsNode_12()) as _i8.DiagnosticsNode);
   @override
-  List<_i4.DiagnosticsNode> describeMissingAncestor(
+  List<_i8.DiagnosticsNode> describeMissingAncestor(
           {Type? expectedAncestorType}) =>
       (super.noSuchMethod(
           Invocation.method(#describeMissingAncestor, [],
               {#expectedAncestorType: expectedAncestorType}),
-          returnValue: <_i4.DiagnosticsNode>[]) as List<_i4.DiagnosticsNode>);
+          returnValue: <_i8.DiagnosticsNode>[]) as List<_i8.DiagnosticsNode>);
   @override
-  _i4.DiagnosticsNode describeOwnershipChain(String? name) =>
+  _i8.DiagnosticsNode describeOwnershipChain(String? name) =>
       (super.noSuchMethod(Invocation.method(#describeOwnershipChain, [name]),
-          returnValue: _FakeDiagnosticsNode_8()) as _i4.DiagnosticsNode);
+          returnValue: _FakeDiagnosticsNode_12()) as _i8.DiagnosticsNode);
 }
 
 /// A class which mocks [AuthenticationInfo].
 ///
 /// See the documentation for Mockito's code generation for more information.
 class MockAuthenticationInfo extends _i1.Mock
-    implements _i12.AuthenticationInfo {
+    implements _i6.AuthenticationInfo {
   MockAuthenticationInfo() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i6.ActionCodeSettings get actionCodeSettings =>
+  _i7.ActionCodeSettings get actionCodeSettings =>
       (super.noSuchMethod(Invocation.getter(#actionCodeSettings),
-          returnValue: _FakeActionCodeSettings_9()) as _i6.ActionCodeSettings);
+          returnValue: _FakeActionCodeSettings_13()) as _i7.ActionCodeSettings);
   @override
-  set actionCodeSettings(_i6.ActionCodeSettings? _actionCodeSettings) => super
+  set actionCodeSettings(_i7.ActionCodeSettings? _actionCodeSettings) => super
       .noSuchMethod(Invocation.setter(#actionCodeSettings, _actionCodeSettings),
           returnValueForMissingStub: null);
   @override
-  List<_i13.ProviderConfiguration> get providerConfigs =>
-      (super.noSuchMethod(Invocation.getter(#providerConfigs),
-              returnValue: <_i13.ProviderConfiguration>[])
-          as List<_i13.ProviderConfiguration>);
+  _i10.PackageInfo get packageInfo =>
+      (super.noSuchMethod(Invocation.getter(#packageInfo),
+          returnValue: _FakePackageInfo_14()) as _i10.PackageInfo);
   @override
-  set providerConfigs(List<_i13.ProviderConfiguration>? _providerConfigs) =>
+  set packageInfo(_i10.PackageInfo? _packageInfo) =>
+      super.noSuchMethod(Invocation.setter(#packageInfo, _packageInfo),
+          returnValueForMissingStub: null);
+  @override
+  List<_i16.ProviderConfiguration> get providerConfigs =>
+      (super.noSuchMethod(Invocation.getter(#providerConfigs),
+              returnValue: <_i16.ProviderConfiguration>[])
+          as List<_i16.ProviderConfiguration>);
+  @override
+  set providerConfigs(List<_i16.ProviderConfiguration>? _providerConfigs) =>
       super.noSuchMethod(Invocation.setter(#providerConfigs, _providerConfigs),
           returnValueForMissingStub: null);
   @override
-  _i11.Future<void> signInAnonymously(
-          _i4.BuildContext? context, _i6.FirebaseAuth? auth) =>
+  _i15.Future<void> signInAnonymously(_i8.BuildContext? context,
+          {_i7.FirebaseAuth? auth}) =>
       (super.noSuchMethod(
-              Invocation.method(#signInAnonymously, [context, auth]),
+              Invocation.method(#signInAnonymously, [context], {#auth: auth}),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-          as _i11.Future<void>);
+          as _i15.Future<void>);
   @override
-  void afterSignIn(_i4.BuildContext? context) =>
+  void afterSignIn(_i8.BuildContext? context) =>
       super.noSuchMethod(Invocation.method(#afterSignIn, [context]),
           returnValueForMissingStub: null);
   @override
-  _i11.Future<bool> reauthenticate(
-          _i4.BuildContext? context, _i6.FirebaseAuth? auth) =>
+  _i15.Future<bool> reauthenticate(
+          _i8.BuildContext? context, _i7.FirebaseAuth? auth) =>
       (super.noSuchMethod(Invocation.method(#reauthenticate, [context, auth]),
-          returnValue: Future<bool>.value(false)) as _i11.Future<bool>);
+          returnValue: Future<bool>.value(false)) as _i15.Future<bool>);
+}
+
+/// A class which mocks [AppInfo].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockAppInfo extends _i1.Mock implements _i5.AppInfo {
+  MockAppInfo() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  String get appName =>
+      (super.noSuchMethod(Invocation.getter(#appName), returnValue: '')
+          as String);
+  @override
+  String get aboutText =>
+      (super.noSuchMethod(Invocation.getter(#aboutText), returnValue: '')
+          as String);
 }

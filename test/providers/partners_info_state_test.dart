@@ -6,11 +6,8 @@ import 'package:lovehue/providers/partners_info_state.dart';
 import 'package:lovehue/resources/database_and_table_names.dart';
 import 'package:mockito/mockito.dart';
 
+import '../mocker.dart';
 import '../mocker.mocks.dart';
-
-class MockFunction extends Mock {
-  call();
-}
 
 void main() {
   const Duration timeout = Duration(seconds: 5);

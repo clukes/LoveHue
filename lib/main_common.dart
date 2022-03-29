@@ -21,17 +21,13 @@ import 'responsive/responsive_screen_layout.dart';
 import 'utils/app_info_class.dart';
 import 'utils/theme_data.dart';
 
-late final AppInfo appInfo;
-late final PackageInfo packageInfo;
-late final AuthenticationInfo globalAuthenticationInfo;
-
 /// Entry point with initializers.
 void mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo) async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  appInfo = flavorAppInfo;
-  packageInfo = await PackageInfo.fromPlatform();
-  globalAuthenticationInfo = AuthenticationInfo();
+  final AppInfo appInfo = flavorAppInfo;
+  final packageInfo = await PackageInfo.fromPlatform();
+  final AuthenticationInfo authenticationInfo = AuthenticationInfo(packageInfo);
 
   await Firebase.initializeApp(
     options: firebaseOptions,
@@ -51,8 +47,14 @@ void mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo) async {
 
   final PartnersInfoState partnersInfoState = PartnersInfoState();
   final UserInfoState userInfoState = UserInfoState(firestore, partnersInfoState);
-  final ApplicationState applicationState =
-      ApplicationState(userInfoState, partnersInfoState, firestore, FirebaseAuth.instance);
+  final ApplicationState applicationState = ApplicationState(
+    userInfoState: userInfoState,
+    partnersInfoState: partnersInfoState,
+    firestore: firestore,
+    authenticationInfo: authenticationInfo,
+    auth: FirebaseAuth.instance,
+    appInfo: appInfo,
+  );
 
   final List<ChangeNotifierProvider<ChangeNotifier>> providers = [
     ChangeNotifierProvider<UserInfoState>.value(value: userInfoState),
@@ -77,7 +79,7 @@ class RelationshipBarsApp extends StatelessWidget {
       child: MaterialApp(
         debugShowCheckedModeBanner: false,
         showPerformanceOverlay: false,
-        title: appInfo.appName,
+        title: Provider.of<ApplicationState>(context, listen: false).appInfo.appName,
         // Currently there is only one theme, a light one.
         theme: lightThemeData,
         home: AnnotatedRegion<SystemUiOverlayStyle>(

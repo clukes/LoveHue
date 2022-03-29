@@ -1,12 +1,10 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:lovehue/providers/partners_info_state.dart';
 import 'package:provider/provider.dart';
 
-import '../main_common.dart';
-import '../models/link_code.dart';
 import '../pages/sign_in_page.dart';
 import '../providers/user_info_state.dart';
+import '../resources/authentication_info.dart';
 
 /// Shows an alert dialog with yes and no buttons.
 Future<void> showAlertDialog({
@@ -47,113 +45,120 @@ Future<void> showAlertDialog({
   );
 }
 
-/// Shows an alert dialog with the unlink partner message.
-Future<void> showUnlinkAlertDialog(BuildContext context, String partnerName, String partnerLinkCode) async {
-  const String yesButtonText = "Unlink";
-  const String noButtonText = "Cancel";
-  const double partnerInfoScaleFactor = 0.95;
-  const double errorScaleFactor = 0.8;
-  String? errorMsg;
-  StateSetter? setState;
+/// A dialog to unlink from partner.
+class UnlinkAlertDialog {
+  UnlinkAlertDialog();
 
-  return showAlertDialog(
-    context: context,
-    yesButtonText: const Text(yesButtonText),
-    noButtonText: const Text(noButtonText),
-    alertTitle: const Text("Unlink from partner"),
-    alertContent: StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
-      setState = setState;
-      return SingleChildScrollView(
-        child: ListBody(
-          children: <Widget>[
-            const Text("Are you sure you would like to unlink from your partner?\n"),
-            Text(
-              "Partner Name: $partnerName\n"
-              "Partner Code: $partnerLinkCode",
-              textScaleFactor: partnerInfoScaleFactor,
-            ),
-            if (errorMsg != null)
+  static const String yesButtonText = "Unlink";
+  static const String noButtonText = "Cancel";
+  static const double partnerInfoScaleFactor = 0.95;
+  static const double errorScaleFactor = 0.8;
+  String? _errorMsg;
+  StateSetter? _setState;
+
+  /// Shows an alert dialog with the unlink partner message.
+  Future<void> show(BuildContext context, String partnerName, String partnerLinkCode) async {
+    UserInfoState userInfoState = Provider.of<UserInfoState>(context, listen: false);
+    return showAlertDialog(
+      context: context,
+      yesButtonText: const Text(yesButtonText),
+      noButtonText: const Text(noButtonText),
+      alertTitle: const Text("Unlink from partner"),
+      alertContent: StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+        _setState = setState;
+        return SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              const Text("Are you sure you would like to unlink from your partner?\n"),
               Text(
-                "\n${errorMsg!}",
-                textScaleFactor: errorScaleFactor,
-              )
-          ],
-        ),
-      );
-    }),
-    yesPressed: () async {
-      await LinkCode.unlink(Provider.of<UserInfoState>(context, listen: false),
-              Provider.of<PartnersInfoState>(context, listen: false))
-          .then((_) {
-        Navigator.pop(context, yesButtonText);
-      }).catchError((error) {
-        if (setState != null) {
-          setState(() {
-            errorMsg = "Error: $error";
-          });
-        }
-      });
-    },
-    // Just close the alert dialog if no pressed.
-    noPressed: () => Navigator.pop(context, noButtonText),
-  );
+                "Partner Name: $partnerName\n"
+                "Partner Code: $partnerLinkCode",
+                textScaleFactor: partnerInfoScaleFactor,
+              ),
+              if (_errorMsg != null)
+                Text(
+                  "\n${_errorMsg!}",
+                  textScaleFactor: errorScaleFactor,
+                )
+            ],
+          ),
+        );
+      }),
+      yesPressed: () async {
+        await userInfoState.unlink().then((_) {
+          Navigator.pop(context, yesButtonText);
+        }).catchError((error) {
+          if (_setState != null) {
+            _setState!(() {
+              _errorMsg = "Error: $error";
+            });
+          }
+        });
+      },
+      // Just close the alert dialog if no pressed.
+      noPressed: () => Navigator.pop(context, noButtonText),
+    );
+  }
 }
 
-/// Shows an alert dialog with the delete account message.
-Future<void> showDeleteAlertDialog(BuildContext context) async {
-  const String yesButtonText = "Delete";
-  const String noButtonText = "Cancel";
-  const double noteScaleFactor = 0.8;
-  const double errorScaleFactor = 0.8;
+/// A dialog to delete account.
+class DeleteAlertDialog {
+  DeleteAlertDialog(this.auth, this.authInfo);
+
+  final FirebaseAuth auth;
+  final AuthenticationInfo authInfo;
+
+  static const String yesButtonText = "Delete";
+  static const String noButtonText = "Cancel";
+  static const double noteScaleFactor = 0.8;
+  static const double errorScaleFactor = 0.8;
 
   String? _errorMsg;
   StateSetter? _setState;
-  return showAlertDialog(
-    context: context,
-    yesButtonText: const Text(yesButtonText),
-    noButtonText: const Text(noButtonText),
-    alertTitle: const Text("Delete Account"),
-    alertContent: StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
-      _setState = setState;
-      return SingleChildScrollView(
-        child: ListBody(
-          children: <Widget>[
-            const Text("Are you sure you would like to delete your account?\n"),
-            const Text("(All your data will be permanently deleted)", textScaleFactor: noteScaleFactor),
-            if (_errorMsg != null)
-              Text(
-                "\n${_errorMsg!}",
-                textScaleFactor: errorScaleFactor,
-              )
-          ],
-        ),
-      );
-    }),
-    yesPressed: () async {
-      await deleteAccount(context).then((_) {
-        Navigator.pop(context, yesButtonText);
-        Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => const SignInPage(),
-        ));
-      }).catchError((error) {
-        if (_setState != null) {
-          _setState!(() {
-            _errorMsg = "Error: $error";
-          });
-        }
-      });
-    },
-    noPressed: () => Navigator.pop(context, noButtonText),
-  );
-}
 
-/// Deletes user data in database, then delete [FirebaseAuth] account with [User.delete]
-Future<void> deleteAccount(BuildContext context) async {
-  FirebaseAuth auth = FirebaseAuth.instance;
-  return Provider.of<UserInfoState>(context, listen: false)
-      .userInfo
-      ?.deleteUserData(context, auth, globalAuthenticationInfo)
-      .then((_) {
-    FirebaseAuth.instance.currentUser?.delete();
-  });
+  /// Shows an alert dialog with the delete account message.
+  Future<void> show(BuildContext context) async {
+    return showAlertDialog(
+      context: context,
+      yesButtonText: const Text(yesButtonText),
+      noButtonText: const Text(noButtonText),
+      alertTitle: const Text("Delete Account"),
+      alertContent: StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+        _setState = setState;
+        return SingleChildScrollView(
+          child: ListBody(
+            children: <Widget>[
+              const Text("Are you sure you would like to delete your account?\n"),
+              const Text("(All your data will be permanently deleted)", textScaleFactor: noteScaleFactor),
+              if (_errorMsg != null)
+                Text(
+                  "\n${_errorMsg!}",
+                  textScaleFactor: errorScaleFactor,
+                )
+            ],
+          ),
+        );
+      }),
+      yesPressed: () async {
+        await _deleteAccount(context, auth, authInfo).then((_) {
+          Navigator.pop(context, yesButtonText);
+          Navigator.of(context).pushReplacement(MaterialPageRoute(
+            builder: (context) => const SignInPage(),
+          ));
+        }).catchError((error) {
+          if (_setState != null) {
+            _setState!(() {
+              _errorMsg = "Error: $error";
+            });
+          }
+        });
+      },
+      noPressed: () => Navigator.pop(context, noButtonText),
+    );
+  }
+
+  /// Deletes user data in database, then delete [FirebaseAuth] account with [User.delete]
+  Future<void> _deleteAccount(BuildContext context, FirebaseAuth auth, AuthenticationInfo authInfo) async {
+    return Provider.of<UserInfoState>(context, listen: false).userInfo?.deleteUserData(context, auth, authInfo);
+  }
 }

@@ -7,7 +7,7 @@ import '../pages/settings_page.dart';
 import '../pages/sign_in_page.dart';
 import '../providers/partners_info_state.dart';
 import '../providers/user_info_state.dart';
-import '../widgets/default_scaffold.dart';
+import '../widgets/constrained_scaffold.dart';
 import '../widgets/profile_page_widgets.dart';
 
 /// Profile Page, which was adapted from flutterfire_ui [ProfileScreen].
@@ -49,7 +49,7 @@ class _ProfilePageState extends State<ProfilePage> {
                 width: double.infinity,
                 // Unlink Partner Button
                 child: OutlinedButton.icon(
-                    onPressed: () => showUnlinkAlertDialog(context, partnerName, partnersInfoState.linkCode!),
+                    onPressed: () => UnlinkAlertDialog().show(context, partnerName, partnersInfoState.linkCode!),
                     icon: const Icon(Icons.person_remove),
                     label: const Text('Unlink Partner')),
               ),
@@ -83,7 +83,7 @@ class _ProfilePageState extends State<ProfilePage> {
         }),
       ],
       child: Builder(
-        builder: (context) => DefaultScaffold(
+        builder: (context) => ConstrainedScaffold(
           title: const Text("Account"),
           actions: [
             IconButton(

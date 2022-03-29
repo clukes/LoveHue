@@ -32,7 +32,8 @@ void main() {
     await tester.pumpWidget(testWidgetBuild);
     expect(find.byWidget(testWidget), findsOneWidget);
 
-    await tester.scrollUntilVisible(find.byWidget(findWidget), surfaceSize.height / 2, scrollable: find.byType(Scrollable).last);
+    await tester.scrollUntilVisible(find.byWidget(findWidget), surfaceSize.height / 2,
+        scrollable: find.byType(Scrollable).last);
     expect(find.byWidget(testWidget), findsNothing);
   });
 }
