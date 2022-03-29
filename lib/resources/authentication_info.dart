@@ -3,6 +3,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
+import 'package:lovehue/resources/printable_error.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
 import '../main_common.dart';
@@ -53,7 +54,11 @@ class AuthenticationInfo {
     Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => responsiveLayout), (route) => false);
   }
 
-  Future<bool> reauthenticate(BuildContext context, FirebaseAuth auth) {
+  Future<bool> reauthenticate(BuildContext context, FirebaseAuth auth) async {
+    User? user = auth.currentUser;
+    if(user == null) {
+      throw PrintableError("No current user.");
+    }
     return showReauthenticateDialog(
       context: context,
       providerConfigs: providerConfigs,

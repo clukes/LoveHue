@@ -178,6 +178,7 @@ class UserInformation {
         await Future.wait(batchPromises);
         debugPrint("UserInformation.deleteUserData: Deleted user with id: $userID, ${this.userID}.");
       } catch (error) {
+        debugPrint("UserInformation.deleteUserData: error: $error.");
         throw PrintableError(error.toString());
       }
     } else if (userID == null) {
@@ -191,6 +192,7 @@ class UserInformation {
   Future<void> _deleteAccount(BuildContext context, FirebaseAuth auth, AuthenticationInfo authenticationInfo) async {
     return auth.currentUser?.delete().onError((FirebaseAuthException error, _) async {
       if (error.code == 'requires-recent-login') {
+        debugPrint(error.code);
         final bool signedIn = await authenticationInfo.reauthenticate(context, auth);
         if (signedIn) {
           return auth.currentUser?.delete();
@@ -206,7 +208,7 @@ class UserInformation {
 
     WriteBatch batch = firestore.batch();
     batch.set(userDoc, this);
-    batch.set(linkCode, LinkCode(linkCode: linkCode.id, user: userDoc));
+    batch.set(linkCode as DocumentReference<LinkCode?>, LinkCode(linkCode: linkCode.id, user: userDoc));
     // Setup default bars.
     List<RelationshipBar> defaultBars = RelationshipBar.listFromLabels(defaultBarLabels);
     userInfoState.latestRelationshipBarDoc =

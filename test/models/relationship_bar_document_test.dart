@@ -34,7 +34,7 @@ void main() {
       await RelationshipBarDocument.getUserBarsFromID(userID, firestore).doc(barDocID).set(barDocument);
 
       barDocument.barList = null;
-      await barDocument.resetBars(userID);
+      await barDocument.resetBars();
       List<RelationshipBar>? result = barDocument.barList;
       expect(barDocument.barList, isNotNull);
       for (int i = 0; i < bars.length; i++) {
@@ -192,10 +192,10 @@ void main() {
 
   group('firestoreAddBarList', () {
     test('adds barDoc with barList to database', () async {
-      RelationshipBarDocument newBarDoc =
+      RelationshipBarDocument? newBarDoc =
           await RelationshipBarDocument.firestoreAddBarList(userID, bars, firestore: firestore);
       List<RelationshipBar>? result = await RelationshipBarDocument.getUserBarsFromID(userID, firestore)
-          .doc(newBarDoc.id)
+          .doc(newBarDoc?.id)
           .get()
           .then((value) => value.data()?.barList);
       expect(result, isNotNull);

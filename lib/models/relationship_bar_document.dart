@@ -35,18 +35,21 @@ class RelationshipBarDocument {
   static const String columnBarList = 'barList';
 
   /// Sets all bars in this [barList] to have [RelationshipBar.changed] set to false.
-  RelationshipBarDocument resetBarsChanged() {
+  void resetBarsChanged() {
     barList?.map((e) {
       e.changed = false;
       return e;
     }).toList();
-    return this;
   }
 
   /// Replaces [barList] with the list of [RelationshipBar] stored in the database.
-  Future<RelationshipBarDocument> resetBars(String userID) async {
-    barList = (await firestoreGet())!.barList;
-    return resetBarsChanged();
+  Future<void> resetBars() async {
+    RelationshipBarDocument? prevBarDoc = await firestoreGet();
+    if(prevBarDoc == null) {
+      debugPrint("RelationshipBarDocument.resetBars: Retrieved no bars from firestore.");
+      return;
+    }
+    barList = prevBarDoc.barList;
   }
 
   /// Gets a reference to the [RelationshipBarDocument] collection for user with the given id.
@@ -185,9 +188,12 @@ class RelationshipBarDocument {
   }
 
   /// Creates [RelationshipBarDocument] with given barList and adds to given userID's RelationshipBarDocument FirebaseFirestore collection.
-  static Future<RelationshipBarDocument> firestoreAddBarList(String userID, List<RelationshipBar> barList,
+  static Future<RelationshipBarDocument?> firestoreAddBarList(String userID, List<RelationshipBar>? barList,
       {FirebaseFirestore? firestore}) async {
     debugPrint("RelationshipBarDocument.firestoreAddBarList: Add list: $barList.");
+    if (barList == null) {
+      return null;
+    }
     firestore ??= FirebaseFirestore.instance;
     WriteBatch batch = firestore.batch();
     RelationshipBarDocument barDoc = firestoreAddBarListWithBatch(userID, barList, batch, firestore);

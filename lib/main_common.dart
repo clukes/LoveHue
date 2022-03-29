@@ -76,7 +76,7 @@ class RelationshipBarsApp extends StatelessWidget {
     return MultiProvider(
       // Setup providers for states.
       providers: providers,
-      child: MaterialApp(
+      builder: (context, child) => MaterialApp(
         debugShowCheckedModeBanner: false,
         showPerformanceOverlay: false,
         title: Provider.of<ApplicationState>(context, listen: false).appInfo.appName,
