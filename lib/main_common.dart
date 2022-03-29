@@ -29,9 +29,11 @@ void mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo) async {
   final packageInfo = await PackageInfo.fromPlatform();
   final AuthenticationInfo authenticationInfo = AuthenticationInfo(packageInfo);
 
-  await Firebase.initializeApp(
-    options: firebaseOptions,
+  final FirebaseApp app = await Firebase.initializeApp(
+    name: 'LoveHue',
+    options: firebaseOptions
   );
+  final FirebaseFirestore firestore = FirebaseFirestore.instanceFor(app: app);
 
   // Add licenses for the fonts.
   LicenseRegistry.addLicense(() async* {
@@ -42,8 +44,6 @@ void mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo) async {
   });
   // Only uses the bundled google fonts, prevents fetching from online.
   GoogleFonts.config.allowRuntimeFetching = false;
-
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
 
   final PartnersInfoState partnersInfoState = PartnersInfoState();
   final UserInfoState userInfoState = UserInfoState(firestore, partnersInfoState);

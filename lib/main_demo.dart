@@ -6,7 +6,7 @@ void main() {
   mainCommon(
     DefaultFirebaseOptions.currentPlatform,
     const AppInfo(
-      appName: 'LoveHue Demo', //TODO: Set to correct name.
+      appName: 'LoveHue Demo',
       aboutText: 'Demo version of the app',
     ),
   );

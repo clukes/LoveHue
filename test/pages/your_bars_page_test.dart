@@ -26,13 +26,13 @@ void main() {
     testWidget = const YourBars();
     testWidgetBuild = MaterialApp(
         home: MultiProvider(
-          providers: [
-            ChangeNotifierProvider<ApplicationState>.value(value: appState),
-            ChangeNotifierProvider<UserInfoState>.value(value: userInfoState),
-            ChangeNotifierProvider<PartnersInfoState>.value(value: partnersInfoState),
-          ],
-          child: testWidget,
-        ));
+      providers: [
+        ChangeNotifierProvider<ApplicationState>.value(value: appState),
+        ChangeNotifierProvider<UserInfoState>.value(value: userInfoState),
+        ChangeNotifierProvider<PartnersInfoState>.value(value: partnersInfoState),
+      ],
+      child: testWidget,
+    ));
 
     when(appState.loginState).thenReturn(ApplicationLoginState.loggedIn);
     when(userInfoState.userExist).thenReturn(true);
@@ -48,7 +48,8 @@ void main() {
         bars.add(RelationshipBar(order: i, label: 'Bar_$i'));
       }
 
-      RelationshipBarDocument barDoc = RelationshipBarDocument(id: '1', userID: '1234', barList: bars, firestore: FakeFirebaseFirestore());
+      RelationshipBarDocument barDoc =
+          RelationshipBarDocument(id: '1', userID: '1234', barList: bars, firestore: FakeFirebaseFirestore());
       when(userInfoState.latestRelationshipBarDoc).thenReturn(barDoc);
 
       await tester.pumpWidget(testWidgetBuild);
@@ -61,7 +62,7 @@ void main() {
       when(appState.loginState).thenReturn(ApplicationLoginState.loggedOut);
 
       await tester.pumpWidget(testWidgetBuild);
-      
+
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
@@ -75,8 +76,9 @@ void main() {
   });
 
   group('cancel and save buttons', () {
-    setUp((){
-      when(userInfoState.latestRelationshipBarDoc).thenReturn(RelationshipBarDocument(id: '1', userID: '1234', firestore: FakeFirebaseFirestore()));
+    setUp(() {
+      when(userInfoState.latestRelationshipBarDoc)
+          .thenReturn(RelationshipBarDocument(id: '1', userID: '1234', firestore: FakeFirebaseFirestore()));
       when(userInfoState.barsChanged).thenReturn(true);
     });
 

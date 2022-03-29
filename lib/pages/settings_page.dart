@@ -14,7 +14,7 @@ import '../widgets/constrained_scaffold.dart';
 import '../widgets/profile_page_widgets.dart';
 
 /// Shows the about dialog with the info about this app.
-Future<void> aboutAppDialog(BuildContext context, AppInfo appInfo, AuthenticationInfo authenticationInfo) async {
+Future<void> showAboutAppDialog(BuildContext context, AppInfo appInfo, AuthenticationInfo authenticationInfo) async {
   final double iconSize = IconTheme.of(context).size ?? 20;
   showAboutDialog(
     context: context,
@@ -25,11 +25,8 @@ Future<void> aboutAppDialog(BuildContext context, AppInfo appInfo, Authenticatio
       image: appLogo,
       width: iconSize * 3,
     )),
-    //TODO: Make better icon logo.
-    applicationLegalese: "Copyright © 2022 Conner Lukes",
-    //TODO: Change this to a different name.
-    children: [const SizedBox(height: 8), Text(appInfo.aboutText)], //TODO: Write about.
-    // routeSettings: ,
+    applicationLegalese: "Copyright © 2022 Conner Lukes", //TODO: Change this to developer name.
+    children: [const SizedBox(height: 8), Text(appInfo.aboutText)],
   );
 }
 
@@ -43,15 +40,14 @@ class SettingsPage extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       children: [
         const SizedBox(height: 32),
-        // TODO: Write about dialog.
         OutlinedButton.icon(
-            onPressed: () async => await aboutAppDialog(context, appState.appInfo, appState.authenticationInfo),
+            onPressed: () async => await showAboutAppDialog(context, appState.appInfo, appState.authenticationInfo),
             icon: const Icon(Icons.info),
             label: const Text('About this app')),
         const SizedBox(height: 32),
         ElevatedButton.icon(
             style: ElevatedButton.styleFrom(primary: redColor),
-            onPressed: () => DeleteAlertDialog(FirebaseAuth.instance, appState.authenticationInfo).show(context),
+            onPressed: () => DeleteAlertDialog(appState.auth, appState.authenticationInfo).show(context),
             icon: const Icon(Icons.delete),
             label: const Text('Delete Account')),
       ],

@@ -1,3 +1,4 @@
+import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lovehue/providers/application_state.dart';
@@ -10,7 +11,6 @@ import 'package:provider/provider.dart';
 
 import '../mocker.dart';
 import '../mocker.mocks.dart';
-import '../models/user_information_test.mocks.dart';
 
 void main() {
   const buttonKey = Key("ALERT_DIALOG_BUTTON");
