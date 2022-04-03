@@ -94,5 +94,4 @@ void main() {
 
     verify(authenticationInfo.signInAnonymously(captureAny));
   });
-
 }

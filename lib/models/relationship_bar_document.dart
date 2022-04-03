@@ -45,7 +45,7 @@ class RelationshipBarDocument {
   /// Replaces [barList] with the list of [RelationshipBar] stored in the database.
   Future<void> resetBars() async {
     RelationshipBarDocument? prevBarDoc = await firestoreGet();
-    if(prevBarDoc == null) {
+    if (prevBarDoc == null) {
       debugPrint("RelationshipBarDocument.resetBars: Retrieved no bars from firestore.");
       return;
     }

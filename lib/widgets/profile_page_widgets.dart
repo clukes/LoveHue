@@ -39,9 +39,7 @@ Future<void> showAlertDialog({
   return showDialog<void>(
     context: context,
     barrierDismissible: false,
-    builder: (BuildContext context) {
-      return alert;
-    },
+    builder: (context) => alert,
   );
 }
 

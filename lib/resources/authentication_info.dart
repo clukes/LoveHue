@@ -11,7 +11,7 @@ import '../responsive/responsive_screen_layout.dart';
 
 class AuthenticationInfo {
   AuthenticationInfo(this.packageInfo) {
-    ActionCodeSettings actionCodeSettings = ActionCodeSettings(
+    actionCodeSettings = ActionCodeSettings(
       // URL you want to redirect back to. The domain (www.example.com) for this
       // URL must be whitelisted in the Firebase Console.
       url: 'http://lovehue.page.link/',
@@ -56,7 +56,7 @@ class AuthenticationInfo {
 
   Future<bool> reauthenticate(BuildContext context, FirebaseAuth auth) async {
     User? user = auth.currentUser;
-    if(user == null) {
+    if (user == null) {
       throw PrintableError("No current user.");
     }
     return showReauthenticateDialog(

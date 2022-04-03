@@ -71,8 +71,7 @@ class SignInPage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   width: double.infinity,
                   child: OutlinedButton(
-                    onPressed: () async =>
-                        await appState.authenticationInfo.signInAnonymously(context),
+                    onPressed: () async => await appState.authenticationInfo.signInAnonymously(context),
                     child: const Text('Skip Login'),
                   ),
                 ),

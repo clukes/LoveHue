@@ -29,10 +29,7 @@ void mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo) async {
   final packageInfo = await PackageInfo.fromPlatform();
   final AuthenticationInfo authenticationInfo = AuthenticationInfo(packageInfo);
 
-  final FirebaseApp app = await Firebase.initializeApp(
-    name: 'LoveHue',
-    options: firebaseOptions
-  );
+  final FirebaseApp app = await Firebase.initializeApp(options: firebaseOptions);
   final FirebaseFirestore firestore = FirebaseFirestore.instanceFor(app: app);
 
   // Add licenses for the fonts.

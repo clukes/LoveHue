@@ -25,7 +25,8 @@ Future<void> showAboutAppDialog(BuildContext context, AppInfo appInfo, Authentic
       image: appLogo,
       width: iconSize * 3,
     )),
-    applicationLegalese: "Copyright © 2022 Conner Lukes", //TODO: Change this to developer name.
+    applicationLegalese: "Copyright © 2022 Conner Lukes",
+    //TODO: Change this to developer name.
     children: [const SizedBox(height: 8), Text(appInfo.aboutText)],
   );
 }
