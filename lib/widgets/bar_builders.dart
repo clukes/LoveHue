@@ -63,16 +63,6 @@ Widget nonInteractableBarBuilder(BuildContext context, RelationshipBar bar) {
   return NonInteractableBarSlider(relationshipBar: bar);
 }
 
-/// Returns a [StreamBuilder] that builds bars for a user with given userID.
-Widget barStreamBuilder(String userID, Widget Function(BuildContext context, RelationshipBar bar) itemBuilderFunction,
-    {FirebaseFirestore? firestore}) {
-  final stream = RelationshipBarDocument.getOrderedUserBarsFromID(userID, firestore).snapshots();
-  return StreamBuilder<QuerySnapshot<RelationshipBarDocument>>(
-    stream: stream,
-    builder: (context, snapshot) => buildBars(context, snapshot, itemBuilderFunction),
-  );
-}
-
 /// Builds bars from given QuerySnapshot using the builder function.
 Widget buildBars(BuildContext context, AsyncSnapshot<QuerySnapshot<RelationshipBarDocument>> snapshot,
     Widget Function(BuildContext context, RelationshipBar bar) itemBuilderFunction) {
@@ -82,7 +72,10 @@ Widget buildBars(BuildContext context, AsyncSnapshot<QuerySnapshot<RelationshipB
     );
   }
   if (!snapshot.hasData) {
-    return const Center(child: CircularProgressIndicator());
+    if (snapshot.connectionState == ConnectionState.waiting) {
+      return const Center(child: CircularProgressIndicator());
+    }
+    return const Center(child: Text("No bars found for partner."));
   }
   RelationshipBarDocument? latestBarDoc;
   List<RelationshipBarDocument> listBarDocs = RelationshipBarDocument.fromQuerySnapshot(snapshot.requireData);

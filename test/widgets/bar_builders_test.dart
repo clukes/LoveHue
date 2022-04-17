@@ -85,14 +85,14 @@ void main() {
       expect(find.text(errorString), findsOneWidget);
     });
 
-    testWidgets('displays loading on no data', (WidgetTester tester) async {
+    testWidgets('displays no bars message on no data', (WidgetTester tester) async {
       const AsyncSnapshot<QuerySnapshot<RelationshipBarDocument>> snapshot = AsyncSnapshot.nothing();
       final Widget testWidget = buildBars(MockBuildContext(), snapshot, nonInteractableBarBuilder);
 
       final testWidgetBuild = MaterialApp(home: testWidget);
 
       await tester.pumpWidget(testWidgetBuild);
-      expect(find.byType(CircularProgressIndicator), findsOneWidget);
+      expect(find.textContaining("No bars found"), findsOneWidget);
     });
 
     testWidgets('displays latest barDoc', (WidgetTester tester) async {
