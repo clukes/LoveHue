@@ -117,7 +117,8 @@ abstract class _BarSliderState extends State<BarSlider> {
 
 /// A [BarSlider] that is not disabled.
 class InteractableBarSlider extends BarSlider {
-  const InteractableBarSlider({Key? key, required relationshipBar}) : super(key: key, relationshipBar: relationshipBar);
+  const InteractableBarSlider({Key? key, required RelationshipBar relationshipBar})
+      : super(key: key, relationshipBar: relationshipBar);
 
   @override
   _InteractableBarSliderState createState() => _InteractableBarSliderState();
@@ -174,7 +175,7 @@ class _InteractableBarSliderState extends _BarSliderState {
 
 /// A [BarSlider] that is disabled.
 class NonInteractableBarSlider extends BarSlider {
-  const NonInteractableBarSlider({Key? key, required relationshipBar})
+  const NonInteractableBarSlider({Key? key, required RelationshipBar relationshipBar})
       : super(key: key, relationshipBar: relationshipBar);
 
   @override
@@ -187,18 +188,4 @@ class _NonInteractableBarSliderState extends _BarSliderState {
     _sliderValue = widget.relationshipBar.value;
     return super.slider();
   }
-
-/* TODO: When history is implemented, possibly display the previous bar values on partners screen?
-  @override
-  Widget sliderText() {
-    int prevValue = widget.relationshipBar.prevValue;
-    return Row(mainAxisAlignment: MainAxisAlignment.spaceBetween,
-        children: [
-      Expanded(child: super.sliderText()),
-      if (_sliderValue != prevValue)
-        Text("(Previous: $prevValue)", textAlign: TextAlign.center,),
-      const Spacer()
-    ]);
-  }
-  */
 }

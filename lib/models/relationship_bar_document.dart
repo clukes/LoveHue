@@ -10,11 +10,13 @@ class RelationshipBarDocument {
     required this.id,
     this.timestamp,
     this.barList,
-    required this.firestore,
+    FirebaseFirestore? firestore,
     required this.userID,
-  });
+  }) {
+    this.firestore = (firestore == null) ? FirebaseFirestore.instance : firestore;
+  }
 
-  final FirebaseFirestore firestore;
+  late final FirebaseFirestore firestore;
 
   /// id in database for this document.
   final String id;
@@ -33,38 +35,44 @@ class RelationshipBarDocument {
   static const String columnBarList = 'barList';
 
   /// Sets all bars in this [barList] to have [RelationshipBar.changed] set to false.
-  RelationshipBarDocument resetBarsChanged() {
+  void resetBarsChanged() {
     barList?.map((e) {
       e.changed = false;
       return e;
     }).toList();
-    return this;
   }
 
   /// Replaces [barList] with the list of [RelationshipBar] stored in the database.
-  Future<RelationshipBarDocument> resetBars(String userID) async {
-    barList = (await firestoreGet())!.barList;
-    return resetBarsChanged();
+  Future<void> resetBars() async {
+    RelationshipBarDocument? prevBarDoc = await firestoreGet();
+    if (prevBarDoc == null) {
+      debugPrint("RelationshipBarDocument.resetBars: Retrieved no bars from firestore.");
+      return;
+    }
+    barList = prevBarDoc.barList;
   }
 
   /// Gets a reference to the [RelationshipBarDocument] collection for user with the given id.
-  static CollectionReference<RelationshipBarDocument> getUserBarsFromID(String userID, FirebaseFirestore firestore) {
+  static CollectionReference<RelationshipBarDocument> getUserBarsFromID(String userID, FirebaseFirestore? firestore) {
+    firestore ??= FirebaseFirestore.instance;
     return firestore
         .collection(userBarsCollection)
         .doc(userID)
         .collection(specificUserBarsCollection)
         .withConverter<RelationshipBarDocument>(
-      fromFirestore: (snapshots, _) => RelationshipBarDocument.fromMap(snapshots.data()!, userID, firestore),
-      toFirestore: (relationshipBarDocument, _) => relationshipBarDocument.toMap(),
-    );
+          fromFirestore: (snapshots, _) => RelationshipBarDocument.fromMap(snapshots.data()!, userID, firestore),
+          toFirestore: (relationshipBarDocument, _) => relationshipBarDocument.toMap(),
+        );
   }
 
   /// Converts a given [Map] to the returned [RelationshipBarDocument].
-  static RelationshipBarDocument fromMap(Map<String, Object?> res, String userID, FirebaseFirestore firestore) {
+  static RelationshipBarDocument fromMap(Map<String, Object?> res, String userID, FirebaseFirestore? firestore) {
     return RelationshipBarDocument(
       id: res[columnID] as String,
       timestamp: res[columnTimestamp] as Timestamp?,
-      barList: res[columnBarList] != null ? RelationshipBar.fromMapList(List<Map<String, Object?>>.from(res[columnBarList] as List)) : null,
+      barList: res[columnBarList] != null
+          ? RelationshipBar.fromMapList(List<Map<String, Object?>>.from(res[columnBarList] as List))
+          : null,
       firestore: firestore,
       userID: userID,
     );
@@ -98,7 +106,7 @@ class RelationshipBarDocument {
   }
 
   /// Retrieve [RelationshipBarDocument] with the greatest timestamp from the FirebaseFirestore collection for given userID.
-  static Future<RelationshipBarDocument?> firestoreGetLatest(String userID, FirebaseFirestore firestore,
+  static Future<RelationshipBarDocument?> firestoreGetLatest(String userID, FirebaseFirestore? firestore,
       [GetOptions? options]) async {
     debugPrint("RelationshipBarDocument.firestoreGetLatest: Get doc for userID: $userID.");
 
@@ -114,12 +122,12 @@ class RelationshipBarDocument {
   }
 
   /// Retrieve ordered list of [RelationshipBarDocument] for user with given userID.
-  static Query<RelationshipBarDocument> getOrderedUserBarsFromID(String userID, FirebaseFirestore firestore) {
+  static Query<RelationshipBarDocument> getOrderedUserBarsFromID(String userID, FirebaseFirestore? firestore) {
     return getUserBarsFromID(userID, firestore).orderBy(RelationshipBarDocument.columnTimestamp, descending: true);
   }
 
   /// Retrieve list of [RelationshipBarDocument] from the FirebaseFirestore collection for given userID.
-  static Future<List<RelationshipBarDocument?>> firestoreGetAll(String userID, FirebaseFirestore firestore,
+  static Future<List<RelationshipBarDocument?>> firestoreGetAll(String userID, FirebaseFirestore? firestore,
       [GetOptions? options]) async {
     debugPrint("RelationshipBarDocument.firestoreGetAll: Get docs for userID: $userID.");
     return await getUserBarsFromID(userID, firestore)
@@ -138,15 +146,16 @@ class RelationshipBarDocument {
         .doc(id)
         .set(this, SetOptions(merge: true))
         .then((value) => debugPrint(
-        "RelationshipBarDocument.firestoreSet: Relationship Bar Document Added with id: $id, for userID: $userID."))
+            "RelationshipBarDocument.firestoreSet: Relationship Bar Document Added with id: $id, for userID: $userID."))
         .catchError((error) =>
-        debugPrint("RelationshipBarDocument.firestoreSet: Failed to add relationship bar document: $error"));
+            debugPrint("RelationshipBarDocument.firestoreSet: Failed to add relationship bar document: $error"));
   }
 
   /// Creates/merges each [RelationshipBarDocument] in list to given userID's RelationshipBarDocument FirebaseFirestore collection.
   static Future<void> firestoreSetList(
-      String userID, List<RelationshipBarDocument> barDocs, FirebaseFirestore firestore) async {
+      String userID, List<RelationshipBarDocument> barDocs, FirebaseFirestore? firestore) async {
     debugPrint("RelationshipBarDocument.firestoreSetList: Set list of barDocs: $barDocs");
+    firestore ??= FirebaseFirestore.instance;
     final CollectionReference<RelationshipBarDocument> ref = getUserBarsFromID(userID, firestore);
     final WriteBatch batch = firestore.batch();
 
@@ -165,7 +174,7 @@ class RelationshipBarDocument {
         .then(
             (value) => debugPrint("RelationshipBarDocument.firestoreUpdateColumns: Relationship Bar Document Updated."))
         .catchError((error) => debugPrint(
-        "RelationshipBarDocument.firestoreUpdateColumns: Failed to update relationship bar document: $error."));
+            "RelationshipBarDocument.firestoreUpdateColumns: Failed to update relationship bar document: $error."));
   }
 
   /// Deletes this [RelationshipBarDocument] from given userID's RelationshipBarDocument FirebaseFirestore collection.
@@ -179,9 +188,13 @@ class RelationshipBarDocument {
   }
 
   /// Creates [RelationshipBarDocument] with given barList and adds to given userID's RelationshipBarDocument FirebaseFirestore collection.
-  static Future<RelationshipBarDocument> firestoreAddBarList(
-      String userID, List<RelationshipBar> barList, FirebaseFirestore firestore) async {
+  static Future<RelationshipBarDocument?> firestoreAddBarList(String userID, List<RelationshipBar>? barList,
+      {FirebaseFirestore? firestore}) async {
     debugPrint("RelationshipBarDocument.firestoreAddBarList: Add list: $barList.");
+    if (barList == null) {
+      return null;
+    }
+    firestore ??= FirebaseFirestore.instance;
     WriteBatch batch = firestore.batch();
     RelationshipBarDocument barDoc = firestoreAddBarListWithBatch(userID, barList, batch, firestore);
     await batch.commit();
@@ -195,13 +208,13 @@ class RelationshipBarDocument {
   ///
   /// See also: [firestoreAddBarList] which has the same functionality, without a given batch.
   static RelationshipBarDocument firestoreAddBarListWithBatch(
-      String userID, List<RelationshipBar> barList, WriteBatch batch, FirebaseFirestore firestore) {
+      String userID, List<RelationshipBar> barList, WriteBatch batch, FirebaseFirestore? firestore) {
     // Allows passing in a batch so that adding a bar list can be combined with other operations in one batch commit.
     debugPrint("RelationshipBarDocument.firestoreAddBarListWithBatch: Add list: $barList.");
     final CollectionReference<RelationshipBarDocument> ref = getUserBarsFromID(userID, firestore);
     DocumentReference<RelationshipBarDocument> docRef = ref.doc();
-    RelationshipBarDocument barDoc =
-    RelationshipBarDocument(id: docRef.id, timestamp: Timestamp.now(), barList: barList, userID: userID, firestore: firestore);
+    RelationshipBarDocument barDoc = RelationshipBarDocument(
+        id: docRef.id, timestamp: Timestamp.now(), barList: barList, userID: userID, firestore: firestore);
     batch.set(docRef, barDoc, SetOptions(merge: true));
     batch.update(docRef, {columnTimestamp: FieldValue.serverTimestamp()});
     return barDoc;

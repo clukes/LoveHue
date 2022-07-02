@@ -1,19 +1,21 @@
 import 'package:flutter/material.dart';
 
 /// Scaffold with a limited width, to prevent it growing too wide on widescreens.
-class DefaultScaffold extends StatefulWidget {
+class ConstrainedScaffold extends StatefulWidget {
   final Widget title;
   final Widget content;
   final List<Widget>? actions;
-  final double maxScaffoldWidth = 500;
+  final double maxScaffoldWidth;
 
-  const DefaultScaffold({Key? key, required this.content, required this.title, this.actions}) : super(key: key);
+  const ConstrainedScaffold(
+      {Key? key, required this.content, required this.title, this.actions, this.maxScaffoldWidth = 500})
+      : super(key: key);
 
   @override
-  State<DefaultScaffold> createState() => _DefaultScaffoldState();
+  State<ConstrainedScaffold> createState() => _ConstrainedScaffoldState();
 }
 
-class _DefaultScaffoldState extends State<DefaultScaffold> {
+class _ConstrainedScaffoldState extends State<ConstrainedScaffold> {
   @override
   Widget build(BuildContext context) {
     final body = Padding(

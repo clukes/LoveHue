@@ -6,8 +6,8 @@ void main() {
   mainCommon(
     DefaultFirebaseOptions.currentPlatform,
     const AppInfo(
-      appName: 'LoveHue', //TODO: Set to correct name.
-      aboutText: 'Development version of the app',
+      appName: 'LoveHue',
+      aboutText: '', //TODO: Write about dialog.
     ),
   );
 }

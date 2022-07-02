@@ -1,10 +1,10 @@
-import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutterfire_ui/auth.dart';
+import 'package:provider/provider.dart';
 
-import '../main_common.dart';
-import '../resources/authentication_info.dart';
+import '../providers/application_state.dart';
 import '../utils/globals.dart';
 
 /// SignIn Page, using flutterfire_ui [SignInScreen].
@@ -13,13 +13,16 @@ class SignInPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    // Returns empty if Firebase app is not initialized
+    if (Firebase.apps.isEmpty) return const SizedBox.shrink();
+
+    ApplicationState appState = Provider.of<ApplicationState>(context, listen: false);
     AspectRatio logo = const AspectRatio(
       aspectRatio: 1,
       child: Image(
         image: appTextLogo,
       ),
     );
-    debugPrint("${globalAuthenticationInfo.actionCodeSettings.androidPackageName}");
     return SignInScreen(
       headerMaxExtent: 200,
       headerBuilder: (context, constraints, _) {
@@ -37,7 +40,7 @@ class SignInPage extends StatelessWidget {
       subtitleBuilder: (context, _) {
         return Padding(
           padding: const EdgeInsets.only(bottom: 8),
-          child: Text('Welcome to ${appInfo.appName}.'),
+          child: Text('Welcome to ${appState.appInfo.appName}.'),
         );
       },
       footerBuilder: (context, _) {
@@ -68,7 +71,7 @@ class SignInPage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   width: double.infinity,
                   child: OutlinedButton(
-                    onPressed: () async => await globalAuthenticationInfo.signInAnonymously(context, FirebaseAuth.instance),
+                    onPressed: () async => await appState.authenticationInfo.signInAnonymously(context),
                     child: const Text('Skip Login'),
                   ),
                 ),
@@ -90,10 +93,10 @@ class SignInPage extends StatelessWidget {
           ],
         );
       },
-      providerConfigs: globalAuthenticationInfo.providerConfigs,
+      providerConfigs: appState.authenticationInfo.providerConfigs,
       actions: [
         AuthStateChangeAction<SignedIn>((context, _) async {
-          globalAuthenticationInfo.afterSignIn(context);
+          appState.authenticationInfo.afterSignIn(context);
         }),
       ],
       showAuthActionSwitch: false,

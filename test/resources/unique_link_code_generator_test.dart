@@ -9,7 +9,7 @@ void main() {
 
   test('link codes are different', () {
     Set<String> codes = {};
-    for(int i = 0; i < 10; i++) {
+    for (int i = 0; i < 10; i++) {
       String code = generateLinkCode();
       expect(codes.add(code), isTrue);
     }

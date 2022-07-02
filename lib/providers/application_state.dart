@@ -9,6 +9,8 @@ import '../models/relationship_bar_document.dart';
 import '../models/user_information.dart';
 import '../providers/partners_info_state.dart';
 import '../providers/user_info_state.dart';
+import '../resources/authentication_info.dart';
+import '../utils/app_info_class.dart';
 
 /// The possible states of login: [loggedOut], [loading], [loggedIn].
 enum ApplicationLoginState {
@@ -27,13 +29,23 @@ class ApplicationState with ChangeNotifier {
   final UserInfoState userInfoState;
   final PartnersInfoState partnersInfoState;
   final FirebaseFirestore firestore;
+  final AppInfo appInfo;
+  final AuthenticationInfo authenticationInfo;
+  final FirebaseAuth auth;
 
   /// Setups app state on startup. Setups listener for [FirebaseAuth.userChanges], dealing with login.
-  ApplicationState(this.userInfoState, this.partnersInfoState, this.firestore, FirebaseAuth auth) {
-    _setupUserChangersListener(auth);
+  ApplicationState({
+    required this.userInfoState,
+    required this.partnersInfoState,
+    required this.firestore,
+    required this.auth,
+    required this.appInfo,
+    required this.authenticationInfo,
+  }) {
+    _setupUserChangersListener();
   }
 
-  StreamSubscription _setupUserChangersListener(FirebaseAuth auth) {
+  StreamSubscription _setupUserChangersListener() {
     return auth.userChanges().listen((user) async {
       if (user != null && loginState == ApplicationLoginState.loggedOut) {
         // The user has logged in, so run setup.
@@ -65,7 +77,8 @@ class ApplicationState with ChangeNotifier {
     if (userInfo == null) {
       // If there is no UserInformation in the database for the current user, i.e. they are a new user, setup their data.
       DocumentReference<LinkCode?> linkCode = await LinkCode.create(firestore);
-      userInfo = UserInformation(userID: user.uid, displayName: user.displayName, linkCode: linkCode, firestore: firestore);
+      userInfo =
+          UserInformation(userID: user.uid, displayName: user.displayName, linkCode: linkCode, firestore: firestore);
       debugPrint("ApplicationState.userLoggedInSetup: New user setup: $userInfo.");
 
       await userInfo.setupUserInDatabase(userInfoState);
@@ -73,7 +86,8 @@ class ApplicationState with ChangeNotifier {
     if (userInfo.partnerID != null) {
       partnersInfoState.addPartner(await UserInformation.firestoreGetFromID(userInfo.partnerID!, firestore), userInfo);
     }
-    userInfoState.latestRelationshipBarDoc ??= await RelationshipBarDocument.firestoreGetLatest(userInfo.userID, firestore);
+    userInfoState.latestRelationshipBarDoc ??=
+        await RelationshipBarDocument.firestoreGetLatest(userInfo.userID, firestore);
     userInfoState.addUser(userInfo);
     loginState = ApplicationLoginState.loggedIn;
     userInfoState.notifyListeners();

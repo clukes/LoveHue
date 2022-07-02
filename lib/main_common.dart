@@ -12,26 +12,25 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 
-import '../pages/sign_in_page.dart';
-import '../providers/application_state.dart';
-import '../providers/partners_info_state.dart';
-import '../providers/user_info_state.dart';
-import '../responsive/responsive_screen_layout.dart';
-import '../utils/theme_data.dart';
+import 'pages/sign_in_page.dart';
+import 'providers/application_state.dart';
+import 'providers/partners_info_state.dart';
+import 'providers/user_info_state.dart';
+import 'resources/authentication_info.dart';
+import 'responsive/responsive_screen_layout.dart';
 import 'utils/app_info_class.dart';
-
-late final AppInfo appInfo;
-late final PackageInfo packageInfo;
+import 'utils/theme_data.dart';
 
 /// Entry point with initializers.
 void mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo) async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  appInfo = flavorAppInfo;
-  packageInfo = await PackageInfo.fromPlatform();
-  await Firebase.initializeApp(
-    options: firebaseOptions,
-  );
+  final AppInfo appInfo = flavorAppInfo;
+  final packageInfo = await PackageInfo.fromPlatform();
+  final AuthenticationInfo authenticationInfo = AuthenticationInfo(packageInfo);
+
+  final FirebaseApp app = await Firebase.initializeApp(options: firebaseOptions);
+  final FirebaseFirestore firestore = FirebaseFirestore.instanceFor(app: app);
 
   // Add licenses for the fonts.
   LicenseRegistry.addLicense(() async* {
@@ -43,11 +42,16 @@ void mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo) async {
   // Only uses the bundled google fonts, prevents fetching from online.
   GoogleFonts.config.allowRuntimeFetching = false;
 
-  FirebaseFirestore firestore = FirebaseFirestore.instance;
-
   final PartnersInfoState partnersInfoState = PartnersInfoState();
   final UserInfoState userInfoState = UserInfoState(firestore, partnersInfoState);
-  final ApplicationState applicationState = ApplicationState(userInfoState, partnersInfoState, firestore, FirebaseAuth.instance);
+  final ApplicationState applicationState = ApplicationState(
+    userInfoState: userInfoState,
+    partnersInfoState: partnersInfoState,
+    firestore: firestore,
+    authenticationInfo: authenticationInfo,
+    auth: FirebaseAuth.instance,
+    appInfo: appInfo,
+  );
 
   final List<ChangeNotifierProvider<ChangeNotifier>> providers = [
     ChangeNotifierProvider<UserInfoState>.value(value: userInfoState),
@@ -69,11 +73,10 @@ class RelationshipBarsApp extends StatelessWidget {
     return MultiProvider(
       // Setup providers for states.
       providers: providers,
-      child: MaterialApp(
+      builder: (context, child) => MaterialApp(
         debugShowCheckedModeBanner: false,
         showPerformanceOverlay: false,
-        title: appInfo.appName,
-        //TODO: Set to correct name.
+        title: Provider.of<ApplicationState>(context, listen: false).appInfo.appName,
         // Currently there is only one theme, a light one.
         theme: lightThemeData,
         home: AnnotatedRegion<SystemUiOverlayStyle>(
