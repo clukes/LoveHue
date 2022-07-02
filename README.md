@@ -22,25 +22,6 @@
   <a href="https://codecov.io/gh/clukes/LoveHue" > 
    <img src="https://codecov.io/gh/clukes/LoveHue/branch/main/graph/badge.svg?token=JPENNSAFQS"/> 
   </a>
-  <a href="https://sonarcloud.io/summary/new_code?id=clukes_LoveHue" > 
-   <img src="https://sonarcloud.io/api/project_badges/measure?project=clukes_LoveHue&metric=alert_status"/> 
-  </a>
-  <br>
-  <a href="https://sonarcloud.io/summary/new_code?id=clukes_LoveHue" > 
-   <img src="https://sonarcloud.io/api/project_badges/measure?project=clukes_LoveHue&metric=sqale_rating"/> 
-  </a>
-  <a href="https://sonarcloud.io/summary/new_code?id=clukes_LoveHue" > 
-   <img src="https://sonarcloud.io/api/project_badges/measure?project=clukes_LoveHue&metric=reliability_rating"/> 
-  </a>
-  <a href="https://sonarcloud.io/summary/new_code?id=clukes_LoveHue" > 
-   <img src="https://sonarcloud.io/api/project_badges/measure?project=clukes_LoveHue&metric=ncloc"/> 
-  </a>
-  <a href="https://sonarcloud.io/summary/new_code?id=clukes_LoveHue" > 
-   <img src="https://sonarcloud.io/api/project_badges/measure?project=clukes_LoveHue&metric=bugs"/> 
-  </a>
-  <a href="https://sonarcloud.io/summary/new_code?id=clukes_LoveHue" > 
-   <img src="https://sonarcloud.io/api/project_badges/measure?project=clukes_LoveHue&metric=code_smells"/> 
-  </a>
 </div>
 <br><br>
 <details>
