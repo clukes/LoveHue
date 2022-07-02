@@ -1,0 +1,33 @@
+name: Builds
+on:
+    push:
+        branches:
+            - main
+    pull_request:
+
+# Declare default permissions as read only.
+permissions: read-all
+
+jobs:
+    build:
+        name: Build ${{ matrix.target }}
+        runs-on: macos-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                target: ["flutter build apk --flavor dev -t lib/main_development.dart", macos, web]
+        steps:
+            # Set up Flutter.
+            - name: Clone Flutter repository with stable channel
+              uses: subosito/flutter-action@d8687e6979e8ef66d2b2970e2c92c1d8e801d7bf
+              with:
+                  channel: 'stable'
+            - run: flutter config --enable-macos-desktop
+            - run: flutter doctor -v
+
+            # Checkout code and get packages.
+            - name: Checkout code
+              uses: actions/checkout@d171c3b028d844f2bf14e9fdec0c58114451e4bf
+            - run: flutter pub get -v
+
+            - run: flutter build ${{ matrix.target }}
