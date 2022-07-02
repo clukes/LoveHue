@@ -124,5 +124,5 @@ Future updates:
 Check for existing issues or submit a new one:
 - [GitHub issues](https://github.com/clukes/LoveHue/issues/new?assignees=&labels=question&template=04_SUPPORT_QUESTION.md&title=support%3A+)
 
-Report security vulnerabilities by emailing:
+Email contact for security vulnerabilities and other issues:
 - [LoveHue@proton.me](mailto:LoveHue@proton.me)
