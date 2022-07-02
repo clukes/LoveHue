@@ -1,4 +1,4 @@
-.env
+*.env
 
 # Miscellaneous
 *.class
@@ -120,5 +120,4 @@ app.*.symbols
 !/dev/ci/**/Gemfile.lock
 
 # Private files
-lib/.firebase/
 **/android/app/google-services.json
