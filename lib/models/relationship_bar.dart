@@ -65,12 +65,12 @@ class RelationshipBar {
 
   /// Returns [label] with format 'label: '.
   String labelString() {
-    return label + ": ";
+    return "$label: ";
   }
 
   /// Returns [value] with format 'value: %'.
   String valueString() {
-    return value.toString() + "%";
+    return "$value%";
   }
 
   /// Converts a given [Map] to the returned [RelationshipBar].
@@ -78,8 +78,10 @@ class RelationshipBar {
     return RelationshipBar(
       order: res[_columnOrder] as int,
       label: res[_columnLabel]! as String,
-      value: res[_columnValue] is int ? res[_columnValue] as int : defaultBarValue,
-      prevValue: res[_columnValue] is int ? res[_columnValue] as int : defaultBarValue,
+      value:
+          res[_columnValue] is int ? res[_columnValue] as int : defaultBarValue,
+      prevValue:
+          res[_columnValue] is int ? res[_columnValue] as int : defaultBarValue,
     );
   }
 
@@ -100,13 +102,14 @@ class RelationshipBar {
 
   /// Calls [fromMap] on a list of [Map].
   static List<RelationshipBar>? fromMapList(List<Map<String, Object?>> maps) {
-    maps.sort((a, b) => (a[_columnOrder] as int).compareTo(b[_columnOrder] as int));
+    maps.sort(
+        (a, b) => (a[_columnOrder] as int).compareTo(b[_columnOrder] as int));
     return maps.map((e) => fromMap(e)).toList();
   }
 
   /// Creates a [RelationshipBar] with default values and given label for each String in labels.
   static List<RelationshipBar> listFromLabels(List<String> labels) {
-    return List<RelationshipBar>.generate(
-        labels.length, (index) => RelationshipBar(order: index, label: labels[index]));
+    return List<RelationshipBar>.generate(labels.length,
+        (index) => RelationshipBar(order: index, label: labels[index]));
   }
 }

@@ -37,12 +37,14 @@ class AuthenticationInfo {
   late final List<ProviderConfiguration> providerConfigs;
 
   /// Implements [signInAnonymously] to allow sign in without email.
-  Future<void> signInAnonymously(BuildContext context, {FirebaseAuth? auth}) async {
+  /// navigator is Navigator.of(context)
+  Future<void> signInAnonymously(NavigatorState navigator,
+      {FirebaseAuth? auth}) async {
 /* TODO: HAVE LOADING OVERLAY */
     auth ??= FirebaseAuth.instance;
     await auth.signInAnonymously();
     if (auth.currentUser != null) {
-      afterSignIn(context);
+      afterSignIn(navigator);
     } else {
 /* TODO: Display Error */
       debugPrint("signInAnonymously: Sign In Error.");
@@ -50,8 +52,10 @@ class AuthenticationInfo {
   }
 
   /// Build and navigate to [ResponsiveLayout].
-  void afterSignIn(BuildContext context) {
-    Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => responsiveLayout), (route) => false);
+  /// navigator is Navigator.of(context)
+  void afterSignIn(NavigatorState navigator) {
+    navigator.pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => responsiveLayout), (route) => false);
   }
 
   Future<bool> reauthenticate(BuildContext context, FirebaseAuth auth) async {

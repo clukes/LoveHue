@@ -8,7 +8,11 @@ class ConstrainedScaffold extends StatefulWidget {
   final double maxScaffoldWidth;
 
   const ConstrainedScaffold(
-      {Key? key, required this.content, required this.title, this.actions, this.maxScaffoldWidth = 500})
+      {Key? key,
+      required this.content,
+      required this.title,
+      this.actions,
+      this.maxScaffoldWidth = 500})
       : super(key: key);
 
   @override

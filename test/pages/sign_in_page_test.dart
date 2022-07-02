@@ -15,37 +15,7 @@ typedef Callback = void Function(MethodCall call);
 
 void setupCloudFirestoreMocks([Callback? customHandlers]) {
   TestWidgetsFlutterBinding.ensureInitialized();
-
-  MethodChannelFirebase.channel.setMockMethodCallHandler((call) async {
-    if (call.method == 'Firebase#initializeCore') {
-      return [
-        {
-          'name': defaultFirebaseAppName,
-          'options': {
-            'apiKey': '123',
-            'appId': '123',
-            'messagingSenderId': '123',
-            'projectId': '123',
-          },
-          'pluginConstants': {},
-        }
-      ];
-    }
-
-    if (call.method == 'Firebase#initializeApp') {
-      return {
-        'name': call.arguments['appName'],
-        'options': call.arguments['options'],
-        'pluginConstants': {},
-      };
-    }
-
-    if (customHandlers != null) {
-      customHandlers(call);
-    }
-
-    return null;
-  });
+  setupFirebaseCoreMocks();
 }
 
 void main() {
@@ -79,7 +49,8 @@ void main() {
     ));
     when(appState.appInfo).thenReturn(appInfo);
     when(appState.authenticationInfo).thenReturn(authenticationInfo);
-    when(authenticationInfo.signInAnonymously(captureAny)).thenAnswer((_) => Future.value());
+    when(authenticationInfo.signInAnonymously(captureAny))
+        .thenAnswer((_) => Future.value());
     when(authenticationInfo.providerConfigs).thenReturn([]);
   });
 

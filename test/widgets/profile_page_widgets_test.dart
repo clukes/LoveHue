@@ -49,7 +49,8 @@ void main() {
       expect(find.byWidget(contentWidget), findsOneWidget);
     });
 
-    testWidgets('yes pressed is called when yes clicked', (WidgetTester tester) async {
+    testWidgets('yes pressed is called when yes clicked',
+        (WidgetTester tester) async {
       await tester.pumpWidget(testWidgetBuild);
       await tester.tap(find.byKey(buttonKey));
       await tester.pumpAndSettle();
@@ -59,7 +60,8 @@ void main() {
       verify(yesPressed.call());
     });
 
-    testWidgets('yes pressed is called when yes clicked', (WidgetTester tester) async {
+    testWidgets('yes pressed is called when yes clicked',
+        (WidgetTester tester) async {
       await tester.pumpWidget(testWidgetBuild);
       await tester.tap(find.byKey(buttonKey));
       await tester.pumpAndSettle();
@@ -97,13 +99,15 @@ void main() {
           home: MultiProvider(
         providers: [
           ChangeNotifierProvider<UserInfoState>.value(value: userInfoState),
-          ChangeNotifierProvider<PartnersInfoState>.value(value: partnersInfoState),
+          ChangeNotifierProvider<PartnersInfoState>.value(
+              value: partnersInfoState),
         ],
         child: testWidget,
       ));
     });
 
-    testWidgets('partner information is displayed', (WidgetTester tester) async {
+    testWidgets('partner information is displayed',
+        (WidgetTester tester) async {
       await tester.pumpWidget(testWidgetBuild);
       await tester.tap(find.byKey(buttonKey));
       await tester.pumpAndSettle();
@@ -112,11 +116,13 @@ void main() {
       expect(find.textContaining(partnerLinkCode), findsOneWidget);
     });
 
-    testWidgets('yes pressed calls unlink and closes dialog', (WidgetTester tester) async {
+    testWidgets('yes pressed calls unlink and closes dialog',
+        (WidgetTester tester) async {
       await tester.pumpWidget(testWidgetBuild);
       await tester.tap(find.byKey(buttonKey));
       await tester.pumpAndSettle();
-      await tester.tap(find.widgetWithText(TextButton, UnlinkAlertDialog.yesButtonText));
+      await tester.tap(
+          find.widgetWithText(TextButton, UnlinkAlertDialog.yesButtonText));
       await tester.pumpAndSettle();
 
       verify(userInfoState.unlink());
@@ -126,11 +132,13 @@ void main() {
 
     testWidgets('unlink error is displayed', (WidgetTester tester) async {
       const String errorText = 'TEST_ERROR';
-      when(userInfoState.unlink()).thenAnswer((realInvocation) async => throw PrintableError(errorText));
+      when(userInfoState.unlink()).thenAnswer(
+          (realInvocation) async => throw PrintableError(errorText));
       await tester.pumpWidget(testWidgetBuild);
       await tester.tap(find.byKey(buttonKey));
       await tester.pumpAndSettle();
-      await tester.tap(find.widgetWithText(TextButton, UnlinkAlertDialog.yesButtonText));
+      await tester.tap(
+          find.widgetWithText(TextButton, UnlinkAlertDialog.yesButtonText));
       await tester.pumpAndSettle();
 
       expect(find.textContaining(errorText), findsOneWidget);
@@ -140,7 +148,8 @@ void main() {
       await tester.pumpWidget(testWidgetBuild);
       await tester.tap(find.byKey(buttonKey));
       await tester.pumpAndSettle();
-      await tester.tap(find.widgetWithText(TextButton, UnlinkAlertDialog.noButtonText));
+      await tester
+          .tap(find.widgetWithText(TextButton, UnlinkAlertDialog.noButtonText));
       await tester.pumpAndSettle();
 
       expect(find.textContaining(partnerName), findsNothing);
@@ -182,7 +191,8 @@ void main() {
           providers: [
             ChangeNotifierProvider<ApplicationState>.value(value: appState),
             ChangeNotifierProvider<UserInfoState>.value(value: userInfoState),
-            ChangeNotifierProvider<PartnersInfoState>.value(value: partnersInfoState),
+            ChangeNotifierProvider<PartnersInfoState>.value(
+                value: partnersInfoState),
           ],
           child: MaterialApp(
             home: testWidget,
@@ -198,11 +208,13 @@ void main() {
       expect(find.text(DeleteAlertDialog.noButtonText), findsOneWidget);
     });
 
-    testWidgets('yes pressed calls delete user data and closes dialog', (WidgetTester tester) async {
+    testWidgets('yes pressed calls delete user data and closes dialog',
+        (WidgetTester tester) async {
       await tester.pumpWidget(testWidgetBuild);
       await tester.tap(find.byKey(buttonKey));
       await tester.pumpAndSettle();
-      await tester.tap(find.widgetWithText(TextButton, DeleteAlertDialog.yesButtonText));
+      await tester.tap(
+          find.widgetWithText(TextButton, DeleteAlertDialog.yesButtonText));
       await tester.pumpAndSettle();
 
       verify(userInfo.deleteUserData(captureAny, captureAny, captureAny));
@@ -213,11 +225,13 @@ void main() {
     testWidgets('delete error is displayed', (WidgetTester tester) async {
       const String errorText = 'TEST_ERROR';
       when(userInfo.deleteUserData(captureAny, captureAny, captureAny))
-          .thenAnswer((realInvocation) async => throw PrintableError(errorText));
+          .thenAnswer(
+              (realInvocation) async => throw PrintableError(errorText));
       await tester.pumpWidget(testWidgetBuild);
       await tester.tap(find.byKey(buttonKey));
       await tester.pumpAndSettle();
-      await tester.tap(find.widgetWithText(TextButton, DeleteAlertDialog.yesButtonText));
+      await tester.tap(
+          find.widgetWithText(TextButton, DeleteAlertDialog.yesButtonText));
       await tester.pumpAndSettle();
 
       expect(find.textContaining(errorText), findsOneWidget);
@@ -227,7 +241,8 @@ void main() {
       await tester.pumpWidget(testWidgetBuild);
       await tester.tap(find.byKey(buttonKey));
       await tester.pumpAndSettle();
-      await tester.tap(find.widgetWithText(TextButton, DeleteAlertDialog.noButtonText));
+      await tester
+          .tap(find.widgetWithText(TextButton, DeleteAlertDialog.noButtonText));
       await tester.pumpAndSettle();
 
       expect(find.text(DeleteAlertDialog.yesButtonText), findsNothing);

@@ -1,4 +1,4 @@
-import '.firebase/firebase_options_demo.dart';
+import 'firebase/firebase_options_demo.dart';
 import 'main_common.dart';
 import 'utils/app_info_class.dart';
 

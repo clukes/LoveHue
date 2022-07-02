@@ -12,7 +12,11 @@ const ResponsiveLayout responsiveLayout = ResponsiveLayout(
 
 /// Builds [WebScreenLayout] or [MobileScreenLayout] depending on screen size.
 class ResponsiveLayout extends StatelessWidget {
-  const ResponsiveLayout({Key? key, required this.webScreenLayout, required this.mobileScreenLayout}) : super(key: key);
+  const ResponsiveLayout(
+      {Key? key,
+      required this.webScreenLayout,
+      required this.mobileScreenLayout})
+      : super(key: key);
 
   final Widget webScreenLayout;
   final Widget mobileScreenLayout;

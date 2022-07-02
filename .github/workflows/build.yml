@@ -15,7 +15,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                target: ["flutter build apk --flavor dev -t lib/main_development.dart", macos, web]
+                target: ["apk --flavor dev -t lib/main_development.dart"] #, macos, web]
         steps:
             # Set up Flutter.
             - name: Clone Flutter repository with stable channel
@@ -29,5 +29,9 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@d171c3b028d844f2bf14e9fdec0c58114451e4bf
             - run: flutter pub get -v
+
+            # Create .dev.env file
+            - name: Set env
+              run: echo '${{ secrets.DEV_ENV }}' > .dev.env
 
             - run: flutter build ${{ matrix.target }}

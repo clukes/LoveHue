@@ -28,15 +28,20 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('bars in bar doc list are displayed', (WidgetTester tester) async {
+    testWidgets('bars in bar doc list are displayed',
+        (WidgetTester tester) async {
       List<RelationshipBar> bars = [];
       for (int i = 0; i < 5; i++) {
         bars.add(RelationshipBar(order: i, label: 'Bar_$i'));
       }
 
-      final barDoc =
-          RelationshipBarDocument(id: '1', barList: bars, firestore: FakeFirebaseFirestore(), userID: '1234');
-      final testWidget = BarDocBuilder(itemBuilderFunction: barBuilder, barDoc: barDoc);
+      final barDoc = RelationshipBarDocument(
+          id: '1',
+          barList: bars,
+          firestore: FakeFirebaseFirestore(),
+          userID: '1234');
+      final testWidget =
+          BarDocBuilder(itemBuilderFunction: barBuilder, barDoc: barDoc);
       final testWidgetBuild = MaterialApp(home: testWidget);
 
       await tester.pumpWidget(testWidgetBuild);
@@ -47,9 +52,13 @@ void main() {
 
     testWidgets('timestamp is displayed', (WidgetTester tester) async {
       final Timestamp timestamp = Timestamp.now();
-      final barDoc =
-          RelationshipBarDocument(id: '1', timestamp: timestamp, firestore: FakeFirebaseFirestore(), userID: '1234');
-      final testWidget = BarDocBuilder(itemBuilderFunction: barBuilder, barDoc: barDoc);
+      final barDoc = RelationshipBarDocument(
+          id: '1',
+          timestamp: timestamp,
+          firestore: FakeFirebaseFirestore(),
+          userID: '1234');
+      final testWidget =
+          BarDocBuilder(itemBuilderFunction: barBuilder, barDoc: barDoc);
       final testWidgetBuild = MaterialApp(home: testWidget);
 
       await tester.pumpWidget(testWidgetBuild);
@@ -59,13 +68,16 @@ void main() {
 
   group('interactableBarBuilder', () {
     testWidgets('sets bar reset to false', (WidgetTester tester) async {
-      UserInfoState userInfoState = UserInfoState(FakeFirebaseFirestore(), MockPartnersInfoState());
+      UserInfoState userInfoState =
+          UserInfoState(FakeFirebaseFirestore(), MockPartnersInfoState());
       RelationshipBar bar = RelationshipBar(order: 1, label: '1');
       userInfoState.barsReset = true;
 
       final testWidgetBuild = MaterialApp(
           home: ChangeNotifierProvider<UserInfoState>.value(
-              value: userInfoState, child: Builder(builder: (context) => interactableBarBuilder(context, bar))));
+              value: userInfoState,
+              child: Builder(
+                  builder: (context) => interactableBarBuilder(context, bar))));
 
       await tester.pumpWidget(testWidgetBuild);
       expect(userInfoState.barsReset, isFalse);
@@ -73,11 +85,13 @@ void main() {
   });
 
   group('buildBars', () {
-    testWidgets('displays error on snapshot error', (WidgetTester tester) async {
+    testWidgets('displays error on snapshot error',
+        (WidgetTester tester) async {
       const errorString = 'ERROR_TEST';
       const AsyncSnapshot<QuerySnapshot<RelationshipBarDocument>> snapshot =
           AsyncSnapshot.withError(ConnectionState.done, errorString);
-      final Widget testWidget = buildBars(MockBuildContext(), snapshot, nonInteractableBarBuilder);
+      final Widget testWidget =
+          buildBars(MockBuildContext(), snapshot, nonInteractableBarBuilder);
 
       final testWidgetBuild = MaterialApp(home: testWidget);
 
@@ -85,9 +99,12 @@ void main() {
       expect(find.text(errorString), findsOneWidget);
     });
 
-    testWidgets('displays no bars message on no data', (WidgetTester tester) async {
-      const AsyncSnapshot<QuerySnapshot<RelationshipBarDocument>> snapshot = AsyncSnapshot.nothing();
-      final Widget testWidget = buildBars(MockBuildContext(), snapshot, nonInteractableBarBuilder);
+    testWidgets('displays no bars message on no data',
+        (WidgetTester tester) async {
+      const AsyncSnapshot<QuerySnapshot<RelationshipBarDocument>> snapshot =
+          AsyncSnapshot.nothing();
+      final Widget testWidget =
+          buildBars(MockBuildContext(), snapshot, nonInteractableBarBuilder);
 
       final testWidgetBuild = MaterialApp(home: testWidget);
 
@@ -99,18 +116,24 @@ void main() {
       const userID = '1234';
       final Timestamp timestamp = Timestamp.fromMillisecondsSinceEpoch(2000);
       final firestore = FakeFirebaseFirestore();
-      final RelationshipBarDocument barDoc1 =
-          RelationshipBarDocument(id: '1', timestamp: timestamp, firestore: firestore, userID: userID);
+      final RelationshipBarDocument barDoc1 = RelationshipBarDocument(
+          id: '1', timestamp: timestamp, firestore: firestore, userID: userID);
       final RelationshipBarDocument barDoc2 = RelationshipBarDocument(
-          id: '2', timestamp: Timestamp.fromMillisecondsSinceEpoch(1000), firestore: firestore, userID: userID);
-      final collection = RelationshipBarDocument.getUserBarsFromID(userID, firestore);
+          id: '2',
+          timestamp: Timestamp.fromMillisecondsSinceEpoch(1000),
+          firestore: firestore,
+          userID: userID);
+      final collection =
+          RelationshipBarDocument.getUserBarsFromID(userID, firestore);
       await collection.add(barDoc1);
       await collection.add(barDoc2);
-      QuerySnapshot<RelationshipBarDocument> querySnapshot = await collection.get();
+      QuerySnapshot<RelationshipBarDocument> querySnapshot =
+          await collection.get();
 
       final AsyncSnapshot<QuerySnapshot<RelationshipBarDocument>> snapshot =
           AsyncSnapshot.withData(ConnectionState.done, querySnapshot);
-      final Widget testWidget = buildBars(MockBuildContext(), snapshot, nonInteractableBarBuilder);
+      final Widget testWidget =
+          buildBars(MockBuildContext(), snapshot, nonInteractableBarBuilder);
 
       final testWidgetBuild = MaterialApp(home: testWidget);
 

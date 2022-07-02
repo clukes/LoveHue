@@ -16,7 +16,8 @@ void main() {
   setUp(() {
     userInfoState = MockUserInfoState();
     when(userInfoState.barsReset).thenReturn(false);
-    bar = RelationshipBar(order: 1, label: 'TEST_LABEL', value: 75, prevValue: 20);
+    bar = RelationshipBar(
+        order: 1, label: 'TEST_LABEL', value: 75, prevValue: 20);
   });
 
   group('InteractableBarSlider', () {
@@ -27,18 +28,21 @@ void main() {
       testWidget = InteractableBarSlider(
         relationshipBar: bar,
       );
-      testWidgetBuild =
-          MaterialApp(home: ChangeNotifierProvider<UserInfoState>.value(value: userInfoState, child: testWidget));
+      testWidgetBuild = MaterialApp(
+          home: ChangeNotifierProvider<UserInfoState>.value(
+              value: userInfoState, child: testWidget));
     });
 
-    testWidgets('bar information is displayed correctly', (WidgetTester tester) async {
+    testWidgets('bar information is displayed correctly',
+        (WidgetTester tester) async {
       await tester.pumpWidget(testWidgetBuild);
       expect(find.textContaining(bar.label), findsOneWidget);
       expect(find.byType(Slider), findsOneWidget);
       Slider slider = tester.widget(find.byType(Slider));
       SliderTheme theme = tester.widget(find.byType(SliderTheme));
       expect(slider.value, equals(bar.value));
-      expect(theme.data.activeTrackColor, equals(getSliderColor(bar.value)?.active));
+      expect(theme.data.activeTrackColor,
+          equals(getSliderColor(bar.value)?.active));
     });
 
     testWidgets('slider value updates on change', (WidgetTester tester) async {
@@ -68,7 +72,8 @@ void main() {
       await expectLater(bar.value, isNot(originalValue));
     });
 
-    testWidgets('sets bar to previous value on undo button press', (WidgetTester tester) async {
+    testWidgets('sets bar to previous value on undo button press',
+        (WidgetTester tester) async {
       bar.changed = true;
 
       await tester.pumpWidget(testWidgetBuild);
@@ -91,21 +96,25 @@ void main() {
 
     setUp(() {
       testWidget = NonInteractableBarSlider(relationshipBar: bar);
-      testWidgetBuild =
-          MaterialApp(home: ChangeNotifierProvider<UserInfoState>.value(value: userInfoState, child: testWidget));
+      testWidgetBuild = MaterialApp(
+          home: ChangeNotifierProvider<UserInfoState>.value(
+              value: userInfoState, child: testWidget));
     });
 
-    testWidgets('bar information is displayed correctly', (WidgetTester tester) async {
+    testWidgets('bar information is displayed correctly',
+        (WidgetTester tester) async {
       await tester.pumpWidget(testWidgetBuild);
       expect(find.textContaining(bar.label), findsOneWidget);
       expect(find.byType(Slider), findsOneWidget);
       Slider slider = tester.widget(find.byType(Slider));
       SliderTheme theme = tester.widget(find.byType(SliderTheme));
       expect(slider.value, equals(bar.value));
-      expect(theme.data.activeTrackColor, equals(getSliderColor(bar.value)?.active));
+      expect(theme.data.activeTrackColor,
+          equals(getSliderColor(bar.value)?.active));
     });
 
-    testWidgets("slider value doesn't update on change", (WidgetTester tester) async {
+    testWidgets("slider value doesn't update on change",
+        (WidgetTester tester) async {
       await tester.pumpWidget(testWidgetBuild);
       int originalValue = bar.value;
 
@@ -119,7 +128,8 @@ void main() {
       await expectLater(slider.value, equals(originalValue));
     });
 
-    testWidgets("slider value doesn't update on change end", (WidgetTester tester) async {
+    testWidgets("slider value doesn't update on change end",
+        (WidgetTester tester) async {
       await tester.pumpWidget(testWidgetBuild);
       int originalValue = bar.value;
 

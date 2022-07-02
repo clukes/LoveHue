@@ -8,7 +8,8 @@ void main() {
   const Header testWidget = Header(heading: heading, fontSize: fontSize);
   const Widget testWidgetBuild = MaterialApp(home: testWidget);
 
-  testWidgets('heading is displayed with font size', (WidgetTester tester) async {
+  testWidgets('heading is displayed with font size',
+      (WidgetTester tester) async {
     await tester.pumpWidget(testWidgetBuild);
     expect(find.text(heading), findsOneWidget);
     Text headingWidget = tester.widget(find.text(heading));

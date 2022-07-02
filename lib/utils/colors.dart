@@ -19,7 +19,9 @@ const inactiveNavigationColor = Color.fromARGB(255, 176, 195, 206);
 
 /// Gradient for the slider cards.
 const cardGradient = LinearGradient(
-    begin: Alignment.topCenter, end: Alignment.bottomCenter, colors: [Color(0x2482D6FF), Color(0x26D7F1FF)]);
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    colors: [Color(0x2482D6FF), Color(0x26D7F1FF)]);
 
 const shadowColor = Color.fromARGB(64, 0, 0, 0);
 const floatingButtonColor = Color.fromARGB(191, 0, 147, 233);
@@ -52,13 +54,16 @@ class SliderColor {
 
   const SliderColor(this.active, this.inactive);
 
-  SliderColor.fromActive(this.active) : inactive = active.withAlpha(_inactiveAlpha);
+  SliderColor.fromActive(this.active)
+      : inactive = active.withAlpha(_inactiveAlpha);
 }
 
 /// Gets slider color for a given value.
 SliderColor? getSliderColor(int sliderValue) {
   // Maps x < 20 to 0 (red), 20 < x < 40 to 1 (orange), etc.
-  int mappedToRange = ((sliderValue / (RelationshipBar.maxBarValue + 1)) * sliderColors.length).floor();
+  int mappedToRange =
+      ((sliderValue / (RelationshipBar.maxBarValue + 1)) * sliderColors.length)
+          .floor();
   if (0 <= mappedToRange && mappedToRange < sliderColors.length) {
     return sliderColors[mappedToRange];
   }

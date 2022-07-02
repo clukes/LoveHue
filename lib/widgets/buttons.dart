@@ -6,7 +6,8 @@ import '../utils/colors.dart';
 
 /// Rounded [OutlinedButton] with [blueColor].
 class StyledButton extends StatelessWidget {
-  const StyledButton({Key? key, required this.child, required this.onPressed}) : super(key: key);
+  const StyledButton({Key? key, required this.child, required this.onPressed})
+      : super(key: key);
   final Widget child;
   final void Function() onPressed;
 
@@ -15,7 +16,8 @@ class StyledButton extends StatelessWidget {
         style: OutlinedButton.styleFrom(
           primary: primaryColor,
           backgroundColor: blueColor,
-          shape: const RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(4))),
+          shape: const RoundedRectangleBorder(
+              borderRadius: BorderRadius.all(Radius.circular(4))),
         ),
         onPressed: onPressed,
         child: child,

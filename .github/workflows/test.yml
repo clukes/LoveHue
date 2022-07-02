@@ -25,6 +25,10 @@ jobs:
               uses: actions/checkout@d171c3b028d844f2bf14e9fdec0c58114451e4bf
             - run: flutter pub get -v
 
+            # Create .dev.env file
+            - name: Set env
+              run: echo '${{ secrets.DEV_ENV }}' > .dev.env
+
             # Analyze, check formatting, and run unit tests.
             - run: flutter analyze
             - name: Ensure the Dart code is formatted correctly

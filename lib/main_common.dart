@@ -29,12 +29,14 @@ void mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo) async {
   final packageInfo = await PackageInfo.fromPlatform();
   final AuthenticationInfo authenticationInfo = AuthenticationInfo(packageInfo);
 
-  final FirebaseApp app = await Firebase.initializeApp(options: firebaseOptions);
+  final FirebaseApp app =
+      await Firebase.initializeApp(options: firebaseOptions);
   final FirebaseFirestore firestore = FirebaseFirestore.instanceFor(app: app);
 
   // Add licenses for the fonts.
   LicenseRegistry.addLicense(() async* {
-    String license = await rootBundle.loadString('assets/google_fonts/DMSansOFL.txt');
+    String license =
+        await rootBundle.loadString('assets/google_fonts/DMSansOFL.txt');
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
     license = await rootBundle.loadString('assets/google_fonts/PoppinsOFL.txt');
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
@@ -43,7 +45,8 @@ void mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo) async {
   GoogleFonts.config.allowRuntimeFetching = false;
 
   final PartnersInfoState partnersInfoState = PartnersInfoState();
-  final UserInfoState userInfoState = UserInfoState(firestore, partnersInfoState);
+  final UserInfoState userInfoState =
+      UserInfoState(firestore, partnersInfoState);
   final ApplicationState applicationState = ApplicationState(
     userInfoState: userInfoState,
     partnersInfoState: partnersInfoState,
@@ -64,7 +67,8 @@ void mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo) async {
 
 /// Initial widget for the app.
 class RelationshipBarsApp extends StatelessWidget {
-  const RelationshipBarsApp({Key? key, required this.providers}) : super(key: key);
+  const RelationshipBarsApp({Key? key, required this.providers})
+      : super(key: key);
 
   final List<ChangeNotifierProvider<ChangeNotifier>> providers;
 
@@ -76,12 +80,15 @@ class RelationshipBarsApp extends StatelessWidget {
       builder: (context, child) => MaterialApp(
         debugShowCheckedModeBanner: false,
         showPerformanceOverlay: false,
-        title: Provider.of<ApplicationState>(context, listen: false).appInfo.appName,
+        title: Provider.of<ApplicationState>(context, listen: false)
+            .appInfo
+            .appName,
         // Currently there is only one theme, a light one.
         theme: lightThemeData,
         home: AnnotatedRegion<SystemUiOverlayStyle>(
           // Ensures that the status bar stays dark with light text.
-          value: SystemUiOverlayStyle.dark.copyWith(statusBarIconBrightness: Brightness.light),
+          value: SystemUiOverlayStyle.dark
+              .copyWith(statusBarIconBrightness: Brightness.light),
           child: SafeArea(
             child: StreamBuilder(
               stream: FirebaseAuth.instance.authStateChanges(),
