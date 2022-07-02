@@ -121,3 +121,4 @@ app.*.symbols
 
 # Private files
 **/android/app/google-services.json
+local.properties
