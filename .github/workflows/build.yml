@@ -32,7 +32,6 @@ jobs:
 
             # Create .dev.env file
             - name: Set env
-            - run: |
-                echo '${{ secrets.DEV_ENV }}' > .dev.env
+            - run: echo '${{ secrets.DEV_ENV }}' > .dev.env
 
             - run: flutter build ${{ matrix.target }}
