@@ -19,7 +19,7 @@ jobs:
         with:
           flutter-version: '2.10.4'
           channel: 'stable'
-      - run: flutter build apk
+#       - run: flutter build apk
 
       - name: Install dependencies
         run: flutter pub get
