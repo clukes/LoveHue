@@ -59,7 +59,7 @@ class _PartnersBarsState extends State<PartnersBars> with AutomaticKeepAliveClie
                 builder: (context, snapshot) => buildBars(context, snapshot, nonInteractableBarBuilder));
           }
           debugPrint("_PartnersBarsState: Not linked to a partner.");
-          return LinkPartnerScreen(partnersInfoState: partnersInfoState);
+          return const LinkPartnerScreen();
         }),
       ),
     );

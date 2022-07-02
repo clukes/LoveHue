@@ -10,9 +10,7 @@ import '../widgets/header.dart';
 
 /// Screen with link partner form to display when no partner linked.
 class LinkPartnerScreen extends StatefulWidget {
-  final PartnersInfoState partnersInfoState;
-
-  const LinkPartnerScreen({Key? key, required this.partnersInfoState}) : super(key: key);
+  const LinkPartnerScreen({Key? key}) : super(key: key);
 
   @override
   State<LinkPartnerScreen> createState() => _LinkPartnerScreenState();
@@ -27,8 +25,8 @@ class _LinkPartnerScreenState extends State<LinkPartnerScreen> {
       child: SizedBox(
         width: double.infinity,
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Consumer<UserInfoState>(builder: (context, userInfoState, _) {
-            return getLinkStatusWidget(userInfoState, widget.partnersInfoState);
+          Consumer2<UserInfoState, PartnersInfoState>(builder: (context, userInfoState, partnersInfoState, _) {
+            return getLinkStatusWidget(userInfoState, partnersInfoState);
           }),
           const SizedBox(height: 64),
           Text(

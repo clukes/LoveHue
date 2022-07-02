@@ -15,7 +15,6 @@ void main() {
   const partnersName = 'TEST_NAME';
   const partnerID = '1234';
 
-  // late MockApplicationState appState;
   late MockUserInfoState userInfoState;
   late MockPartnersInfoState partnersInfoState;
   late FakeFirebaseFirestore firestore;
@@ -24,7 +23,6 @@ void main() {
   late ValueNotifier<String> partnersNameValueNotifier;
 
   setUp(() {
-    // appState = MockApplicationState();
     userInfoState = MockUserInfoState();
     partnersInfoState = MockPartnersInfoState();
     firestore = FakeFirebaseFirestore();
@@ -32,7 +30,6 @@ void main() {
     testWidgetBuild = MaterialApp(
         home: MultiProvider(
       providers: [
-        // ChangeNotifierProvider<ApplicationState>.value(value: appState),
         ChangeNotifierProvider<UserInfoState>.value(value: userInfoState),
         ChangeNotifierProvider<PartnersInfoState>.value(value: partnersInfoState),
       ],
