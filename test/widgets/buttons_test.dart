@@ -15,12 +15,13 @@ void main() {
 
   setUp(() {
     onPressed = MockFunction();
-    testWidget = StyledButton(child: child, onPressed: onPressed);
+    testWidget = StyledButton(onPressed: onPressed, child: child);
     testWidgetBuild = MaterialApp(home: testWidget);
   });
 
   group('StyledButton', () {
-    testWidgets('child displayed and calls onPressed function when tapped', (WidgetTester tester) async {
+    testWidgets('child displayed and calls onPressed function when tapped',
+        (WidgetTester tester) async {
       await tester.pumpWidget(testWidgetBuild);
 
       await tester.tap(find.byWidget(testWidget));

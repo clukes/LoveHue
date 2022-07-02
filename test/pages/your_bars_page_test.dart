@@ -29,7 +29,8 @@ void main() {
       providers: [
         ChangeNotifierProvider<ApplicationState>.value(value: appState),
         ChangeNotifierProvider<UserInfoState>.value(value: userInfoState),
-        ChangeNotifierProvider<PartnersInfoState>.value(value: partnersInfoState),
+        ChangeNotifierProvider<PartnersInfoState>.value(
+            value: partnersInfoState),
       ],
       child: testWidget,
     ));
@@ -48,8 +49,11 @@ void main() {
         bars.add(RelationshipBar(order: i, label: 'Bar_$i'));
       }
 
-      RelationshipBarDocument barDoc =
-          RelationshipBarDocument(id: '1', userID: '1234', barList: bars, firestore: FakeFirebaseFirestore());
+      RelationshipBarDocument barDoc = RelationshipBarDocument(
+          id: '1',
+          userID: '1234',
+          barList: bars,
+          firestore: FakeFirebaseFirestore());
       when(userInfoState.latestRelationshipBarDoc).thenReturn(barDoc);
 
       await tester.pumpWidget(testWidgetBuild);
@@ -58,7 +62,8 @@ void main() {
       }
     });
 
-    testWidgets('loading indicator is displayed when user not logged in', (WidgetTester tester) async {
+    testWidgets('loading indicator is displayed when user not logged in',
+        (WidgetTester tester) async {
       when(appState.loginState).thenReturn(ApplicationLoginState.loggedOut);
 
       await tester.pumpWidget(testWidgetBuild);
@@ -66,7 +71,8 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('loading indicator is displayed when no user exists', (WidgetTester tester) async {
+    testWidgets('loading indicator is displayed when no user exists',
+        (WidgetTester tester) async {
       when(userInfoState.userExist).thenReturn(false);
 
       await tester.pumpWidget(testWidgetBuild);
@@ -77,18 +83,21 @@ void main() {
 
   group('cancel and save buttons', () {
     setUp(() {
-      when(userInfoState.latestRelationshipBarDoc)
-          .thenReturn(RelationshipBarDocument(id: '1', userID: '1234', firestore: FakeFirebaseFirestore()));
+      when(userInfoState.latestRelationshipBarDoc).thenReturn(
+          RelationshipBarDocument(
+              id: '1', userID: '1234', firestore: FakeFirebaseFirestore()));
       when(userInfoState.barsChanged).thenReturn(true);
     });
 
-    testWidgets('buttons displayed when bars changed', (WidgetTester tester) async {
+    testWidgets('buttons displayed when bars changed',
+        (WidgetTester tester) async {
       await tester.pumpWidget(testWidgetBuild);
 
       expect(find.byType(FloatingActionButton), findsNWidgets(2));
     });
 
-    testWidgets('buttons not displayed when user not logged in', (WidgetTester tester) async {
+    testWidgets('buttons not displayed when user not logged in',
+        (WidgetTester tester) async {
       when(appState.loginState).thenReturn(ApplicationLoginState.loggedOut);
 
       await tester.pumpWidget(testWidgetBuild);
@@ -96,7 +105,8 @@ void main() {
       expect(find.byType(FloatingActionButton), findsNothing);
     });
 
-    testWidgets('buttons not displayed when no bar doc', (WidgetTester tester) async {
+    testWidgets('buttons not displayed when no bar doc',
+        (WidgetTester tester) async {
       when(userInfoState.latestRelationshipBarDoc).thenReturn(null);
 
       await tester.pumpWidget(testWidgetBuild);
@@ -104,7 +114,8 @@ void main() {
       expect(find.byType(FloatingActionButton), findsNothing);
     });
 
-    testWidgets('buttons not displayed when bars not changed', (WidgetTester tester) async {
+    testWidgets('buttons not displayed when bars not changed',
+        (WidgetTester tester) async {
       when(userInfoState.barsChanged).thenReturn(false);
 
       await tester.pumpWidget(testWidgetBuild);

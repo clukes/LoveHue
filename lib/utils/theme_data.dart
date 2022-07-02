@@ -29,14 +29,16 @@ final ThemeData lightThemeData = ThemeData.light().copyWith(
   ),
   cardTheme: const CardTheme(
     elevation: 2.0,
-    shape: RoundedRectangleBorder(borderRadius: BorderRadius.all(Radius.circular(24))),
+    shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(24))),
   ),
   sliderTheme: const SliderThemeData(
     trackHeight: 30.0,
     thumbColor: null,
     overlayShape: RoundSliderOverlayShape(overlayRadius: 0),
     tickMarkShape: RoundSliderTickMarkShape(tickMarkRadius: 0),
-    thumbShape: RoundSliderThumbShape(enabledThumbRadius: 0, elevation: 0, pressedElevation: 0),
+    thumbShape: RoundSliderThumbShape(
+        enabledThumbRadius: 0, elevation: 0, pressedElevation: 0),
     trackShape: CustomRoundedSliderTrackShape(),
   ),
   floatingActionButtonTheme: const FloatingActionButtonThemeData(
@@ -49,13 +51,17 @@ final ThemeData lightThemeData = ThemeData.light().copyWith(
 );
 
 // Default theme for primary text.
-final TextTheme _primaryTextTheme = GoogleFonts.dmSansTextTheme(ThemeData.from(colorScheme: colorScheme).textTheme);
+final TextTheme _primaryTextTheme = GoogleFonts.dmSansTextTheme(
+    ThemeData.from(colorScheme: colorScheme).textTheme);
 
 final TextTheme _dmSansTextTheme = _primaryTextTheme.copyWith(
-  headline6: const TextStyle(fontWeight: FontWeight.w700, fontSize: 28, color: primaryTextColor),
-  subtitle1: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16, color: primaryTextColor),
+  headline6: const TextStyle(
+      fontWeight: FontWeight.w700, fontSize: 28, color: primaryTextColor),
+  subtitle1: const TextStyle(
+      fontWeight: FontWeight.w700, fontSize: 16, color: primaryTextColor),
 );
 // Theme for non-primary text with a secondary font.
 final TextTheme _textTheme = _dmSansTextTheme.copyWith(
-  subtitle2: GoogleFonts.poppins(fontWeight: FontWeight.normal, fontSize: 16, color: secondaryTextColor),
+  subtitle2: GoogleFonts.poppins(
+      fontWeight: FontWeight.normal, fontSize: 16, color: secondaryTextColor),
 );

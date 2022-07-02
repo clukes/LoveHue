@@ -26,12 +26,15 @@ void main() {
     userInfoState = MockUserInfoState();
     partnersInfoState = MockPartnersInfoState();
     firestore = FakeFirebaseFirestore();
-    testWidget = PartnersBars(firestore: firestore,);
+    testWidget = PartnersBars(
+      firestore: firestore,
+    );
     testWidgetBuild = MaterialApp(
         home: MultiProvider(
       providers: [
         ChangeNotifierProvider<UserInfoState>.value(value: userInfoState),
-        ChangeNotifierProvider<PartnersInfoState>.value(value: partnersInfoState),
+        ChangeNotifierProvider<PartnersInfoState>.value(
+            value: partnersInfoState),
       ],
       child: testWidget,
     ));
@@ -59,7 +62,8 @@ void main() {
 
       partnersNameValueNotifier.value = partnersChangedName;
       await tester.pump();
-      await expectLater(find.textContaining(partnersChangedName), findsOneWidget);
+      await expectLater(
+          find.textContaining(partnersChangedName), findsOneWidget);
     });
   });
 
@@ -70,9 +74,11 @@ void main() {
         bars.add(RelationshipBar(order: i, label: 'Bar_$i'));
       }
 
-      RelationshipBarDocument barDoc =
-          RelationshipBarDocument(id: '1', userID: partnerID, barList: bars, firestore: firestore);
-      await RelationshipBarDocument.getUserBarsFromID(partnerID, firestore).doc(barDoc.id).set(barDoc);
+      RelationshipBarDocument barDoc = RelationshipBarDocument(
+          id: '1', userID: partnerID, barList: bars, firestore: firestore);
+      await RelationshipBarDocument.getUserBarsFromID(partnerID, firestore)
+          .doc(barDoc.id)
+          .set(barDoc);
 
       await tester.pumpWidget(testWidgetBuild);
       await tester.pumpAndSettle();

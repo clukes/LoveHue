@@ -40,7 +40,10 @@ abstract class _BarSliderState extends State<BarSlider> {
           alignment: AlignmentDirectional.centerStart,
           child: Text(
             widget.relationshipBar.labelString(),
-            style: Theme.of(context).textTheme.subtitle1?.copyWith(fontSize: _sliderTextFontSize),
+            style: Theme.of(context)
+                .textTheme
+                .subtitle1
+                ?.copyWith(fontSize: _sliderTextFontSize),
           ),
         ),
       ),
@@ -49,7 +52,10 @@ abstract class _BarSliderState extends State<BarSlider> {
         alignment: AlignmentDirectional.centerEnd,
         child: Text(
           widget.relationshipBar.valueString(),
-          style: Theme.of(context).textTheme.subtitle2?.copyWith(fontSize: _sliderTextFontSize),
+          style: Theme.of(context)
+              .textTheme
+              .subtitle2
+              ?.copyWith(fontSize: _sliderTextFontSize),
         ),
       ),
     ]);
@@ -63,8 +69,10 @@ abstract class _BarSliderState extends State<BarSlider> {
       data: SliderTheme.of(context).copyWith(
         activeTrackColor: activeTrackColor,
         inactiveTrackColor: inactiveTrackColor,
-        disabledActiveTrackColor: activeTrackColor?.withOpacity(activeTrackColor.opacity * _disabledOpacityRatio),
-        disabledInactiveTrackColor: inactiveTrackColor?.withOpacity(inactiveTrackColor.opacity * _disabledOpacityRatio),
+        disabledActiveTrackColor: activeTrackColor
+            ?.withOpacity(activeTrackColor.opacity * _disabledOpacityRatio),
+        disabledInactiveTrackColor: inactiveTrackColor
+            ?.withOpacity(inactiveTrackColor.opacity * _disabledOpacityRatio),
       ),
       child: Slider(
         value: _sliderValue.toDouble(),
@@ -84,7 +92,9 @@ abstract class _BarSliderState extends State<BarSlider> {
     return ListTile(
       contentPadding: contentPadding,
       // Padding on the bottom and right of slider text, to space it from slider and undo button.
-      title: Padding(padding: const EdgeInsets.only(bottom: 16, right: 16), child: sliderText()),
+      title: Padding(
+          padding: const EdgeInsets.only(bottom: 16, right: 16),
+          child: sliderText()),
       subtitle: slider(),
     );
   }
@@ -117,11 +127,12 @@ abstract class _BarSliderState extends State<BarSlider> {
 
 /// A [BarSlider] that is not disabled.
 class InteractableBarSlider extends BarSlider {
-  const InteractableBarSlider({Key? key, required RelationshipBar relationshipBar})
+  const InteractableBarSlider(
+      {Key? key, required RelationshipBar relationshipBar})
       : super(key: key, relationshipBar: relationshipBar);
 
   @override
-  _InteractableBarSliderState createState() => _InteractableBarSliderState();
+  State<BarSlider> createState() => _InteractableBarSliderState();
 }
 
 class _InteractableBarSliderState extends _BarSliderState {
@@ -175,11 +186,12 @@ class _InteractableBarSliderState extends _BarSliderState {
 
 /// A [BarSlider] that is disabled.
 class NonInteractableBarSlider extends BarSlider {
-  const NonInteractableBarSlider({Key? key, required RelationshipBar relationshipBar})
+  const NonInteractableBarSlider(
+      {Key? key, required RelationshipBar relationshipBar})
       : super(key: key, relationshipBar: relationshipBar);
 
   @override
-  _NonInteractableBarSliderState createState() => _NonInteractableBarSliderState();
+  State<BarSlider> createState() => _NonInteractableBarSliderState();
 }
 
 class _NonInteractableBarSliderState extends _BarSliderState {

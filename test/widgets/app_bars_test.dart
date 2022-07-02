@@ -12,13 +12,17 @@ void main() {
       home: Scaffold(
           primary: false,
           body: NestedScrollView(
-              headerSliverBuilder: (BuildContext context, bool innerBoxIsScrolled) {
+              headerSliverBuilder:
+                  (BuildContext context, bool innerBoxIsScrolled) {
                 return <Widget>[
                   testWidget,
                 ];
               },
               body: ListView(
-                  children: List<Widget>.generate(100, (i) => ListTile(key: Key('$i'), title: Text("Item $i"))) +
+                  children: List<Widget>.generate(
+                          100,
+                          (i) => ListTile(
+                              key: Key('$i'), title: Text("Item $i"))) +
                       [(const ListTile(title: findWidget))]))));
 
   testWidgets('displays barTitleWidget', (WidgetTester tester) async {
@@ -32,7 +36,8 @@ void main() {
     await tester.pumpWidget(testWidgetBuild);
     expect(find.byWidget(testWidget), findsOneWidget);
 
-    await tester.scrollUntilVisible(find.byWidget(findWidget), surfaceSize.height / 2,
+    await tester.scrollUntilVisible(
+        find.byWidget(findWidget), surfaceSize.height / 2,
         scrollable: find.byType(Scrollable).last);
     expect(find.byWidget(testWidget), findsNothing);
   });

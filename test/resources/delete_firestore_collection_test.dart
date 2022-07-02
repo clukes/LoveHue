@@ -24,13 +24,16 @@ void main() {
       batch.set(collection.doc('$i'), {'id': i});
     }
     await batch.commit();
-    expect(await collection.get().then((value) => value.docs.length), greaterThan(0));
+    expect(await collection.get().then((value) => value.docs.length),
+        greaterThan(0));
     await deleteCollection(collection, firestore: firestore);
   });
 
-  test('no expection thrown if collection is empty', () async {
-    expect(await collection.get().then((value) => value.docs.length), equals(0));
+  test('no exception thrown if collection is empty', () async {
+    expect(
+        await collection.get().then((value) => value.docs.length), equals(0));
     await deleteCollection(collection, firestore: firestore);
-    expect(await collection.get().then((value) => value.docs.length), equals(0));
+    expect(
+        await collection.get().then((value) => value.docs.length), equals(0));
   });
 }

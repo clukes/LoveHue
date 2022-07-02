@@ -25,7 +25,8 @@ void main() {
     expect(contentWidth, lessThan(maxWidth));
   });
 
-  testWidgets('content is constrained on larger width screen', (WidgetTester tester) async {
+  testWidgets('content is constrained on larger width screen',
+      (WidgetTester tester) async {
     const screenSize = Size(maxWidth + 500, 400);
 
     final SizedBox contentWidget = SizedBox.fromSize(size: screenSize);

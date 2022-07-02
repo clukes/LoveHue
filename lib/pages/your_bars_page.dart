@@ -15,10 +15,11 @@ class YourBars extends StatefulWidget {
   const YourBars({Key? key}) : super(key: key);
 
   @override
-  _YourBarsState createState() => _YourBarsState();
+  State<YourBars> createState() => _YourBarsState();
 }
 
-class _YourBarsState extends State<YourBars> with AutomaticKeepAliveClientMixin<YourBars> {
+class _YourBarsState extends State<YourBars>
+    with AutomaticKeepAliveClientMixin<YourBars> {
   @override
   bool get wantKeepAlive => true;
 
@@ -36,16 +37,18 @@ class _YourBarsState extends State<YourBars> with AutomaticKeepAliveClientMixin<
         },
         body: Consumer2<ApplicationState, UserInfoState>(
           builder: (context, applicationState, userInfoState, _) =>
-              (applicationState.loginState == ApplicationLoginState.loggedIn && userInfoState.userExist)
+              (applicationState.loginState == ApplicationLoginState.loggedIn &&
+                      userInfoState.userExist)
                   ? BarDocBuilder(
-                      barDoc: userInfoState.latestRelationshipBarDoc, itemBuilderFunction: interactableBarBuilder)
+                      barDoc: userInfoState.latestRelationshipBarDoc,
+                      itemBuilderFunction: interactableBarBuilder)
                   : const Center(
                       child: CircularProgressIndicator(),
                     ),
         ),
       ),
-      floatingActionButton:
-          Consumer2<ApplicationState, UserInfoState>(builder: (context, applicationState, userInfoState, _) {
+      floatingActionButton: Consumer2<ApplicationState, UserInfoState>(
+          builder: (context, applicationState, userInfoState, _) {
         if (applicationState.loginState != ApplicationLoginState.loggedIn ||
             userInfoState.latestRelationshipBarDoc == null ||
             !userInfoState.barsChanged) {
@@ -74,11 +77,13 @@ class _YourBarsState extends State<YourBars> with AutomaticKeepAliveClientMixin<
                 heroTag: "saveButton",
                 onPressed: () async {
                   String? userID = userInfoState.userID;
-                  RelationshipBarDocument? barDoc = userInfoState.latestRelationshipBarDoc;
+                  RelationshipBarDocument? barDoc =
+                      userInfoState.latestRelationshipBarDoc;
                   if (userID != null && barDoc != null) {
                     barDoc.resetBarsChanged();
                     userInfoState.resetBarChange();
-                    await RelationshipBarDocument.firestoreAddBarList(userID, barDoc.barList);
+                    await RelationshipBarDocument.firestoreAddBarList(
+                        userID, barDoc.barList);
                   }
                 },
                 tooltip: 'Save',

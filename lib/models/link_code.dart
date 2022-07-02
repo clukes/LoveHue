@@ -17,7 +17,8 @@ class LinkCode {
   final DocumentReference<UserInformation?>? user;
 
   // Reference to the linkCode collection in FirebaseFirestore database.
-  static CollectionReference<LinkCode?> _firestoreConverter(FirebaseFirestore? firestore) {
+  static CollectionReference<LinkCode?> _firestoreConverter(
+      FirebaseFirestore? firestore) {
     firestore ??= FirebaseFirestore.instance;
     return firestore.collection(linkCodesCollection).withConverter<LinkCode?>(
           fromFirestore: (snapshots, _) => LinkCode.fromMap(snapshots.data()!),
@@ -45,14 +46,17 @@ class LinkCode {
     };
   }
 
-  static DocumentReference<LinkCode?> getDocumentReference(String linkCode, FirebaseFirestore? firestore) {
+  static DocumentReference<LinkCode?> getDocumentReference(
+      String linkCode, FirebaseFirestore? firestore) {
     return _firestoreConverter(firestore).doc(linkCode);
   }
 
   /// Generates id for a new uniquely generated [LinkCode], and returns a [DocumentReference] to it.
   ///
   /// If newCode is supplied, will check if it exists in the database, and generate a different code if so.
-  static Future<DocumentReference<LinkCode?>> create(FirebaseFirestore? firestore, {String? newCode}) async {
+  static Future<DocumentReference<LinkCode?>> create(
+      FirebaseFirestore? firestore,
+      {String? newCode}) async {
     DocumentReference<LinkCode?>? linkCode;
     do {
       // Generate a new link code, and check if it already exists in the database, to ensure uniqueness.

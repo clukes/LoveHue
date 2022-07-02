@@ -5,7 +5,8 @@ void main() {
   late RelationshipBar bar;
 
   setUp(() {
-    bar = RelationshipBar(label: '1', order: 1, prevValue: 100, value: 75, changed: false);
+    bar = RelationshipBar(
+        label: '1', order: 1, prevValue: 100, value: 75, changed: false);
   });
 
   group('setValue', () {
@@ -57,7 +58,10 @@ void main() {
         {'label': '1', 'order': 1},
         {'label': '2', 'order': 2}
       ];
-      List<RelationshipBar> bars = [RelationshipBar(label: '1', order: 1), RelationshipBar(label: '2', order: 2)];
+      List<RelationshipBar> bars = [
+        RelationshipBar(label: '1', order: 1),
+        RelationshipBar(label: '2', order: 2)
+      ];
       List<Map<String, Object?>>? result = RelationshipBar.toMapList(bars);
       expect(result, isNotNull);
       for (int i = 0; i < bars.length; i++) {
@@ -69,7 +73,10 @@ void main() {
 
   group('fromMapList', () {
     test('valid map should return RelationshipBar list', () {
-      List<RelationshipBar> expected = [RelationshipBar(label: '1', order: 1), RelationshipBar(label: '2', order: 2)];
+      List<RelationshipBar> expected = [
+        RelationshipBar(label: '1', order: 1),
+        RelationshipBar(label: '2', order: 2)
+      ];
       List<Map<String, Object?>> maps = [
         {'label': '1', 'order': 1},
         {'label': '2', 'order': 2}

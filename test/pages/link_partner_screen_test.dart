@@ -23,12 +23,13 @@ void main() {
     testWidget = const LinkPartnerScreen();
     testWidgetBuild = MaterialApp(
         home: MultiProvider(
-          providers: [
-            ChangeNotifierProvider<UserInfoState>.value(value: userInfoState),
-            ChangeNotifierProvider<PartnersInfoState>.value(value: partnersInfoState),
-          ],
-          child: Scaffold(body: testWidget),
-        ));
+      providers: [
+        ChangeNotifierProvider<UserInfoState>.value(value: userInfoState),
+        ChangeNotifierProvider<PartnersInfoState>.value(
+            value: partnersInfoState),
+      ],
+      child: Scaffold(body: testWidget),
+    ));
 
     when(userInfoState.userPending).thenReturn(false);
     when(partnersInfoState.partnerPending).thenReturn(false);
@@ -39,19 +40,22 @@ void main() {
   });
 
   group('LinkPartnerScreen', () {
-    testWidgets('userPending displays incoming link request', (WidgetTester tester) async {
+    testWidgets('userPending displays incoming link request',
+        (WidgetTester tester) async {
       when(userInfoState.userPending).thenReturn(true);
       await tester.pumpWidget(testWidgetBuild);
       expect(find.byType(IncomingLinkRequest), findsOneWidget);
     });
 
-    testWidgets('partnerPending displays link request sent', (WidgetTester tester) async {
+    testWidgets('partnerPending displays link request sent',
+        (WidgetTester tester) async {
       when(partnersInfoState.partnerPending).thenReturn(true);
       await tester.pumpWidget(testWidgetBuild);
       expect(find.byType(LinkRequestSent), findsOneWidget);
     });
 
-    testWidgets('not partnerExist displays link partner form', (WidgetTester tester) async {
+    testWidgets('not partnerExist displays link partner form',
+        (WidgetTester tester) async {
       when(partnersInfoState.partnerExist).thenReturn(false);
       await tester.pumpWidget(testWidgetBuild);
       expect(find.byType(LinkPartnerForm), findsOneWidget);
@@ -63,7 +67,8 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('No user linkcode displays loading...', (WidgetTester tester) async {
+    testWidgets('No user linkcode displays loading...',
+        (WidgetTester tester) async {
       await tester.pumpWidget(testWidgetBuild);
       expect(find.text('Your link code is:'), findsOneWidget);
       expect(find.text('Loading...'), findsOneWidget);
@@ -79,7 +84,8 @@ void main() {
 
     testWidgets('copy button copies to clipboard', (WidgetTester tester) async {
       final MockClipboard mockClipboard = MockClipboard();
-      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(SystemChannels.platform, mockClipboard.handleMethodCall);
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          SystemChannels.platform, mockClipboard.handleMethodCall);
 
       const linkCode = '1234';
       when(userInfoState.linkCode).thenReturn(linkCode);
@@ -87,6 +93,5 @@ void main() {
       await tester.tap(find.byIcon(Icons.copy));
       expect(mockClipboard.clipboardData['text'], equals(linkCode));
     });
-
   });
 }

@@ -22,9 +22,13 @@ void main() {
   setUp(() {
     linkCodeRef = MockDocumentReference<LinkCode>();
     firestore = FakeFirebaseFirestore();
-    currentUserInfo = UserInformation(userID: '1234', linkCode: linkCodeRef, firestore: firestore);
-    partnersInfo =
-        UserInformation(displayName: displayName, userID: '5678', linkCode: linkCodeRef, firestore: firestore);
+    currentUserInfo = UserInformation(
+        userID: '1234', linkCode: linkCodeRef, firestore: firestore);
+    partnersInfo = UserInformation(
+        displayName: displayName,
+        userID: '5678',
+        linkCode: linkCodeRef,
+        firestore: firestore);
     partnersInfoState = PartnersInfoState();
   });
 
@@ -37,8 +41,10 @@ void main() {
     });
 
     test('partner name changed updates partner name in state', () async {
-      currentUserInfo.partner = firestore.collection(userInfoCollection).doc(partnersInfo.userID);
-      partnersInfo.partner = firestore.collection(userInfoCollection).doc(currentUserInfo.userID);
+      currentUserInfo.partner =
+          firestore.collection(userInfoCollection).doc(partnersInfo.userID);
+      partnersInfo.partner =
+          firestore.collection(userInfoCollection).doc(currentUserInfo.userID);
       partnersInfoState.partnersInfo = partnersInfo;
       partnersInfoState.partnersName.value = '';
 
@@ -46,12 +52,17 @@ void main() {
           .collection(userInfoCollection)
           .doc(partnersInfo.userID)
           .set(partnersInfo.toMap())
-          .then((value) => partnersInfoState.setupPartnerInfoSubscription(currentUserInfo));
+          .then((value) =>
+              partnersInfoState.setupPartnerInfoSubscription(currentUserInfo));
 
-      await untilCalled(notifyListenerCallback.call()).timeout(timeout).then((value) {
+      await untilCalled(notifyListenerCallback.call())
+          .timeout(timeout)
+          .then((value) {
         expect(partnersInfoState.partnersInfo, isNotNull);
-        expect(partnersInfoState.partnersInfo!.userID, equals(partnersInfo.userID));
-        expect(partnersInfoState.partnersInfo!.displayName, equals(displayName));
+        expect(partnersInfoState.partnersInfo!.userID,
+            equals(partnersInfo.userID));
+        expect(
+            partnersInfoState.partnersInfo!.displayName, equals(displayName));
         expect(partnersInfoState.partnersName.value, equals(displayName));
       });
     });
@@ -63,7 +74,9 @@ void main() {
       expect(partnersInfoState.partnersInfo, isNull);
     });
 
-    test('if partners info id does not match current user partner id, set partner info to null', () async {
+    test(
+        'if partners info id does not match current user partner id, set partner info to null',
+        () async {
       final MockUserInformation currentUserInfo = MockUserInformation();
 
       partnersInfoState.partnersInfo = partnersInfo;
@@ -74,7 +87,8 @@ void main() {
           .collection(userInfoCollection)
           .doc(partnersInfo.userID)
           .set(partnersInfo.toMap())
-          .then((value) => partnersInfoState.setupPartnerInfoSubscription(currentUserInfo));
+          .then((value) =>
+              partnersInfoState.setupPartnerInfoSubscription(currentUserInfo));
 
       await untilCalled(notifyListenerCallback.call())
           .timeout(timeout)
@@ -87,7 +101,8 @@ void main() {
       partnersInfoState.addPartner(partnersInfo, currentUserInfo);
 
       expect(partnersInfoState.partnersInfo, isNotNull);
-      expect(partnersInfoState.partnersInfo!.userID, equals(partnersInfo.userID));
+      expect(
+          partnersInfoState.partnersInfo!.userID, equals(partnersInfo.userID));
       expect(partnersInfoState.partnersName.value, equals(displayName));
     });
   });

@@ -5,7 +5,8 @@ import 'package:flutter/material.dart';
 /// Create a slider track that draws two rectangles that combine with a rounded rectangle via their intersection.
 ///
 /// Fixes the issue where a rounded rectangle track without a thumb ends up with flat edges when full/empty.
-class CustomRoundedSliderTrackShape extends RoundedRectSliderTrackShape with BaseSliderTrackShape {
+class CustomRoundedSliderTrackShape extends RoundedRectSliderTrackShape
+    with BaseSliderTrackShape {
   const CustomRoundedSliderTrackShape();
 
   @override
@@ -32,12 +33,16 @@ class CustomRoundedSliderTrackShape extends RoundedRectSliderTrackShape with Bas
       return;
     }
 
-    final ColorTween activeTrackColorTween =
-        ColorTween(begin: sliderTheme.disabledActiveTrackColor, end: sliderTheme.activeTrackColor);
-    final ColorTween inactiveTrackColorTween =
-        ColorTween(begin: sliderTheme.disabledInactiveTrackColor, end: sliderTheme.inactiveTrackColor);
-    final Paint activePaint = Paint()..color = activeTrackColorTween.evaluate(enableAnimation)!;
-    final Paint inactivePaint = Paint()..color = inactiveTrackColorTween.evaluate(enableAnimation)!;
+    final ColorTween activeTrackColorTween = ColorTween(
+        begin: sliderTheme.disabledActiveTrackColor,
+        end: sliderTheme.activeTrackColor);
+    final ColorTween inactiveTrackColorTween = ColorTween(
+        begin: sliderTheme.disabledInactiveTrackColor,
+        end: sliderTheme.inactiveTrackColor);
+    final Paint activePaint = Paint()
+      ..color = activeTrackColorTween.evaluate(enableAnimation)!;
+    final Paint inactivePaint = Paint()
+      ..color = inactiveTrackColorTween.evaluate(enableAnimation)!;
 
     final Paint leftTrackPaint;
     final Paint rightTrackPaint;
@@ -61,7 +66,8 @@ class CustomRoundedSliderTrackShape extends RoundedRectSliderTrackShape with Bas
       isDiscrete: isDiscrete,
     );
     final Radius trackRadius = Radius.circular(trackRect.height / 2);
-    final Radius activeTrackRadius = Radius.circular((trackRect.height + additionalActiveTrackHeight) / 2);
+    final Radius activeTrackRadius =
+        Radius.circular((trackRect.height + additionalActiveTrackHeight) / 2);
 
     // Uses a Rounded Rectangle that covers the whole track to combine with left and right rects via intersection.
     RRect trackRRect = RRect.fromLTRBAndCorners(
@@ -69,30 +75,55 @@ class CustomRoundedSliderTrackShape extends RoundedRectSliderTrackShape with Bas
       trackRect.top + (additionalActiveTrackHeight / 2),
       trackRect.right,
       trackRect.bottom + (additionalActiveTrackHeight / 2),
-      topLeft: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
-      bottomLeft: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
-      topRight: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
-      bottomRight: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
+      topLeft: (textDirection == TextDirection.rtl)
+          ? activeTrackRadius
+          : trackRadius,
+      bottomLeft: (textDirection == TextDirection.rtl)
+          ? activeTrackRadius
+          : trackRadius,
+      topRight: (textDirection == TextDirection.rtl)
+          ? activeTrackRadius
+          : trackRadius,
+      bottomRight: (textDirection == TextDirection.rtl)
+          ? activeTrackRadius
+          : trackRadius,
     );
 
     RRect leftRect = RRect.fromLTRBAndCorners(
       trackRect.left,
-      (textDirection == TextDirection.ltr) ? trackRect.top - (additionalActiveTrackHeight / 2) : trackRect.top,
+      (textDirection == TextDirection.ltr)
+          ? trackRect.top - (additionalActiveTrackHeight / 2)
+          : trackRect.top,
       thumbCenter.dx,
-      (textDirection == TextDirection.ltr) ? trackRect.bottom + (additionalActiveTrackHeight / 2) : trackRect.bottom,
-      topLeft: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
-      bottomLeft: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
+      (textDirection == TextDirection.ltr)
+          ? trackRect.bottom + (additionalActiveTrackHeight / 2)
+          : trackRect.bottom,
+      topLeft: (textDirection == TextDirection.rtl)
+          ? activeTrackRadius
+          : trackRadius,
+      bottomLeft: (textDirection == TextDirection.rtl)
+          ? activeTrackRadius
+          : trackRadius,
     );
     RRect rightRect = RRect.fromLTRBAndCorners(
       trackRect.right,
-      (textDirection == TextDirection.ltr) ? trackRect.top - (additionalActiveTrackHeight / 2) : trackRect.top,
+      (textDirection == TextDirection.ltr)
+          ? trackRect.top - (additionalActiveTrackHeight / 2)
+          : trackRect.top,
       thumbCenter.dx,
-      (textDirection == TextDirection.ltr) ? trackRect.bottom + (additionalActiveTrackHeight / 2) : trackRect.bottom,
-      topRight: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
-      bottomRight: (textDirection == TextDirection.rtl) ? activeTrackRadius : trackRadius,
+      (textDirection == TextDirection.ltr)
+          ? trackRect.bottom + (additionalActiveTrackHeight / 2)
+          : trackRect.bottom,
+      topRight: (textDirection == TextDirection.rtl)
+          ? activeTrackRadius
+          : trackRadius,
+      bottomRight: (textDirection == TextDirection.rtl)
+          ? activeTrackRadius
+          : trackRadius,
     );
 
-    if (thumbCenter.dx >= trackRect.right - trackRadius.x || thumbCenter.dx <= trackRect.left + trackRadius.x) {
+    if (thumbCenter.dx >= trackRect.right - trackRadius.x ||
+        thumbCenter.dx <= trackRect.left + trackRadius.x) {
       // If we get near the end of the track,
       // we need to intersect the trackRRect with left and right to prevent flat edges.
       context.canvas.drawPath(
@@ -129,10 +160,12 @@ class CustomRoundedSliderTrackShape extends RoundedRectSliderTrackShape with Bas
     assert(trackHeight >= 0);
 
     final double trackLeft = offset.dx;
-    final double trackTop = offset.dy + (parentBox.size.height - trackHeight) / 2;
+    final double trackTop =
+        offset.dy + (parentBox.size.height - trackHeight) / 2;
     final double trackRight = trackLeft + parentBox.size.width;
     final double trackBottom = trackTop + trackHeight;
     // If the parentBox's size is less than slider's size the trackRight will be less than trackLeft, so switch them.
-    return Rect.fromLTRB(min(trackLeft, trackRight), trackTop, max(trackLeft, trackRight), trackBottom);
+    return Rect.fromLTRB(min(trackLeft, trackRight), trackTop,
+        max(trackLeft, trackRight), trackBottom);
   }
 }

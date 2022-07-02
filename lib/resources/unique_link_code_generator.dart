@@ -3,7 +3,8 @@ import 'dart:math';
 /// Length is default 5.
 const int linkCodeLength = 5;
 
-const String _codeAlphabet = "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+const String _codeAlphabet =
+    "123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
 final _random = Random();
 
 /// Generate a code of length [linkCodeLength] with characters from [codeAlphabet].

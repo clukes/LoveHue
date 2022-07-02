@@ -30,12 +30,14 @@ void main() {
     appState = MockApplicationState();
     partnersInfoState = MockPartnersInfoState();
     userInfoState = MockUserInfoState();
-    auth = MockFirebaseAuth(signedIn: true, mockUser: MockUser(displayName: displayName));
+    auth = MockFirebaseAuth(
+        signedIn: true, mockUser: MockUser(displayName: displayName));
     testWidget = const ProfilePage();
     testWidgetBuild = MultiProvider(
       providers: [
         ChangeNotifierProvider<ApplicationState>.value(value: appState),
-        ChangeNotifierProvider<PartnersInfoState>.value(value: partnersInfoState),
+        ChangeNotifierProvider<PartnersInfoState>.value(
+            value: partnersInfoState),
         ChangeNotifierProvider<UserInfoState>.value(value: userInfoState),
       ],
       builder: (context, _) => MaterialApp(home: testWidget),
@@ -61,7 +63,8 @@ void main() {
     expect(find.textContaining(partnerDisplayName), findsOneWidget);
   });
 
-  testWidgets('no partner username displays placeholder', (WidgetTester tester) async {
+  testWidgets('no partner username displays placeholder',
+      (WidgetTester tester) async {
     when(partnersInfoState.partnerExist).thenReturn(true);
     when(partnersInfoState.partnerPending).thenReturn(false);
     when(partnersInfoState.partnersInfo).thenReturn(null);
@@ -85,7 +88,8 @@ void main() {
     expect(find.text(UnlinkAlertDialog.noButtonText), findsOneWidget);
   });
 
-  testWidgets('sign out button signs out and navigates to sign in page', (WidgetTester tester) async {
+  testWidgets('sign out button signs out and navigates to sign in page',
+      (WidgetTester tester) async {
     expect(auth.currentUser, isNotNull);
 
     await tester.pumpWidget(testWidgetBuild);
@@ -96,14 +100,18 @@ void main() {
     expect(find.byType(SignInPage), findsOneWidget);
   });
 
-  testWidgets('sign in with email button shows email link sign in view', (WidgetTester tester) async {
-    auth = MockFirebaseAuth(mockUser: MockUser(displayName: displayName, isAnonymous: true));
+  testWidgets('sign in with email button shows email link sign in view',
+      (WidgetTester tester) async {
+    auth = MockFirebaseAuth(
+        mockUser: MockUser(displayName: displayName, isAnonymous: true));
     when(appState.auth).thenReturn(auth);
 
     final authInfo = MockAuthenticationInfo();
     when(appState.authenticationInfo).thenReturn(authInfo);
-    when(authInfo.providerConfigs)
-        .thenReturn([EmailLinkProviderConfiguration(actionCodeSettings: ActionCodeSettings(url: ''))]);
+    when(authInfo.providerConfigs).thenReturn([
+      EmailLinkProviderConfiguration(
+          actionCodeSettings: ActionCodeSettings(url: ''))
+    ]);
 
     await auth.signInAnonymously();
 
@@ -114,7 +122,8 @@ void main() {
     expect(find.byType(EmailLinkSignInView), findsOneWidget);
   });
 
-  testWidgets('settings button opens settings page', (WidgetTester tester) async {
+  testWidgets('settings button opens settings page',
+      (WidgetTester tester) async {
     await tester.pumpWidget(testWidgetBuild);
     await tester.tap(find.byIcon(Icons.settings));
     await tester.pumpAndSettle();

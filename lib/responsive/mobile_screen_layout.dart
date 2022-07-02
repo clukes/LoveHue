@@ -9,7 +9,7 @@ class MobileScreenLayout extends ScreenLayout {
   const MobileScreenLayout({Key? key}) : super(key: key);
 
   @override
-  _MobileScreenLayoutState createState() => _MobileScreenLayoutState();
+  State<ScreenLayout> createState() => _MobileScreenLayoutState();
 }
 
 class _MobileScreenLayoutState extends ScreenLayoutState {
@@ -25,7 +25,10 @@ class _MobileScreenLayoutState extends ScreenLayoutState {
       bottomNavigationBar: Container(
         decoration: const BoxDecoration(
           boxShadow: <BoxShadow>[
-            BoxShadow(color: Color.fromARGB(38, 0, 0, 0), blurRadius: 20, offset: Offset(0, 0.75))
+            BoxShadow(
+                color: Color.fromARGB(38, 0, 0, 0),
+                blurRadius: 20,
+                offset: Offset(0, 0.75))
           ],
         ),
         child: BottomNavigationBar(

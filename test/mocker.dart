@@ -44,4 +44,5 @@ class MockFunction extends Mock {
 ])
 void main() {
   // Uses build runner to generate mocks for tests.
+  // Using command: flutter pub run build_runner build
 }

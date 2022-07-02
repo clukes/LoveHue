@@ -17,13 +17,13 @@ Future<void> showAlertDialog({
   void Function()? noPressed,
 }) async {
   Widget noButton = TextButton(
-    child: noButtonText,
     onPressed: noPressed,
+    child: noButtonText,
   );
 
   Widget yesButton = TextButton(
-    child: yesButtonText,
     onPressed: yesPressed,
+    child: yesButtonText,
   );
 
   AlertDialog alert = AlertDialog(
@@ -55,19 +55,23 @@ class UnlinkAlertDialog {
   StateSetter? _setState;
 
   /// Shows an alert dialog with the unlink partner message.
-  Future<void> show(BuildContext context, String partnerName, String partnerLinkCode) async {
-    UserInfoState userInfoState = Provider.of<UserInfoState>(context, listen: false);
+  Future<void> show(
+      BuildContext context, String partnerName, String partnerLinkCode) async {
+    UserInfoState userInfoState =
+        Provider.of<UserInfoState>(context, listen: false);
     return showAlertDialog(
       context: context,
       yesButtonText: const Text(yesButtonText),
       noButtonText: const Text(noButtonText),
       alertTitle: const Text("Unlink from partner"),
-      alertContent: StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+      alertContent: StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
         _setState = setState;
         return SingleChildScrollView(
           child: ListBody(
             children: <Widget>[
-              const Text("Are you sure you would like to unlink from your partner?\n"),
+              const Text(
+                  "Are you sure you would like to unlink from your partner?\n"),
               Text(
                 "Partner Name: $partnerName\n"
                 "Partner Code: $partnerLinkCode",
@@ -121,13 +125,16 @@ class DeleteAlertDialog {
       yesButtonText: const Text(yesButtonText),
       noButtonText: const Text(noButtonText),
       alertTitle: const Text("Delete Account"),
-      alertContent: StatefulBuilder(builder: (BuildContext context, StateSetter setState) {
+      alertContent: StatefulBuilder(
+          builder: (BuildContext context, StateSetter setState) {
         _setState = setState;
         return SingleChildScrollView(
           child: ListBody(
             children: <Widget>[
-              const Text("Are you sure you would like to delete your account?\n"),
-              const Text("(All your data will be permanently deleted)", textScaleFactor: noteScaleFactor),
+              const Text(
+                  "Are you sure you would like to delete your account?\n"),
+              const Text("(All your data will be permanently deleted)",
+                  textScaleFactor: noteScaleFactor),
               if (_errorMsg != null)
                 Text(
                   "\n${_errorMsg!}",
@@ -156,7 +163,10 @@ class DeleteAlertDialog {
   }
 
   /// Deletes user data in database, then delete [FirebaseAuth] account with [User.delete]
-  Future<void> _deleteAccount(BuildContext context, FirebaseAuth auth, AuthenticationInfo authInfo) async {
-    return Provider.of<UserInfoState>(context, listen: false).userInfo?.deleteUserData(context, auth, authInfo);
+  Future<void> _deleteAccount(BuildContext context, FirebaseAuth auth,
+      AuthenticationInfo authInfo) async {
+    return Provider.of<UserInfoState>(context, listen: false)
+        .userInfo
+        ?.deleteUserData(context, auth, authInfo);
   }
 }

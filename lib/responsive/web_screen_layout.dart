@@ -10,7 +10,7 @@ class WebScreenLayout extends ScreenLayout {
   const WebScreenLayout({Key? key}) : super(key: key);
 
   @override
-  _WebScreenLayoutState createState() => _WebScreenLayoutState();
+  State<ScreenLayout> createState() => _WebScreenLayoutState();
 }
 
 class _WebScreenLayoutState extends ScreenLayoutState {
@@ -31,21 +31,24 @@ class _WebScreenLayoutState extends ScreenLayoutState {
           IconButton(
             icon: Icon(
               navigationBarIcons[0],
-              color: page == 0 ? activeNavigationColor : inactiveNavigationColor,
+              color:
+                  page == 0 ? activeNavigationColor : inactiveNavigationColor,
             ),
             onPressed: () => navigationTapped(0),
           ),
           IconButton(
             icon: Icon(
               navigationBarIcons[1],
-              color: page == 1 ? activeNavigationColor : inactiveNavigationColor,
+              color:
+                  page == 1 ? activeNavigationColor : inactiveNavigationColor,
             ),
             onPressed: () => navigationTapped(1),
           ),
           IconButton(
             icon: Icon(
               navigationBarIcons[2],
-              color: page == 2 ? activeNavigationColor : inactiveNavigationColor,
+              color:
+                  page == 2 ? activeNavigationColor : inactiveNavigationColor,
             ),
             onPressed: () => navigationTapped(2),
           ),

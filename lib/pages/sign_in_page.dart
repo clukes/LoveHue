@@ -16,7 +16,8 @@ class SignInPage extends StatelessWidget {
     // Returns empty if Firebase app is not initialized
     if (Firebase.apps.isEmpty) return const SizedBox.shrink();
 
-    ApplicationState appState = Provider.of<ApplicationState>(context, listen: false);
+    ApplicationState appState =
+        Provider.of<ApplicationState>(context, listen: false);
     AspectRatio logo = const AspectRatio(
       aspectRatio: 1,
       child: Image(
@@ -71,7 +72,8 @@ class SignInPage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   width: double.infinity,
                   child: OutlinedButton(
-                    onPressed: () async => await appState.authenticationInfo.signInAnonymously(context),
+                    onPressed: () async => await appState.authenticationInfo
+                        .signInAnonymously(Navigator.of(context)),
                     child: const Text('Skip Login'),
                   ),
                 ),
@@ -96,7 +98,7 @@ class SignInPage extends StatelessWidget {
       providerConfigs: appState.authenticationInfo.providerConfigs,
       actions: [
         AuthStateChangeAction<SignedIn>((context, _) async {
-          appState.authenticationInfo.afterSignIn(context);
+          appState.authenticationInfo.afterSignIn(Navigator.of(context));
         }),
       ],
       showAuthActionSwitch: false,

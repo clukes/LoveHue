@@ -13,7 +13,8 @@ import '../resources/printable_error.dart';
 /// Handles current user state, dealing with users [UserInformation]
 class UserInfoState with ChangeNotifier {
   UserInfoState(FirebaseFirestore? firestore, this.partnersInfoState) {
-    this.firestore = (firestore == null) ? FirebaseFirestore.instance : firestore;
+    this.firestore =
+        (firestore == null) ? FirebaseFirestore.instance : firestore;
   }
 
   final PartnersInfoState partnersInfoState;
@@ -37,7 +38,9 @@ class UserInfoState with ChangeNotifier {
   bool get userPending => (userExist && (userInfo?.linkPending ?? false));
 
   /// True if [partnerExist] and there isn't a link pending.
-  bool get partnerLinked => (partnersInfoState.partnerExist && !partnersInfoState.partnerPending && !userPending);
+  bool get partnerLinked => (partnersInfoState.partnerExist &&
+      !partnersInfoState.partnerPending &&
+      !userPending);
 
   /// Stores the most recent [RelationshipBarDocument].
   RelationshipBarDocument? latestRelationshipBarDoc;
@@ -54,17 +57,22 @@ class UserInfoState with ChangeNotifier {
   /// Setups listener for [UserInformation] changes of [userID] document.
   void setupUserInfoSubscription() {
     if (userInfo != null) {
-      _userInfoSubscription = userInfo!.getUserInDatabase().snapshots().listen((snapshot) async {
+      _userInfoSubscription =
+          userInfo!.getUserInDatabase().snapshots().listen((snapshot) async {
         UserInformation? newUserInfo = snapshot.data();
-        debugPrint("UserInfoState.setupYourInfoSubscription: User Info Change: $newUserInfo");
+        debugPrint(
+            "UserInfoState.setupYourInfoSubscription: User Info Change: $newUserInfo");
 
         if (newUserInfo != null) {
           userInfo = newUserInfo;
 
           String? partnerID = newUserInfo.partnerID;
-          if (partnerID != null && (!partnersInfoState.partnerExist || partnersInfoState.partnersID != partnerID)) {
+          if (partnerID != null &&
+              (!partnersInfoState.partnerExist ||
+                  partnersInfoState.partnersID != partnerID)) {
             // If theres a new partner linked, setup partner info.
-            UserInformation? partnerInfo = await UserInformation.firestoreGetFromID(partnerID, firestore);
+            UserInformation? partnerInfo =
+                await UserInformation.firestoreGetFromID(partnerID, firestore);
             partnersInfoState.addPartner(partnerInfo, userInfo!);
           } else if (partnerID == null && partnersInfoState.partnerExist) {
             // Remove partner info if not linked.
@@ -125,8 +133,10 @@ class UserInfoState with ChangeNotifier {
     }
 
     await firestore.runTransaction((transaction) async {
-      DocumentReference<LinkCode?> partnerCodeReference = LinkCode.getDocumentReference(linkCode, firestore);
-      DocumentSnapshot partnerCodeSnapshot = await transaction.get(partnerCodeReference);
+      DocumentReference<LinkCode?> partnerCodeReference =
+          LinkCode.getDocumentReference(linkCode, firestore);
+      DocumentSnapshot partnerCodeSnapshot =
+          await transaction.get(partnerCodeReference);
       if (!partnerCodeSnapshot.exists) {
         throw PrintableError("Link code does not exist.");
       }
@@ -134,20 +144,26 @@ class UserInfoState with ChangeNotifier {
         throw PrintableError("No user for that link code.");
       }
       String partnerID = partnerCodeSnapshot.get(LinkCode.columnUser).id;
-      DocumentReference<UserInformation?> partner = UserInformation.getUserInDatabaseFromID(partnerID, firestore);
+      DocumentReference<UserInformation?> partner =
+          UserInformation.getUserInDatabaseFromID(partnerID, firestore);
       DocumentReference<UserInformation?> currentUser =
           UserInformation.getUserInDatabaseFromID(userInfo.userID, firestore);
-      DocumentSnapshot<UserInformation?> partnerSnapshot = await transaction.get(partner);
+      DocumentSnapshot<UserInformation?> partnerSnapshot =
+          await transaction.get(partner);
       if (!partnerSnapshot.exists || partnerSnapshot.data() == null) {
         throw PrintableError("Link code does not exist.");
       }
       if (partnerSnapshot.get(UserInformation.columnPartner) != null) {
         throw PrintableError("That user is already connected to a partner.");
       }
-      transaction
-          .update(currentUser, {UserInformation.columnPartner: partner, UserInformation.columnLinkPending: false});
-      transaction
-          .update(partner, {UserInformation.columnPartner: currentUser, UserInformation.columnLinkPending: true});
+      transaction.update(currentUser, {
+        UserInformation.columnPartner: partner,
+        UserInformation.columnLinkPending: false
+      });
+      transaction.update(partner, {
+        UserInformation.columnPartner: currentUser,
+        UserInformation.columnLinkPending: true
+      });
       UserInformation partnerInfo = partnerSnapshot.data()!;
       partnerInfo.linkPending = true;
       partnerInfo.partner = currentUser;
@@ -167,17 +183,24 @@ class UserInfoState with ChangeNotifier {
       throw PrintableError("Already connected to a partner.");
     }
     UserInformation userInfo = _getCurrentUser();
-    DocumentReference<UserInformation?> currentUser = userInfo.getUserInDatabase();
+    DocumentReference<UserInformation?> currentUser =
+        userInfo.getUserInDatabase();
     // Update the user info in database first, then update locally stored information.
-    await currentUser.update({UserInformation.columnLinkPending: false}).then((_) async {
-      debugPrint("LinkCode.acceptRequest: Updated linkPending for user id: ${currentUser.id}.");
+    await currentUser
+        .update({UserInformation.columnLinkPending: false}).then((_) async {
+      debugPrint(
+          "LinkCode.acceptRequest: Updated linkPending for user id: ${currentUser.id}.");
       userInfo.linkPending = false;
       // Pull local partner info from database if it isn't correct.
       if (userInfo.partnerID != null &&
-          (!partnersInfoState.partnerExist || userInfo.partnerID != partnersInfoState.partnersID)) {
-        UserInformation? newPartnerInfo = await UserInformation.firestoreGetFromID(userInfo.partnerID!, firestore);
+          (!partnersInfoState.partnerExist ||
+              userInfo.partnerID != partnersInfoState.partnersID)) {
+        UserInformation? newPartnerInfo =
+            await UserInformation.firestoreGetFromID(
+                userInfo.partnerID!, firestore);
         partnersInfoState.addPartner(newPartnerInfo, userInfo);
-        debugPrint("LinkCode.acceptRequest: Updated partner info with partner id: ${userInfo.partnerID}.");
+        debugPrint(
+            "LinkCode.acceptRequest: Updated partner info with partner id: ${userInfo.partnerID}.");
       } else {
         // Notify listeners that partner has been connected.
         partnersInfoState.notify();
@@ -192,10 +215,16 @@ class UserInfoState with ChangeNotifier {
   Future<void> unlink() async {
     UserInformation userInfo = _getCurrentUser();
     await firestore.runTransaction((transaction) async {
-      DocumentReference<UserInformation?> currentUser = userInfo.getUserInDatabase();
-      transaction.update(currentUser, {UserInformation.columnPartner: null, UserInformation.columnLinkPending: false});
-      transaction
-          .update(userInfo.partner!, {UserInformation.columnPartner: null, UserInformation.columnLinkPending: false});
+      DocumentReference<UserInformation?> currentUser =
+          userInfo.getUserInDatabase();
+      transaction.update(currentUser, {
+        UserInformation.columnPartner: null,
+        UserInformation.columnLinkPending: false
+      });
+      transaction.update(userInfo.partner!, {
+        UserInformation.columnPartner: null,
+        UserInformation.columnLinkPending: false
+      });
     }).then((_) {
       partnersInfoState.removePartner(userInfo);
     });

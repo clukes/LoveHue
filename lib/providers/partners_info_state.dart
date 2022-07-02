@@ -26,10 +26,12 @@ class PartnersInfoState with ChangeNotifier {
   bool get partnerExist => (partnersID != null);
 
   /// True if [partnerExist] and there is a link pending.
-  bool get partnerPending => (partnerExist && (partnersInfo?.linkPending ?? false));
+  bool get partnerPending =>
+      (partnerExist && (partnersInfo?.linkPending ?? false));
 
   /// [ValueNotifier] to listen to changes in the partners [UserInformation.displayName]. Defaults to "Partner".
-  ValueNotifier<String> partnersName = ValueNotifier<String>(defaultPartnerName);
+  ValueNotifier<String> partnersName =
+      ValueNotifier<String>(defaultPartnerName);
 
   /// Allows outside classes to call [notifyListeners].
   void notify() => notifyListeners();
@@ -37,19 +39,23 @@ class PartnersInfoState with ChangeNotifier {
   /// Setups listener for [UserInformation] changes of [partnersID] document.
   void setupPartnerInfoSubscription(UserInformation currentUserInfo) {
     if (partnersInfo != null) {
-      _partnersInfoSubscription = partnersInfo!.getUserInDatabase().snapshots().listen((snapshot) {
+      _partnersInfoSubscription =
+          partnersInfo!.getUserInDatabase().snapshots().listen((snapshot) {
         UserInformation? partnersUserInfo = snapshot.data();
-        debugPrint("PartnersInfoState.setupPartnerInfoSubscription: Partner Info Change: $partnersUserInfo");
+        debugPrint(
+            "PartnersInfoState.setupPartnerInfoSubscription: Partner Info Change: $partnersUserInfo");
 
         if (partnersUserInfo?.partnerID == currentUserInfo.userID) {
           // Check that user and partner are linked to each other
           partnersInfo = partnersUserInfo;
-          if (partnersName.value != partnersUserInfo?.displayName && partnersUserInfo?.displayName != null) {
+          if (partnersName.value != partnersUserInfo?.displayName &&
+              partnersUserInfo?.displayName != null) {
             // Update the ValueNotifier with current displayName.
             partnersName.value = partnersUserInfo!.displayName!;
           }
         } else {
-          debugPrint("PartnersInfoState.setupPartnerInfoSubscription: Error: Not linked to that partner.");
+          debugPrint(
+              "PartnersInfoState.setupPartnerInfoSubscription: Error: Not linked to that partner.");
           partnersInfo = null;
         }
         notifyListeners();
@@ -58,7 +64,8 @@ class PartnersInfoState with ChangeNotifier {
   }
 
   /// Setups local data for a new partner.
-  void addPartner(UserInformation? newPartnerInfo, UserInformation currentUserInfo) {
+  void addPartner(
+      UserInformation? newPartnerInfo, UserInformation currentUserInfo) {
     if (newPartnerInfo != null) {
       partnersInfo = newPartnerInfo;
       partnersName.value = newPartnerInfo.displayName ?? defaultPartnerName;

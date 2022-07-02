@@ -20,9 +20,9 @@ abstract class ScreenLayoutState<T extends ScreenLayout> extends State<T> {
     pageController = PageController();
     pageView = PageView(
       physics: const NeverScrollableScrollPhysics(),
-      children: navigationBarPages,
       controller: pageController,
       onPageChanged: onPageChanged,
+      children: navigationBarPages,
     );
   }
 

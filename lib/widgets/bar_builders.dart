@@ -11,12 +11,15 @@ import 'app_bars.dart';
 
 /// Builder to build widgets for a [RelationshipBarDocument], including each [RelationshipBar].
 class BarDocBuilder extends StatelessWidget {
-  const BarDocBuilder({Key? key, this.barDoc, required this.itemBuilderFunction}) : super(key: key);
+  const BarDocBuilder(
+      {Key? key, this.barDoc, required this.itemBuilderFunction})
+      : super(key: key);
 
   final RelationshipBarDocument? barDoc;
 
   /// Function used to build a [RelationshipBar] widget.
-  final Widget Function(BuildContext context, RelationshipBar bar) itemBuilderFunction;
+  final Widget Function(BuildContext context, RelationshipBar bar)
+      itemBuilderFunction;
 
   @override
   Widget build(BuildContext context) {
@@ -40,9 +43,11 @@ class BarDocBuilder extends StatelessWidget {
         Expanded(
           child: ListView.builder(
             // kFloatingActionButtonMargin to give space at the bottom where floating action buttons don't overlap with bars.
-            padding: const EdgeInsets.only(top: 4, bottom: kFloatingActionButtonMargin + 64),
+            padding: const EdgeInsets.only(
+                top: 4, bottom: kFloatingActionButtonMargin + 64),
             itemCount: bars.length,
-            itemBuilder: (context, index) => itemBuilderFunction(context, bars[index]),
+            itemBuilder: (context, index) =>
+                itemBuilderFunction(context, bars[index]),
           ),
         )
       ]);
@@ -54,8 +59,7 @@ class BarDocBuilder extends StatelessWidget {
 /// Builder for a non-disabled [RelationshipBar], e.g. on YourBars page.
 Widget interactableBarBuilder(BuildContext context, RelationshipBar bar) {
   WidgetsBinding.instance.addPostFrameCallback((_) =>
-      Provider.of<UserInfoState>(context, listen: false).barsReset = false
-  );
+      Provider.of<UserInfoState>(context, listen: false).barsReset = false);
   return InteractableBarSlider(relationshipBar: bar);
 }
 
@@ -65,8 +69,11 @@ Widget nonInteractableBarBuilder(BuildContext context, RelationshipBar bar) {
 }
 
 /// Builds bars from given QuerySnapshot using the builder function.
-Widget buildBars(BuildContext context, AsyncSnapshot<QuerySnapshot<RelationshipBarDocument>> snapshot,
-    Widget Function(BuildContext context, RelationshipBar bar) itemBuilderFunction) {
+Widget buildBars(
+    BuildContext context,
+    AsyncSnapshot<QuerySnapshot<RelationshipBarDocument>> snapshot,
+    Widget Function(BuildContext context, RelationshipBar bar)
+        itemBuilderFunction) {
   if (snapshot.hasError) {
     return Center(
       child: Text(snapshot.error.toString()),
@@ -79,9 +86,11 @@ Widget buildBars(BuildContext context, AsyncSnapshot<QuerySnapshot<RelationshipB
     return const Center(child: Text("No bars found for partner."));
   }
   RelationshipBarDocument? latestBarDoc;
-  List<RelationshipBarDocument> listBarDocs = RelationshipBarDocument.fromQuerySnapshot(snapshot.requireData);
+  List<RelationshipBarDocument> listBarDocs =
+      RelationshipBarDocument.fromQuerySnapshot(snapshot.requireData);
   if (listBarDocs.isNotEmpty) {
     latestBarDoc = listBarDocs.first;
   }
-  return BarDocBuilder(barDoc: latestBarDoc, itemBuilderFunction: itemBuilderFunction);
+  return BarDocBuilder(
+      barDoc: latestBarDoc, itemBuilderFunction: itemBuilderFunction);
 }

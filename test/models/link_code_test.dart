@@ -58,9 +58,13 @@ void main() {
     });
 
     test('existing link code generates a new one', () async {
-      firestore.collection(linkCodesCollection).doc('1234').set({'linkCode': '1234'});
+      firestore
+          .collection(linkCodesCollection)
+          .doc('1234')
+          .set({'linkCode': '1234'});
 
-      DocumentReference codeRef = await LinkCode.create(firestore, newCode: '1234');
+      DocumentReference codeRef =
+          await LinkCode.create(firestore, newCode: '1234');
       DocumentSnapshot codeSnapshot = await codeRef.get();
       expectLater(codeSnapshot.exists, isFalse);
       expectLater(codeRef.id, isNot('1234'));
