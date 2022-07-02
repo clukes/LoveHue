@@ -26,7 +26,7 @@
    <img src="https://codecov.io/gh/clukes/LoveHue/branch/main/graph/badge.svg?token=JPENNSAFQS"/> 
   </a>
 </div>
-<br><br>
+<br>
 <details>
 <summary>Table of Contents</summary>
 
@@ -103,13 +103,14 @@ This can then open a conversation about why you each feel that way, moving the f
 ## Roadmap
 Current stage TODO:
 - [x] Unit Tests
-- [ ] Widget Tests
+- [ ] Widget Tests (In progress)
 - [ ] Integration Tests
 
 Development Process for V1.0:
 - [x] Design
 - [x] Development
-- [ ] Unit testing (35% coverage so far)
+- [ ] Unit testing (75% coverage so far)
+- [ ] Integration testing
 - [ ] Beta Testing
 - [ ] Production
 
