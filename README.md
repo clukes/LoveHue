@@ -1,4 +1,3 @@
-
 <div align="center">
   <img src="https://user-images.githubusercontent.com/25383436/156942429-0f111ad7-6004-4b5f-8570-73518765822c.png" alt="Logo" width="100%">
   <h1>A relationship app.</h1>
@@ -10,8 +9,40 @@
     • 
     <a href="https://clukes.github.io/LoveHue/">View code documentation</a>
   </strong>
+  <br>
 </div>
-
+<br>
+<div align="center">
+  <a href="https://github.com/clukes/LoveHue/releases" > 
+   <img alt="GitHub release (release name instead of tag name)" src="https://img.shields.io/github/v/release/clukes/LoveHue?include_prereleases&sort=date">
+  </a>
+  <a href="https://github.com/clukes/LoveHue/actions">
+    <img src="https://github.com/clukes/LoveHue/workflows/Unit_Tests/badge.svg" alt="Test Status">
+  </a>
+  <a href="https://codecov.io/gh/clukes/LoveHue" > 
+   <img src="https://codecov.io/gh/clukes/LoveHue/branch/main/graph/badge.svg?token=JPENNSAFQS"/> 
+  </a>
+  <a href="https://sonarcloud.io/summary/new_code?id=clukes_LoveHue" > 
+   <img src="https://sonarcloud.io/api/project_badges/measure?project=clukes_LoveHue&metric=alert_status"/> 
+  </a>
+  <br>
+  <a href="https://sonarcloud.io/summary/new_code?id=clukes_LoveHue" > 
+   <img src="https://sonarcloud.io/api/project_badges/measure?project=clukes_LoveHue&metric=sqale_rating"/> 
+  </a>
+  <a href="https://sonarcloud.io/summary/new_code?id=clukes_LoveHue" > 
+   <img src="https://sonarcloud.io/api/project_badges/measure?project=clukes_LoveHue&metric=reliability_rating"/> 
+  </a>
+  <a href="https://sonarcloud.io/summary/new_code?id=clukes_LoveHue" > 
+   <img src="https://sonarcloud.io/api/project_badges/measure?project=clukes_LoveHue&metric=ncloc"/> 
+  </a>
+  <a href="https://sonarcloud.io/summary/new_code?id=clukes_LoveHue" > 
+   <img src="https://sonarcloud.io/api/project_badges/measure?project=clukes_LoveHue&metric=bugs"/> 
+  </a>
+  <a href="https://sonarcloud.io/summary/new_code?id=clukes_LoveHue" > 
+   <img src="https://sonarcloud.io/api/project_badges/measure?project=clukes_LoveHue&metric=code_smells"/> 
+  </a>
+</div>
+<br><br>
 <details>
 <summary>Table of Contents</summary>
 
