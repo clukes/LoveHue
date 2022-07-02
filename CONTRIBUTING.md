@@ -1,16 +1,41 @@
-# Security Policy
+# Contributing
 
-## Reporting a Vulnerability
+Please feel free to contribute to this repository, by creating a branch and a pull request.
 
-If there are any vulnerabilities in **LoveHue**, don't hesitate to _report them_.
+## Development environment setup
 
-1. Use any of the [private contact addresses](https://github.com/clukes/LoveHue#support).
-2. Describe the vulnerability.
+To set up a development environment, please follow these steps:
 
-   If you have a fix, that is most welcome -- please attach or summarize it in your message!
+1. Clone the repo
 
-3. We will evaluate the vulnerability and, if necessary, release a fix or mitigating steps to address it. We will contact you to let you know the outcome, and will credit you in the report.
+   ```sh
+   git clone https://github.com/clukes/LoveHue
+   ```
 
-   Please **do not disclose the vulnerability publicly** until a fix is released!
+2. TODO
 
-4. Once we have either a) published a fix, or b) declined to address the vulnerability for whatever reason, you are free to publicly disclose it.
+## Issues and feature requests
+
+You've found a bug in the source code, a mistake in the documentation or maybe you'd like a new feature? 
+Take a look at [GitHub Discussions](https://github.com/clukes/LoveHue/discussions) to see if it's already being discussed.
+You can help us by [submitting an issue on GitHub](https://github.com/clukes/LoveHue/issues). Before you create an issue, make sure to search the issue archive -- your issue may have already been addressed!
+
+Please try to create bug reports that are:
+
+- _Reproducible._ Include steps to reproduce the problem.
+- _Specific._ Include as much detail as possible: which version, what environment, etc.
+- _Unique._ Do not duplicate existing opened issues.
+- _Scoped to a Single Bug._ One bug per report.
+
+**Even better: Submit a pull request with a fix or new feature!**
+
+### How to submit a Pull Request
+
+1. Search our repository for open or closed
+   [Pull Requests](https://github.com/clukes/LoveHue/pulls)
+   that relate to your submission. You don't want to duplicate effort.
+2. Fork the project
+3. Create your feature branch (`git checkout -b feat/amazing_feature`)
+4. Commit your changes (`git commit -m 'feat: add amazing_feature'`)
+5. Push to the branch (`git push origin feat/amazing_feature`)
+6. [Open a Pull Request](https://github.com/clukes/LoveHue/compare?expand=1)
