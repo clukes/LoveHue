@@ -27,7 +27,7 @@ jobs:
 
             # Create .dev.env file
             - name: Set env
-            - run: echo '${{ secrets.DEV_ENV }}' > .dev.env
+              run: echo '${{ secrets.DEV_ENV }}' > .dev.env
 
             # Analyze, check formatting, and run unit tests.
             - run: flutter analyze
