@@ -25,6 +25,9 @@
   <a href="https://codecov.io/gh/clukes/LoveHue" > 
    <img src="https://codecov.io/gh/clukes/LoveHue/branch/main/graph/badge.svg?token=JPENNSAFQS"/> 
   </a>
+  <a href="https://www.codefactor.io/repository/github/clukes/lovehue">
+    <img src="https://www.codefactor.io/repository/github/clukes/lovehue/badge" alt="CodeFactor" />
+  </a>
 </div>
 <br><br>
 <details>
