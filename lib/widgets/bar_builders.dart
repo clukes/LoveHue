@@ -53,8 +53,12 @@ class BarDocBuilder extends StatelessWidget {
 
 /// Builder for a non-disabled [RelationshipBar], e.g. on YourBars page.
 Widget interactableBarBuilder(BuildContext context, RelationshipBar bar) {
-  WidgetsBinding.instance
-      ?.addPostFrameCallback((_) => Provider.of<UserInfoState>(context, listen: false).barsReset = false);
+  WidgetsBinding? instance = WidgetsBinding.instance;
+  if(instance != null) {
+    instance.addPostFrameCallback((_) =>
+      Provider.of<UserInfoState>(context, listen: false).barsReset = false
+    );
+  }
   return InteractableBarSlider(relationshipBar: bar);
 }
 

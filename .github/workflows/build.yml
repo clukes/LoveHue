@@ -15,7 +15,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                target: ["flutter build apk --flavor dev -t lib/main_development.dart", macos, web]
+                target: ["apk --flavor dev -t lib/main_development.dart", macos, web]
         steps:
             # Set up Flutter.
             - name: Clone Flutter repository with stable channel
