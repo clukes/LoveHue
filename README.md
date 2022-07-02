@@ -17,7 +17,10 @@
    <img alt="GitHub release (release name instead of tag name)" src="https://img.shields.io/github/v/release/clukes/LoveHue?include_prereleases&sort=date">
   </a>
   <a href="https://github.com/clukes/LoveHue/actions">
-    <img src="https://github.com/clukes/LoveHue/workflows/Unit_Tests/badge.svg" alt="Test Status">
+    <img src="https://github.com/clukes/LoveHue/workflows/Builds/badge.svg" alt="Test Status">
+  </a>
+  <a href="https://github.com/clukes/LoveHue/actions">
+    <img src="https://github.com/clukes/LoveHue/workflows/Tests/badge.svg" alt="Test Status">
   </a>
   <a href="https://codecov.io/gh/clukes/LoveHue" > 
    <img src="https://codecov.io/gh/clukes/LoveHue/branch/main/graph/badge.svg?token=JPENNSAFQS"/> 
