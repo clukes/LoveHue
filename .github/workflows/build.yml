@@ -15,13 +15,13 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                target: ["apk --debug", macos, web]
+                target: ["flutter build apk --flavor dev -t lib/main_development.dart", macos, web]
         steps:
             # Set up Flutter.
-            - name: Clone Flutter repository with main channel
+            - name: Clone Flutter repository with stable channel
               uses: subosito/flutter-action@d8687e6979e8ef66d2b2970e2c92c1d8e801d7bf
               with:
-                  channel: main
+                  channel: 'stable'
             - run: flutter config --enable-macos-desktop
             - run: flutter doctor -v
 

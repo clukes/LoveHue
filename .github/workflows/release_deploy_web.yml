@@ -20,10 +20,10 @@ jobs:
         runs-on: ubuntu-18.04
         steps:
             # Set up Flutter.
-            - name: Clone Flutter repository with master channel
+            - name: Clone Flutter repository with stable channel
               uses: subosito/flutter-action@d8687e6979e8ef66d2b2970e2c92c1d8e801d7bf
               with:
-                  channel: master
+                  channel: "stable"
             - run: flutter doctor -v
 
             - name: Install web dependencies
