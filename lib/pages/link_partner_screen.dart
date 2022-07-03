@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:lovehue/models/user_information.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/partners_info_state.dart';
@@ -115,6 +114,7 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
             child: Header(heading: 'Enter partners link code to connect.'),
           ),
           TextFormField(
+            key: const Key("LinkCodeField"),
             controller: _controller,
             decoration: InputDecoration(
                 hintText: 'Link code',
@@ -128,6 +128,7 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
             width: double.infinity,
             padding: const EdgeInsets.only(top: 12),
             child: OutlinedButton.icon(
+              key: const Key("LinkCodeSubmitButton"),
               onPressed: onLinkCodeSubmit,
               icon: const Icon(Icons.person_add_alt_1),
               label: const Text('Link'),
@@ -163,18 +164,16 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
       String linkCode = _controller.text;
       UserInfoState userInfoState =
           Provider.of<UserInfoState>(context, listen: false);
-      UserInformation? userInfo = userInfoState.userInfo;
-      if (userInfo != null) {
-        await userInfoState.connectTo(linkCode).then((_) {
-          setState(() {
-            // Update page to reflect changes
-          });
-        }).catchError((error) {
-          setState(() {
-            _errorMsg = "Error: $error";
-          });
+      await userInfoState.connectTo(linkCode).then((_) {
+        setState(() {
+          // Update page to reflect changes
+          _errorMsg = null;
         });
-      }
+      }).catchError((error) {
+        setState(() {
+          _errorMsg = "Error: $error";
+        });
+      });
     }
     if (!mounted) return;
     ScaffoldMessenger.of(context).clearSnackBars();
