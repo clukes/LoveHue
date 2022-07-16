@@ -41,6 +41,7 @@ class MockFunction extends Mock {
   BuildContext,
   AuthenticationInfo,
   AppInfo,
+  NavigatorState,
 ])
 void main() {
   // Uses build runner to generate mocks for tests.
