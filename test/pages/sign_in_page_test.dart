@@ -49,7 +49,8 @@ void main() {
     ));
     when(appState.appInfo).thenReturn(appInfo);
     when(appState.authenticationInfo).thenReturn(authenticationInfo);
-    when(authenticationInfo.signInAnonymously(any)).thenAnswer((_) => Future.value());
+    when(authenticationInfo.signInAnonymously(any))
+        .thenAnswer((_) => Future.value());
     when(authenticationInfo.providerConfigs).thenReturn([]);
   });
 

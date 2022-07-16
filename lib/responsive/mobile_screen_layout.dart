@@ -4,7 +4,7 @@ import '../responsive/screen_layout.dart';
 import '../utils/globals.dart';
 import '../utils/navigation.dart';
 
-/// Vertical layout with [BottomNavigationBar] for screen size <= [webScreenSize].
+/// Vertical layout with [BottomNavigationBar] for screen size <= [webScreenWidth].
 class MobileScreenLayout extends ScreenLayout {
   const MobileScreenLayout({Key? key}) : super(key: key);
 

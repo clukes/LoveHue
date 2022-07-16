@@ -287,6 +287,12 @@ void main() {
       expectLater(userInfoState.connectTo(linkCodeID), throwsA(isA<PrintableError>()));
     });
 
+    test('null user info throws error', () async {
+      when(partnersInfoState.partnerExist).thenReturn(false);
+      userInfoState.userInfo = null;
+      expectLater(userInfoState.connectTo(linkCodeID), throwsA(isA<PrintableError>()));
+    });
+
     test('link code not in database throws error', () async {
       await firestore.collection(linkCodesCollection).doc(linkCodeID).delete();
       expectLater(userInfoState.connectTo(linkCodeID), throwsA(isA<PrintableError>()));

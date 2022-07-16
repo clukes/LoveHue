@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 
 /// Screen width to switch layout.
-const webScreenSize = 900;
+const webScreenWidth = 900;
 
 /// Default bar labels for new user.
 const List<String> defaultBarLabels = [

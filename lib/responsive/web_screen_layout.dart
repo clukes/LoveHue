@@ -5,7 +5,7 @@ import '../utils/colors.dart';
 import '../utils/globals.dart';
 import '../utils/navigation.dart';
 
-/// Wider layout with [AppBar] navigation for screen size > [webScreenSize].
+/// Wider layout with [AppBar] navigation for screen size > [webScreenWidth].
 class WebScreenLayout extends ScreenLayout {
   const WebScreenLayout({Key? key}) : super(key: key);
 
