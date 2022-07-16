@@ -28,7 +28,8 @@ void main() {
         home: MultiProvider(
       providers: [
         ChangeNotifierProvider<UserInfoState>.value(value: userInfoState),
-        ChangeNotifierProvider<PartnersInfoState>.value(value: partnersInfoState)
+        ChangeNotifierProvider<PartnersInfoState>.value(
+            value: partnersInfoState)
       ],
       child: Scaffold(body: testWidget),
     ));
@@ -42,19 +43,22 @@ void main() {
   });
 
   group('LinkPartnerScreen', () {
-    testWidgets('userPending displays incoming link request', (WidgetTester tester) async {
+    testWidgets('userPending displays incoming link request',
+        (WidgetTester tester) async {
       when(userInfoState.userPending).thenReturn(true);
       await tester.pumpWidget(testWidgetBuild);
       expect(find.byType(IncomingLinkRequest), findsOneWidget);
     });
 
-    testWidgets('partnerPending displays link request sent', (WidgetTester tester) async {
+    testWidgets('partnerPending displays link request sent',
+        (WidgetTester tester) async {
       when(partnersInfoState.partnerPending).thenReturn(true);
       await tester.pumpWidget(testWidgetBuild);
       expect(find.byType(LinkRequestSent), findsOneWidget);
     });
 
-    testWidgets('not partnerExist displays link partner form', (WidgetTester tester) async {
+    testWidgets('not partnerExist displays link partner form',
+        (WidgetTester tester) async {
       when(partnersInfoState.partnerExist).thenReturn(false);
       await tester.pumpWidget(testWidgetBuild);
       expect(find.byType(LinkPartnerForm), findsOneWidget);
@@ -66,7 +70,8 @@ void main() {
       expect(find.byType(CircularProgressIndicator), findsOneWidget);
     });
 
-    testWidgets('No user linkcode displays loading...', (WidgetTester tester) async {
+    testWidgets('No user linkcode displays loading...',
+        (WidgetTester tester) async {
       await tester.pumpWidget(testWidgetBuild);
       expect(find.text('Your link code is:'), findsOneWidget);
       expect(find.text('Loading...'), findsOneWidget);
@@ -82,7 +87,8 @@ void main() {
 
     testWidgets('copy button copies to clipboard', (WidgetTester tester) async {
       final MockClipboard mockClipboard = MockClipboard();
-      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(SystemChannels.platform, mockClipboard.handleMethodCall);
+      tester.binding.defaultBinaryMessenger.setMockMethodCallHandler(
+          SystemChannels.platform, mockClipboard.handleMethodCall);
 
       const linkCode = '1234';
       when(userInfoState.linkCode).thenReturn(linkCode);
@@ -93,8 +99,9 @@ void main() {
   });
 
   group('LinkPartnerForm', () {
-    var linkButtonFinder =
-        find.ancestor(of: find.byIcon(Icons.person_add_alt_1), matching: find.byWidgetPredicate((widget) => widget is OutlinedButton));
+    var linkButtonFinder = find.ancestor(
+        of: find.byIcon(Icons.person_add_alt_1),
+        matching: find.byWidgetPredicate((widget) => widget is OutlinedButton));
     var linkCodeFieldFinder = find.widgetWithText(TextFormField, 'Link code');
 
     setUp(() {
@@ -139,7 +146,8 @@ void main() {
       await tester.enterText(linkCodeFieldFinder, userCode);
       await tester.tap(linkButtonFinder);
       await tester.pumpAndSettle();
-      expect(find.textContaining("You can't be your own partner."), findsOneWidget);
+      expect(find.textContaining("You can't be your own partner."),
+          findsOneWidget);
     });
 
     testWidgets('successful link gives no error', (WidgetTester tester) async {
@@ -152,10 +160,12 @@ void main() {
       expect(find.textContaining("Error"), findsNothing);
     });
 
-    testWidgets('unsuccessful link displays error', (WidgetTester tester) async {
+    testWidgets('unsuccessful link displays error',
+        (WidgetTester tester) async {
       String errorMsg = "TestError";
       String userCode = "12345";
-      when(userInfoState.connectTo(userCode)).thenAnswer((_) async => throw PrintableError(errorMsg));
+      when(userInfoState.connectTo(userCode))
+          .thenAnswer((_) async => throw PrintableError(errorMsg));
       await tester.pumpWidget(testWidgetBuild);
       await tester.enterText(linkCodeFieldFinder, userCode);
       await tester.tap(linkButtonFinder);
@@ -163,10 +173,12 @@ void main() {
       expect(find.textContaining("Error: $errorMsg"), findsOneWidget);
     });
 
-    testWidgets('linking submit shows then hides snack bar', (WidgetTester tester) async {
+    testWidgets('linking submit shows then hides snack bar',
+        (WidgetTester tester) async {
       String userCode = "12345";
       Completer completer = Completer();
-      when(userInfoState.connectTo(userCode)).thenAnswer((_) async => completer.future);
+      when(userInfoState.connectTo(userCode))
+          .thenAnswer((_) async => completer.future);
       await tester.pumpWidget(testWidgetBuild);
       await tester.enterText(linkCodeFieldFinder, userCode);
       await tester.tap(linkButtonFinder);
@@ -187,12 +199,14 @@ void main() {
       when(partnersInfoState.partnerPending).thenReturn(true);
     });
 
-    testWidgets('null partner link code displays error', (WidgetTester tester) async {
+    testWidgets('null partner link code displays error',
+        (WidgetTester tester) async {
       when(partnersInfoState.linkCode).thenReturn(null);
 
       await tester.pumpWidget(testWidgetBuild);
 
-      expect(find.textContaining('[Error: no partner link code]'), findsOneWidget);
+      expect(
+          find.textContaining('[Error: no partner link code]'), findsOneWidget);
     });
 
     testWidgets('partner link code is displayed', (WidgetTester tester) async {
@@ -201,10 +215,12 @@ void main() {
 
       await tester.pumpWidget(testWidgetBuild);
 
-      expect(find.textContaining("Link request sent to: $linkCode"), findsOneWidget);
+      expect(find.textContaining("Link request sent to: $linkCode"),
+          findsOneWidget);
     });
 
-    testWidgets('cancel button shows then hides snack bar', (WidgetTester tester) async {
+    testWidgets('cancel button shows then hides snack bar',
+        (WidgetTester tester) async {
       Completer completer = Completer();
       when(userInfoState.unlink()).thenAnswer((_) async => completer.future);
       await tester.pumpWidget(testWidgetBuild);
@@ -224,7 +240,8 @@ void main() {
       verify(userInfoState.unlink());
     });
 
-    testWidgets('cancel button displays error on unlink', (WidgetTester tester) async {
+    testWidgets('cancel button displays error on unlink',
+        (WidgetTester tester) async {
       var error = PrintableError("Test-Error");
       when(userInfoState.unlink()).thenThrow(error);
       await tester.pumpWidget(testWidgetBuild);

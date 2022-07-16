@@ -20,8 +20,8 @@ jobs:
                   channel: "stable"
             - run: flutter doctor -v
 
-            # Checkout gallery code and get packages.
-            - name: Checkout gallery code
+            # Checkout LoveHue code and get packages.
+            - name: Checkout LoveHue code
               uses: actions/checkout@d171c3b028d844f2bf14e9fdec0c58114451e4bf
             - run: flutter pub get -v
 
