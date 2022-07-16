@@ -42,6 +42,7 @@ class MockFunction extends Mock {
   AuthenticationInfo,
   AppInfo,
   NavigatorState,
+  ReauthenticateHelper,
 ])
 void main() {
   // Uses build runner to generate mocks for tests.
