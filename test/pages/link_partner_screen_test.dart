@@ -13,13 +13,13 @@ import 'package:provider/provider.dart';
 import '../mocker.dart';
 import '../mocker.mocks.dart';
 
-//TODO: IncomingLinkRequest next
-
 void main() {
   late MockUserInfoState userInfoState;
   late MockPartnersInfoState partnersInfoState;
   late Widget testWidget;
   late Widget testWidgetBuild;
+
+  String errorText(Object error) => "Error: $error";
 
   setUp(() {
     userInfoState = MockUserInfoState();
@@ -171,7 +171,7 @@ void main() {
       await tester.enterText(linkCodeFieldFinder, userCode);
       await tester.tap(linkButtonFinder);
       await tester.pumpAndSettle();
-      expect(find.textContaining("Error: $errorMsg"), findsOneWidget);
+      expect(find.textContaining(errorText(errorMsg)), findsOneWidget);
     });
 
     testWidgets('linking submit shows then hides snack bar',
@@ -248,7 +248,107 @@ void main() {
       await tester.pumpWidget(testWidgetBuild);
       await tester.tap(cancelButtonFinder);
       await tester.pumpAndSettle();
-      expect(find.widgetWithText(SnackBar, "Error: $error."), findsOneWidget);
+      expect(find.widgetWithText(SnackBar, errorText(error)), findsOneWidget);
+    });
+  });
+
+  group('IncomingLinkRequest', () {
+    var acceptButtonFinder = find.widgetWithText(OutlinedButton, "Accept");
+    var rejectButtonFinder = find.widgetWithText(OutlinedButton, "Reject");
+
+    setUp(() {
+      when(userInfoState.userPending).thenReturn(true);
+    });
+
+    testWidgets('null incoming partner link code displays error',
+        (WidgetTester tester) async {
+      when(partnersInfoState.linkCode).thenReturn(null);
+
+      await tester.pumpWidget(testWidgetBuild);
+      expect(
+          find.textContaining('Incoming link request from:',
+              findRichText: true),
+          findsOneWidget);
+      expect(
+          find.textContaining('[Error: no partner link code]',
+              findRichText: true),
+          findsOneWidget);
+    });
+
+    testWidgets('incoming partner link code is displayed',
+        (WidgetTester tester) async {
+      String linkCode = "12345";
+      when(partnersInfoState.linkCode).thenReturn(linkCode);
+
+      await tester.pumpWidget(testWidgetBuild);
+      expect(
+          find.textContaining('Incoming link request from:',
+              findRichText: true),
+          findsOneWidget);
+      expect(find.textContaining(linkCode, findRichText: true), findsOneWidget);
+    });
+
+    testWidgets('accept button shows then hides snack bar',
+        (WidgetTester tester) async {
+      Completer completer = Completer();
+      when(userInfoState.acceptRequest())
+          .thenAnswer((_) async => completer.future);
+      await tester.pumpWidget(testWidgetBuild);
+      await tester.tap(acceptButtonFinder);
+      expect(find.widgetWithText(SnackBar, "Accepting..."), findsNothing);
+      await tester.pump();
+      expect(find.widgetWithText(SnackBar, "Accepting..."), findsOneWidget);
+      // Complete the future to finish execution and hide snackbar
+      completer.complete();
+      await tester.pumpAndSettle();
+      expect(find.widgetWithText(SnackBar, "Accepting..."), findsNothing);
+    });
+
+    testWidgets('accept button calls unlink', (WidgetTester tester) async {
+      await tester.pumpWidget(testWidgetBuild);
+      await tester.tap(acceptButtonFinder);
+      verify(userInfoState.acceptRequest());
+    });
+
+    testWidgets('accept button displays error on accept',
+        (WidgetTester tester) async {
+      var error = PrintableError("Test-Error");
+      when(userInfoState.acceptRequest()).thenThrow(error);
+      await tester.pumpWidget(testWidgetBuild);
+      await tester.tap(acceptButtonFinder);
+      await tester.pumpAndSettle();
+      expect(find.widgetWithText(SnackBar, errorText(error)), findsOneWidget);
+    });
+
+    testWidgets('cancel button shows then hides snack bar',
+        (WidgetTester tester) async {
+      Completer completer = Completer();
+      when(userInfoState.unlink()).thenAnswer((_) async => completer.future);
+      await tester.pumpWidget(testWidgetBuild);
+      await tester.tap(rejectButtonFinder);
+      expect(find.widgetWithText(SnackBar, "Rejecting..."), findsNothing);
+      await tester.pump();
+      expect(find.widgetWithText(SnackBar, "Rejecting..."), findsOneWidget);
+      // Complete the future to finish execution and hide snackbar
+      completer.complete();
+      await tester.pumpAndSettle();
+      expect(find.widgetWithText(SnackBar, "Rejecting..."), findsNothing);
+    });
+
+    testWidgets('cancel button calls unlink', (WidgetTester tester) async {
+      await tester.pumpWidget(testWidgetBuild);
+      await tester.tap(rejectButtonFinder);
+      verify(userInfoState.unlink());
+    });
+
+    testWidgets('reject button displays error on unlink',
+        (WidgetTester tester) async {
+      var error = PrintableError("Test-Error");
+      when(userInfoState.unlink()).thenThrow(error);
+      await tester.pumpWidget(testWidgetBuild);
+      await tester.tap(rejectButtonFinder);
+      await tester.pumpAndSettle();
+      expect(find.widgetWithText(SnackBar, errorText(error)), findsOneWidget);
     });
   });
 }
