@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:flutterfire_ui/auth.dart';
 import 'package:lovehue/resources/authentication_info.dart';
+import 'package:lovehue/resources/printable_error.dart';
 import 'package:mockito/mockito.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -41,14 +42,14 @@ void main() {
       navigator = MockNavigatorState();
       when(auth.currentUser).thenReturn(MockUser());
       when(auth.signInAnonymously()).thenAnswer((_) async => MockUserCredential());
-      when(navigator.pushAndRemoveUntil(captureAny, captureAny)).thenAnswer((_) async => null);
+      when(navigator.pushAndRemoveUntil(any, any)).thenAnswer((_) async => null);
     });
 
     test('calls signInAnonymously and navigator', () async {
       await subject.signInAnonymously(navigator, auth: auth);
 
       verify(auth.signInAnonymously());
-      verify(navigator.pushAndRemoveUntil(captureAny, captureAny));
+      verify(navigator.pushAndRemoveUntil(any, any));
     });
 
     test('doesnt navigate if user is null', () async {
@@ -57,18 +58,35 @@ void main() {
       await subject.signInAnonymously(navigator, auth: auth);
 
       verify(auth.signInAnonymously());
-      verifyNever(navigator.pushAndRemoveUntil(captureAny, captureAny));
+      verifyNever(navigator.pushAndRemoveUntil(any, any));
+    });
+  });
+
+  group("reauthenticate", () {
+    late MockFirebaseAuth auth;
+    late MockBuildContext context;
+
+    setUp(() {
+      auth = MockFirebaseAuth();
+      context = MockBuildContext();
+      when(auth.signInAnonymously()).thenAnswer((_) async => MockUserCredential());
+    });
+
+    test('null user throws error', () async {
+      when(auth.currentUser).thenReturn(null);
+      await expectLater(() => subject.reauthenticate(context, auth), throwsA(isA<PrintableError>()));
+    });
+
+    test('reauthenticate shows dialog', () async {
+      var helper = MockReauthenticateHelper();
+      when(helper.showDialog(any, any, any)).thenAnswer((_) async => false);
+      when(auth.currentUser).thenReturn(MockUser());
+
+      await subject.reauthenticate(context, auth, helper: helper);
+
+      verify(helper.showDialog(context, auth, subject.providerConfigs)).called(1);
     });
   });
 }
 
-class MockUserCredential implements UserCredential {
-  @override
-  AdditionalUserInfo? get additionalUserInfo => throw UnimplementedError();
-
-  @override
-  AuthCredential? get credential => throw UnimplementedError();
-
-  @override
-  User? get user => throw UnimplementedError();
-}
+class MockUserCredential extends Mock implements UserCredential {}

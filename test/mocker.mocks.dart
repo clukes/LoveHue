@@ -612,8 +612,11 @@ class MockAuthenticationInfo extends _i1.Mock
           returnValueForMissingStub: null);
   @override
   _i16.Future<bool> reauthenticate(
-          _i8.BuildContext? context, _i7.FirebaseAuth? auth) =>
-      (super.noSuchMethod(Invocation.method(#reauthenticate, [context, auth]),
+          _i8.BuildContext? context, _i7.FirebaseAuth? auth,
+          {_i6.ReauthenticateHelper? helper}) =>
+      (super.noSuchMethod(
+          Invocation.method(
+              #reauthenticate, [context, auth], {#helper: helper}),
           returnValue: Future<bool>.value(false)) as _i16.Future<bool>);
 }
 
@@ -930,4 +933,23 @@ class MockNavigatorState extends _i1.Mock implements _i8.NavigatorState {
   void didUpdateRestorationId() =>
       super.noSuchMethod(Invocation.method(#didUpdateRestorationId, []),
           returnValueForMissingStub: null);
+}
+
+/// A class which mocks [ReauthenticateHelper].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockReauthenticateHelper extends _i1.Mock
+    implements _i6.ReauthenticateHelper {
+  MockReauthenticateHelper() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i16.Future<bool> showDialog(
+          _i8.BuildContext? context,
+          _i7.FirebaseAuth? auth,
+          List<_i17.ProviderConfiguration>? providerConfigs) =>
+      (super.noSuchMethod(
+          Invocation.method(#showDialog, [context, auth, providerConfigs]),
+          returnValue: Future<bool>.value(false)) as _i16.Future<bool>);
 }

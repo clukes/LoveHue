@@ -56,16 +56,21 @@ class AuthenticationInfo {
     navigator.pushAndRemoveUntil(MaterialPageRoute(builder: (_) => responsiveLayout), (route) => false);
   }
 
-  Future<bool> reauthenticate(BuildContext context, FirebaseAuth auth) async {
+  Future<bool> reauthenticate(BuildContext context, FirebaseAuth auth, {ReauthenticateHelper? helper}) {
     User? user = auth.currentUser;
     if (user == null) {
       throw PrintableError("No current user.");
     }
-    return showReauthenticateDialog(
-      context: context,
-      providerConfigs: providerConfigs,
-      auth: auth,
-      onSignedIn: () => Navigator.of(context).pop(true),
-    );
+    helper ??= ReauthenticateHelper();
+    return helper.showDialog(context, auth, providerConfigs);
   }
+}
+
+class ReauthenticateHelper {
+  Future<bool> showDialog(BuildContext context, FirebaseAuth auth, List<ProviderConfiguration> providerConfigs) => showReauthenticateDialog(
+        context: context,
+        providerConfigs: providerConfigs,
+        auth: auth,
+        onSignedIn: () => Navigator.of(context).pop(true),
+      );
 }

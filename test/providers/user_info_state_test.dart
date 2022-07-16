@@ -128,7 +128,7 @@ void main() {
       await untilCalled(notifyListenerCallback.call()).timeout(timeout).then((value) {
         expect(userInfoState.userInfo, isNotNull);
         expect(userInfoState.userInfo!.userID, equals(currentUserInfo.userID));
-        verify(partnersInfoState.addPartner(captureAny, captureAny));
+        verify(partnersInfoState.addPartner(any, any));
       });
     });
 
@@ -159,8 +159,8 @@ void main() {
         expect(userInfoState.userInfo!.userID, equals(currentUserInfo.userID));
         verify(partnersInfoState.partnerExist);
         verify(partnersInfoState.partnersID);
-        verifyNever(partnersInfoState.addPartner(captureAny, captureAny));
-        verifyNever(partnersInfoState.removePartner(captureAny));
+        verifyNever(partnersInfoState.addPartner(any, any));
+        verifyNever(partnersInfoState.removePartner(any));
       });
     });
 
@@ -178,7 +178,7 @@ void main() {
       await untilCalled(notifyListenerCallback.call()).timeout(timeout).then((value) {
         expect(userInfoState.userInfo, isNotNull);
         expect(userInfoState.userInfo!.userID, equals(currentUserInfo.userID));
-        verify(partnersInfoState.removePartner(captureAny));
+        verify(partnersInfoState.removePartner(any));
       });
     });
   });
