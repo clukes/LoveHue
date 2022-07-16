@@ -114,7 +114,6 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
             child: Header(heading: 'Enter partners link code to connect.'),
           ),
           TextFormField(
-            key: const Key("LinkCodeField"),
             controller: _controller,
             decoration: InputDecoration(
                 hintText: 'Link code',
@@ -128,7 +127,6 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
             width: double.infinity,
             padding: const EdgeInsets.only(top: 12),
             child: OutlinedButton.icon(
-              key: const Key("LinkCodeSubmitButton"),
               onPressed: onLinkCodeSubmit,
               icon: const Icon(Icons.person_add_alt_1),
               label: const Text('Link'),
@@ -213,15 +211,26 @@ class _LinkRequestSentState extends State<LinkRequestSent> {
 
   Future<void> cancelRequest(BuildContext context) async {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Cancelling...')),
+      const SnackBar(
+        content: Text('Cancelling...'),
+      ),
     );
     UserInfoState userInfoState =
         Provider.of<UserInfoState>(context, listen: false);
-    await userInfoState.unlink().catchError((error) {
+
+    try {
+      await userInfoState.unlink();
+    } catch (error) {
+      ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $error.')),
+        SnackBar(
+          content: Text('Error: $error.'),
+          duration: const Duration(seconds: 10),
+        ),
       );
-    });
+      return;
+    }
+
     if (!mounted) return;
     ScaffoldMessenger.of(context).clearSnackBars();
   }
