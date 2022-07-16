@@ -33,6 +33,7 @@ jobs:
             - run: flutter analyze
             - name: Ensure the Dart code is formatted correctly
               run: flutter format --set-exit-if-changed --dry-run .
+              continue-on-error: true
             - name: Run Flutter unit tests
               run: flutter test --coverage
 
