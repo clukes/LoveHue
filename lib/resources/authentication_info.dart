@@ -38,7 +38,8 @@ class AuthenticationInfo {
 
   /// Implements [signInAnonymously] to allow sign in without email.
   /// navigator is Navigator.of(context)
-  Future<void> signInAnonymously(NavigatorState navigator, {FirebaseAuth? auth}) async {
+  Future<void> signInAnonymously(NavigatorState navigator,
+      {FirebaseAuth? auth}) async {
 /* TODO: HAVE LOADING OVERLAY */
     auth ??= FirebaseAuth.instance;
     await auth.signInAnonymously();
@@ -53,10 +54,12 @@ class AuthenticationInfo {
   /// Build and navigate to [ResponsiveLayout].
   /// navigator is Navigator.of(context)
   void afterSignIn(NavigatorState navigator) {
-    navigator.pushAndRemoveUntil(MaterialPageRoute(builder: (_) => responsiveLayout), (route) => false);
+    navigator.pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => responsiveLayout), (route) => false);
   }
 
-  Future<bool> reauthenticate(BuildContext context, FirebaseAuth auth, {ReauthenticateHelper? helper}) {
+  Future<bool> reauthenticate(BuildContext context, FirebaseAuth auth,
+      {ReauthenticateHelper? helper}) {
     User? user = auth.currentUser;
     if (user == null) {
       throw PrintableError("No current user.");
@@ -67,7 +70,9 @@ class AuthenticationInfo {
 }
 
 class ReauthenticateHelper {
-  Future<bool> showDialog(BuildContext context, FirebaseAuth auth, List<ProviderConfiguration> providerConfigs) => showReauthenticateDialog(
+  Future<bool> showDialog(BuildContext context, FirebaseAuth auth,
+          List<ProviderConfiguration> providerConfigs) =>
+      showReauthenticateDialog(
         context: context,
         providerConfigs: providerConfigs,
         auth: auth,
