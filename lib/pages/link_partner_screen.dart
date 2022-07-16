@@ -7,6 +7,9 @@ import '../resources/copy_to_clipboard.dart';
 import '../resources/unique_link_code_generator.dart';
 import '../widgets/header.dart';
 
+const errorDuration = Duration(seconds: 10);
+String errorText(Object error) => "Error: $error";
+
 /// Screen with link partner form to display when no partner linked.
 class LinkPartnerScreen extends StatefulWidget {
   const LinkPartnerScreen({Key? key}) : super(key: key);
@@ -222,12 +225,10 @@ class _LinkRequestSentState extends State<LinkRequestSent> {
       await userInfoState.unlink();
     } catch (error) {
       ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text('Error: $error.'),
-          duration: const Duration(seconds: 10),
-        ),
-      );
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(errorText(error)),
+        duration: errorDuration,
+      ));
       return;
     }
 
@@ -264,7 +265,7 @@ class _IncomingLinkRequestState extends State<IncomingLinkRequest> {
               TextSpan(
                   text: Provider.of<PartnersInfoState>(context, listen: true)
                           .linkCode ??
-                      "[Error: something went wrong.]",
+                      "[Error: no partner link code]",
                   style: const TextStyle(fontWeight: FontWeight.bold))
             ],
           ),
@@ -292,12 +293,18 @@ class _IncomingLinkRequestState extends State<IncomingLinkRequest> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Accepting...')),
     );
-    await userInfoState.acceptRequest().catchError((error) {
+    try {
+      await userInfoState.acceptRequest();
+    } catch (error) {
       ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $error.')),
-      );
-    });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(errorText(error)),
+        duration: errorDuration,
+      ));
+      return;
+    }
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).clearSnackBars();
   }
 
   Future<void> rejectRequest(BuildContext context, UserInfoState userInfoState,
@@ -305,11 +312,17 @@ class _IncomingLinkRequestState extends State<IncomingLinkRequest> {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Rejecting...')),
     );
-    await userInfoState.unlink().catchError((error) {
+    try {
+      await userInfoState.unlink();
+    } catch (error) {
       ScaffoldMessenger.of(context).clearSnackBars();
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $error.')),
-      );
-    });
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(errorText(error)),
+        duration: errorDuration,
+      ));
+      return;
+    }
+    if (!mounted) return;
+    ScaffoldMessenger.of(context).clearSnackBars();
   }
 }
