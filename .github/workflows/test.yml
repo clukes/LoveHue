@@ -20,8 +20,8 @@ jobs:
                   channel: "stable"
             - run: flutter doctor -v
 
-            # Checkout gallery code and get packages.
-            - name: Checkout gallery code
+            # Checkout LoveHue code and get packages.
+            - name: Checkout LoveHue code
               uses: actions/checkout@d171c3b028d844f2bf14e9fdec0c58114451e4bf
             - run: flutter pub get -v
 
@@ -33,6 +33,7 @@ jobs:
             - run: flutter analyze
             - name: Ensure the Dart code is formatted correctly
               run: flutter format --set-exit-if-changed --dry-run .
+              continue-on-error: true
             - name: Run Flutter unit tests
               run: flutter test --coverage
 
