@@ -20,7 +20,6 @@ void main() {
   late MockPartnersInfoState partnersInfoState;
   late Widget testWidget;
   late Widget testWidgetBuild;
-
   setUp(() {
     userInfoState = MockUserInfoState();
     partnersInfoState = MockPartnersInfoState();
