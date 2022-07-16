@@ -18,15 +18,13 @@ class LinkPartnerScreen extends StatefulWidget {
 class _LinkPartnerScreenState extends State<LinkPartnerScreen> {
   @override
   Widget build(BuildContext context) {
-    TextStyle linkCodeTextStyle =
-        DefaultTextStyle.of(context).style.copyWith(fontSize: 20);
+    TextStyle linkCodeTextStyle = DefaultTextStyle.of(context).style.copyWith(fontSize: 20);
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 32),
       child: SizedBox(
         width: double.infinity,
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Consumer2<UserInfoState, PartnersInfoState>(
-              builder: (context, userInfoState, partnersInfoState, _) {
+          Consumer2<UserInfoState, PartnersInfoState>(builder: (context, userInfoState, partnersInfoState, _) {
             return getLinkStatusWidget(userInfoState, partnersInfoState);
           }),
           const SizedBox(height: 64),
@@ -35,8 +33,7 @@ class _LinkPartnerScreenState extends State<LinkPartnerScreen> {
             style: linkCodeTextStyle,
             textAlign: TextAlign.center,
           ),
-          Consumer<UserInfoState>(
-              builder: (BuildContext context, UserInfoState userInfoState, _) {
+          Consumer<UserInfoState>(builder: (BuildContext context, UserInfoState userInfoState, _) {
             String linkCodeText = userInfoState.linkCode ?? 'Loading...';
             return Row(
               children: [
@@ -44,8 +41,7 @@ class _LinkPartnerScreenState extends State<LinkPartnerScreen> {
                 Expanded(
                   child: SelectableText(
                     linkCodeText,
-                    style:
-                        linkCodeTextStyle.copyWith(fontWeight: FontWeight.bold),
+                    style: linkCodeTextStyle.copyWith(fontWeight: FontWeight.bold),
                     textAlign: TextAlign.center,
                   ),
                 ),
@@ -67,8 +63,7 @@ class _LinkPartnerScreenState extends State<LinkPartnerScreen> {
   }
 
   // Return widget depending on the linking state.
-  Widget getLinkStatusWidget(
-      UserInfoState userInfoState, PartnersInfoState partnersInfoState) {
+  Widget getLinkStatusWidget(UserInfoState userInfoState, PartnersInfoState partnersInfoState) {
     ScaffoldMessenger.of(context).clearSnackBars();
     if (userInfoState.userPending) {
       return const IncomingLinkRequest();
@@ -114,21 +109,15 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
             child: Header(heading: 'Enter partners link code to connect.'),
           ),
           TextFormField(
-            key: const Key("LinkCodeField"),
             controller: _controller,
-            decoration: InputDecoration(
-                hintText: 'Link code',
-                errorText: _errorMsg,
-                helperText: 'Codes are case sensitive.'),
-            validator: (value) => _linkCodeValidator(value,
-                Provider.of<UserInfoState>(context, listen: false).linkCode),
+            decoration: InputDecoration(hintText: 'Link code', errorText: _errorMsg, helperText: 'Codes are case sensitive.'),
+            validator: (value) => _linkCodeValidator(value, Provider.of<UserInfoState>(context, listen: false).linkCode),
             onEditingComplete: onLinkCodeSubmit,
           ),
           Container(
             width: double.infinity,
             padding: const EdgeInsets.only(top: 12),
             child: OutlinedButton.icon(
-              key: const Key("LinkCodeSubmitButton"),
               onPressed: onLinkCodeSubmit,
               icon: const Icon(Icons.person_add_alt_1),
               label: const Text('Link'),
@@ -162,8 +151,7 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
         const SnackBar(content: Text('Linking...')),
       );
       String linkCode = _controller.text;
-      UserInfoState userInfoState =
-          Provider.of<UserInfoState>(context, listen: false);
+      UserInfoState userInfoState = Provider.of<UserInfoState>(context, listen: false);
       await userInfoState.connectTo(linkCode).then((_) {
         setState(() {
           // Update page to reflect changes
@@ -191,9 +179,7 @@ class LinkRequestSent extends StatefulWidget {
 class _LinkRequestSentState extends State<LinkRequestSent> {
   @override
   Widget build(BuildContext context) {
-    String code =
-        Provider.of<PartnersInfoState>(context, listen: false).linkCode ??
-            "[Error: no partner link code]";
+    String code = Provider.of<PartnersInfoState>(context, listen: false).linkCode ?? "[Error: no partner link code]";
     return Center(
       child: Padding(
         padding: const EdgeInsets.only(bottom: 16),
@@ -213,15 +199,25 @@ class _LinkRequestSentState extends State<LinkRequestSent> {
 
   Future<void> cancelRequest(BuildContext context) async {
     ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Cancelling...')),
+      const SnackBar(
+        content: Text('Cancelling...'),
+      ),
     );
-    UserInfoState userInfoState =
-        Provider.of<UserInfoState>(context, listen: false);
-    await userInfoState.unlink().catchError((error) {
+    UserInfoState userInfoState = Provider.of<UserInfoState>(context, listen: false);
+
+    try {
+      await userInfoState.unlink();
+    } catch (error) {
+      ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text('Error: $error.')),
+        SnackBar(
+          content: Text('Error: $error.'),
+          duration: const Duration(seconds: 10),
+        ),
       );
-    });
+      return;
+    }
+
     if (!mounted) return;
     ScaffoldMessenger.of(context).clearSnackBars();
   }
@@ -238,12 +234,9 @@ class IncomingLinkRequest extends StatefulWidget {
 class _IncomingLinkRequestState extends State<IncomingLinkRequest> {
   @override
   Widget build(BuildContext context) {
-    UserInfoState userInfoState =
-        Provider.of<UserInfoState>(context, listen: false);
-    PartnersInfoState partnersInfoState =
-        Provider.of<PartnersInfoState>(context, listen: false);
-    return Column(mainAxisAlignment: MainAxisAlignment.center, children: <
-        Widget>[
+    UserInfoState userInfoState = Provider.of<UserInfoState>(context, listen: false);
+    PartnersInfoState partnersInfoState = Provider.of<PartnersInfoState>(context, listen: false);
+    return Column(mainAxisAlignment: MainAxisAlignment.center, children: <Widget>[
       const SizedBox(height: 64),
       Padding(
         padding: const EdgeInsets.only(bottom: 16),
@@ -253,9 +246,7 @@ class _IncomingLinkRequestState extends State<IncomingLinkRequest> {
             children: <TextSpan>[
               const TextSpan(text: 'Incoming link request from:\n\n'),
               TextSpan(
-                  text: Provider.of<PartnersInfoState>(context, listen: true)
-                          .linkCode ??
-                      "[Error: something went wrong.]",
+                  text: Provider.of<PartnersInfoState>(context, listen: true).linkCode ?? "[Error: something went wrong.]",
                   style: const TextStyle(fontWeight: FontWeight.bold))
             ],
           ),
@@ -265,21 +256,18 @@ class _IncomingLinkRequestState extends State<IncomingLinkRequest> {
       const SizedBox(height: 16),
       Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: <Widget>[
         OutlinedButton(
-          onPressed: () async =>
-              await acceptRequest(context, userInfoState, partnersInfoState),
+          onPressed: () async => await acceptRequest(context, userInfoState, partnersInfoState),
           child: const Text('Accept'),
         ),
         OutlinedButton(
-          onPressed: () async =>
-              await rejectRequest(context, userInfoState, partnersInfoState),
+          onPressed: () async => await rejectRequest(context, userInfoState, partnersInfoState),
           child: const Text('Reject'),
         )
       ]),
     ]);
   }
 
-  Future<void> acceptRequest(BuildContext context, UserInfoState userInfoState,
-      PartnersInfoState partnersInfoState) async {
+  Future<void> acceptRequest(BuildContext context, UserInfoState userInfoState, PartnersInfoState partnersInfoState) async {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Accepting...')),
     );
@@ -291,8 +279,7 @@ class _IncomingLinkRequestState extends State<IncomingLinkRequest> {
     });
   }
 
-  Future<void> rejectRequest(BuildContext context, UserInfoState userInfoState,
-      PartnersInfoState partnersInfoState) async {
+  Future<void> rejectRequest(BuildContext context, UserInfoState userInfoState, PartnersInfoState partnersInfoState) async {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('Rejecting...')),
     );
