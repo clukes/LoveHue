@@ -175,10 +175,9 @@ class RelationshipBarDocument {
   static Future<void> firestoreSetList(
       String userID,
       List<RelationshipBarDocument> barDocs,
-      FirebaseFirestore? firestore) async {
+      FirebaseFirestore firestore) async {
     debugPrint(
         "RelationshipBarDocument.firestoreSetList: Set list of barDocs: $barDocs");
-    firestore ??= FirebaseFirestore.instance;
     final CollectionReference<RelationshipBarDocument> ref =
         getUserBarsFromID(userID, firestore);
     final WriteBatch batch = firestore.batch();
@@ -216,15 +215,13 @@ class RelationshipBarDocument {
   }
 
   /// Creates [RelationshipBarDocument] with given barList and adds to given userID's RelationshipBarDocument FirebaseFirestore collection.
-  static Future<RelationshipBarDocument?> firestoreAddBarList(
-      String userID, List<RelationshipBar>? barList,
-      {FirebaseFirestore? firestore}) async {
+  static Future<RelationshipBarDocument?> firestoreAddBarList(String userID,
+      List<RelationshipBar>? barList, FirebaseFirestore firestore) async {
     debugPrint(
         "RelationshipBarDocument.firestoreAddBarList: Add list: $barList.");
     if (barList == null) {
       return null;
     }
-    firestore ??= FirebaseFirestore.instance;
     WriteBatch batch = firestore.batch();
     RelationshipBarDocument barDoc =
         firestoreAddBarListWithBatch(userID, barList, batch, firestore);

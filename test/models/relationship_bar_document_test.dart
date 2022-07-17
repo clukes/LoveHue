@@ -230,8 +230,8 @@ void main() {
   group('firestoreAddBarList', () {
     test('adds barDoc with barList to database', () async {
       RelationshipBarDocument? newBarDoc =
-          await RelationshipBarDocument.firestoreAddBarList(userID, bars,
-              firestore: firestore);
+          await RelationshipBarDocument.firestoreAddBarList(
+              userID, bars, firestore);
       List<RelationshipBar>? result =
           await RelationshipBarDocument.getUserBarsFromID(userID, firestore)
               .doc(newBarDoc?.id)

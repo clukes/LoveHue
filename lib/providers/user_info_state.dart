@@ -241,4 +241,17 @@ class UserInfoState with ChangeNotifier {
     }
     return userInfo;
   }
+
+  Future<void> saveBars() async {
+    String? userID = this.userID;
+    RelationshipBarDocument? barDoc = latestRelationshipBarDoc;
+    if (userID != null && barDoc != null) {
+      barDoc.resetBarsChanged();
+      resetBarChange();
+      latestRelationshipBarDoc =
+          await RelationshipBarDocument.firestoreAddBarList(
+              userID, barDoc.barList, firestore);
+    }
+    return;
+  }
 }

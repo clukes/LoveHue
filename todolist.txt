@@ -13,25 +13,6 @@ flutter build apk --flavor dev -t lib/main_development.dart
 
 
 For 1.0 Release:
-Get Ready for GitHub release:
-- Think of a name.
-    NAME IDEAS:
-	LoveDOT
-        Something from mythology.
-        Rati is hindu god of love. Rati - Rating, play on that somehow.
-        Love, Relationship, Couple, Cupid
-        Connect, Rating, Valuation, Value, Compass, Tank, Fuel, Needs, Bond, Rate, Relate, Satisfaction, Link, Passion, Care, Check, Happy
-        PassionRate
-        LoveRati
-        Care
-	LoveLink
-	LoveCompass
-	CoupleCompass
-	LoveCheck
-	LoveLux
-	LoveChrome
-    LoveHue
-
 - Think of developer name.
 
 - Perform actions needed for release: Specify app ID and add signing config.
@@ -40,23 +21,9 @@ Get Ready for GitHub release:
 
 - Write about app dialog info.
 
-- Setup github readme doc.
-- Include roadmap/future features.
-- Link to api doc in readme.
-- Maybe setup project management in github, rather than just this todolist.
-
 - Before Release: https://docs.flutter.dev/deployment/android
 
-- Setup automated pipeline.
-    - https://docs.flutter.dev/deployment/cd
-    - Have two github repos, one public and one private. Each has a development branch and release branch.
-    - Automatically push commits from the private repo to public repo, with any confidential info removed.
-
-- Release on github, setup different branches with release and testing.
-
 - Write tests.
-
-- Have some sort of code evaluation, e.g. test code coverage. Display results on github.
 
 
 - Have flavours:
@@ -101,8 +68,6 @@ Get Ready for GitHub release:
     \ Change dark green colour to something else.
     - Add some animation
 
-- See if can call the bars needs, or something similar.
-
 - Improve error displays, display more errors on screen rather than printing, and log non display errors.
 - Show no internet connection message when trying to connect to FireStore and no connection error is given.
 
@@ -144,8 +109,6 @@ Get Ready for GitHub release:
 
 - Have nice website, use template, showing about app, link to it from portfolio.
 - Set this up on google hosting, with same name as domain name.
-
-- Maybe have web version to demo with emulated database.
 
 
 - Animated logo. https://icons8.com/icon/SHe9eWc1NTiF/half-heart
@@ -230,3 +193,36 @@ For 1.0 Release
 - Setup best .gitignore
 - Hide all confidential info in public repo.
 - Put version number in about dialog
+
+- See if can call the bars needs, or something similar.
+
+- Think of a name.
+    NAME IDEAS:
+	LoveDOT
+        Something from mythology.
+        Rati is hindu god of love. Rati - Rating, play on that somehow.
+        Love, Relationship, Couple, Cupid
+        Connect, Rating, Valuation, Value, Compass, Tank, Fuel, Needs, Bond, Rate, Relate, Satisfaction, Link, Passion, Care, Check, Happy
+        PassionRate
+        LoveRati
+        Care
+	LoveLink
+	LoveCompass
+	CoupleCompass
+	LoveCheck
+	LoveLux
+	LoveChrome
+    LoveHue
+
+- Setup github readme doc.
+- Include roadmap/future features.
+- Link to api doc in readme.
+- Maybe setup project management in github, rather than just this todolist.
+
+- Setup automated pipeline.
+    - https://docs.flutter.dev/deployment/cd
+    - Have two github repos, one public and one private. Each has a development branch and release branch.
+    - Automatically push commits from the private repo to public repo, with any confidential info removed.
+- Release on github, setup different branches with release and testing.
+- Have some sort of code evaluation, e.g. test code coverage. Display results on github.
+
