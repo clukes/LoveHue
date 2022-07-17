@@ -133,12 +133,10 @@ void main() {
     });
 
     testWidgets('save button saves bars', (WidgetTester tester) async {
-      when(userInfoState.userID).thenReturn('1234');
-
       await tester.pumpWidget(testWidgetBuild);
       await tester.tap(find.byTooltip('Save'));
 
-      verify(userInfoState.resetBarChange());
+      verify(userInfoState.saveBars());
     });
   });
 }

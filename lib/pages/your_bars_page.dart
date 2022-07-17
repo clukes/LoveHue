@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
-import '../models/relationship_bar_document.dart';
 import '../providers/application_state.dart';
 import '../providers/user_info_state.dart';
 import '../widgets/app_bars.dart';
@@ -75,17 +74,9 @@ class _YourBarsState extends State<YourBars>
             BlurredCircle(
               child: FloatingActionButton(
                 heroTag: "saveButton",
-                onPressed: () async {
-                  String? userID = userInfoState.userID;
-                  RelationshipBarDocument? barDoc =
-                      userInfoState.latestRelationshipBarDoc;
-                  if (userID != null && barDoc != null) {
-                    barDoc.resetBarsChanged();
-                    userInfoState.resetBarChange();
-                    await RelationshipBarDocument.firestoreAddBarList(
-                        userID, barDoc.barList);
-                  }
-                },
+                onPressed: () async => setState(() async {
+                  await userInfoState.saveBars();
+                }),
                 tooltip: 'Save',
                 child: const Icon(Icons.save),
               ),

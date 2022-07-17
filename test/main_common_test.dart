@@ -21,9 +21,11 @@ void main() {
   test('mainCommon calls AppRunner', () async {
     var mockAppRunner = MockAppRunner();
     await mainCommon(
-      const FirebaseOptions(apiKey: '', projectId: '', messagingSenderId: '', appId: ''),
+      const FirebaseOptions(
+          apiKey: '', projectId: '', messagingSenderId: '', appId: ''),
       const AppInfo(appName: '', aboutText: ''),
-      packageInfo: PackageInfo(appName: '', packageName: '', version: '', buildNumber: ''),
+      packageInfo: PackageInfo(
+          appName: '', packageName: '', version: '', buildNumber: ''),
       appRunner: mockAppRunner,
       firebaseApp: FakeFirebaseApp(),
       firebaseAuth: MockFirebaseAuth(),
@@ -34,7 +36,8 @@ void main() {
   test('AppRunner run calls runMethod with widget', () {
     var widget = const Text("");
     var mockFunction = MockFunction();
-    var subject = AppRunner(widget: widget, runMethod: (_) => mockFunction.call());
+    var subject =
+        AppRunner(widget: widget, runMethod: (_) => mockFunction.call());
     subject.run();
     verify(mockFunction.call());
   });
@@ -55,7 +58,8 @@ void main() {
       var providers = [
         ChangeNotifierProvider<ApplicationState>.value(value: appState),
         ChangeNotifierProvider<UserInfoState>.value(value: userInfoState),
-        ChangeNotifierProvider<PartnersInfoState>.value(value: partnersInfoState),
+        ChangeNotifierProvider<PartnersInfoState>.value(
+            value: partnersInfoState),
       ];
       testWidget = RelationshipBarsApp(providers: providers);
 
@@ -64,7 +68,8 @@ void main() {
       when(appState.loginState).thenReturn(ApplicationLoginState.loggedOut);
     });
 
-    testWidgets("navigates to responsive layout on sign in", (WidgetTester tester) async {
+    testWidgets("navigates to responsive layout on sign in",
+        (WidgetTester tester) async {
       await firebaseAuth.signOut();
       await tester.pumpWidget(testWidget);
       await tester.pump();
@@ -74,7 +79,8 @@ void main() {
       expect(find.byType(ResponsiveLayout), findsOneWidget);
     });
 
-    testWidgets("navigates to sign out page on sign out", (WidgetTester tester) async {
+    testWidgets("navigates to sign out page on sign out",
+        (WidgetTester tester) async {
       await firebaseAuth.signInAnonymously();
       await tester.pumpWidget(testWidget);
       await tester.pump();
