@@ -2,7 +2,7 @@ import 'firebase/firebase_options_demo.dart';
 import 'main_common.dart';
 import 'utils/app_info_class.dart';
 
-void main() {
+Future<void> main() async {
   mainCommon(
     DefaultFirebaseOptions.currentPlatform,
     const AppInfo(
