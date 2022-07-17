@@ -22,16 +22,20 @@ import 'utils/app_info_class.dart';
 import 'utils/theme_data.dart';
 
 /// Entry point with initializers.
-void mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo) async {
+Future<void> mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo,
+    {PackageInfo? packageInfo,
+    AppRunner? appRunner,
+    FirebaseApp? firebaseApp,
+    FirebaseAuth? firebaseAuth}) async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final AppInfo appInfo = flavorAppInfo;
-  final packageInfo = await PackageInfo.fromPlatform();
+  packageInfo ??= await PackageInfo.fromPlatform();
   final AuthenticationInfo authenticationInfo = AuthenticationInfo(packageInfo);
 
-  final FirebaseApp app =
-      await Firebase.initializeApp(options: firebaseOptions);
-  final FirebaseFirestore firestore = FirebaseFirestore.instanceFor(app: app);
+  firebaseApp ??= await Firebase.initializeApp(options: firebaseOptions);
+  final FirebaseFirestore firestore =
+      FirebaseFirestore.instanceFor(app: firebaseApp);
 
   // Add licenses for the fonts.
   LicenseRegistry.addLicense(() async* {
@@ -52,7 +56,7 @@ void mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo) async {
     partnersInfoState: partnersInfoState,
     firestore: firestore,
     authenticationInfo: authenticationInfo,
-    auth: FirebaseAuth.instance,
+    auth: firebaseAuth ?? FirebaseAuth.instance,
     appInfo: appInfo,
   );
 
@@ -62,7 +66,23 @@ void mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo) async {
     ChangeNotifierProvider<ApplicationState>.value(value: applicationState),
   ];
 
-  runApp(RelationshipBarsApp(providers: providers));
+  appRunner ??= AppRunner(
+    widget: RelationshipBarsApp(providers: providers),
+    runMethod: runApp,
+  );
+  appRunner.run();
+}
+
+class AppRunner {
+  AppRunner({
+    required this.widget,
+    required this.runMethod,
+  });
+
+  final Widget widget;
+  final Function(Widget) runMethod;
+
+  void run() => runMethod(widget);
 }
 
 /// Initial widget for the app.
@@ -91,7 +111,9 @@ class RelationshipBarsApp extends StatelessWidget {
               .copyWith(statusBarIconBrightness: Brightness.light),
           child: SafeArea(
             child: StreamBuilder(
-              stream: FirebaseAuth.instance.authStateChanges(),
+              stream: Provider.of<ApplicationState>(context, listen: false)
+                  .auth
+                  .authStateChanges(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   if (snapshot.hasData) {
