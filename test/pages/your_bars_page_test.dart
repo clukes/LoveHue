@@ -133,6 +133,7 @@ void main() {
     });
 
     testWidgets('save button saves bars', (WidgetTester tester) async {
+      when(userInfoState.saveBars()).thenAnswer((_) async {});
       await tester.pumpWidget(testWidgetBuild);
       await tester.tap(find.byTooltip('Save'));
 

@@ -74,9 +74,7 @@ class _YourBarsState extends State<YourBars>
             BlurredCircle(
               child: FloatingActionButton(
                 heroTag: "saveButton",
-                onPressed: () async => setState(() async {
-                  await userInfoState.saveBars();
-                }),
+                onPressed: () async => await userInfoState.saveBars(),
                 tooltip: 'Save',
                 child: const Icon(Icons.save),
               ),

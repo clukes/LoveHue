@@ -252,5 +252,6 @@ class UserInfoState with ChangeNotifier {
           await RelationshipBarDocument.firestoreAddBarList(
               userID, barDoc.barList, firestore);
     }
+    return;
   }
 }

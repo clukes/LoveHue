@@ -259,6 +259,11 @@ class MockUserInfoState extends _i1.Mock implements _i2.UserInfoState {
       returnValue: Future<void>.value(),
       returnValueForMissingStub: Future<void>.value()) as _i16.Future<void>);
   @override
+  _i16.Future<void> saveBars() => (super.noSuchMethod(
+      Invocation.method(#saveBars, []),
+      returnValue: Future<void>.value(),
+      returnValueForMissingStub: Future<void>.value()) as _i16.Future<void>);
+  @override
   void addListener(_i13.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#addListener, [listener]),
           returnValueForMissingStub: null);

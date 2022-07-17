@@ -510,10 +510,11 @@ void main() {
     test('null userID does nothing', () async {
       subject.userInfo = null;
       await subject.saveBars();
-      expect(subject.latestRelationshipBarDoc, isNull);
+      expect(subject.latestRelationshipBarDoc, equals(barDocument));
     });
 
     test('null barDoc does nothing', () async {
+      subject.latestRelationshipBarDoc = null;
       await subject.saveBars();
       expect(subject.latestRelationshipBarDoc, isNull);
     });
@@ -538,6 +539,8 @@ void main() {
       expect(firestoreDocs, hasLength(1));
       var doc = firestoreDocs.single;
       expect(doc.id, equals(subject.latestRelationshipBarDoc?.id));
+      expect(
+          subject.latestRelationshipBarDoc?.id, isNot(equals(barDocument.id)));
     });
   });
 }
