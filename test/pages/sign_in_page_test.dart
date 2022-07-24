@@ -49,8 +49,7 @@ void main() {
     ));
     when(appState.appInfo).thenReturn(appInfo);
     when(appState.authenticationInfo).thenReturn(authenticationInfo);
-    when(authenticationInfo.signInAnonymously(any))
-        .thenAnswer((_) => Future.value());
+    when(appState.signInAnonymously(any)).thenAnswer((_) => Future.value());
     when(authenticationInfo.providerConfigs).thenReturn([]);
   });
 
@@ -63,6 +62,6 @@ void main() {
     await tester.pumpWidget(testWidgetBuild);
     await tester.tap(find.widgetWithText(OutlinedButton, 'Skip Login'));
 
-    verify(authenticationInfo.signInAnonymously(any));
+    verify(appState.signInAnonymously(any));
   });
 }

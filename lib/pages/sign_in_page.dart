@@ -16,7 +16,8 @@ class SignInPage extends StatelessWidget {
     // Returns empty if Firebase app is not initialized
     if (Firebase.apps.isEmpty) return const SizedBox.shrink();
 
-    ApplicationState appState = Provider.of<ApplicationState>(context, listen: false);
+    ApplicationState appState =
+        Provider.of<ApplicationState>(context, listen: false);
     AspectRatio logo = const AspectRatio(
       aspectRatio: 1,
       child: Image(
@@ -49,7 +50,9 @@ class SignInPage extends StatelessWidget {
             Padding(
               padding: const EdgeInsets.only(top: 16),
               child: Column(children: const [
-                if (!kIsWeb) Text('You can use magic link to sign in with a verification link sent to your email, no password required.\n'),
+                if (!kIsWeb)
+                  Text(
+                      'You can use magic link to sign in with a verification link sent to your email, no password required.\n'),
                 Text(
                   'By using this app, you agree to our terms and conditions.',
                   style: TextStyle(color: Colors.grey),
@@ -69,7 +72,8 @@ class SignInPage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   width: double.infinity,
                   child: OutlinedButton(
-                    onPressed: () async => await appState.signInAnonymously(Navigator.of(context)),
+                    onPressed: () async =>
+                        await appState.signInAnonymously(Navigator.of(context)),
                     child: const Text('Skip Login'),
                   ),
                 ),

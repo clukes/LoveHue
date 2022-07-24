@@ -25,7 +25,8 @@ Future main() async {
 /// );
 /// ```
 class DevFirebaseOptions {
-  static FirebaseOptions get currentPlatform => DefaultFirebaseOptions.getCurrentPlatform(web: web, android: android);
+  static FirebaseOptions get currentPlatform =>
+      DefaultFirebaseOptions.getCurrentPlatform(web: web, android: android);
 
   static FirebaseOptions web = FirebaseOptions(
     apiKey: dotenv.env['DEV_WEB_APIKEY']!,

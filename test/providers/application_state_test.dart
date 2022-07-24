@@ -154,6 +154,6 @@ void main() {
 
     await appState.signInAnonymously(state);
 
-    verify(authInfo.signInAnonymously(state, auth: auth));
+    verify(authInfo.signInAnonymously(state, auth));
   });
 }

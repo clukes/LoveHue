@@ -16,7 +16,11 @@ void main() {
   late PackageInfo packageInfo;
 
   setUp(() {
-    packageInfo = PackageInfo(appName: "TestApp", packageName: packageName, version: "1", buildNumber: "2");
+    packageInfo = PackageInfo(
+        appName: "TestApp",
+        packageName: packageName,
+        version: "1",
+        buildNumber: "2");
     subject = AuthenticationInfo(packageInfo);
   });
 
@@ -29,7 +33,9 @@ void main() {
     });
 
     test('providerConfigs has email link provider config', () async {
-      expect(subject.providerConfigs.whereType<EmailLinkProviderConfiguration>(), isNotEmpty);
+      expect(
+          subject.providerConfigs.whereType<EmailLinkProviderConfiguration>(),
+          isNotEmpty);
     });
   });
 
@@ -41,8 +47,10 @@ void main() {
       auth = MockFirebaseAuth();
       navigator = MockNavigatorState();
       when(auth.currentUser).thenReturn(MockUser());
-      when(auth.signInAnonymously()).thenAnswer((_) async => MockUserCredential());
-      when(navigator.pushAndRemoveUntil(any, any)).thenAnswer((_) async => null);
+      when(auth.signInAnonymously())
+          .thenAnswer((_) async => MockUserCredential());
+      when(navigator.pushAndRemoveUntil(any, any))
+          .thenAnswer((_) async => null);
     });
 
     test('calls signInAnonymously and navigator', () async {
@@ -69,12 +77,14 @@ void main() {
     setUp(() {
       auth = MockFirebaseAuth();
       context = MockBuildContext();
-      when(auth.signInAnonymously()).thenAnswer((_) async => MockUserCredential());
+      when(auth.signInAnonymously())
+          .thenAnswer((_) async => MockUserCredential());
     });
 
     test('null user throws error', () async {
       when(auth.currentUser).thenReturn(null);
-      await expectLater(() => subject.reauthenticate(context, auth), throwsA(isA<PrintableError>()));
+      await expectLater(() => subject.reauthenticate(context, auth),
+          throwsA(isA<PrintableError>()));
     });
 
     test('reauthenticate shows dialog', () async {
@@ -84,7 +94,8 @@ void main() {
 
       await subject.reauthenticate(context, auth, helper: helper);
 
-      verify(helper.showDialog(context, auth, subject.providerConfigs)).called(1);
+      verify(helper.showDialog(context, auth, subject.providerConfigs))
+          .called(1);
     });
   });
 }
