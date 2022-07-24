@@ -23,10 +23,7 @@ import 'utils/theme_data.dart';
 
 /// Entry point with initializers.
 Future<void> mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo,
-    {PackageInfo? packageInfo,
-    AppRunner? appRunner,
-    FirebaseApp? firebaseApp,
-    FirebaseAuth? firebaseAuth}) async {
+    {PackageInfo? packageInfo, AppRunner? appRunner, FirebaseApp? firebaseApp, FirebaseAuth? firebaseAuth}) async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final AppInfo appInfo = flavorAppInfo;
@@ -34,13 +31,11 @@ Future<void> mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo,
   final AuthenticationInfo authenticationInfo = AuthenticationInfo(packageInfo);
 
   firebaseApp ??= await Firebase.initializeApp(options: firebaseOptions);
-  final FirebaseFirestore firestore =
-      FirebaseFirestore.instanceFor(app: firebaseApp);
+  final FirebaseFirestore firestore = FirebaseFirestore.instanceFor(app: firebaseApp);
 
   // Add licenses for the fonts.
   LicenseRegistry.addLicense(() async* {
-    String license =
-        await rootBundle.loadString('assets/google_fonts/DMSansOFL.txt');
+    String license = await rootBundle.loadString('assets/google_fonts/DMSansOFL.txt');
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
     license = await rootBundle.loadString('assets/google_fonts/PoppinsOFL.txt');
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
@@ -49,8 +44,7 @@ Future<void> mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo,
   GoogleFonts.config.allowRuntimeFetching = false;
 
   final PartnersInfoState partnersInfoState = PartnersInfoState();
-  final UserInfoState userInfoState =
-      UserInfoState(firestore, partnersInfoState);
+  final UserInfoState userInfoState = UserInfoState(firestore, partnersInfoState);
   final ApplicationState applicationState = ApplicationState(
     userInfoState: userInfoState,
     partnersInfoState: partnersInfoState,
@@ -87,8 +81,7 @@ class AppRunner {
 
 /// Initial widget for the app.
 class RelationshipBarsApp extends StatelessWidget {
-  const RelationshipBarsApp({Key? key, required this.providers})
-      : super(key: key);
+  const RelationshipBarsApp({Key? key, required this.providers}) : super(key: key);
 
   final List<ChangeNotifierProvider<ChangeNotifier>> providers;
 
@@ -100,20 +93,15 @@ class RelationshipBarsApp extends StatelessWidget {
       builder: (context, child) => MaterialApp(
         debugShowCheckedModeBanner: false,
         showPerformanceOverlay: false,
-        title: Provider.of<ApplicationState>(context, listen: false)
-            .appInfo
-            .appName,
+        title: Provider.of<ApplicationState>(context, listen: false).appInfo.appName,
         // Currently there is only one theme, a light one.
         theme: lightThemeData,
         home: AnnotatedRegion<SystemUiOverlayStyle>(
           // Ensures that the status bar stays dark with light text.
-          value: SystemUiOverlayStyle.dark
-              .copyWith(statusBarIconBrightness: Brightness.light),
+          value: SystemUiOverlayStyle.dark.copyWith(statusBarIconBrightness: Brightness.light),
           child: SafeArea(
             child: StreamBuilder(
-              stream: Provider.of<ApplicationState>(context, listen: false)
-                  .auth
-                  .authStateChanges(),
+              stream: Provider.of<ApplicationState>(context, listen: false).auth.authStateChanges(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   if (snapshot.hasData) {

@@ -147,9 +147,9 @@ class DeleteAlertDialog {
       yesPressed: () async {
         await _deleteAccount(context, auth, authInfo).then((_) {
           Navigator.pop(context, yesButtonText);
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => const SignInPage(),
-          ));
+          Navigator.of(context).pushAndRemoveUntil(
+              MaterialPageRoute(builder: (_) => const SignInPage()),
+              (route) => false);
         }).catchError((error) {
           if (_setState != null) {
             _setState!(() {
