@@ -20,6 +20,7 @@ void main() {
   late MockFirebaseAuth auth;
   late ApplicationState appState;
   late MockDocumentReference linkCodeRef;
+  late MockNotificationService notificationService;
 
   setUp(() {
     firestore = FakeFirebaseFirestore();
@@ -27,6 +28,7 @@ void main() {
     user = MockUser(uid: '1234', isAnonymous: true);
     userInfoState = MockUserInfoState();
     auth = MockFirebaseAuth(mockUser: user);
+    notificationService = MockNotificationService();
     appState = ApplicationState(
       userInfoState: userInfoState,
       partnersInfoState: partnersInfoState,
@@ -34,6 +36,7 @@ void main() {
       firestore: firestore,
       authenticationInfo: MockAuthenticationInfo(),
       appInfo: MockAppInfo(),
+      notificationService: notificationService,
     );
     linkCodeRef = MockDocumentReference<LinkCode>();
   });
@@ -122,13 +125,13 @@ void main() {
     when(userInfoState.latestRelationshipBarDoc).thenReturn(null);
 
     appState = ApplicationState(
-      userInfoState: userInfoState,
-      partnersInfoState: partnersInfoState,
-      auth: auth,
-      firestore: firestore,
-      authenticationInfo: MockAuthenticationInfo(),
-      appInfo: MockAppInfo(),
-    );
+        userInfoState: userInfoState,
+        partnersInfoState: partnersInfoState,
+        auth: auth,
+        firestore: firestore,
+        authenticationInfo: MockAuthenticationInfo(),
+        appInfo: MockAppInfo(),
+        notificationService: notificationService);
     appState.loginState = ApplicationLoginState.loggedIn;
 
     String displayName = 'Test';
@@ -159,13 +162,13 @@ void main() {
     when(userInfoState.latestRelationshipBarDoc).thenReturn(null);
 
     appState = ApplicationState(
-      userInfoState: userInfoState,
-      partnersInfoState: partnersInfoState,
-      auth: auth,
-      firestore: firestore,
-      authenticationInfo: MockAuthenticationInfo(),
-      appInfo: MockAppInfo(),
-    );
+        userInfoState: userInfoState,
+        partnersInfoState: partnersInfoState,
+        auth: auth,
+        firestore: firestore,
+        authenticationInfo: MockAuthenticationInfo(),
+        appInfo: MockAppInfo(),
+        notificationService: notificationService);
     appState.loginState = ApplicationLoginState.loggedIn;
 
     await auth.signOut();
@@ -177,5 +180,17 @@ void main() {
         .then((value) => verify(userInfoState.removeUser()))
         .timeout(timeout);
     expect(appState.loginState, equals(ApplicationLoginState.loggedOut));
+  });
+
+  test('sendNudgeNotification calls NotificationService', () {
+    appState.sendNudgeNotification();
+    verify(notificationService.sendNudgeNotification());
+  });
+
+  test('canSendNudgeNotification calls NotificationService', () {
+    when(notificationService.canSendNudgeNotification()).thenReturn(false);
+    expect(appState.canSendNudgeNotification(), isFalse);
+
+    verify(notificationService.canSendNudgeNotification());
   });
 }

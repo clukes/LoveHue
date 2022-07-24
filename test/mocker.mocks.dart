@@ -2,24 +2,25 @@
 // in lovehue/test/mocker.dart.
 // Do not manually edit this file.
 
-import 'dart:async' as _i16;
-import 'dart:ui' as _i13;
+import 'dart:async' as _i17;
+import 'dart:ui' as _i14;
 
 import 'package:cloud_firestore/cloud_firestore.dart' as _i4;
 import 'package:firebase_auth/firebase_auth.dart' as _i7;
-import 'package:flutter/material.dart' as _i8;
-import 'package:flutter/scheduler.dart' as _i11;
-import 'package:flutter/src/foundation/diagnostics.dart' as _i9;
-import 'package:flutterfire_ui/auth.dart' as _i17;
-import 'package:lovehue/models/relationship_bar_document.dart' as _i15;
-import 'package:lovehue/models/user_information.dart' as _i14;
-import 'package:lovehue/providers/application_state.dart' as _i12;
+import 'package:flutter/material.dart' as _i9;
+import 'package:flutter/scheduler.dart' as _i12;
+import 'package:flutter/src/foundation/diagnostics.dart' as _i10;
+import 'package:flutterfire_ui/auth.dart' as _i18;
+import 'package:lovehue/models/relationship_bar_document.dart' as _i16;
+import 'package:lovehue/models/user_information.dart' as _i15;
+import 'package:lovehue/providers/application_state.dart' as _i13;
 import 'package:lovehue/providers/partners_info_state.dart' as _i3;
 import 'package:lovehue/providers/user_info_state.dart' as _i2;
 import 'package:lovehue/resources/authentication_info.dart' as _i6;
+import 'package:lovehue/services/notification_service.dart' as _i8;
 import 'package:lovehue/utils/app_info_class.dart' as _i5;
 import 'package:mockito/mockito.dart' as _i1;
-import 'package:package_info_plus/package_info_plus.dart' as _i10;
+import 'package:package_info_plus/package_info_plus.dart' as _i11;
 
 // ignore_for_file: type=lint
 // ignore_for_file: avoid_redundant_argument_values
@@ -46,58 +47,61 @@ class _FakeAuthenticationInfo_4 extends _i1.Fake
 
 class _FakeFirebaseAuth_5 extends _i1.Fake implements _i7.FirebaseAuth {}
 
-class _FakeValueNotifier_6<T> extends _i1.Fake implements _i8.ValueNotifier<T> {
+class _FakeNotificationService_6 extends _i1.Fake
+    implements _i8.NotificationService {}
+
+class _FakeValueNotifier_7<T> extends _i1.Fake implements _i9.ValueNotifier<T> {
 }
 
-class _FakeCollectionReference_7<T extends Object?> extends _i1.Fake
+class _FakeCollectionReference_8<T extends Object?> extends _i1.Fake
     implements _i4.CollectionReference<T> {}
 
-class _FakeDocumentSnapshot_8<T extends Object?> extends _i1.Fake
+class _FakeDocumentSnapshot_9<T extends Object?> extends _i1.Fake
     implements _i4.DocumentSnapshot<T> {}
 
-class _FakeDocumentReference_9<T extends Object?> extends _i1.Fake
+class _FakeDocumentReference_10<T extends Object?> extends _i1.Fake
     implements _i4.DocumentReference<T> {}
 
-class _FakeWidget_10 extends _i1.Fake implements _i8.Widget {
+class _FakeWidget_11 extends _i1.Fake implements _i9.Widget {
   @override
-  String toString({_i8.DiagnosticLevel? minLevel = _i8.DiagnosticLevel.info}) =>
+  String toString({_i9.DiagnosticLevel? minLevel = _i9.DiagnosticLevel.info}) =>
       super.toString();
 }
 
-class _FakeInheritedWidget_11 extends _i1.Fake implements _i8.InheritedWidget {
+class _FakeInheritedWidget_12 extends _i1.Fake implements _i9.InheritedWidget {
   @override
-  String toString({_i8.DiagnosticLevel? minLevel = _i8.DiagnosticLevel.info}) =>
+  String toString({_i9.DiagnosticLevel? minLevel = _i9.DiagnosticLevel.info}) =>
       super.toString();
 }
 
-class _FakeDiagnosticsNode_12 extends _i1.Fake implements _i8.DiagnosticsNode {
+class _FakeDiagnosticsNode_13 extends _i1.Fake implements _i9.DiagnosticsNode {
   @override
   String toString(
-          {_i9.TextTreeConfiguration? parentConfiguration,
-          _i8.DiagnosticLevel? minLevel = _i8.DiagnosticLevel.info}) =>
+          {_i10.TextTreeConfiguration? parentConfiguration,
+          _i9.DiagnosticLevel? minLevel = _i9.DiagnosticLevel.info}) =>
       super.toString();
 }
 
-class _FakeActionCodeSettings_13 extends _i1.Fake
+class _FakeActionCodeSettings_14 extends _i1.Fake
     implements _i7.ActionCodeSettings {}
 
-class _FakePackageInfo_14 extends _i1.Fake implements _i10.PackageInfo {}
+class _FakePackageInfo_15 extends _i1.Fake implements _i11.PackageInfo {}
 
-class _FakeFocusScopeNode_15 extends _i1.Fake implements _i8.FocusScopeNode {
+class _FakeFocusScopeNode_16 extends _i1.Fake implements _i9.FocusScopeNode {
   @override
-  String toString({_i8.DiagnosticLevel? minLevel = _i8.DiagnosticLevel.info}) =>
+  String toString({_i9.DiagnosticLevel? minLevel = _i9.DiagnosticLevel.info}) =>
       super.toString();
 }
 
-class _FakeNavigator_16 extends _i1.Fake implements _i8.Navigator {
+class _FakeNavigator_17 extends _i1.Fake implements _i9.Navigator {
   @override
-  String toString({_i8.DiagnosticLevel? minLevel = _i8.DiagnosticLevel.info}) =>
+  String toString({_i9.DiagnosticLevel? minLevel = _i9.DiagnosticLevel.info}) =>
       super.toString();
 }
 
-class _FakeBuildContext_17 extends _i1.Fake implements _i8.BuildContext {}
+class _FakeBuildContext_18 extends _i1.Fake implements _i9.BuildContext {}
 
-class _FakeTicker_18 extends _i1.Fake implements _i11.Ticker {
+class _FakeTicker_19 extends _i1.Fake implements _i12.Ticker {
   @override
   String toString({bool? debugIncludeStack = false}) => super.toString();
 }
@@ -105,18 +109,18 @@ class _FakeTicker_18 extends _i1.Fake implements _i11.Ticker {
 /// A class which mocks [ApplicationState].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockApplicationState extends _i1.Mock implements _i12.ApplicationState {
+class MockApplicationState extends _i1.Mock implements _i13.ApplicationState {
   MockApplicationState() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i12.ApplicationLoginState get loginState =>
+  _i13.ApplicationLoginState get loginState =>
       (super.noSuchMethod(Invocation.getter(#loginState),
-              returnValue: _i12.ApplicationLoginState.loggedOut)
-          as _i12.ApplicationLoginState);
+              returnValue: _i13.ApplicationLoginState.loggedOut)
+          as _i13.ApplicationLoginState);
   @override
-  set loginState(_i12.ApplicationLoginState? _loginState) =>
+  set loginState(_i13.ApplicationLoginState? _loginState) =>
       super.noSuchMethod(Invocation.setter(#loginState, _loginState),
           returnValueForMissingStub: null);
   @override
@@ -142,15 +146,27 @@ class MockApplicationState extends _i1.Mock implements _i12.ApplicationState {
   _i7.FirebaseAuth get auth => (super.noSuchMethod(Invocation.getter(#auth),
       returnValue: _FakeFirebaseAuth_5()) as _i7.FirebaseAuth);
   @override
+  _i8.NotificationService get notificationService => (super.noSuchMethod(
+      Invocation.getter(#notificationService),
+      returnValue: _FakeNotificationService_6()) as _i8.NotificationService);
+  @override
   bool get hasListeners =>
       (super.noSuchMethod(Invocation.getter(#hasListeners), returnValue: false)
           as bool);
   @override
-  void addListener(_i13.VoidCallback? listener) =>
+  void sendNudgeNotification() =>
+      super.noSuchMethod(Invocation.method(#sendNudgeNotification, []),
+          returnValueForMissingStub: null);
+  @override
+  bool canSendNudgeNotification() =>
+      (super.noSuchMethod(Invocation.method(#canSendNudgeNotification, []),
+          returnValue: false) as bool);
+  @override
+  void addListener(_i14.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#addListener, [listener]),
           returnValueForMissingStub: null);
   @override
-  void removeListener(_i13.VoidCallback? listener) =>
+  void removeListener(_i14.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#removeListener, [listener]),
           returnValueForMissingStub: null);
   @override
@@ -183,12 +199,12 @@ class MockUserInfoState extends _i1.Mock implements _i2.UserInfoState {
       super.noSuchMethod(Invocation.setter(#firestore, _firestore),
           returnValueForMissingStub: null);
   @override
-  set userInfo(_i14.UserInformation? _userInfo) =>
+  set userInfo(_i15.UserInformation? _userInfo) =>
       super.noSuchMethod(Invocation.setter(#userInfo, _userInfo),
           returnValueForMissingStub: null);
   @override
   set latestRelationshipBarDoc(
-          _i15.RelationshipBarDocument? _latestRelationshipBarDoc) =>
+          _i16.RelationshipBarDocument? _latestRelationshipBarDoc) =>
       super.noSuchMethod(
           Invocation.setter(
               #latestRelationshipBarDoc, _latestRelationshipBarDoc),
@@ -230,7 +246,7 @@ class MockUserInfoState extends _i1.Mock implements _i2.UserInfoState {
       super.noSuchMethod(Invocation.method(#setupUserInfoSubscription, []),
           returnValueForMissingStub: null);
   @override
-  void addUser(_i14.UserInformation? newUserInfo) =>
+  void addUser(_i15.UserInformation? newUserInfo) =>
       super.noSuchMethod(Invocation.method(#addUser, [newUserInfo]),
           returnValueForMissingStub: null);
   @override
@@ -244,31 +260,31 @@ class MockUserInfoState extends _i1.Mock implements _i2.UserInfoState {
       super.noSuchMethod(Invocation.method(#resetBarChange, []),
           returnValueForMissingStub: null);
   @override
-  _i16.Future<void> connectTo(String? linkCode) => (super.noSuchMethod(
+  _i17.Future<void> connectTo(String? linkCode) => (super.noSuchMethod(
       Invocation.method(#connectTo, [linkCode]),
       returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i16.Future<void>);
+      returnValueForMissingStub: Future<void>.value()) as _i17.Future<void>);
   @override
-  _i16.Future<void> acceptRequest() => (super.noSuchMethod(
+  _i17.Future<void> acceptRequest() => (super.noSuchMethod(
       Invocation.method(#acceptRequest, []),
       returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i16.Future<void>);
+      returnValueForMissingStub: Future<void>.value()) as _i17.Future<void>);
   @override
-  _i16.Future<void> unlink() => (super.noSuchMethod(
+  _i17.Future<void> unlink() => (super.noSuchMethod(
       Invocation.method(#unlink, []),
       returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i16.Future<void>);
+      returnValueForMissingStub: Future<void>.value()) as _i17.Future<void>);
   @override
-  _i16.Future<void> saveBars() => (super.noSuchMethod(
+  _i17.Future<void> saveBars() => (super.noSuchMethod(
       Invocation.method(#saveBars, []),
       returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i16.Future<void>);
+      returnValueForMissingStub: Future<void>.value()) as _i17.Future<void>);
   @override
-  void addListener(_i13.VoidCallback? listener) =>
+  void addListener(_i14.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#addListener, [listener]),
           returnValueForMissingStub: null);
   @override
-  void removeListener(_i13.VoidCallback? listener) =>
+  void removeListener(_i14.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#removeListener, [listener]),
           returnValueForMissingStub: null);
   @override
@@ -289,16 +305,16 @@ class MockPartnersInfoState extends _i1.Mock implements _i3.PartnersInfoState {
   }
 
   @override
-  set partnersInfo(_i14.UserInformation? _partnersInfo) =>
+  set partnersInfo(_i15.UserInformation? _partnersInfo) =>
       super.noSuchMethod(Invocation.setter(#partnersInfo, _partnersInfo),
           returnValueForMissingStub: null);
   @override
-  _i8.ValueNotifier<String> get partnersName =>
+  _i9.ValueNotifier<String> get partnersName =>
       (super.noSuchMethod(Invocation.getter(#partnersName),
-              returnValue: _FakeValueNotifier_6<String>())
-          as _i8.ValueNotifier<String>);
+              returnValue: _FakeValueNotifier_7<String>())
+          as _i9.ValueNotifier<String>);
   @override
-  set partnersName(_i8.ValueNotifier<String>? _partnersName) =>
+  set partnersName(_i9.ValueNotifier<String>? _partnersName) =>
       super.noSuchMethod(Invocation.setter(#partnersName, _partnersName),
           returnValueForMissingStub: null);
   @override
@@ -317,26 +333,26 @@ class MockPartnersInfoState extends _i1.Mock implements _i3.PartnersInfoState {
   void notify() => super.noSuchMethod(Invocation.method(#notify, []),
       returnValueForMissingStub: null);
   @override
-  void setupPartnerInfoSubscription(_i14.UserInformation? currentUserInfo) =>
+  void setupPartnerInfoSubscription(_i15.UserInformation? currentUserInfo) =>
       super.noSuchMethod(
           Invocation.method(#setupPartnerInfoSubscription, [currentUserInfo]),
           returnValueForMissingStub: null);
   @override
-  void addPartner(_i14.UserInformation? newPartnerInfo,
-          _i14.UserInformation? currentUserInfo) =>
+  void addPartner(_i15.UserInformation? newPartnerInfo,
+          _i15.UserInformation? currentUserInfo) =>
       super.noSuchMethod(
           Invocation.method(#addPartner, [newPartnerInfo, currentUserInfo]),
           returnValueForMissingStub: null);
   @override
-  void removePartner(_i14.UserInformation? currentUserInfo) =>
+  void removePartner(_i15.UserInformation? currentUserInfo) =>
       super.noSuchMethod(Invocation.method(#removePartner, [currentUserInfo]),
           returnValueForMissingStub: null);
   @override
-  void addListener(_i13.VoidCallback? listener) =>
+  void addListener(_i14.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#addListener, [listener]),
           returnValueForMissingStub: null);
   @override
-  void removeListener(_i13.VoidCallback? listener) =>
+  void removeListener(_i14.VoidCallback? listener) =>
       super.noSuchMethod(Invocation.method(#removeListener, [listener]),
           returnValueForMissingStub: null);
   @override
@@ -368,7 +384,7 @@ class MockDocumentReference<T extends Object?> extends _i1.Mock
   @override
   _i4.CollectionReference<T> get parent =>
       (super.noSuchMethod(Invocation.getter(#parent),
-              returnValue: _FakeCollectionReference_7<T>())
+              returnValue: _FakeCollectionReference_8<T>())
           as _i4.CollectionReference<T>);
   @override
   String get path =>
@@ -377,38 +393,38 @@ class MockDocumentReference<T extends Object?> extends _i1.Mock
   _i4.CollectionReference<Map<String, dynamic>> collection(
           String? collectionPath) =>
       (super.noSuchMethod(Invocation.method(#collection, [collectionPath]),
-              returnValue: _FakeCollectionReference_7<Map<String, dynamic>>())
+              returnValue: _FakeCollectionReference_8<Map<String, dynamic>>())
           as _i4.CollectionReference<Map<String, dynamic>>);
   @override
-  _i16.Future<void> delete() => (super.noSuchMethod(
+  _i17.Future<void> delete() => (super.noSuchMethod(
       Invocation.method(#delete, []),
       returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i16.Future<void>);
+      returnValueForMissingStub: Future<void>.value()) as _i17.Future<void>);
   @override
-  _i16.Future<void> update(Map<String, Object?>? data) => (super.noSuchMethod(
+  _i17.Future<void> update(Map<String, Object?>? data) => (super.noSuchMethod(
       Invocation.method(#update, [data]),
       returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i16.Future<void>);
+      returnValueForMissingStub: Future<void>.value()) as _i17.Future<void>);
   @override
-  _i16.Future<_i4.DocumentSnapshot<T>> get([_i4.GetOptions? options]) =>
+  _i17.Future<_i4.DocumentSnapshot<T>> get([_i4.GetOptions? options]) =>
       (super.noSuchMethod(Invocation.method(#get, [options]),
               returnValue: Future<_i4.DocumentSnapshot<T>>.value(
-                  _FakeDocumentSnapshot_8<T>()))
-          as _i16.Future<_i4.DocumentSnapshot<T>>);
+                  _FakeDocumentSnapshot_9<T>()))
+          as _i17.Future<_i4.DocumentSnapshot<T>>);
   @override
-  _i16.Stream<_i4.DocumentSnapshot<T>> snapshots(
+  _i17.Stream<_i4.DocumentSnapshot<T>> snapshots(
           {bool? includeMetadataChanges = false}) =>
       (super.noSuchMethod(
               Invocation.method(#snapshots, [],
                   {#includeMetadataChanges: includeMetadataChanges}),
               returnValue: Stream<_i4.DocumentSnapshot<T>>.empty())
-          as _i16.Stream<_i4.DocumentSnapshot<T>>);
+          as _i17.Stream<_i4.DocumentSnapshot<T>>);
   @override
-  _i16.Future<void> set(T? data, [_i4.SetOptions? options]) =>
+  _i17.Future<void> set(T? data, [_i4.SetOptions? options]) =>
       (super.noSuchMethod(Invocation.method(#set, [data, options]),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-          as _i16.Future<void>);
+          as _i17.Future<void>);
   @override
   _i4.DocumentReference<R> withConverter<R>(
           {_i4.FromFirestore<R>? fromFirestore,
@@ -416,14 +432,14 @@ class MockDocumentReference<T extends Object?> extends _i1.Mock
       (super.noSuchMethod(
               Invocation.method(#withConverter, [],
                   {#fromFirestore: fromFirestore, #toFirestore: toFirestore}),
-              returnValue: _FakeDocumentReference_9<R>())
+              returnValue: _FakeDocumentReference_10<R>())
           as _i4.DocumentReference<R>);
 }
 
 /// A class which mocks [UserInformation].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockUserInformation extends _i1.Mock implements _i14.UserInformation {
+class MockUserInformation extends _i1.Mock implements _i15.UserInformation {
   MockUserInformation() {
     _i1.throwOnMissingStub(this);
   }
@@ -443,7 +459,7 @@ class MockUserInformation extends _i1.Mock implements _i14.UserInformation {
   @override
   _i4.DocumentReference<Object?> get linkCode =>
       (super.noSuchMethod(Invocation.getter(#linkCode),
-              returnValue: _FakeDocumentReference_9<Object?>())
+              returnValue: _FakeDocumentReference_10<Object?>())
           as _i4.DocumentReference<Object?>);
   @override
   set linkCode(_i4.DocumentReference<Object?>? _linkCode) =>
@@ -470,103 +486,103 @@ class MockUserInformation extends _i1.Mock implements _i14.UserInformation {
       (super.noSuchMethod(Invocation.method(#toMap, []),
           returnValue: <String, Object?>{}) as Map<String, Object?>);
   @override
-  _i4.DocumentReference<_i14.UserInformation?> getUserInDatabase() =>
+  _i4.DocumentReference<_i15.UserInformation?> getUserInDatabase() =>
       (super.noSuchMethod(Invocation.method(#getUserInDatabase, []),
-              returnValue: _FakeDocumentReference_9<_i14.UserInformation?>())
-          as _i4.DocumentReference<_i14.UserInformation?>);
+              returnValue: _FakeDocumentReference_10<_i15.UserInformation?>())
+          as _i4.DocumentReference<_i15.UserInformation?>);
   @override
-  _i16.Future<void> firestoreSet() => (super.noSuchMethod(
+  _i17.Future<void> firestoreSet() => (super.noSuchMethod(
       Invocation.method(#firestoreSet, []),
       returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i16.Future<void>);
+      returnValueForMissingStub: Future<void>.value()) as _i17.Future<void>);
   @override
-  _i16.Future<void> firestoreUpdateColumns(Map<String, Object?>? data) =>
+  _i17.Future<void> firestoreUpdateColumns(Map<String, Object?>? data) =>
       (super.noSuchMethod(Invocation.method(#firestoreUpdateColumns, [data]),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-          as _i16.Future<void>);
+          as _i17.Future<void>);
   @override
-  _i16.Future<void> firestoreDelete() => (super.noSuchMethod(
+  _i17.Future<void> firestoreDelete() => (super.noSuchMethod(
       Invocation.method(#firestoreDelete, []),
       returnValue: Future<void>.value(),
-      returnValueForMissingStub: Future<void>.value()) as _i16.Future<void>);
+      returnValueForMissingStub: Future<void>.value()) as _i17.Future<void>);
   @override
-  _i16.Future<void> deleteUserData(_i8.BuildContext? context,
+  _i17.Future<void> deleteUserData(_i9.BuildContext? context,
           _i7.FirebaseAuth? auth, _i6.AuthenticationInfo? authenticationInfo) =>
       (super.noSuchMethod(
               Invocation.method(
                   #deleteUserData, [context, auth, authenticationInfo]),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-          as _i16.Future<void>);
+          as _i17.Future<void>);
   @override
-  _i16.Future<void> setupUserInDatabase(_i2.UserInfoState? userInfoState) =>
+  _i17.Future<void> setupUserInDatabase(_i2.UserInfoState? userInfoState) =>
       (super.noSuchMethod(
               Invocation.method(#setupUserInDatabase, [userInfoState]),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-          as _i16.Future<void>);
+          as _i17.Future<void>);
 }
 
 /// A class which mocks [BuildContext].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockBuildContext extends _i1.Mock implements _i8.BuildContext {
+class MockBuildContext extends _i1.Mock implements _i9.BuildContext {
   MockBuildContext() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i8.Widget get widget => (super.noSuchMethod(Invocation.getter(#widget),
-      returnValue: _FakeWidget_10()) as _i8.Widget);
+  _i9.Widget get widget => (super.noSuchMethod(Invocation.getter(#widget),
+      returnValue: _FakeWidget_11()) as _i9.Widget);
   @override
   bool get debugDoingBuild => (super
           .noSuchMethod(Invocation.getter(#debugDoingBuild), returnValue: false)
       as bool);
   @override
-  _i8.InheritedWidget dependOnInheritedElement(_i8.InheritedElement? ancestor,
+  _i9.InheritedWidget dependOnInheritedElement(_i9.InheritedElement? ancestor,
           {Object? aspect}) =>
       (super.noSuchMethod(
           Invocation.method(
               #dependOnInheritedElement, [ancestor], {#aspect: aspect}),
-          returnValue: _FakeInheritedWidget_11()) as _i8.InheritedWidget);
+          returnValue: _FakeInheritedWidget_12()) as _i9.InheritedWidget);
   @override
-  void visitAncestorElements(bool Function(_i8.Element)? visitor) =>
+  void visitAncestorElements(bool Function(_i9.Element)? visitor) =>
       super.noSuchMethod(Invocation.method(#visitAncestorElements, [visitor]),
           returnValueForMissingStub: null);
   @override
-  void visitChildElements(_i8.ElementVisitor? visitor) =>
+  void visitChildElements(_i9.ElementVisitor? visitor) =>
       super.noSuchMethod(Invocation.method(#visitChildElements, [visitor]),
           returnValueForMissingStub: null);
   @override
-  void dispatchNotification(_i8.Notification? notification) => super
+  void dispatchNotification(_i9.Notification? notification) => super
       .noSuchMethod(Invocation.method(#dispatchNotification, [notification]),
           returnValueForMissingStub: null);
   @override
-  _i8.DiagnosticsNode describeElement(String? name,
-          {_i9.DiagnosticsTreeStyle? style =
-              _i9.DiagnosticsTreeStyle.errorProperty}) =>
+  _i9.DiagnosticsNode describeElement(String? name,
+          {_i10.DiagnosticsTreeStyle? style =
+              _i10.DiagnosticsTreeStyle.errorProperty}) =>
       (super.noSuchMethod(
           Invocation.method(#describeElement, [name], {#style: style}),
-          returnValue: _FakeDiagnosticsNode_12()) as _i8.DiagnosticsNode);
+          returnValue: _FakeDiagnosticsNode_13()) as _i9.DiagnosticsNode);
   @override
-  _i8.DiagnosticsNode describeWidget(String? name,
-          {_i9.DiagnosticsTreeStyle? style =
-              _i9.DiagnosticsTreeStyle.errorProperty}) =>
+  _i9.DiagnosticsNode describeWidget(String? name,
+          {_i10.DiagnosticsTreeStyle? style =
+              _i10.DiagnosticsTreeStyle.errorProperty}) =>
       (super.noSuchMethod(
           Invocation.method(#describeWidget, [name], {#style: style}),
-          returnValue: _FakeDiagnosticsNode_12()) as _i8.DiagnosticsNode);
+          returnValue: _FakeDiagnosticsNode_13()) as _i9.DiagnosticsNode);
   @override
-  List<_i8.DiagnosticsNode> describeMissingAncestor(
+  List<_i9.DiagnosticsNode> describeMissingAncestor(
           {Type? expectedAncestorType}) =>
       (super.noSuchMethod(
           Invocation.method(#describeMissingAncestor, [],
               {#expectedAncestorType: expectedAncestorType}),
-          returnValue: <_i8.DiagnosticsNode>[]) as List<_i8.DiagnosticsNode>);
+          returnValue: <_i9.DiagnosticsNode>[]) as List<_i9.DiagnosticsNode>);
   @override
-  _i8.DiagnosticsNode describeOwnershipChain(String? name) =>
+  _i9.DiagnosticsNode describeOwnershipChain(String? name) =>
       (super.noSuchMethod(Invocation.method(#describeOwnershipChain, [name]),
-          returnValue: _FakeDiagnosticsNode_12()) as _i8.DiagnosticsNode);
+          returnValue: _FakeDiagnosticsNode_13()) as _i9.DiagnosticsNode);
 }
 
 /// A class which mocks [AuthenticationInfo].
@@ -581,48 +597,48 @@ class MockAuthenticationInfo extends _i1.Mock
   @override
   _i7.ActionCodeSettings get actionCodeSettings =>
       (super.noSuchMethod(Invocation.getter(#actionCodeSettings),
-          returnValue: _FakeActionCodeSettings_13()) as _i7.ActionCodeSettings);
+          returnValue: _FakeActionCodeSettings_14()) as _i7.ActionCodeSettings);
   @override
   set actionCodeSettings(_i7.ActionCodeSettings? _actionCodeSettings) => super
       .noSuchMethod(Invocation.setter(#actionCodeSettings, _actionCodeSettings),
           returnValueForMissingStub: null);
   @override
-  _i10.PackageInfo get packageInfo =>
+  _i11.PackageInfo get packageInfo =>
       (super.noSuchMethod(Invocation.getter(#packageInfo),
-          returnValue: _FakePackageInfo_14()) as _i10.PackageInfo);
+          returnValue: _FakePackageInfo_15()) as _i11.PackageInfo);
   @override
-  set packageInfo(_i10.PackageInfo? _packageInfo) =>
+  set packageInfo(_i11.PackageInfo? _packageInfo) =>
       super.noSuchMethod(Invocation.setter(#packageInfo, _packageInfo),
           returnValueForMissingStub: null);
   @override
-  List<_i17.ProviderConfiguration> get providerConfigs =>
+  List<_i18.ProviderConfiguration> get providerConfigs =>
       (super.noSuchMethod(Invocation.getter(#providerConfigs),
-              returnValue: <_i17.ProviderConfiguration>[])
-          as List<_i17.ProviderConfiguration>);
+              returnValue: <_i18.ProviderConfiguration>[])
+          as List<_i18.ProviderConfiguration>);
   @override
-  set providerConfigs(List<_i17.ProviderConfiguration>? _providerConfigs) =>
+  set providerConfigs(List<_i18.ProviderConfiguration>? _providerConfigs) =>
       super.noSuchMethod(Invocation.setter(#providerConfigs, _providerConfigs),
           returnValueForMissingStub: null);
   @override
-  _i16.Future<void> signInAnonymously(_i8.NavigatorState? navigator,
+  _i17.Future<void> signInAnonymously(_i9.NavigatorState? navigator,
           {_i7.FirebaseAuth? auth}) =>
       (super.noSuchMethod(
               Invocation.method(#signInAnonymously, [navigator], {#auth: auth}),
               returnValue: Future<void>.value(),
               returnValueForMissingStub: Future<void>.value())
-          as _i16.Future<void>);
+          as _i17.Future<void>);
   @override
-  void afterSignIn(_i8.NavigatorState? navigator) =>
+  void afterSignIn(_i9.NavigatorState? navigator) =>
       super.noSuchMethod(Invocation.method(#afterSignIn, [navigator]),
           returnValueForMissingStub: null);
   @override
-  _i16.Future<bool> reauthenticate(
-          _i8.BuildContext? context, _i7.FirebaseAuth? auth,
+  _i17.Future<bool> reauthenticate(
+          _i9.BuildContext? context, _i7.FirebaseAuth? auth,
           {_i6.ReauthenticateHelper? helper}) =>
       (super.noSuchMethod(
           Invocation.method(
               #reauthenticate, [context, auth], {#helper: helper}),
-          returnValue: Future<bool>.value(false)) as _i16.Future<bool>);
+          returnValue: Future<bool>.value(false)) as _i17.Future<bool>);
 }
 
 /// A class which mocks [AppInfo].
@@ -646,31 +662,31 @@ class MockAppInfo extends _i1.Mock implements _i5.AppInfo {
 /// A class which mocks [NavigatorState].
 ///
 /// See the documentation for Mockito's code generation for more information.
-class MockNavigatorState extends _i1.Mock implements _i8.NavigatorState {
+class MockNavigatorState extends _i1.Mock implements _i9.NavigatorState {
   MockNavigatorState() {
     _i1.throwOnMissingStub(this);
   }
 
   @override
-  _i8.FocusScopeNode get focusScopeNode =>
+  _i9.FocusScopeNode get focusScopeNode =>
       (super.noSuchMethod(Invocation.getter(#focusScopeNode),
-          returnValue: _FakeFocusScopeNode_15()) as _i8.FocusScopeNode);
+          returnValue: _FakeFocusScopeNode_16()) as _i9.FocusScopeNode);
   @override
-  _i8.ValueNotifier<bool> get userGestureInProgressNotifier =>
+  _i9.ValueNotifier<bool> get userGestureInProgressNotifier =>
       (super.noSuchMethod(Invocation.getter(#userGestureInProgressNotifier),
-              returnValue: _FakeValueNotifier_6<bool>())
-          as _i8.ValueNotifier<bool>);
+              returnValue: _FakeValueNotifier_7<bool>())
+          as _i9.ValueNotifier<bool>);
   @override
   bool get userGestureInProgress =>
       (super.noSuchMethod(Invocation.getter(#userGestureInProgress),
           returnValue: false) as bool);
   @override
-  _i8.Navigator get widget => (super.noSuchMethod(Invocation.getter(#widget),
-      returnValue: _FakeNavigator_16()) as _i8.Navigator);
+  _i9.Navigator get widget => (super.noSuchMethod(Invocation.getter(#widget),
+      returnValue: _FakeNavigator_17()) as _i9.Navigator);
   @override
-  _i8.BuildContext get context =>
+  _i9.BuildContext get context =>
       (super.noSuchMethod(Invocation.getter(#context),
-          returnValue: _FakeBuildContext_17()) as _i8.BuildContext);
+          returnValue: _FakeBuildContext_18()) as _i9.BuildContext);
   @override
   bool get mounted =>
       (super.noSuchMethod(Invocation.getter(#mounted), returnValue: false)
@@ -683,12 +699,12 @@ class MockNavigatorState extends _i1.Mock implements _i8.NavigatorState {
   void initState() => super.noSuchMethod(Invocation.method(#initState, []),
       returnValueForMissingStub: null);
   @override
-  void restoreState(_i8.RestorationBucket? oldBucket, bool? initialRestore) =>
+  void restoreState(_i9.RestorationBucket? oldBucket, bool? initialRestore) =>
       super.noSuchMethod(
           Invocation.method(#restoreState, [oldBucket, initialRestore]),
           returnValueForMissingStub: null);
   @override
-  void didToggleBucket(_i8.RestorationBucket? oldBucket) =>
+  void didToggleBucket(_i9.RestorationBucket? oldBucket) =>
       super.noSuchMethod(Invocation.method(#didToggleBucket, [oldBucket]),
           returnValueForMissingStub: null);
   @override
@@ -696,7 +712,7 @@ class MockNavigatorState extends _i1.Mock implements _i8.NavigatorState {
       super.noSuchMethod(Invocation.method(#didChangeDependencies, []),
           returnValueForMissingStub: null);
   @override
-  void didUpdateWidget(_i8.StatefulWidget? oldWidget) =>
+  void didUpdateWidget(_i9.StatefulWidget? oldWidget) =>
       super.noSuchMethod(Invocation.method(#didUpdateWidget, [oldWidget]),
           returnValueForMissingStub: null);
   @override
@@ -709,11 +725,11 @@ class MockNavigatorState extends _i1.Mock implements _i8.NavigatorState {
   void dispose() => super.noSuchMethod(Invocation.method(#dispose, []),
       returnValueForMissingStub: null);
   @override
-  _i16.Future<T?> pushNamed<T extends Object?>(String? routeName,
+  _i17.Future<T?> pushNamed<T extends Object?>(String? routeName,
           {Object? arguments}) =>
       (super.noSuchMethod(
           Invocation.method(#pushNamed, [routeName], {#arguments: arguments}),
-          returnValue: Future<T?>.value()) as _i16.Future<T?>);
+          returnValue: Future<T?>.value()) as _i17.Future<T?>);
   @override
   String restorablePushNamed<T extends Object?>(String? routeName,
           {Object? arguments}) =>
@@ -722,14 +738,14 @@ class MockNavigatorState extends _i1.Mock implements _i8.NavigatorState {
               #restorablePushNamed, [routeName], {#arguments: arguments}),
           returnValue: '') as String);
   @override
-  _i16.Future<T?> pushReplacementNamed<T extends Object?, TO extends Object?>(
+  _i17.Future<T?> pushReplacementNamed<T extends Object?, TO extends Object?>(
           String? routeName,
           {TO? result,
           Object? arguments}) =>
       (super.noSuchMethod(
           Invocation.method(#pushReplacementNamed, [routeName],
               {#result: result, #arguments: arguments}),
-          returnValue: Future<T?>.value()) as _i16.Future<T?>);
+          returnValue: Future<T?>.value()) as _i17.Future<T?>);
   @override
   String restorablePushReplacementNamed<T extends Object?, TO extends Object?>(
           String? routeName,
@@ -740,14 +756,14 @@ class MockNavigatorState extends _i1.Mock implements _i8.NavigatorState {
               {#result: result, #arguments: arguments}),
           returnValue: '') as String);
   @override
-  _i16.Future<T?> popAndPushNamed<T extends Object?, TO extends Object?>(
+  _i17.Future<T?> popAndPushNamed<T extends Object?, TO extends Object?>(
           String? routeName,
           {TO? result,
           Object? arguments}) =>
       (super.noSuchMethod(
           Invocation.method(#popAndPushNamed, [routeName],
               {#result: result, #arguments: arguments}),
-          returnValue: Future<T?>.value()) as _i16.Future<T?>);
+          returnValue: Future<T?>.value()) as _i17.Future<T?>);
   @override
   String restorablePopAndPushNamed<T extends Object?, TO extends Object?>(
           String? routeName,
@@ -758,43 +774,43 @@ class MockNavigatorState extends _i1.Mock implements _i8.NavigatorState {
               {#result: result, #arguments: arguments}),
           returnValue: '') as String);
   @override
-  _i16.Future<T?> pushNamedAndRemoveUntil<T extends Object?>(
-          String? newRouteName, _i8.RoutePredicate? predicate,
+  _i17.Future<T?> pushNamedAndRemoveUntil<T extends Object?>(
+          String? newRouteName, _i9.RoutePredicate? predicate,
           {Object? arguments}) =>
       (super.noSuchMethod(
           Invocation.method(#pushNamedAndRemoveUntil, [newRouteName, predicate],
               {#arguments: arguments}),
-          returnValue: Future<T?>.value()) as _i16.Future<T?>);
+          returnValue: Future<T?>.value()) as _i17.Future<T?>);
   @override
   String restorablePushNamedAndRemoveUntil<T extends Object?>(
-          String? newRouteName, _i8.RoutePredicate? predicate,
+          String? newRouteName, _i9.RoutePredicate? predicate,
           {Object? arguments}) =>
       (super.noSuchMethod(
           Invocation.method(#restorablePushNamedAndRemoveUntil,
               [newRouteName, predicate], {#arguments: arguments}),
           returnValue: '') as String);
   @override
-  _i16.Future<T?> push<T extends Object?>(_i8.Route<T>? route) =>
+  _i17.Future<T?> push<T extends Object?>(_i9.Route<T>? route) =>
       (super.noSuchMethod(Invocation.method(#push, [route]),
-          returnValue: Future<T?>.value()) as _i16.Future<T?>);
+          returnValue: Future<T?>.value()) as _i17.Future<T?>);
   @override
   String restorablePush<T extends Object?>(
-          _i8.RestorableRouteBuilder<T>? routeBuilder,
+          _i9.RestorableRouteBuilder<T>? routeBuilder,
           {Object? arguments}) =>
       (super.noSuchMethod(
           Invocation.method(
               #restorablePush, [routeBuilder], {#arguments: arguments}),
           returnValue: '') as String);
   @override
-  _i16.Future<T?> pushReplacement<T extends Object?, TO extends Object?>(
-          _i8.Route<T>? newRoute,
+  _i17.Future<T?> pushReplacement<T extends Object?, TO extends Object?>(
+          _i9.Route<T>? newRoute,
           {TO? result}) =>
       (super.noSuchMethod(
           Invocation.method(#pushReplacement, [newRoute], {#result: result}),
-          returnValue: Future<T?>.value()) as _i16.Future<T?>);
+          returnValue: Future<T?>.value()) as _i17.Future<T?>);
   @override
   String restorablePushReplacement<T extends Object?, TO extends Object?>(
-          _i8.RestorableRouteBuilder<T>? routeBuilder,
+          _i9.RestorableRouteBuilder<T>? routeBuilder,
           {TO? result,
           Object? arguments}) =>
       (super.noSuchMethod(
@@ -802,15 +818,15 @@ class MockNavigatorState extends _i1.Mock implements _i8.NavigatorState {
               {#result: result, #arguments: arguments}),
           returnValue: '') as String);
   @override
-  _i16.Future<T?> pushAndRemoveUntil<T extends Object?>(
-          _i8.Route<T>? newRoute, _i8.RoutePredicate? predicate) =>
+  _i17.Future<T?> pushAndRemoveUntil<T extends Object?>(
+          _i9.Route<T>? newRoute, _i9.RoutePredicate? predicate) =>
       (super.noSuchMethod(
           Invocation.method(#pushAndRemoveUntil, [newRoute, predicate]),
-          returnValue: Future<T?>.value()) as _i16.Future<T?>);
+          returnValue: Future<T?>.value()) as _i17.Future<T?>);
   @override
   String restorablePushAndRemoveUntil<T extends Object?>(
-          _i8.RestorableRouteBuilder<T>? newRouteBuilder,
-          _i8.RoutePredicate? predicate,
+          _i9.RestorableRouteBuilder<T>? newRouteBuilder,
+          _i9.RoutePredicate? predicate,
           {Object? arguments}) =>
       (super.noSuchMethod(
           Invocation.method(#restorablePushAndRemoveUntil,
@@ -818,15 +834,15 @@ class MockNavigatorState extends _i1.Mock implements _i8.NavigatorState {
           returnValue: '') as String);
   @override
   void replace<T extends Object?>(
-          {_i8.Route<dynamic>? oldRoute, _i8.Route<T>? newRoute}) =>
+          {_i9.Route<dynamic>? oldRoute, _i9.Route<T>? newRoute}) =>
       super.noSuchMethod(
           Invocation.method(
               #replace, [], {#oldRoute: oldRoute, #newRoute: newRoute}),
           returnValueForMissingStub: null);
   @override
   String restorableReplace<T extends Object?>(
-          {_i8.Route<dynamic>? oldRoute,
-          _i8.RestorableRouteBuilder<T>? newRouteBuilder,
+          {_i9.Route<dynamic>? oldRoute,
+          _i9.RestorableRouteBuilder<T>? newRouteBuilder,
           Object? arguments}) =>
       (super.noSuchMethod(
           Invocation.method(#restorableReplace, [], {
@@ -837,15 +853,15 @@ class MockNavigatorState extends _i1.Mock implements _i8.NavigatorState {
           returnValue: '') as String);
   @override
   void replaceRouteBelow<T extends Object?>(
-          {_i8.Route<dynamic>? anchorRoute, _i8.Route<T>? newRoute}) =>
+          {_i9.Route<dynamic>? anchorRoute, _i9.Route<T>? newRoute}) =>
       super.noSuchMethod(
           Invocation.method(#replaceRouteBelow, [],
               {#anchorRoute: anchorRoute, #newRoute: newRoute}),
           returnValueForMissingStub: null);
   @override
   String restorableReplaceRouteBelow<T extends Object?>(
-          {_i8.Route<dynamic>? anchorRoute,
-          _i8.RestorableRouteBuilder<T>? newRouteBuilder,
+          {_i9.Route<dynamic>? anchorRoute,
+          _i9.RestorableRouteBuilder<T>? newRouteBuilder,
           Object? arguments}) =>
       (super.noSuchMethod(
           Invocation.method(#restorableReplaceRouteBelow, [], {
@@ -859,27 +875,27 @@ class MockNavigatorState extends _i1.Mock implements _i8.NavigatorState {
       (super.noSuchMethod(Invocation.method(#canPop, []), returnValue: false)
           as bool);
   @override
-  _i16.Future<bool> maybePop<T extends Object?>([T? result]) =>
+  _i17.Future<bool> maybePop<T extends Object?>([T? result]) =>
       (super.noSuchMethod(Invocation.method(#maybePop, [result]),
-          returnValue: Future<bool>.value(false)) as _i16.Future<bool>);
+          returnValue: Future<bool>.value(false)) as _i17.Future<bool>);
   @override
   void pop<T extends Object?>([T? result]) =>
       super.noSuchMethod(Invocation.method(#pop, [result]),
           returnValueForMissingStub: null);
   @override
-  void popUntil(_i8.RoutePredicate? predicate) =>
+  void popUntil(_i9.RoutePredicate? predicate) =>
       super.noSuchMethod(Invocation.method(#popUntil, [predicate]),
           returnValueForMissingStub: null);
   @override
-  void removeRoute(_i8.Route<dynamic>? route) =>
+  void removeRoute(_i9.Route<dynamic>? route) =>
       super.noSuchMethod(Invocation.method(#removeRoute, [route]),
           returnValueForMissingStub: null);
   @override
-  void removeRouteBelow(_i8.Route<dynamic>? anchorRoute) =>
+  void removeRouteBelow(_i9.Route<dynamic>? anchorRoute) =>
       super.noSuchMethod(Invocation.method(#removeRouteBelow, [anchorRoute]),
           returnValueForMissingStub: null);
   @override
-  void finalizeRoute(_i8.Route<dynamic>? route) =>
+  void finalizeRoute(_i9.Route<dynamic>? route) =>
       super.noSuchMethod(Invocation.method(#finalizeRoute, [route]),
           returnValueForMissingStub: null);
   @override
@@ -891,46 +907,46 @@ class MockNavigatorState extends _i1.Mock implements _i8.NavigatorState {
       super.noSuchMethod(Invocation.method(#didStopUserGesture, []),
           returnValueForMissingStub: null);
   @override
-  _i8.Widget build(_i8.BuildContext? context) =>
+  _i9.Widget build(_i9.BuildContext? context) =>
       (super.noSuchMethod(Invocation.method(#build, [context]),
-          returnValue: _FakeWidget_10()) as _i8.Widget);
+          returnValue: _FakeWidget_11()) as _i9.Widget);
   @override
   void reassemble() => super.noSuchMethod(Invocation.method(#reassemble, []),
       returnValueForMissingStub: null);
   @override
-  void setState(_i13.VoidCallback? fn) =>
+  void setState(_i14.VoidCallback? fn) =>
       super.noSuchMethod(Invocation.method(#setState, [fn]),
           returnValueForMissingStub: null);
   @override
-  void debugFillProperties(_i9.DiagnosticPropertiesBuilder? properties) =>
+  void debugFillProperties(_i10.DiagnosticPropertiesBuilder? properties) =>
       super.noSuchMethod(Invocation.method(#debugFillProperties, [properties]),
           returnValueForMissingStub: null);
   @override
-  String toString({_i8.DiagnosticLevel? minLevel = _i8.DiagnosticLevel.info}) =>
+  String toString({_i9.DiagnosticLevel? minLevel = _i9.DiagnosticLevel.info}) =>
       super.toString();
   @override
   String toStringShort() => (super
           .noSuchMethod(Invocation.method(#toStringShort, []), returnValue: '')
       as String);
   @override
-  _i8.DiagnosticsNode toDiagnosticsNode(
-          {String? name, _i9.DiagnosticsTreeStyle? style}) =>
+  _i9.DiagnosticsNode toDiagnosticsNode(
+          {String? name, _i10.DiagnosticsTreeStyle? style}) =>
       (super.noSuchMethod(
           Invocation.method(
               #toDiagnosticsNode, [], {#name: name, #style: style}),
-          returnValue: _FakeDiagnosticsNode_12()) as _i8.DiagnosticsNode);
+          returnValue: _FakeDiagnosticsNode_13()) as _i9.DiagnosticsNode);
   @override
-  _i11.Ticker createTicker(_i11.TickerCallback? onTick) =>
+  _i12.Ticker createTicker(_i12.TickerCallback? onTick) =>
       (super.noSuchMethod(Invocation.method(#createTicker, [onTick]),
-          returnValue: _FakeTicker_18()) as _i11.Ticker);
+          returnValue: _FakeTicker_19()) as _i12.Ticker);
   @override
   void registerForRestoration(
-          _i8.RestorableProperty<Object?>? property, String? restorationId) =>
+          _i9.RestorableProperty<Object?>? property, String? restorationId) =>
       super.noSuchMethod(
           Invocation.method(#registerForRestoration, [property, restorationId]),
           returnValueForMissingStub: null);
   @override
-  void unregisterFromRestoration(_i8.RestorableProperty<Object?>? property) =>
+  void unregisterFromRestoration(_i9.RestorableProperty<Object?>? property) =>
       super.noSuchMethod(
           Invocation.method(#unregisterFromRestoration, [property]),
           returnValueForMissingStub: null);
@@ -950,11 +966,30 @@ class MockReauthenticateHelper extends _i1.Mock
   }
 
   @override
-  _i16.Future<bool> showDialog(
-          _i8.BuildContext? context,
+  _i17.Future<bool> showDialog(
+          _i9.BuildContext? context,
           _i7.FirebaseAuth? auth,
-          List<_i17.ProviderConfiguration>? providerConfigs) =>
+          List<_i18.ProviderConfiguration>? providerConfigs) =>
       (super.noSuchMethod(
           Invocation.method(#showDialog, [context, auth, providerConfigs]),
-          returnValue: Future<bool>.value(false)) as _i16.Future<bool>);
+          returnValue: Future<bool>.value(false)) as _i17.Future<bool>);
+}
+
+/// A class which mocks [NotificationService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockNotificationService extends _i1.Mock
+    implements _i8.NotificationService {
+  MockNotificationService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  void sendNudgeNotification() =>
+      super.noSuchMethod(Invocation.method(#sendNudgeNotification, []),
+          returnValueForMissingStub: null);
+  @override
+  bool canSendNudgeNotification() =>
+      (super.noSuchMethod(Invocation.method(#canSendNudgeNotification, []),
+          returnValue: false) as bool);
 }

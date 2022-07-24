@@ -4,6 +4,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:lovehue/models/relationship_bar.dart';
 import 'package:lovehue/models/relationship_bar_document.dart';
 import 'package:lovehue/pages/partners_bars_page.dart';
+import 'package:lovehue/providers/application_state.dart';
 import 'package:lovehue/providers/partners_info_state.dart';
 import 'package:lovehue/providers/user_info_state.dart';
 import 'package:mockito/mockito.dart';
@@ -17,6 +18,7 @@ void main() {
 
   late MockUserInfoState userInfoState;
   late MockPartnersInfoState partnersInfoState;
+  late MockApplicationState applicationState;
   late FakeFirebaseFirestore firestore;
   late Widget testWidget;
   late Widget testWidgetBuild;
@@ -25,6 +27,7 @@ void main() {
   setUp(() {
     userInfoState = MockUserInfoState();
     partnersInfoState = MockPartnersInfoState();
+    applicationState = MockApplicationState();
     firestore = FakeFirebaseFirestore();
     testWidget = PartnersBars(
       firestore: firestore,
@@ -32,6 +35,7 @@ void main() {
     testWidgetBuild = MaterialApp(
         home: MultiProvider(
       providers: [
+        ChangeNotifierProvider<ApplicationState>.value(value: applicationState),
         ChangeNotifierProvider<UserInfoState>.value(value: userInfoState),
         ChangeNotifierProvider<PartnersInfoState>.value(
             value: partnersInfoState),
@@ -42,9 +46,13 @@ void main() {
     partnersNameValueNotifier = ValueNotifier('TEST_NAME');
 
     when(userInfoState.partnerLinked).thenReturn(true);
+    when(userInfoState.userPending).thenReturn(true);
     when(partnersInfoState.partnersInfo).thenReturn(null);
     when(partnersInfoState.partnersID).thenReturn(partnerID);
     when(partnersInfoState.partnersName).thenReturn(partnersNameValueNotifier);
+    when(partnersInfoState.linkCode).thenReturn(null);
+    when(userInfoState.linkCode).thenReturn(null);
+    when(applicationState.canSendNudgeNotification()).thenReturn(false);
   });
 
   group('partners name', () {
@@ -85,6 +93,51 @@ void main() {
       for (RelationshipBar bar in bars) {
         expect(find.textContaining(bar.label), findsOneWidget);
       }
+    });
+  });
+
+  group('nudge button', () {
+    testWidgets('if partner not linked then nudge button not displayed',
+        (WidgetTester tester) async {
+      when(userInfoState.partnerLinked).thenReturn(false);
+      await tester.pumpWidget(testWidgetBuild);
+      expect(find.byTooltip('Nudge'), findsNothing);
+    });
+
+    testWidgets(
+        'if cant send nudge notification then nudge button not displayed',
+        (WidgetTester tester) async {
+      when(applicationState.canSendNudgeNotification()).thenReturn(false);
+      await tester.pumpWidget(testWidgetBuild);
+      expect(find.byTooltip('Nudge'), findsNothing);
+      verify(applicationState.canSendNudgeNotification());
+    });
+
+    testWidgets('nudge button is displayed', (WidgetTester tester) async {
+      when(applicationState.canSendNudgeNotification()).thenReturn(true);
+      await tester.pumpWidget(testWidgetBuild);
+      expect(find.byTooltip('Nudge'), findsOneWidget);
+      verify(applicationState.canSendNudgeNotification());
+    });
+
+    testWidgets('nudge button is displayed', (WidgetTester tester) async {
+      when(applicationState.canSendNudgeNotification()).thenReturn(true);
+      await tester.pumpWidget(testWidgetBuild);
+      expect(find.byTooltip('Nudge'), findsOneWidget);
+      verify(applicationState.canSendNudgeNotification());
+    });
+
+    testWidgets('nudge button pressed calls sendNudgeNotification',
+        (WidgetTester tester) async {
+      when(applicationState.canSendNudgeNotification()).thenReturn(true);
+
+      await tester.pumpWidget(testWidgetBuild);
+
+      expect(find.byTooltip('Nudge'), findsOneWidget);
+      await tester.tap(find.byTooltip('Nudge'));
+
+      verify(applicationState.canSendNudgeNotification());
+      verify(applicationState.sendNudgeNotification());
     });
   });
 }

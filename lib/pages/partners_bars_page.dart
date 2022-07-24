@@ -3,10 +3,12 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../models/relationship_bar_document.dart';
+import '../providers/application_state.dart';
 import '../providers/partners_info_state.dart';
 import '../providers/user_info_state.dart';
 import '../widgets/app_bars.dart';
 import '../widgets/bar_builders.dart';
+import '../widgets/buttons.dart';
 import 'link_partner_screen.dart';
 
 /// Partners Bars page builder.
@@ -71,6 +73,23 @@ class _PartnersBarsState extends State<PartnersBars>
           return const LinkPartnerScreen();
         }),
       ),
+      floatingActionButton: Consumer2<UserInfoState, ApplicationState>(
+          builder: (context, userInfoState, appState, _) {
+        if (!userInfoState.partnerLinked ||
+            !appState.canSendNudgeNotification()) {
+          return const SizedBox.shrink();
+        }
+        return BlurredCircle(
+          child: FloatingActionButton(
+            heroTag: "nudgeButton",
+            onPressed: () async {
+              appState.sendNudgeNotification();
+            },
+            tooltip: 'Nudge',
+            child: const Icon(Icons.notification_add),
+          ),
+        );
+      }),
     );
   }
 }

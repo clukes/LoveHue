@@ -10,6 +10,7 @@ import '../models/user_information.dart';
 import '../providers/partners_info_state.dart';
 import '../providers/user_info_state.dart';
 import '../resources/authentication_info.dart';
+import '../services/notification_service.dart';
 import '../utils/app_info_class.dart';
 
 /// The possible states of login: [loggedOut], [loading], [loggedIn].
@@ -32,6 +33,7 @@ class ApplicationState with ChangeNotifier {
   final AppInfo appInfo;
   final AuthenticationInfo authenticationInfo;
   final FirebaseAuth auth;
+  final NotificationService notificationService;
 
   /// Setups app state on startup. Setups listener for [FirebaseAuth.userChanges], dealing with login.
   ApplicationState({
@@ -41,6 +43,7 @@ class ApplicationState with ChangeNotifier {
     required this.auth,
     required this.appInfo,
     required this.authenticationInfo,
+    required this.notificationService,
   }) {
     _setupUserChangersListener();
   }
@@ -114,4 +117,9 @@ class ApplicationState with ChangeNotifier {
     userInfoState.removeUser();
     loginState = ApplicationLoginState.loggedOut;
   }
+
+  void sendNudgeNotification() => notificationService.sendNudgeNotification();
+
+  bool canSendNudgeNotification() =>
+      notificationService.canSendNudgeNotification();
 }
