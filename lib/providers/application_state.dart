@@ -114,4 +114,7 @@ class ApplicationState with ChangeNotifier {
     userInfoState.removeUser();
     loginState = ApplicationLoginState.loggedOut;
   }
+
+  Future<void> signInAnonymously(NavigatorState navigator) async =>
+      authenticationInfo.signInAnonymously(navigator, auth);
 }

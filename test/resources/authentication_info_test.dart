@@ -54,7 +54,7 @@ void main() {
     });
 
     test('calls signInAnonymously and navigator', () async {
-      await subject.signInAnonymously(navigator, auth: auth);
+      await subject.signInAnonymously(navigator, auth);
 
       verify(auth.signInAnonymously());
       verify(navigator.pushAndRemoveUntil(any, any));
@@ -63,7 +63,7 @@ void main() {
     test('doesnt navigate if user is null', () async {
       when(auth.currentUser).thenReturn(null);
 
-      await subject.signInAnonymously(navigator, auth: auth);
+      await subject.signInAnonymously(navigator, auth);
 
       verify(auth.signInAnonymously());
       verifyNever(navigator.pushAndRemoveUntil(any, any));
