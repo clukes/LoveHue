@@ -43,7 +43,7 @@ dependencies:
   flutterfire_ui: ^0.4.2+2
   intl: ^0.17.0
   google_fonts: ^3.0.1
-  package_info_plus: ^1.4.0
+  package_info_plus: ^1.4.3
   flutter_dotenv: ^5.0.2
 
 dev_dependencies:
