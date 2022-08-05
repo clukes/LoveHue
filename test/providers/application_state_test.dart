@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
+import 'package:flutter/widgets.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lovehue/models/link_code.dart';
 import 'package:lovehue/models/user_information.dart';
@@ -177,5 +178,22 @@ void main() {
         .then((value) => verify(userInfoState.removeUser()))
         .timeout(timeout);
     expect(appState.loginState, equals(ApplicationLoginState.loggedOut));
+  });
+
+  test('sign in anonymously calls auth state method', () async {
+    var authInfo = MockAuthenticationInfo();
+    appState = ApplicationState(
+      userInfoState: userInfoState,
+      partnersInfoState: partnersInfoState,
+      auth: auth,
+      firestore: firestore,
+      authenticationInfo: authInfo,
+      appInfo: MockAppInfo(),
+    );
+    var state = NavigatorState();
+
+    await appState.signInAnonymously(state);
+
+    verify(authInfo.signInAnonymously(state, auth));
   });
 }

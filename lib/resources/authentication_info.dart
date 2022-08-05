@@ -38,10 +38,9 @@ class AuthenticationInfo {
 
   /// Implements [signInAnonymously] to allow sign in without email.
   /// navigator is Navigator.of(context)
-  Future<void> signInAnonymously(NavigatorState navigator,
-      {FirebaseAuth? auth}) async {
+  Future<void> signInAnonymously(
+      NavigatorState navigator, FirebaseAuth auth) async {
 /* TODO: HAVE LOADING OVERLAY */
-    auth ??= FirebaseAuth.instance;
     await auth.signInAnonymously();
     if (auth.currentUser != null) {
       afterSignIn(navigator);

@@ -27,11 +27,16 @@ class ProfilePage extends StatefulWidget {
 
 class _ProfilePageState extends State<ProfilePage> {
   Future<void> _signOut(BuildContext context, FirebaseAuth auth) async {
-    await auth
-        .signOut()
-        .then(await Navigator.of(context).pushReplacement(MaterialPageRoute(
-          builder: (context) => const SignInPage(),
-        )));
+    await auth.signOut();
+    if (!mounted) return;
+    await _signOutNavigate(context);
+  }
+
+  Future<void> _signOutNavigate(BuildContext context) async {
+    debugPrint("ProfilePage: Signed Out.");
+    await Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const SignInPage()),
+        (route) => false);
   }
 
   @override
@@ -89,13 +94,9 @@ class _ProfilePageState extends State<ProfilePage> {
 
     return FlutterFireUIActions(
       actions: [
-        SignedOutAction((context) {
-          // Called after account deleted, just navigate to SignInPage.
-          debugPrint("ProfilePage: Signed Out.");
-          Navigator.of(context).pushReplacement(MaterialPageRoute(
-            builder: (context) => const SignInPage(),
-          ));
-        }),
+        SignedOutAction((context) async =>
+            // Called after account deleted, just navigate to SignInPage.
+            _signOutNavigate(context)),
       ],
       child: Builder(
         builder: (context) => ConstrainedScaffold(
