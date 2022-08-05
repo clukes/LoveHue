@@ -1,5 +1,6 @@
 name: Auto reviews release
 on: pull_request
+permissions: read-all
 jobs:
   reviews:
     runs-on: ubuntu-latest
