@@ -11,4 +11,4 @@ jobs:
       - uses: hmarr/auto-approve-action@v2
         if: github.actor == 'clukes'
         with:
-          github-token: ${{ secrets.AUTOREVIEWPAT }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
