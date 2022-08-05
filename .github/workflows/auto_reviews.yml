@@ -1,6 +1,6 @@
 name: Auto reviews release
 on:
-  pull_request_target:
+  pull_request:
 
 jobs:
   build:
