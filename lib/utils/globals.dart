@@ -19,3 +19,5 @@ const AssetImage appLogo = AssetImage('assets/images/lovehue.png');
 
 /// App logo with text.
 const AssetImage appTextLogo = AssetImage('assets/images/lovehuetext.png');
+
+const int minimumSecondsBetweenNudges = 60 * 60; //60 minutes

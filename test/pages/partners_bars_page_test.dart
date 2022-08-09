@@ -7,6 +7,7 @@ import 'package:lovehue/pages/partners_bars_page.dart';
 import 'package:lovehue/providers/application_state.dart';
 import 'package:lovehue/providers/partners_info_state.dart';
 import 'package:lovehue/providers/user_info_state.dart';
+import 'package:lovehue/services/notification_service.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
@@ -37,8 +38,7 @@ void main() {
       providers: [
         ChangeNotifierProvider<ApplicationState>.value(value: applicationState),
         ChangeNotifierProvider<UserInfoState>.value(value: userInfoState),
-        ChangeNotifierProvider<PartnersInfoState>.value(
-            value: partnersInfoState),
+        ChangeNotifierProvider<PartnersInfoState>.value(value: partnersInfoState),
       ],
       child: testWidget,
     ));
@@ -70,8 +70,7 @@ void main() {
 
       partnersNameValueNotifier.value = partnersChangedName;
       await tester.pump();
-      await expectLater(
-          find.textContaining(partnersChangedName), findsOneWidget);
+      await expectLater(find.textContaining(partnersChangedName), findsOneWidget);
     });
   });
 
@@ -82,11 +81,8 @@ void main() {
         bars.add(RelationshipBar(order: i, label: 'Bar_$i'));
       }
 
-      RelationshipBarDocument barDoc = RelationshipBarDocument(
-          id: '1', userID: partnerID, barList: bars, firestore: firestore);
-      await RelationshipBarDocument.getUserBarsFromID(partnerID, firestore)
-          .doc(barDoc.id)
-          .set(barDoc);
+      RelationshipBarDocument barDoc = RelationshipBarDocument(id: '1', userID: partnerID, barList: bars, firestore: firestore);
+      await RelationshipBarDocument.getUserBarsFromID(partnerID, firestore).doc(barDoc.id).set(barDoc);
 
       await tester.pumpWidget(testWidgetBuild);
       await tester.pumpAndSettle();
@@ -97,16 +93,13 @@ void main() {
   });
 
   group('nudge button', () {
-    testWidgets('if partner not linked then nudge button not displayed',
-        (WidgetTester tester) async {
+    testWidgets('if partner not linked then nudge button not displayed', (WidgetTester tester) async {
       when(userInfoState.partnerLinked).thenReturn(false);
       await tester.pumpWidget(testWidgetBuild);
       expect(find.byTooltip('Nudge'), findsNothing);
     });
 
-    testWidgets(
-        'if cant send nudge notification then nudge button not displayed',
-        (WidgetTester tester) async {
+    testWidgets('if cant send nudge notification then nudge button not displayed', (WidgetTester tester) async {
       when(applicationState.canSendNudgeNotification()).thenReturn(false);
       await tester.pumpWidget(testWidgetBuild);
       expect(find.byTooltip('Nudge'), findsNothing);
@@ -120,22 +113,51 @@ void main() {
       verify(applicationState.canSendNudgeNotification());
     });
 
-    testWidgets('nudge button is displayed', (WidgetTester tester) async {
+    testWidgets('nudge button pressed calls sendNudgeNotification, and shows successful message', (WidgetTester tester) async {
       when(applicationState.canSendNudgeNotification()).thenReturn(true);
+      when(applicationState.sendNudgeNotification()).thenAnswer((_) async => NudgeResult(true));
+
       await tester.pumpWidget(testWidgetBuild);
+
       expect(find.byTooltip('Nudge'), findsOneWidget);
+      // Act
+      await tester.tap(find.byTooltip('Nudge'));
+      tester.pump();
+
+      expect(find.widgetWithText(SnackBar, "Nudge notification sent to partner."), findsOneWidget);
       verify(applicationState.canSendNudgeNotification());
+      verify(applicationState.sendNudgeNotification());
     });
 
-    testWidgets('nudge button pressed calls sendNudgeNotification',
-        (WidgetTester tester) async {
+    testWidgets('nudge button shows error message when not successful', (WidgetTester tester) async {
       when(applicationState.canSendNudgeNotification()).thenReturn(true);
+      var errorMessage = "testErrorMessage";
+      when(applicationState.sendNudgeNotification()).thenAnswer((_) async => NudgeResult(false, errorMessage: errorMessage));
 
       await tester.pumpWidget(testWidgetBuild);
 
       expect(find.byTooltip('Nudge'), findsOneWidget);
+      // Act
       await tester.tap(find.byTooltip('Nudge'));
+      tester.pump();
 
+      expect(find.widgetWithText(SnackBar, errorMessage), findsOneWidget);
+      verify(applicationState.canSendNudgeNotification());
+      verify(applicationState.sendNudgeNotification());
+    });
+
+    testWidgets('nudge button shows default error message when not successful with no error message', (WidgetTester tester) async {
+      when(applicationState.canSendNudgeNotification()).thenReturn(true);
+      when(applicationState.sendNudgeNotification()).thenAnswer((_) async => NudgeResult(false));
+
+      await tester.pumpWidget(testWidgetBuild);
+
+      expect(find.byTooltip('Nudge'), findsOneWidget);
+      // Act
+      await tester.tap(find.byTooltip('Nudge'));
+      tester.pump();
+
+      expect(find.widgetWithText(SnackBar, "Error sending nudge notification."), findsOneWidget);
       verify(applicationState.canSendNudgeNotification());
       verify(applicationState.sendNudgeNotification());
     });

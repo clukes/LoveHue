@@ -6,6 +6,7 @@ import 'package:lovehue/models/link_code.dart';
 import 'package:lovehue/models/user_information.dart';
 import 'package:lovehue/providers/application_state.dart';
 import 'package:lovehue/resources/database_and_table_names.dart';
+import 'package:lovehue/services/notification_service.dart';
 import 'package:mockito/mockito.dart';
 
 import '../mocker.mocks.dart';
@@ -51,37 +52,22 @@ void main() {
 
     when(userInfoState.notifyListeners()).thenAnswer((realInvocation) async {
       expect(appState.loginState, equals(ApplicationLoginState.loggedIn));
-      Map<String, dynamic>? info = await firestore
-          .collection(userInfoCollection)
-          .doc(user.uid)
-          .get()
-          .then((value) => value.data());
+      Map<String, dynamic>? info = await firestore.collection(userInfoCollection).doc(user.uid).get().then((value) => value.data());
       expectLater(info, isNotNull);
     });
-    await untilCalled(userInfoState.notifyListeners())
-        .then((value) => verify(userInfoState.notifyListeners()))
-        .timeout(timeout);
+    await untilCalled(userInfoState.notifyListeners()).then((value) => verify(userInfoState.notifyListeners())).timeout(timeout);
   });
 
   test('user login with partner adds partner to state and logs in', () async {
     when(userInfoState.userInfo).thenReturn(null);
     when(userInfoState.latestRelationshipBarDoc).thenReturn(null);
 
-    UserInformation partnersInfo = UserInformation(
-        userID: '6789', firestore: firestore, linkCode: linkCodeRef);
-    DocumentReference partnersDoc =
-        firestore.collection(userInfoCollection).doc(partnersInfo.userID);
+    UserInformation partnersInfo = UserInformation(userID: '6789', firestore: firestore, linkCode: linkCodeRef);
+    DocumentReference partnersDoc = firestore.collection(userInfoCollection).doc(partnersInfo.userID);
     await partnersDoc.set(partnersInfo.toMap());
 
-    UserInformation userInfo = UserInformation(
-        userID: user.uid,
-        partner: partnersDoc,
-        firestore: firestore,
-        linkCode: linkCodeRef);
-    await firestore
-        .collection(userInfoCollection)
-        .doc(user.uid)
-        .set(userInfo.toMap());
+    UserInformation userInfo = UserInformation(userID: user.uid, partner: partnersDoc, firestore: firestore, linkCode: linkCodeRef);
+    await firestore.collection(userInfoCollection).doc(user.uid).set(userInfo.toMap());
 
     expect(appState.loginState, equals(ApplicationLoginState.loggedOut));
 
@@ -89,36 +75,22 @@ void main() {
 
     when(userInfoState.notifyListeners()).thenAnswer((realInvocation) async {
       expect(appState.loginState, equals(ApplicationLoginState.loggedIn));
-      Map<String, dynamic>? info = await firestore
-          .collection(userInfoCollection)
-          .doc(user.uid)
-          .get()
-          .then((value) => value.data());
+      Map<String, dynamic>? info = await firestore.collection(userInfoCollection).doc(user.uid).get().then((value) => value.data());
       expect(info, isNotNull);
       expect(userInfo, isNotNull);
-      var captured =
-          verify(partnersInfoState.addPartner(captureAny, captureAny)).captured;
+      var captured = verify(partnersInfoState.addPartner(captureAny, captureAny)).captured;
       expect(captured[0].userID, partnersInfo.userID);
       expect(captured[1].userID, userInfo.userID);
     });
-    await untilCalled(userInfoState.notifyListeners())
-        .then((value) => verify(userInfoState.notifyListeners()))
-        .timeout(timeout);
+    await untilCalled(userInfoState.notifyListeners()).then((value) => verify(userInfoState.notifyListeners())).timeout(timeout);
   });
 
   test('changed display name updates in database', () async {
     user = MockUser(uid: '1234');
     auth = MockFirebaseAuth(mockUser: user, signedIn: true);
 
-    UserInformation userInfo = UserInformation(
-        userID: user.uid,
-        displayName: user.displayName,
-        firestore: firestore,
-        linkCode: linkCodeRef);
-    await firestore
-        .collection(userInfoCollection)
-        .doc(user.uid)
-        .set(userInfo.toMap());
+    UserInformation userInfo = UserInformation(userID: user.uid, displayName: user.displayName, firestore: firestore, linkCode: linkCodeRef);
+    await firestore.collection(userInfoCollection).doc(user.uid).set(userInfo.toMap());
 
     when(userInfoState.userExist).thenReturn(true);
     when(userInfoState.userInfo).thenReturn(userInfo);
@@ -136,10 +108,8 @@ void main() {
 
     String displayName = 'Test';
     await user.updateDisplayName(displayName);
-    await untilCalled(userInfoState.userInfo?.firestoreUpdateColumns(
-            {UserInformation.columnDisplayName: displayName}))
-        .then((value) => verify(userInfoState.userInfo?.firestoreUpdateColumns(
-            {UserInformation.columnDisplayName: displayName})))
+    await untilCalled(userInfoState.userInfo?.firestoreUpdateColumns({UserInformation.columnDisplayName: displayName}))
+        .then((value) => verify(userInfoState.userInfo?.firestoreUpdateColumns({UserInformation.columnDisplayName: displayName})))
         .timeout(timeout);
   });
 
@@ -147,15 +117,8 @@ void main() {
     user = MockUser(uid: '1234');
     auth = MockFirebaseAuth(mockUser: user, signedIn: true);
 
-    UserInformation userInfo = UserInformation(
-        userID: user.uid,
-        displayName: user.displayName,
-        firestore: firestore,
-        linkCode: linkCodeRef);
-    await firestore
-        .collection(userInfoCollection)
-        .doc(user.uid)
-        .set(userInfo.toMap());
+    UserInformation userInfo = UserInformation(userID: user.uid, displayName: user.displayName, firestore: firestore, linkCode: linkCodeRef);
+    await firestore.collection(userInfoCollection).doc(user.uid).set(userInfo.toMap());
 
     when(userInfoState.userExist).thenReturn(true);
     when(userInfoState.userInfo).thenReturn(userInfo);
@@ -176,15 +139,19 @@ void main() {
       expect(appState.loginState, equals(ApplicationLoginState.loading));
       verify(partnersInfoState.removePartner(any));
     });
-    await untilCalled(userInfoState.removeUser())
-        .then((value) => verify(userInfoState.removeUser()))
-        .timeout(timeout);
+    await untilCalled(userInfoState.removeUser()).then((value) => verify(userInfoState.removeUser())).timeout(timeout);
     expect(appState.loginState, equals(ApplicationLoginState.loggedOut));
   });
 
   test('sendNudgeNotification calls NotificationService', () {
-    appState.sendNudgeNotification();
+    NudgeResult expectedResult = NudgeResult(false, errorMessage: "Test");
+    when(notificationService.sendNudgeNotification()).thenAnswer((_) async => expectedResult);
+
+    // act
+    var actualResult = appState.sendNudgeNotification();
+
     verify(notificationService.sendNudgeNotification());
+    expect(actualResult, equals(expectedResult));
   });
 
   test('canSendNudgeNotification calls NotificationService', () {

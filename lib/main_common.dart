@@ -10,8 +10,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:lovehue/services/notification_service.dart';
+import 'package:lovehue/services/shared_preferences_service.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'pages/sign_in_page.dart';
 import 'providers/application_state.dart';
@@ -24,10 +26,7 @@ import 'utils/theme_data.dart';
 
 /// Entry point with initializers.
 Future<void> mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo,
-    {PackageInfo? packageInfo,
-    AppRunner? appRunner,
-    FirebaseApp? firebaseApp,
-    FirebaseAuth? firebaseAuth}) async {
+    {PackageInfo? packageInfo, AppRunner? appRunner, FirebaseApp? firebaseApp, FirebaseAuth? firebaseAuth}) async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final AppInfo appInfo = flavorAppInfo;
@@ -35,23 +34,22 @@ Future<void> mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo,
   final AuthenticationInfo authenticationInfo = AuthenticationInfo(packageInfo);
 
   firebaseApp ??= await Firebase.initializeApp(options: firebaseOptions);
-  final FirebaseFirestore firestore =
-      FirebaseFirestore.instanceFor(app: firebaseApp);
+  final FirebaseFirestore firestore = FirebaseFirestore.instanceFor(app: firebaseApp);
 
   // Add licenses for the fonts.
   LicenseRegistry.addLicense(() async* {
-    String license =
-        await rootBundle.loadString('assets/google_fonts/DMSansOFL.txt');
+    String license = await rootBundle.loadString('assets/google_fonts/DMSansOFL.txt');
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
     license = await rootBundle.loadString('assets/google_fonts/PoppinsOFL.txt');
     yield LicenseEntryWithLineBreaks(['google_fonts'], license);
   });
   // Only uses the bundled google fonts, prevents fetching from online.
   GoogleFonts.config.allowRuntimeFetching = false;
+  final SharedPreferences sharedPreferences = await SharedPreferences.getInstance();
+  final SharedPreferencesService sharedPreferencesService = SharedPreferencesService(sharedPreferences);
 
   final PartnersInfoState partnersInfoState = PartnersInfoState();
-  final UserInfoState userInfoState =
-      UserInfoState(firestore, partnersInfoState);
+  final UserInfoState userInfoState = UserInfoState(firestore, partnersInfoState);
   final ApplicationState applicationState = ApplicationState(
     userInfoState: userInfoState,
     partnersInfoState: partnersInfoState,
@@ -59,7 +57,7 @@ Future<void> mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo,
     authenticationInfo: authenticationInfo,
     auth: firebaseAuth ?? FirebaseAuth.instance,
     appInfo: appInfo,
-    notificationService: NotificationService(),
+    notificationService: NotificationService(sharedPreferencesService),
   );
 
   final List<ChangeNotifierProvider<ChangeNotifier>> providers = [
@@ -89,8 +87,7 @@ class AppRunner {
 
 /// Initial widget for the app.
 class RelationshipBarsApp extends StatelessWidget {
-  const RelationshipBarsApp({Key? key, required this.providers})
-      : super(key: key);
+  const RelationshipBarsApp({Key? key, required this.providers}) : super(key: key);
 
   final List<ChangeNotifierProvider<ChangeNotifier>> providers;
 
@@ -102,20 +99,15 @@ class RelationshipBarsApp extends StatelessWidget {
       builder: (context, child) => MaterialApp(
         debugShowCheckedModeBanner: false,
         showPerformanceOverlay: false,
-        title: Provider.of<ApplicationState>(context, listen: false)
-            .appInfo
-            .appName,
+        title: Provider.of<ApplicationState>(context, listen: false).appInfo.appName,
         // Currently there is only one theme, a light one.
         theme: lightThemeData,
         home: AnnotatedRegion<SystemUiOverlayStyle>(
           // Ensures that the status bar stays dark with light text.
-          value: SystemUiOverlayStyle.dark
-              .copyWith(statusBarIconBrightness: Brightness.light),
+          value: SystemUiOverlayStyle.dark.copyWith(statusBarIconBrightness: Brightness.light),
           child: SafeArea(
             child: StreamBuilder(
-              stream: Provider.of<ApplicationState>(context, listen: false)
-                  .auth
-                  .authStateChanges(),
+              stream: Provider.of<ApplicationState>(context, listen: false).auth.authStateChanges(),
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.active) {
                   if (snapshot.hasData) {
