@@ -201,13 +201,13 @@ void main() {
     verify(authInfo.signInAnonymously(state, auth));
   });
 
-  test('sendNudgeNotification calls NotificationService', () {
+  test('sendNudgeNotification calls NotificationService', () async {
     NudgeResult expectedResult = NudgeResult(false, errorMessage: "Test");
     when(notificationService.sendNudgeNotification())
         .thenAnswer((_) async => expectedResult);
 
     // act
-    var actualResult = appState.sendNudgeNotification();
+    var actualResult = await appState.sendNudgeNotification();
 
     verify(notificationService.sendNudgeNotification());
     expect(actualResult, equals(expectedResult));

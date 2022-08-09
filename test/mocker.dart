@@ -7,9 +7,11 @@ import 'package:lovehue/providers/partners_info_state.dart';
 import 'package:lovehue/providers/user_info_state.dart';
 import 'package:lovehue/resources/authentication_info.dart';
 import 'package:lovehue/services/notification_service.dart';
+import 'package:lovehue/services/shared_preferences_service.dart';
 import 'package:lovehue/utils/app_info_class.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MockClipboard {
   Map<String, dynamic> _clipboardData = <String, dynamic>{
@@ -45,6 +47,8 @@ class MockFunction extends Mock {
   NavigatorState,
   ReauthenticateHelper,
   NotificationService,
+  SharedPreferences,
+  SharedPreferencesService
 ])
 void main() {
   // Uses build runner to generate mocks for tests.

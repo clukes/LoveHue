@@ -133,7 +133,7 @@ void main() {
       expect(find.byTooltip('Nudge'), findsOneWidget);
       // Act
       await tester.tap(find.byTooltip('Nudge'));
-      tester.pump();
+      await tester.pump();
 
       expect(
           find.widgetWithText(SnackBar, "Nudge notification sent to partner."),
@@ -154,7 +154,7 @@ void main() {
       expect(find.byTooltip('Nudge'), findsOneWidget);
       // Act
       await tester.tap(find.byTooltip('Nudge'));
-      tester.pump();
+      await tester.pump();
 
       expect(find.widgetWithText(SnackBar, errorMessage), findsOneWidget);
       verify(applicationState.canSendNudgeNotification());
@@ -173,7 +173,7 @@ void main() {
       expect(find.byTooltip('Nudge'), findsOneWidget);
       // Act
       await tester.tap(find.byTooltip('Nudge'));
-      tester.pump();
+      await tester.pump();
 
       expect(find.widgetWithText(SnackBar, "Error sending nudge notification."),
           findsOneWidget);

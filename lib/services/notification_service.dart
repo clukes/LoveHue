@@ -1,4 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:clock/clock.dart';
 import 'package:lovehue/services/shared_preferences_service.dart';
 import 'package:lovehue/utils/globals.dart';
 
@@ -6,40 +6,44 @@ class NotificationService {
   static const String lastNudgeTimestampKey = "LastNudgeTimestamp";
 
   final SharedPreferencesService _prefsService;
-  NotificationService(this._prefsService);
+  final Clock clock;
+  NotificationService(this._prefsService, {this.clock = const Clock()});
 
   Future<NudgeResult> sendNudgeNotification() async {
-    int secondsSinceLastNudge = _getSecondsSinceLastNudge();
-    if (!_hasItBeenEnoughSecondsBetweenNudges(secondsSinceLastNudge)) {
-      String errorMsg = _getMinutesToWaitMessage(secondsSinceLastNudge);
+    int milliSecondsSinceLastNudge = _getMillisecondsSinceLastNudge();
+    if (!_hasItBeenEnoughMillisecondsBetweenNudges(
+        milliSecondsSinceLastNudge)) {
+      String errorMsg = _getMinutesToWaitMessage(milliSecondsSinceLastNudge);
       return NudgeResult(false, errorMessage: errorMsg);
     }
 
     // TODO: send nudge notification
 
-    _prefsService.setInt(lastNudgeTimestampKey, _getCurrentTimeStamp());
+    await _prefsService.setInt(lastNudgeTimestampKey, _getCurrentTimeStamp());
 
     return NudgeResult(true);
   }
 
-  bool canSendNudgeNotification() =>
-      _hasItBeenEnoughSecondsBetweenNudges(_getSecondsSinceLastNudge());
+  bool canSendNudgeNotification() => _hasItBeenEnoughMillisecondsBetweenNudges(
+      _getMillisecondsSinceLastNudge());
 
-  bool _hasItBeenEnoughSecondsBetweenNudges(int secondsSinceLastNudge) =>
-      secondsSinceLastNudge >= minimumSecondsBetweenNudges;
+  bool _hasItBeenEnoughMillisecondsBetweenNudges(
+          int milliSecondsSinceLastNudge) =>
+      _getMillisecondsSinceLastNudge() >= minimumMillisecondsBetweenNudges;
 
-  int _getSecondsSinceLastNudge() {
+  int _getMillisecondsSinceLastNudge() {
     var lastTimestamp = _prefsService.getInt(lastNudgeTimestampKey);
     if (lastTimestamp == null) return 0;
 
     return _getCurrentTimeStamp() - lastTimestamp;
   }
 
-  int _getCurrentTimeStamp() => Timestamp.now().seconds;
+  int _getCurrentTimeStamp() => clock.now().millisecondsSinceEpoch;
 
-  String _getMinutesToWaitMessage(int secondsSinceLastNudge) {
-    int secondsToWait = minimumSecondsBetweenNudges - secondsSinceLastNudge;
-    Duration timeToWait = Duration(seconds: secondsToWait);
+  String _getMinutesToWaitMessage(int milliSecondsSinceLastNudge) {
+    int milliSecondsToWait =
+        minimumMillisecondsBetweenNudges - milliSecondsSinceLastNudge;
+    Duration timeToWait = Duration(milliseconds: milliSecondsToWait);
     String errorMsg =
         'Wait ${_formatDuration(timeToWait)} minutes to nudge again.';
     return errorMsg;

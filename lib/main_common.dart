@@ -29,7 +29,8 @@ Future<void> mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo,
     {PackageInfo? packageInfo,
     AppRunner? appRunner,
     FirebaseApp? firebaseApp,
-    FirebaseAuth? firebaseAuth}) async {
+    FirebaseAuth? firebaseAuth,
+    NotificationService? notificationService}) async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final AppInfo appInfo = flavorAppInfo;
@@ -50,10 +51,13 @@ Future<void> mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo,
   });
   // Only uses the bundled google fonts, prevents fetching from online.
   GoogleFonts.config.allowRuntimeFetching = false;
-  final SharedPreferences sharedPreferences =
-      await SharedPreferences.getInstance();
-  final SharedPreferencesService sharedPreferencesService =
-      SharedPreferencesService(sharedPreferences);
+  if (notificationService == null) {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    final SharedPreferencesService sharedPreferencesService =
+        SharedPreferencesService(sharedPreferences);
+    notificationService = NotificationService(sharedPreferencesService);
+  }
 
   final PartnersInfoState partnersInfoState = PartnersInfoState();
   final UserInfoState userInfoState =
@@ -65,7 +69,7 @@ Future<void> mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo,
     authenticationInfo: authenticationInfo,
     auth: firebaseAuth ?? FirebaseAuth.instance,
     appInfo: appInfo,
-    notificationService: NotificationService(sharedPreferencesService),
+    notificationService: notificationService,
   );
 
   final List<ChangeNotifierProvider<ChangeNotifier>> providers = [
