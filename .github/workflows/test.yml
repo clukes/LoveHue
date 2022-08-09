@@ -31,7 +31,7 @@ jobs:
 
             - name: generate mocks
             - run: flutter pub run build_runner build
-            
+
             # Analyze, check formatting, and run unit tests.
             - run: flutter analyze
             - name: Ensure the Dart code is formatted correctly
