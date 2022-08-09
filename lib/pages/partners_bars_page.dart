@@ -24,7 +24,8 @@ class PartnersBars extends StatefulWidget {
   State<PartnersBars> createState() => _PartnersBarsState();
 }
 
-class _PartnersBarsState extends State<PartnersBars> with AutomaticKeepAliveClientMixin<PartnersBars> {
+class _PartnersBarsState extends State<PartnersBars>
+    with AutomaticKeepAliveClientMixin<PartnersBars> {
   // Keeps page alive in background to save the scroll position.
   @override
   bool get wantKeepAlive => true;
@@ -50,9 +51,12 @@ class _PartnersBarsState extends State<PartnersBars> with AutomaticKeepAliveClie
   @override
   Widget build(BuildContext context) {
     // Listener to update page title in app bar when partner's name changes.
-    final ValueListenableBuilder<String> listenableTitle = ValueListenableBuilder<String>(
-      valueListenable: Provider.of<PartnersInfoState>(context, listen: false).partnersName,
-      builder: (BuildContext context, String partnersName, Widget? child) => FittedBox(
+    final ValueListenableBuilder<String> listenableTitle =
+        ValueListenableBuilder<String>(
+      valueListenable:
+          Provider.of<PartnersInfoState>(context, listen: false).partnersName,
+      builder: (BuildContext context, String partnersName, Widget? child) =>
+          FittedBox(
         // Scale text down if it becomes too big for app bar.
         fit: BoxFit.scaleDown,
         child: Text("$partnersName's Bars"),
@@ -70,21 +74,28 @@ class _PartnersBarsState extends State<PartnersBars> with AutomaticKeepAliveClie
             BarsPageAppBar(barTitleWidget: listenableTitle),
           ];
         },
-        body: Consumer<PartnersInfoState>(builder: (BuildContext context, PartnersInfoState partnersInfoState, _) {
+        body: Consumer<PartnersInfoState>(builder:
+            (BuildContext context, PartnersInfoState partnersInfoState, _) {
           if (Provider.of<UserInfoState>(context).partnerLinked) {
-            debugPrint("_PartnersBarsState: Linked partner id: ${partnersInfoState.partnersInfo?.partnerID}");
+            debugPrint(
+                "_PartnersBarsState: Linked partner id: ${partnersInfoState.partnersInfo?.partnerID}");
             Query<RelationshipBarDocument> userBarsQuery =
-                RelationshipBarDocument.getOrderedUserBarsFromID(partnersInfoState.partnersID!, widget.firestore);
+                RelationshipBarDocument.getOrderedUserBarsFromID(
+                    partnersInfoState.partnersID!, widget.firestore);
 
             return StreamBuilder<QuerySnapshot<RelationshipBarDocument>>(
-                stream: userBarsQuery.snapshots(), builder: (context, snapshot) => buildBars(context, snapshot, nonInteractableBarBuilder));
+                stream: userBarsQuery.snapshots(),
+                builder: (context, snapshot) =>
+                    buildBars(context, snapshot, nonInteractableBarBuilder));
           }
           debugPrint("_PartnersBarsState: Not linked to a partner.");
           return const LinkPartnerScreen();
         }),
       ),
-      floatingActionButton: Consumer2<UserInfoState, ApplicationState>(builder: (context, userInfoState, appState, _) {
-        if (!userInfoState.partnerLinked || !appState.canSendNudgeNotification()) {
+      floatingActionButton: Consumer2<UserInfoState, ApplicationState>(
+          builder: (context, userInfoState, appState, _) {
+        if (!userInfoState.partnerLinked ||
+            !appState.canSendNudgeNotification()) {
           return const SizedBox.shrink();
         }
         return BlurredCircle(

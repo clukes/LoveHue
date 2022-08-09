@@ -22,9 +22,11 @@ class NotificationService {
     return NudgeResult(true);
   }
 
-  bool canSendNudgeNotification() => _hasItBeenEnoughSecondsBetweenNudges(_getSecondsSinceLastNudge());
+  bool canSendNudgeNotification() =>
+      _hasItBeenEnoughSecondsBetweenNudges(_getSecondsSinceLastNudge());
 
-  bool _hasItBeenEnoughSecondsBetweenNudges(int secondsSinceLastNudge) => secondsSinceLastNudge >= minimumSecondsBetweenNudges;
+  bool _hasItBeenEnoughSecondsBetweenNudges(int secondsSinceLastNudge) =>
+      secondsSinceLastNudge >= minimumSecondsBetweenNudges;
 
   int _getSecondsSinceLastNudge() {
     var lastTimestamp = _prefsService.getInt(lastNudgeTimestampKey);
@@ -38,11 +40,13 @@ class NotificationService {
   String _getMinutesToWaitMessage(int secondsSinceLastNudge) {
     int secondsToWait = minimumSecondsBetweenNudges - secondsSinceLastNudge;
     Duration timeToWait = Duration(seconds: secondsToWait);
-    String errorMsg = 'Wait ${_formatDuration(timeToWait)} minutes to nudge again.';
+    String errorMsg =
+        'Wait ${_formatDuration(timeToWait)} minutes to nudge again.';
     return errorMsg;
   }
 
-  String _formatDuration(Duration duration) => "${duration.inMinutes}:${(duration.inSeconds.remainder(60))}";
+  String _formatDuration(Duration duration) =>
+      "${duration.inMinutes}:${(duration.inSeconds.remainder(60))}";
 }
 
 class NudgeResult {

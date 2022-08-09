@@ -56,9 +56,11 @@ class ApplicationState with ChangeNotifier {
         notifyListeners();
       } else if (user != null && loginState == ApplicationLoginState.loggedIn) {
         // When something changes while user is logged in.
-        if (userInfoState.userExist && user.displayName != userInfoState.userInfo?.displayName) {
+        if (userInfoState.userExist &&
+            user.displayName != userInfoState.userInfo?.displayName) {
           // If user display name has changed, update their userInfo display name in database.
-          await userInfoState.userInfo?.firestoreUpdateColumns({UserInformation.columnDisplayName: user.displayName});
+          await userInfoState.userInfo?.firestoreUpdateColumns(
+              {UserInformation.columnDisplayName: user.displayName});
         }
       } else if (user == null && loginState == ApplicationLoginState.loggedIn) {
         // If user has been logged out, reset.
@@ -76,19 +78,30 @@ class ApplicationState with ChangeNotifier {
     loginState = ApplicationLoginState.loading;
 
     // Retrieve userInfo if not locally stored.
-    UserInformation? userInfo = userInfoState.userInfo ?? await UserInformation.firestoreGetFromID(user.uid, firestore);
+    UserInformation? userInfo = userInfoState.userInfo ??
+        await UserInformation.firestoreGetFromID(user.uid, firestore);
     if (userInfo == null) {
       // If there is no UserInformation in the database for the current user, i.e. they are a new user, setup their data.
       DocumentReference<LinkCode?> linkCode = await LinkCode.create(firestore);
-      userInfo = UserInformation(userID: user.uid, displayName: user.displayName, linkCode: linkCode, firestore: firestore);
-      debugPrint("ApplicationState.userLoggedInSetup: New user setup: $userInfo.");
+      userInfo = UserInformation(
+          userID: user.uid,
+          displayName: user.displayName,
+          linkCode: linkCode,
+          firestore: firestore);
+      debugPrint(
+          "ApplicationState.userLoggedInSetup: New user setup: $userInfo.");
 
       await userInfo.setupUserInDatabase(userInfoState);
     }
     if (userInfo.partnerID != null) {
-      partnersInfoState.addPartner(await UserInformation.firestoreGetFromID(userInfo.partnerID!, firestore), userInfo);
+      partnersInfoState.addPartner(
+          await UserInformation.firestoreGetFromID(
+              userInfo.partnerID!, firestore),
+          userInfo);
     }
-    userInfoState.latestRelationshipBarDoc ??= await RelationshipBarDocument.firestoreGetLatest(userInfo.userID, firestore);
+    userInfoState.latestRelationshipBarDoc ??=
+        await RelationshipBarDocument.firestoreGetLatest(
+            userInfo.userID, firestore);
     userInfoState.addUser(userInfo);
     loginState = ApplicationLoginState.loggedIn;
     userInfoState.notifyListeners();
@@ -108,7 +121,9 @@ class ApplicationState with ChangeNotifier {
   Future<void> signInAnonymously(NavigatorState navigator) async =>
       authenticationInfo.signInAnonymously(navigator, auth);
 
-  Future<NudgeResult> sendNudgeNotification() => notificationService.sendNudgeNotification();
+  Future<NudgeResult> sendNudgeNotification() =>
+      notificationService.sendNudgeNotification();
 
-  bool canSendNudgeNotification() => notificationService.canSendNudgeNotification();
+  bool canSendNudgeNotification() =>
+      notificationService.canSendNudgeNotification();
 }

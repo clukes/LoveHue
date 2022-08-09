@@ -5,7 +5,8 @@ class SharedPreferencesService {
 
   SharedPreferencesService(this.preferences);
 
-  void setInt(String key, int value) async => await preferences.setInt(key, value);
+  void setInt(String key, int value) async =>
+      await preferences.setInt(key, value);
 
   int? getInt(String key) => preferences.getInt(key);
 }
