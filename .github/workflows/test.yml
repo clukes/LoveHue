@@ -15,7 +15,7 @@ jobs:
         steps:
             # Set up Flutter.
             - name: Clone Flutter repository with stable channel
-              uses: subosito/flutter-action@d8687e6979e8ef66d2b2970e2c92c1d8e801d7bf
+              uses: subosito/flutter-action@6c2e035f2692eeac890d854df95630c72673f130
               with:
                   channel: "stable"
             - run: flutter doctor -v
@@ -28,6 +28,9 @@ jobs:
             # Create .dev.env file
             - name: Set env
               run: echo '${{ secrets.DEV_ENV }}' > .dev.env
+
+            - name: generate mocks
+              run: flutter pub get && flutter pub run build_runner build --delete-conflicting-outputs
 
             # Analyze, check formatting, and run unit tests.
             - run: flutter analyze
@@ -49,7 +52,7 @@ jobs:
     #   steps:
     #     # Set up Flutter.
     #     - name: Clone Flutter repository with master channel
-    #       uses: subosito/flutter-action@d8687e6979e8ef66d2b2970e2c92c1d8e801d7bf
+    #       uses: subosito/flutter-action@6c2e035f2692eeac890d854df95630c72673f130
     #       with:
     #         channel: master
     #     - run: flutter doctor -v
@@ -68,7 +71,7 @@ jobs:
     #   steps:
     #     # Set up Flutter.
     #     - name: Clone Flutter repository with master channel
-    #       uses: subosito/flutter-action@d8687e6979e8ef66d2b2970e2c92c1d8e801d7bf
+    #       uses: subosito/flutter-action@6c2e035f2692eeac890d854df95630c72673f130
     #       with:
     #         channel: master
     #     - run: flutter doctor -v

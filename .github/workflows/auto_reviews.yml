@@ -1,14 +1,15 @@
 name: Auto reviews release
 on: pull_request
+permissions:
+  contents: read
+
 jobs:
-  reviews:
+  build:
     runs-on: ubuntu-latest
+    permissions:
+      pull-requests: write
     steps:
-      - name: Auto reviews branches
-        uses: golfzaptw/action-auto-reviews-from-branches@master
+      - uses: hmarr/auto-approve-action@v2
+        if: github.actor == 'clukes'
         with:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-          EVENT_TYPE: APPROVE
-          BRANCHES: release/*
-          AUTHOR: 'clukes'
-          MESSAGE: Approved.
+          github-token: ${{ secrets.GITHUB_TOKEN }}

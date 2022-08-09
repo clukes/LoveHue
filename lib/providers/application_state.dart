@@ -105,6 +105,9 @@ class ApplicationState with ChangeNotifier {
     loginState = ApplicationLoginState.loggedOut;
   }
 
+  Future<void> signInAnonymously(NavigatorState navigator) async =>
+      authenticationInfo.signInAnonymously(navigator, auth);
+
   Future<NudgeResult> sendNudgeNotification() => notificationService.sendNudgeNotification();
 
   bool canSendNudgeNotification() => notificationService.canSendNudgeNotification();
