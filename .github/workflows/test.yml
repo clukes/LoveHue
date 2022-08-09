@@ -29,6 +29,9 @@ jobs:
             - name: Set env
               run: echo '${{ secrets.DEV_ENV }}' > .dev.env
 
+            - name: generate mocks
+              run: flutter pub get && flutter pub run build_runner build --delete-conflicting-outputs
+
             # Analyze, check formatting, and run unit tests.
             - run: flutter analyze
             - name: Ensure the Dart code is formatted correctly
