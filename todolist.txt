@@ -1,4 +1,3 @@
-TODO: Make better TODO list.
 Bugs:
 / Username editing bug (not being able to enter text when editing username twice) seems to be flutter problem, hopefully flutter fixes soon. [Fix is done, waiting for it to reach release: https://github.com/flutter/engine/pull/30916]
 - Fix delete account bug, requires two clicks of button.

@@ -1,5 +1,5 @@
 // TODO: Setup new email and developer name
-// Copyright (C) 2022 Conner Lukes <clukes@icloud.com>
+// Copyright (C) 2022 Conner Lukes <clukes@me.com>
 // All rights reserved.
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -51,6 +51,7 @@ Future<void> mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo,
   });
   // Only uses the bundled google fonts, prevents fetching from online.
   GoogleFonts.config.allowRuntimeFetching = false;
+
   if (notificationService == null) {
     final SharedPreferences sharedPreferences =
         await SharedPreferences.getInstance();

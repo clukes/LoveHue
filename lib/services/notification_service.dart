@@ -33,7 +33,7 @@ class NotificationService {
 
   int _getMillisecondsSinceLastNudge() {
     var lastTimestamp = _prefsService.getInt(lastNudgeTimestampKey);
-    if (lastTimestamp == null) return 0;
+    lastTimestamp ??= 0;
 
     return _getCurrentTimeStamp() - lastTimestamp;
   }

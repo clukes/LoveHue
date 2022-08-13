@@ -107,6 +107,8 @@ This can then open a conversation about why you each feel that way, moving the f
 Current stage TODO:
 - [x] Unit Tests
 - [x] Widget Tests
+- [ ] Bug fixes + add missing features/elements
+
 - [ ] Integration Tests
 
 Development Process for V1.0:

@@ -5,8 +5,8 @@ import 'package:mockito/mockito.dart';
 import '../mocker.mocks.dart';
 
 void main() {
-  late final MockSharedPreferences mockPreferences;
-  late final SharedPreferencesService subject;
+  late MockSharedPreferences mockPreferences;
+  late SharedPreferencesService subject;
 
   setUp(() {
     mockPreferences = MockSharedPreferences();
@@ -25,7 +25,7 @@ void main() {
     verify(mockPreferences.setInt(key, value));
   });
 
-  test('setInt calls preferences getInt', () {
+  test('getInt calls preferences getInt', () {
     when(mockPreferences.getInt(any)).thenReturn(null);
 
     String key = "Test";
