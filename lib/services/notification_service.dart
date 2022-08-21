@@ -1,5 +1,6 @@
 import 'package:clock/clock.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
+import 'package:flutter/material.dart';
 import 'package:lovehue/services/shared_preferences_service.dart';
 
 import '../models/notification_request.dart';
@@ -22,7 +23,7 @@ class NotificationService {
   }
 
   String notificationDocumentPath(String userId) =>
-      "${_config.notificationCollectionPath}/{userId}";
+      "${_config.notificationCollectionPath}/$userId";
 
   /// Sends nudge notification to partner if it has been long enough since last nudge.
   Future<NudgeResult> sendNudgeNotification(String? currentUserId) async {
@@ -51,19 +52,35 @@ class NotificationService {
       _getMillisecondsSinceLastNudge());
 
   /// Subscribe to notifications from partner, by subscribing to topic with [partnersId].
-  Future<void> subscribeToNotificationsAsync(String partnersId, ) async {
-    return await firebaseMessaging.subscribeToTopic(partnersId);
+  Future<void> subscribeToNotificationsAsync(String partnersId) async {
+    try {
+      return await firebaseMessaging.subscribeToTopic(partnersId);
+    }
+    on UnimplementedError catch (error, _) {
+      debugPrint("subscribeToNotificationsAsync: Unimplemented error $error");
+    }
   }
 
   /// Subscribe to notifications from partner, by subscribing to topic with [partnersId].
   Future<void> unsubscribeFromNotificationsAsync(String partnersId) async {
-    return await firebaseMessaging.unsubscribeFromTopic(partnersId);
+    try {
+      return await firebaseMessaging.unsubscribeFromTopic(partnersId);
+    }
+    on UnimplementedError catch (error, _) {
+      debugPrint("unsubscribeFromNotificationsAsync: Unimplemented error $error");
+    }
   }
 
   bool _hasItBeenEnoughMillisecondsBetweenNudges(
-          int milliSecondsSinceLastNudge) =>
-      _getMillisecondsSinceLastNudge() >=
-      _config.minimumMillisecondsBetweenNudges;
+          int milliSecondsSinceLastNudge) {
+    int millisecondsSinceLastNudge = _getMillisecondsSinceLastNudge();
+    int minMilliseconds = 1000;//_config.minimumMillisecondsBetweenNudges;
+    bool result =
+        millisecondsSinceLastNudge >=
+            minMilliseconds;
+    debugPrint("_hasItBeenEnoughMillisecondsBetweenNudges: $result for $milliSecondsSinceLastNudge, with minMilliseconds as $minMilliseconds");
+    return result;
+  }
 
   int _getMillisecondsSinceLastNudge() {
     var lastTimestamp = _prefsService.getInt(lastNudgeTimestampKey);

@@ -6,7 +6,7 @@ import 'main_common.dart';
 import 'utils/app_info_class.dart';
 
 Future main() async {
-  await dotenv.load(fileName: ".dev.env");
+  await dotenv.load(fileName: "assets/.dev.env");
   mainCommon(
     DevFirebaseOptions.currentPlatform,
     const AppInfo(

@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:flutter/material.dart';
 
 /// Service to connect with firestore.
 class DatabaseService {
@@ -8,8 +9,10 @@ class DatabaseService {
 
   /// Saves [data] to [docPath] in firestore.
   Future<void> saveAsync(String docPath, Map<String, dynamic> data,
-          {bool merge = false}) =>
-      firestore.doc(docPath).set(data, SetOptions(merge: merge));
+          {bool merge = false}) {
+    debugPrint("saveAsync: Writing to $docPath with data $data and merge set to $merge");
+    return firestore.doc(docPath).set(data, SetOptions(merge: merge));
+  }
 
   /// Saves [data] object to [docPath] in firestore, overwriting doc if exists.
   Future<void> writeObjectAsync<T extends Mappable>(String docPath, T data) =>

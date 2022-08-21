@@ -3,7 +3,7 @@ import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 
 class NotificationsConfig {
-  static const String configFileName = "notification_service.json";
+  static const String configFilePath = "assets/configs/notification_configs.json";
 
   final String notificationCollectionPath;
   final String columnRequested;
@@ -19,7 +19,7 @@ class NotificationsConfig {
 
   static Future<NotificationsConfig> _getJson() async {
     return rootBundle.loadStructuredData<NotificationsConfig>(
-        configFileName, (str) async => convertJson(str));
+        configFilePath, (str) async => convertJson(str));
   }
 
   static NotificationsConfig convertJson(String jsonStr) =>
