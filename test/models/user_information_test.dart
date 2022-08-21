@@ -7,7 +7,6 @@ import 'package:lovehue/models/relationship_bar_document.dart';
 import 'package:lovehue/models/user_information.dart';
 import 'package:lovehue/resources/database_and_table_names.dart';
 import 'package:lovehue/resources/printable_error.dart';
-import 'package:lovehue/services/notification_service.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -171,12 +170,16 @@ void main() {
     late MockUser user;
     late MockFirebaseAuth firebaseAuth;
     late MockAuthenticationInfo authenticationInfo;
+    late MockNotificationService notificationService;
 
     setUp(() {
       context = MockBuildContext();
       user = MockUser();
       firebaseAuth = MockFirebaseAuth();
       authenticationInfo = MockAuthenticationInfo();
+      notificationService = MockNotificationService();
+      when(notificationService.notificationDocumentPath(any))
+          .thenReturn("test/1234");
     });
 
     test(
@@ -194,7 +197,7 @@ void main() {
       DocumentReference partnerDoc =
           firestore.collection(userInfoCollection).doc(partnerID);
       DocumentReference notificationsDoc =
-          firestore.doc(NotificationService.notificationDocumentPath(userID));
+          firestore.doc(notificationService.notificationDocumentPath(userID));
       CollectionReference barsCollection =
           RelationshipBarDocument.getUserBarsFromID(userID, firestore);
 
@@ -212,11 +215,12 @@ void main() {
       await partnerDoc.set(partner.toMap());
       await userDoc.set(currentUser.toMap());
       await notificationsDoc.set({"test": 1234});
-      await barsCollection.doc("1").set(RelationshipBarDocument(id: "1", userID: userID, firestore: firestore));
+      await barsCollection.doc("1").set(RelationshipBarDocument(
+          id: "1", userID: userID, firestore: firestore));
 
       // Act
       await currentUser.deleteUserData(
-          context, firebaseAuth, authenticationInfo);
+          context, firebaseAuth, authenticationInfo, notificationService);
       Map<String, dynamic>? result = await firestore
           .collection(userInfoCollection)
           .doc(userID)
@@ -267,7 +271,8 @@ void main() {
 
       await partnerDoc.set(partner.toMap());
       await userDoc.set(userInfo.toMap());
-      await userInfo.deleteUserData(context, firebaseAuth, authenticationInfo);
+      await userInfo.deleteUserData(
+          context, firebaseAuth, authenticationInfo, notificationService);
       Map<String, dynamic>? result = await firestore
           .collection(userInfoCollection)
           .doc(userID)
@@ -299,7 +304,8 @@ void main() {
 
       await userDoc.set(userInfo.toMap());
       await expectLater(
-          userInfo.deleteUserData(context, firebaseAuth, authenticationInfo),
+          userInfo.deleteUserData(
+              context, firebaseAuth, authenticationInfo, notificationService),
           throwsA(isA<PrintableError>()));
       verify(authenticationInfo.reauthenticate(context, firebaseAuth));
     });
@@ -308,7 +314,8 @@ void main() {
       when(firebaseAuth.currentUser).thenReturn(null);
 
       expectLater(
-          userInfo.deleteUserData(context, firebaseAuth, authenticationInfo),
+          userInfo.deleteUserData(
+              context, firebaseAuth, authenticationInfo, notificationService),
           throwsA(isA<PrintableError>()));
     });
 
@@ -317,7 +324,8 @@ void main() {
       when(firebaseAuth.currentUser).thenReturn(user);
 
       expectLater(
-          userInfo.deleteUserData(context, firebaseAuth, authenticationInfo),
+          userInfo.deleteUserData(
+              context, firebaseAuth, authenticationInfo, notificationService),
           throwsA(isA<PrintableError>()));
     });
   });

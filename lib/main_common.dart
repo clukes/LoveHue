@@ -12,6 +12,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:lovehue/services/database_service.dart';
 import 'package:lovehue/services/notification_service.dart';
 import 'package:lovehue/services/shared_preferences_service.dart';
+import 'package:lovehue/utils/configs.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -59,8 +60,10 @@ Future<void> mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo,
     final SharedPreferencesService sharedPreferencesService =
         SharedPreferencesService(sharedPreferences);
     final DatabaseService databaseService = DatabaseService(firestore);
-    notificationService =
-        NotificationService(sharedPreferencesService, databaseService);
+    final NotificationsConfig notificationsConfig =
+        await NotificationsConfig.initialize();
+    notificationService = NotificationService(
+        sharedPreferencesService, databaseService, notificationsConfig);
   }
 
   final PartnersInfoState partnersInfoState = PartnersInfoState();

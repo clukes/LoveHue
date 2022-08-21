@@ -51,9 +51,9 @@ class SettingsPage extends StatelessWidget {
         const SizedBox(height: 32),
         ElevatedButton.icon(
             style: ElevatedButton.styleFrom(primary: redColor),
-            onPressed: () =>
-                DeleteAlertDialog(appState.auth, appState.authenticationInfo)
-                    .show(context),
+            onPressed: () => DeleteAlertDialog(appState.auth,
+                    appState.authenticationInfo, appState.notificationService)
+                .show(context),
             icon: const Icon(Icons.delete),
             label: const Text('Delete Account')),
       ],

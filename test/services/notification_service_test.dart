@@ -2,7 +2,6 @@ import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lovehue/models/notification_request.dart';
 import 'package:lovehue/services/notification_service.dart';
-import 'package:lovehue/utils/globals.dart';
 import 'package:mockito/mockito.dart';
 
 import '../mocker.mocks.dart';
@@ -10,17 +9,25 @@ import '../mocker.mocks.dart';
 void main() {
   late MockSharedPreferencesService mockPreferencesService;
   late MockDatabaseService mockDatabaseService;
+  late MockNotificationsConfig mockNotificationsConfig;
   late NotificationService subject;
   final DateTime currentTime = DateTime.now();
   final mockClock = Clock.fixed(currentTime);
   const String timestampKey = NotificationService.lastNudgeTimestampKey;
   const String userId = "1234";
+  const minimumMillisecondsBetweenNudges = 360000;
 
   setUp(() {
     mockPreferencesService = MockSharedPreferencesService();
     mockDatabaseService = MockDatabaseService();
-    subject = NotificationService(mockPreferencesService, mockDatabaseService,
+    mockNotificationsConfig = MockNotificationsConfig();
+    subject = NotificationService(
+        mockPreferencesService, mockDatabaseService, mockNotificationsConfig,
         clock: mockClock);
+    when(mockNotificationsConfig.minimumMillisecondsBetweenNudges)
+        .thenReturn(360000);
+    when(mockNotificationsConfig.notificationCollectionPath)
+        .thenReturn("/nudge");
   });
 
   group("sendNudgeNotification", () {
@@ -68,6 +75,7 @@ void main() {
       when(mockPreferencesService.getInt(any)).thenReturn(value);
       when(mockPreferencesService.setInt(any, any))
           .thenAnswer((_) async => true);
+      var notificationDocPath = subject.notificationDocumentPath(userId);
 
       // Act
       var result = await subject.sendNudgeNotification(userId);
@@ -75,7 +83,7 @@ void main() {
       verify(mockPreferencesService.getInt(timestampKey));
       verify(mockPreferencesService.setInt(timestampKey, currentMilliseconds));
       verify(mockDatabaseService.mergeObjectAsync<NotificationRequest>(
-          NotificationService.notificationDocumentPath(userId),
+          notificationDocPath,
           argThat(predicate((NotificationRequest request) =>
               request.requestedTimestampMilliseconds == currentMilliseconds))));
       expect(result, isNotNull);

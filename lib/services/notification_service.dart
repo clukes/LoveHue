@@ -1,8 +1,8 @@
 import 'package:clock/clock.dart';
 import 'package:lovehue/services/shared_preferences_service.dart';
-import 'package:lovehue/utils/globals.dart';
 
 import '../models/notification_request.dart';
+import '../utils/configs.dart';
 import 'database_service.dart';
 
 /// Service to send notifications.
@@ -11,13 +11,14 @@ class NotificationService {
 
   final SharedPreferencesService _prefsService;
   final DatabaseService _databaseService;
+  final NotificationsConfig _config;
   final Clock clock;
 
-  NotificationService(this._prefsService, this._databaseService,
+  NotificationService(this._prefsService, this._databaseService, this._config,
       {this.clock = const Clock()});
 
-  static String notificationDocumentPath(String userId) =>
-      "nudgeNotifications/{userId}";
+  String notificationDocumentPath(String userId) =>
+      "${_config.notificationCollectionPath}/{userId}";
 
   /// Sends nudge notification to partner if it has been long enough since last nudge.
   Future<NudgeResult> sendNudgeNotification(String? currentUserId) async {
@@ -47,7 +48,8 @@ class NotificationService {
 
   bool _hasItBeenEnoughMillisecondsBetweenNudges(
           int milliSecondsSinceLastNudge) =>
-      _getMillisecondsSinceLastNudge() >= minimumMillisecondsBetweenNudges;
+      _getMillisecondsSinceLastNudge() >=
+      _config.minimumMillisecondsBetweenNudges;
 
   int _getMillisecondsSinceLastNudge() {
     var lastTimestamp = _prefsService.getInt(lastNudgeTimestampKey);
@@ -60,7 +62,7 @@ class NotificationService {
 
   String _getMinutesToWaitMessage(int milliSecondsSinceLastNudge) {
     int milliSecondsToWait =
-        minimumMillisecondsBetweenNudges - milliSecondsSinceLastNudge;
+        _config.minimumMillisecondsBetweenNudges - milliSecondsSinceLastNudge;
     Duration timeToWait = Duration(milliseconds: milliSecondsToWait);
     String errorMsg =
         'Wait ${_formatDuration(timeToWait)} minutes to nudge again.';

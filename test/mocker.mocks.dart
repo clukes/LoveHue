@@ -23,6 +23,7 @@ import 'package:lovehue/services/database_service.dart' as _i22;
 import 'package:lovehue/services/notification_service.dart' as _i8;
 import 'package:lovehue/services/shared_preferences_service.dart' as _i21;
 import 'package:lovehue/utils/app_info_class.dart' as _i5;
+import 'package:lovehue/utils/configs.dart' as _i23;
 import 'package:mockito/mockito.dart' as _i1;
 import 'package:package_info_plus/package_info_plus.dart' as _i11;
 import 'package:shared_preferences/shared_preferences.dart' as _i14;
@@ -637,11 +638,14 @@ class MockUserInformation extends _i1.Mock implements _i18.UserInformation {
               returnValueForMissingStub: _i16.Future<void>.value())
           as _i16.Future<void>);
   @override
-  _i16.Future<void> deleteUserData(_i9.BuildContext? context,
-          _i7.FirebaseAuth? auth, _i6.AuthenticationInfo? authenticationInfo) =>
+  _i16.Future<void> deleteUserData(
+          _i9.BuildContext? context,
+          _i7.FirebaseAuth? auth,
+          _i6.AuthenticationInfo? authenticationInfo,
+          _i8.NotificationService? notificationService) =>
       (super.noSuchMethod(
-              Invocation.method(
-                  #deleteUserData, [context, auth, authenticationInfo]),
+              Invocation.method(#deleteUserData,
+                  [context, auth, authenticationInfo, notificationService]),
               returnValue: _i16.Future<void>.value(),
               returnValueForMissingStub: _i16.Future<void>.value())
           as _i16.Future<void>);
@@ -1146,6 +1150,10 @@ class MockNotificationService extends _i1.Mock
           returnValue: _FakeClock_21(this, Invocation.getter(#clock)))
       as _i13.Clock);
   @override
+  String notificationDocumentPath(String? userId) => (super.noSuchMethod(
+      Invocation.method(#notificationDocumentPath, [userId]),
+      returnValue: '') as String);
+  @override
   _i16.Future<_i8.NudgeResult> sendNudgeNotification(String? currentUserId) =>
       (super.noSuchMethod(
           Invocation.method(#sendNudgeNotification, [currentUserId]),
@@ -1281,10 +1289,9 @@ class MockDatabaseService extends _i1.Mock implements _i22.DatabaseService {
               returnValueForMissingStub: _i16.Future<void>.value())
           as _i16.Future<void>);
   @override
-  _i16.Future<void> overwriteObjectAsync<T extends _i22.Mappable>(
+  _i16.Future<void> writeObjectAsync<T extends _i22.Mappable>(
           String? docPath, T? data) =>
-      (super.noSuchMethod(
-              Invocation.method(#overwriteObjectAsync, [docPath, data]),
+      (super.noSuchMethod(Invocation.method(#writeObjectAsync, [docPath, data]),
               returnValue: _i16.Future<void>.value(),
               returnValueForMissingStub: _i16.Future<void>.value())
           as _i16.Future<void>);
@@ -1295,4 +1302,31 @@ class MockDatabaseService extends _i1.Mock implements _i22.DatabaseService {
               returnValue: _i16.Future<void>.value(),
               returnValueForMissingStub: _i16.Future<void>.value())
           as _i16.Future<void>);
+}
+
+/// A class which mocks [NotificationsConfig].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockNotificationsConfig extends _i1.Mock
+    implements _i23.NotificationsConfig {
+  MockNotificationsConfig() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  String get notificationCollectionPath =>
+      (super.noSuchMethod(Invocation.getter(#notificationCollectionPath),
+          returnValue: '') as String);
+  @override
+  String get columnRequested =>
+      (super.noSuchMethod(Invocation.getter(#columnRequested), returnValue: '')
+          as String);
+  @override
+  String get columnCompleted =>
+      (super.noSuchMethod(Invocation.getter(#columnCompleted), returnValue: '')
+          as String);
+  @override
+  int get minimumMillisecondsBetweenNudges =>
+      (super.noSuchMethod(Invocation.getter(#minimumMillisecondsBetweenNudges),
+          returnValue: 0) as int);
 }

@@ -10,6 +10,7 @@ import 'package:lovehue/services/database_service.dart';
 import 'package:lovehue/services/notification_service.dart';
 import 'package:lovehue/services/shared_preferences_service.dart';
 import 'package:lovehue/utils/app_info_class.dart';
+import 'package:lovehue/utils/configs.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -51,6 +52,7 @@ class MockFunction extends Mock {
   SharedPreferences,
   SharedPreferencesService,
   DatabaseService,
+  NotificationsConfig
 ])
 void main() {
   // Uses build runner to generate mocks for tests.

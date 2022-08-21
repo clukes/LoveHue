@@ -101,6 +101,7 @@ This can then open a conversation about why you each feel that way, moving the f
 ### Built With
 
 - Flutter
+- TypeScript (In Google Cloud Functions)
 - Google Firebase (Authentication and NoSQL database)
 
 ## Roadmap

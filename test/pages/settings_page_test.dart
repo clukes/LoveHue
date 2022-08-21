@@ -29,12 +29,14 @@ void main() {
 
   late MockApplicationState appState;
   late MockAuthenticationInfo authenticationInfo;
+  late MockNotificationService mockNotificationService;
   late Widget testWidget;
   late Widget testWidgetBuild;
 
   setUp(() {
     appState = MockApplicationState();
     authenticationInfo = MockAuthenticationInfo();
+    mockNotificationService = MockNotificationService();
     testWidget = const SettingsPage();
     testWidgetBuild = MaterialApp(
         home: MultiProvider(
@@ -47,6 +49,9 @@ void main() {
     when(appState.authenticationInfo).thenReturn(authenticationInfo);
     when(authenticationInfo.packageInfo).thenReturn(packageInfo);
     when(appState.auth).thenReturn(MockFirebaseAuth());
+    when(appState.notificationService).thenReturn(mockNotificationService);
+    when(mockNotificationService.notificationDocumentPath(any))
+        .thenReturn("nudge/12345");
   });
 
   testWidgets('displays settings page', (WidgetTester tester) async {

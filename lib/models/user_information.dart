@@ -160,8 +160,11 @@ class UserInformation {
   /// Throws [PrintableError] if there is no userID stored for currentUser,
   /// or the userID for currentUser doesn't match the locally stored UserInformation,
   /// or if an error occurs during deletion.
-  Future<void> deleteUserData(BuildContext context, FirebaseAuth auth,
-      AuthenticationInfo authenticationInfo) async {
+  Future<void> deleteUserData(
+      BuildContext context,
+      FirebaseAuth auth,
+      AuthenticationInfo authenticationInfo,
+      NotificationService notificationService) async {
     String? userID = auth.currentUser?.uid;
     if (userID != null && userID == this.userID) {
       try {
@@ -174,7 +177,7 @@ class UserInformation {
         }
         DocumentReference userDoc = getUserInDatabase();
         DocumentReference notificationsDoc =
-            firestore.doc(NotificationService.notificationDocumentPath(userID));
+            firestore.doc(notificationService.notificationDocumentPath(userID));
         batch.delete(userDoc);
         batch.delete(linkCode);
         batch.delete(notificationsDoc);
