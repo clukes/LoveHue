@@ -2,6 +2,7 @@ import 'package:clock/clock.dart';
 import 'package:lovehue/services/shared_preferences_service.dart';
 import 'package:lovehue/utils/globals.dart';
 
+import '../models/notification_request.dart';
 import 'database_service.dart';
 
 /// Service to send notifications.
@@ -15,10 +16,8 @@ class NotificationService {
   NotificationService(this._prefsService, this._databaseService,
       {this.clock = const Clock()});
 
-  static String _baseCollectionPath(String userId) =>
+  static String notificationDocumentPath(String userId) =>
       "nudgeNotifications/{userId}";
-  static String _requestedDocumentPath(String userId) =>
-      "${_baseCollectionPath(userId)}/requested";
 
   /// Sends nudge notification to partner if it has been long enough since last nudge.
   Future<NudgeResult> sendNudgeNotification(String? currentUserId) async {
@@ -71,9 +70,12 @@ class NotificationService {
   String _formatDuration(Duration duration) =>
       "${duration.inMinutes}:${(duration.inSeconds.remainder(60))}";
 
-  void _saveNudgeRequest(int milliseconds, String userId) =>
-      _databaseService.saveTimestampAsync(
-          _requestedDocumentPath(userId), lastNudgeTimestampKey, milliseconds);
+  void _saveNudgeRequest(int requestedTimestampMilliseconds, String userId) {
+    NotificationRequest request =
+        NotificationRequest(requestedTimestampMilliseconds);
+    _databaseService.mergeObjectAsync<NotificationRequest>(
+        notificationDocumentPath(userId), request);
+  }
 }
 
 /// Result of trying to send a nudge notification, with an error message if unsuccessful.

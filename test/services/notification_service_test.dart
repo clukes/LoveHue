@@ -1,5 +1,6 @@
 import 'package:clock/clock.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:lovehue/models/notification_request.dart';
 import 'package:lovehue/services/notification_service.dart';
 import 'package:lovehue/utils/globals.dart';
 import 'package:mockito/mockito.dart';
@@ -73,10 +74,10 @@ void main() {
 
       verify(mockPreferencesService.getInt(timestampKey));
       verify(mockPreferencesService.setInt(timestampKey, currentMilliseconds));
-      verify(mockDatabaseService.saveTimestampAsync(
-          "nudgeNotifications/{userId}/requested",
-          timestampKey,
-          currentMilliseconds));
+      verify(mockDatabaseService.mergeObjectAsync<NotificationRequest>(
+          NotificationService.notificationDocumentPath(userId),
+          argThat(predicate((NotificationRequest request) =>
+              request.requestedTimestampMilliseconds == currentMilliseconds))));
       expect(result, isNotNull);
       expect(result.successful, isTrue);
       expect(result.errorMessage, isNull);

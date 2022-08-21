@@ -7,6 +7,7 @@ import 'package:lovehue/models/relationship_bar_document.dart';
 import 'package:lovehue/models/user_information.dart';
 import 'package:lovehue/resources/database_and_table_names.dart';
 import 'package:lovehue/resources/printable_error.dart';
+import 'package:lovehue/services/notification_service.dart';
 import 'package:mockito/annotations.dart';
 import 'package:mockito/mockito.dart';
 
@@ -192,6 +193,11 @@ void main() {
           firestore.collection(userInfoCollection).doc(user.uid);
       DocumentReference partnerDoc =
           firestore.collection(userInfoCollection).doc(partnerID);
+      DocumentReference notificationsDoc =
+          firestore.doc(NotificationService.notificationDocumentPath(userID));
+      CollectionReference barsCollection =
+          RelationshipBarDocument.getUserBarsFromID(userID, firestore);
+
       UserInformation partner = UserInformation(
           firestore: firestore,
           userID: partnerID,
@@ -205,6 +211,10 @@ void main() {
 
       await partnerDoc.set(partner.toMap());
       await userDoc.set(currentUser.toMap());
+      await notificationsDoc.set({"test": 1234});
+      await barsCollection.doc("1").set(RelationshipBarDocument(id: "1", userID: userID, firestore: firestore));
+
+      // Act
       await currentUser.deleteUserData(
           context, firebaseAuth, authenticationInfo);
       Map<String, dynamic>? result = await firestore
@@ -217,9 +227,14 @@ void main() {
           .doc(partnerID)
           .get()
           .then((value) => value.data());
+      DocumentSnapshot notificationsResult = await notificationsDoc.get();
+      QuerySnapshot barsResult = await barsCollection.get();
+
       expect(result, isNull);
       expect(firebaseAuth.currentUser, isNull);
       expect(partnerResult![UserInformation.columnPartner], isNull);
+      expect(barsResult.size, isZero);
+      expect(notificationsResult.exists, isFalse);
     });
 
     test("no recent sign in reauthenticates then deletes", () async {

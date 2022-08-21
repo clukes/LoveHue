@@ -7,14 +7,21 @@ class DatabaseService {
   DatabaseService(this.firestore);
 
   /// Saves [data] to [docPath] in firestore.
-  Future<void> saveAsync(String docPath, Map<String, dynamic> data) =>
-      firestore.doc(docPath).set(data);
+  Future<void> saveAsync(String docPath, Map<String, dynamic> data,
+          {bool merge = false}) =>
+      firestore.doc(docPath).set(data, SetOptions(merge: merge));
 
-  /// Saves a milliseconds timestamp to [docPath] in firestore.
-  Future<void> saveTimestampAsync(
-      String docPath, String lastNudgeTimestampKey, int milliseconds) {
-    Timestamp timestamp = Timestamp.fromMillisecondsSinceEpoch(milliseconds);
-    Map<String, Timestamp> data = {lastNudgeTimestampKey: timestamp};
-    return saveAsync(docPath, data);
-  }
+  /// Saves [data] object to [docPath] in firestore, overwriting doc if exists.
+  Future<void> writeObjectAsync<T extends Mappable>(String docPath, T data) =>
+      saveAsync(docPath, data.toMap(), merge: false);
+
+  /// Saves [data] object to [docPath] in firestore, merging with doc if exists and ignoring null values in object.
+  Future<void> mergeObjectAsync<T extends Mappable>(String docPath, T data) =>
+      saveAsync(docPath, data.toMapIgnoreNulls(), merge: true);
+}
+
+abstract class Mappable {
+  Map<String, Object?> toMap();
+
+  Map<String, Object> toMapIgnoreNulls();
 }

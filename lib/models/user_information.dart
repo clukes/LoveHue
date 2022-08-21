@@ -9,6 +9,7 @@ import '../resources/authentication_info.dart';
 import '../resources/database_and_table_names.dart';
 import '../resources/delete_firestore_collection.dart';
 import '../resources/printable_error.dart';
+import '../services/notification_service.dart';
 import '../utils/globals.dart';
 import 'link_code.dart';
 
@@ -172,8 +173,11 @@ class UserInformation {
           batch.update(partner!, {UserInformation.columnPartner: null});
         }
         DocumentReference userDoc = getUserInDatabase();
+        DocumentReference notificationsDoc =
+            firestore.doc(NotificationService.notificationDocumentPath(userID));
         batch.delete(userDoc);
         batch.delete(linkCode);
+        batch.delete(notificationsDoc);
         // Add batch commit promises for all RelationshipBars for user, split in chunks of 500.
         // Max operations in a batch is 500, thus the split. This is necessary since:
         // "When you delete a document, Cloud Firestore does not automatically delete the documents within its subcollections".

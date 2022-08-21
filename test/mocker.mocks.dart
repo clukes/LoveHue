@@ -1273,17 +1273,25 @@ class MockDatabaseService extends _i1.Mock implements _i22.DatabaseService {
                   _FakeFirebaseFirestore_2(this, Invocation.getter(#firestore)))
           as _i4.FirebaseFirestore);
   @override
-  _i16.Future<void> saveAsync(String? docPath, Map<String, dynamic>? data) =>
-      (super.noSuchMethod(Invocation.method(#saveAsync, [docPath, data]),
+  _i16.Future<void> saveAsync(String? docPath, Map<String, dynamic>? data,
+          {bool? merge = false}) =>
+      (super.noSuchMethod(
+              Invocation.method(#saveAsync, [docPath, data], {#merge: merge}),
               returnValue: _i16.Future<void>.value(),
               returnValueForMissingStub: _i16.Future<void>.value())
           as _i16.Future<void>);
   @override
-  _i16.Future<void> saveTimestampAsync(
-          String? docPath, String? lastNudgeTimestampKey, int? milliseconds) =>
+  _i16.Future<void> overwriteObjectAsync<T extends _i22.Mappable>(
+          String? docPath, T? data) =>
       (super.noSuchMethod(
-              Invocation.method(#saveTimestampAsync,
-                  [docPath, lastNudgeTimestampKey, milliseconds]),
+              Invocation.method(#overwriteObjectAsync, [docPath, data]),
+              returnValue: _i16.Future<void>.value(),
+              returnValueForMissingStub: _i16.Future<void>.value())
+          as _i16.Future<void>);
+  @override
+  _i16.Future<void> mergeObjectAsync<T extends _i22.Mappable>(
+          String? docPath, T? data) =>
+      (super.noSuchMethod(Invocation.method(#mergeObjectAsync, [docPath, data]),
               returnValue: _i16.Future<void>.value(),
               returnValueForMissingStub: _i16.Future<void>.value())
           as _i16.Future<void>);
