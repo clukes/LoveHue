@@ -1,3 +1,28 @@
+Notifications Note:
+
+Topic!
+
+SHARE MIN TIME BETWEEN NOTIFICATIONS BETWEEN CLOUD AND APP
+
+On app setup/sign in, subscribe to topic.
+Topic Name: Use the userId, from account sign in.
+
+1. Read timestamp, check can send notification. /
+2. Store timestamp/request in Firestore.
+    - On cloud function, listen for Firestore write:
+        1. Check timestamp of last request. If can't send notification, send error notification back to requester.
+        2. Get partner ID of user.
+        3. Send notification to topic with partner ID.
+        4. Write timestamp.
+3. Store timestamp in shared preferences.
+
+4. Receive notification.
+
+nudgeNotifications/{userId}/requested -> Write a request timestamp to requested timestamp field.
+nudgeNotifications/{userId}/completed -> After doing the notification, write the request timestamp to a completed timestamp field.
+
+
+
 Bugs:
 / Username editing bug (not being able to enter text when editing username twice) seems to be flutter problem, hopefully flutter fixes soon. [Fix is done, waiting for it to reach release: https://github.com/flutter/engine/pull/30916]
 - Fix delete account bug, requires two clicks of button.
