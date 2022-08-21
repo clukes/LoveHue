@@ -19,6 +19,7 @@ import 'package:lovehue/providers/application_state.dart' as _i15;
 import 'package:lovehue/providers/partners_info_state.dart' as _i3;
 import 'package:lovehue/providers/user_info_state.dart' as _i2;
 import 'package:lovehue/resources/authentication_info.dart' as _i6;
+import 'package:lovehue/services/database_service.dart' as _i22;
 import 'package:lovehue/services/notification_service.dart' as _i8;
 import 'package:lovehue/services/shared_preferences_service.dart' as _i21;
 import 'package:lovehue/utils/app_info_class.dart' as _i5;
@@ -1145,11 +1146,14 @@ class MockNotificationService extends _i1.Mock
           returnValue: _FakeClock_21(this, Invocation.getter(#clock)))
       as _i13.Clock);
   @override
-  _i16.Future<_i8.NudgeResult> sendNudgeNotification() => (super.noSuchMethod(
-          Invocation.method(#sendNudgeNotification, []),
+  _i16.Future<_i8.NudgeResult> sendNudgeNotification(String? currentUserId) =>
+      (super.noSuchMethod(
+          Invocation.method(#sendNudgeNotification, [currentUserId]),
           returnValue: _i16.Future<_i8.NudgeResult>.value(_FakeNudgeResult_7(
-              this, Invocation.method(#sendNudgeNotification, []))))
-      as _i16.Future<_i8.NudgeResult>);
+              this,
+              Invocation.method(
+                  #sendNudgeNotification, [currentUserId])))) as _i16
+          .Future<_i8.NudgeResult>);
   @override
   bool canSendNudgeNotification() =>
       (super.noSuchMethod(Invocation.method(#canSendNudgeNotification, []),
@@ -1252,4 +1256,35 @@ class MockSharedPreferencesService extends _i1.Mock
   @override
   int? getInt(String? key) =>
       (super.noSuchMethod(Invocation.method(#getInt, [key])) as int?);
+}
+
+/// A class which mocks [DatabaseService].
+///
+/// See the documentation for Mockito's code generation for more information.
+class MockDatabaseService extends _i1.Mock implements _i22.DatabaseService {
+  MockDatabaseService() {
+    _i1.throwOnMissingStub(this);
+  }
+
+  @override
+  _i4.FirebaseFirestore get firestore =>
+      (super.noSuchMethod(Invocation.getter(#firestore),
+              returnValue:
+                  _FakeFirebaseFirestore_2(this, Invocation.getter(#firestore)))
+          as _i4.FirebaseFirestore);
+  @override
+  _i16.Future<void> saveAsync(String? docPath, Map<String, dynamic>? data) =>
+      (super.noSuchMethod(Invocation.method(#saveAsync, [docPath, data]),
+              returnValue: _i16.Future<void>.value(),
+              returnValueForMissingStub: _i16.Future<void>.value())
+          as _i16.Future<void>);
+  @override
+  _i16.Future<void> saveTimestampAsync(
+          String? docPath, String? lastNudgeTimestampKey, int? milliseconds) =>
+      (super.noSuchMethod(
+              Invocation.method(#saveTimestampAsync,
+                  [docPath, lastNudgeTimestampKey, milliseconds]),
+              returnValue: _i16.Future<void>.value(),
+              returnValueForMissingStub: _i16.Future<void>.value())
+          as _i16.Future<void>);
 }

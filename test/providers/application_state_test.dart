@@ -202,14 +202,17 @@ void main() {
   });
 
   test('sendNudgeNotification calls NotificationService', () async {
+    String userId = "1234";
     NudgeResult expectedResult = NudgeResult(false, errorMessage: "Test");
-    when(notificationService.sendNudgeNotification())
+    when(notificationService.sendNudgeNotification(any))
         .thenAnswer((_) async => expectedResult);
+    when(userInfoState.userID).thenReturn(userId);
 
     // act
     var actualResult = await appState.sendNudgeNotification();
 
-    verify(notificationService.sendNudgeNotification());
+    verify(userInfoState.userID);
+    verify(notificationService.sendNudgeNotification(userId));
     expect(actualResult, equals(expectedResult));
   });
 

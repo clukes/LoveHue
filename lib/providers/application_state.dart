@@ -122,7 +122,7 @@ class ApplicationState with ChangeNotifier {
       authenticationInfo.signInAnonymously(navigator, auth);
 
   Future<NudgeResult> sendNudgeNotification() =>
-      notificationService.sendNudgeNotification();
+      notificationService.sendNudgeNotification(userInfoState.userID);
 
   bool canSendNudgeNotification() =>
       notificationService.canSendNudgeNotification();

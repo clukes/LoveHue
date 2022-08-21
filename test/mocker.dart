@@ -6,6 +6,7 @@ import 'package:lovehue/providers/application_state.dart';
 import 'package:lovehue/providers/partners_info_state.dart';
 import 'package:lovehue/providers/user_info_state.dart';
 import 'package:lovehue/resources/authentication_info.dart';
+import 'package:lovehue/services/database_service.dart';
 import 'package:lovehue/services/notification_service.dart';
 import 'package:lovehue/services/shared_preferences_service.dart';
 import 'package:lovehue/utils/app_info_class.dart';
@@ -48,7 +49,8 @@ class MockFunction extends Mock {
   ReauthenticateHelper,
   NotificationService,
   SharedPreferences,
-  SharedPreferencesService
+  SharedPreferencesService,
+  DatabaseService,
 ])
 void main() {
   // Uses build runner to generate mocks for tests.

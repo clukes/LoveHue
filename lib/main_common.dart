@@ -9,6 +9,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lovehue/services/database_service.dart';
 import 'package:lovehue/services/notification_service.dart';
 import 'package:lovehue/services/shared_preferences_service.dart';
 import 'package:package_info_plus/package_info_plus.dart';
@@ -57,7 +58,8 @@ Future<void> mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo,
         await SharedPreferences.getInstance();
     final SharedPreferencesService sharedPreferencesService =
         SharedPreferencesService(sharedPreferences);
-    notificationService = NotificationService(sharedPreferencesService);
+    final DatabaseService databaseService = DatabaseService(firestore);
+    notificationService = NotificationService(sharedPreferencesService, databaseService);
   }
 
   final PartnersInfoState partnersInfoState = PartnersInfoState();

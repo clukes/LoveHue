@@ -2,19 +2,19 @@ Notifications Note:
 
 Topic!
 
-SHARE MIN TIME BETWEEN NOTIFICATIONS BETWEEN CLOUD AND APP
+SHARE MIN TIME BETWEEN NOTIFICATIONS BETWEEN CLOUD AND APP (use a config json)
 
 On app setup/sign in, subscribe to topic.
 Topic Name: Use the userId, from account sign in.
 
 1. Read timestamp, check can send notification. /
-2. Store timestamp/request in Firestore.
+2. Store timestamp/request in Firestore. /
     - On cloud function, listen for Firestore write:
         1. Check timestamp of last request. If can't send notification, send error notification back to requester.
         2. Get partner ID of user.
         3. Send notification to topic with partner ID.
         4. Write timestamp.
-3. Store timestamp in shared preferences.
+3. Store timestamp in shared preferences. /
 
 4. Receive notification.
 

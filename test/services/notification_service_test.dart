@@ -8,17 +8,38 @@ import '../mocker.mocks.dart';
 
 void main() {
   late MockSharedPreferencesService mockPreferencesService;
+  late MockDatabaseService mockDatabaseService;
   late NotificationService subject;
-  final DateTime currentTime = DateTime(2020, 1, 1);
+  final DateTime currentTime = DateTime.now();
   final mockClock = Clock.fixed(currentTime);
   const String timestampKey = NotificationService.lastNudgeTimestampKey;
+  const String userId = "1234";
 
   setUp(() {
     mockPreferencesService = MockSharedPreferencesService();
-    subject = NotificationService(mockPreferencesService, clock: mockClock);
+    mockDatabaseService = MockDatabaseService();
+    subject = NotificationService(mockPreferencesService, mockDatabaseService, clock: mockClock);
   });
 
   group("sendNudgeNotification", () {
+    Future _testUserIdCheck(String? userId) async {
+      // Act
+      var result = await subject.sendNudgeNotification(userId);
+
+      expect(result, isNotNull);
+      expect(result.successful, isFalse);
+      expect(result.errorMessage,
+          equals("No User Id."));
+    }
+
+    test(
+        'sendNudgeNotification returns error when userId is null or empty',
+        () async => await _testUserIdCheck(null));
+
+    test(
+        'sendNudgeNotification returns error when userId is empty',
+            () async => await _testUserIdCheck(""));
+
     test(
         'sendNudgeNotification returns error when it hasnt been enough milliseconds between nudges',
         () async {
@@ -30,7 +51,7 @@ void main() {
       when(mockPreferencesService.getInt(any)).thenReturn(value);
 
       // Act
-      var result = await subject.sendNudgeNotification();
+      var result = await subject.sendNudgeNotification(userId);
 
       verify(mockPreferencesService.getInt(timestampKey));
       expect(result, isNotNull);
@@ -40,9 +61,11 @@ void main() {
     });
 
     test(
-        'sendNudgeNotification sets int and return true when it has been enough milliseconds between nudges',
+        'sendNudgeNotification sets int, stores timestamp and return true when it has been enough milliseconds between nudges',
         () async {
-      int value = currentTime.millisecondsSinceEpoch -
+      var currentMilliseconds = currentTime.millisecondsSinceEpoch;
+
+      int value = currentMilliseconds -
           minimumMillisecondsBetweenNudges -
           10;
       when(mockPreferencesService.getInt(any)).thenReturn(value);
@@ -50,11 +73,12 @@ void main() {
           .thenAnswer((_) async => true);
 
       // Act
-      var result = await subject.sendNudgeNotification();
+      var result = await subject.sendNudgeNotification(userId);
 
       verify(mockPreferencesService.getInt(timestampKey));
       verify(mockPreferencesService.setInt(
-          timestampKey, currentTime.millisecondsSinceEpoch));
+          timestampKey, currentMilliseconds));
+      verify(mockDatabaseService.saveTimestampAsync("nudgeNotifications/{userId}/requested", timestampKey, currentMilliseconds));
       expect(result, isNotNull);
       expect(result.successful, isTrue);
       expect(result.errorMessage, isNull);
