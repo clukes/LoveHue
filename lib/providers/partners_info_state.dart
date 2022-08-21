@@ -69,11 +69,13 @@ class PartnersInfoState with ChangeNotifier {
   /// Setups local data for a new partner.
   Future<void> addPartner(
       UserInformation? newPartnerInfo, UserInformation currentUserInfo) async {
-    if (newPartnerInfo != null && newPartnerInfo.partnerID == currentUserInfo.userID) {
+    if (newPartnerInfo != null &&
+        newPartnerInfo.partnerID == currentUserInfo.userID) {
       partnersInfo = newPartnerInfo;
       partnersName.value = newPartnerInfo.displayName ?? defaultPartnerName;
       setupPartnerInfoSubscription(currentUserInfo);
-      await notificationService.subscribeToNotificationsAsync(newPartnerInfo.userID);
+      await notificationService
+          .subscribeToNotificationsAsync(newPartnerInfo.userID);
       notify();
     }
   }
@@ -81,7 +83,9 @@ class PartnersInfoState with ChangeNotifier {
   /// Removes local data for current partner.
   Future<void> removePartner(UserInformation? currentUserInfo) async {
     var partnerID = partnersID;
-    if(partnerID != null) await notificationService.unsubscribeFromNotificationsAsync(partnerID);
+    if (partnerID != null) {
+      await notificationService.unsubscribeFromNotificationsAsync(partnerID);
+    }
     partnersInfo = null;
     _partnersInfoSubscription?.cancel();
     currentUserInfo?.linkPending = false;

@@ -151,7 +151,8 @@ void main() {
       // Act
       await partnersInfoState.addPartner(partnersInfo, currentUserInfo);
 
-      verify(mockNotificationService.subscribeToNotificationsAsync(partnersInfo.userID));
+      verify(mockNotificationService
+          .subscribeToNotificationsAsync(partnersInfo.userID));
       expect(partnersInfoState.partnersInfo, isNotNull);
       expect(
           partnersInfoState.partnersInfo!.userID, equals(partnersInfo.userID));
@@ -166,7 +167,8 @@ void main() {
       // Act
       await partnersInfoState.removePartner(currentUserInfo);
 
-      verify(mockNotificationService.unsubscribeFromNotificationsAsync(partnersInfo.userID));
+      verify(mockNotificationService
+          .unsubscribeFromNotificationsAsync(partnersInfo.userID));
       expect(partnersInfoState.partnersInfo, isNull);
       expect(currentUserInfo.linkPending, isFalse);
       expect(currentUserInfo.partner, isNull);

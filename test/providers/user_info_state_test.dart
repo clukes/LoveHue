@@ -344,7 +344,10 @@ void main() {
     });
 
     test('no user with link code throws error', () async {
-      await firestore.collection(userInfoCollection).doc(partnerRef.id).delete();
+      await firestore
+          .collection(userInfoCollection)
+          .doc(partnerRef.id)
+          .delete();
       expectLater(
           subject.connectTo(linkCodeID), throwsA(isA<PrintableError>()));
     });
@@ -391,15 +394,18 @@ void main() {
     test(
         'valid request with incorrect local partner info adds partner to state',
         () async {
-          await firestore
-              .collection(userInfoCollection)
-              .doc(partnerRef.id)
-              .set({"id": partnerInfo.userID, "linkCode": linkCodeRef});
+      await firestore
+          .collection(userInfoCollection)
+          .doc(partnerRef.id)
+          .set({"id": partnerInfo.userID, "linkCode": linkCodeRef});
 
-          await subject.acceptRequest();
+      await subject.acceptRequest();
 
-      verify(partnersInfoState.addPartner(argThat(predicate((UserInformation partnerArg) => partnerArg.userID == partnerInfo.userID)), any));
-        });
+      verify(partnersInfoState.addPartner(
+          argThat(predicate((UserInformation partnerArg) =>
+              partnerArg.userID == partnerInfo.userID)),
+          any));
+    });
 
     test('valid request with correct local partner info notifies listeners',
         () async {
@@ -473,7 +479,8 @@ void main() {
           .get();
       expectLater(user.get('partner'), isNull);
       expectLater(partner.get('partner'), isNull);
-      verify(partnersInfoState.removePartner(argThat(predicate((UserInformation argInfo) => argInfo.userID == userInfo.userID))));
+      verify(partnersInfoState.removePartner(argThat(predicate(
+          (UserInformation argInfo) => argInfo.userID == userInfo.userID))));
     });
 
     test('no user info in state throws error', () async {

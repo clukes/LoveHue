@@ -154,20 +154,19 @@ void main() {
   group("Topic Subscriptions", () {
     const topic = "TestTopic";
 
-    test(
-        'subscribeToNotificationsAsync calls firebaseMessaging subscribe',
-            () async {
-          await subject.subscribeToNotificationsAsync(topic);
+    test('subscribeToNotificationsAsync calls firebaseMessaging subscribe',
+        () async {
+      await subject.subscribeToNotificationsAsync(topic);
 
-          verify(mockFirebaseMessaging.subscribeToTopic(topic));
-        });
+      verify(mockFirebaseMessaging.subscribeToTopic(topic));
+    });
 
     test(
         'unSubscribeFromNotificationsAsync calls firebaseMessaging unsubscribe',
-            () async {
-          await subject.unsubscribeFromNotificationsAsync(topic);
+        () async {
+      await subject.unsubscribeFromNotificationsAsync(topic);
 
-          verify(mockFirebaseMessaging.unsubscribeFromTopic(topic));
-        });
+      verify(mockFirebaseMessaging.unsubscribeFromTopic(topic));
+    });
   });
 }

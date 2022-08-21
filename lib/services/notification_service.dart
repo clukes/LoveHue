@@ -55,8 +55,7 @@ class NotificationService {
   Future<void> subscribeToNotificationsAsync(String partnersId) async {
     try {
       return await firebaseMessaging.subscribeToTopic(partnersId);
-    }
-    on UnimplementedError catch (error, _) {
+    } on UnimplementedError catch (error) {
       debugPrint("subscribeToNotificationsAsync: Unimplemented error $error");
     }
   }
@@ -65,20 +64,19 @@ class NotificationService {
   Future<void> unsubscribeFromNotificationsAsync(String partnersId) async {
     try {
       return await firebaseMessaging.unsubscribeFromTopic(partnersId);
-    }
-    on UnimplementedError catch (error, _) {
-      debugPrint("unsubscribeFromNotificationsAsync: Unimplemented error $error");
+    } on UnimplementedError catch (error) {
+      debugPrint(
+          "unsubscribeFromNotificationsAsync: Unimplemented error $error");
     }
   }
 
   bool _hasItBeenEnoughMillisecondsBetweenNudges(
-          int milliSecondsSinceLastNudge) {
+      int milliSecondsSinceLastNudge) {
     int millisecondsSinceLastNudge = _getMillisecondsSinceLastNudge();
-    int minMilliseconds = 1000;//_config.minimumMillisecondsBetweenNudges;
-    bool result =
-        millisecondsSinceLastNudge >=
-            minMilliseconds;
-    debugPrint("_hasItBeenEnoughMillisecondsBetweenNudges: $result for $milliSecondsSinceLastNudge, with minMilliseconds as $minMilliseconds");
+    int minMilliseconds = 1000; //_config.minimumMillisecondsBetweenNudges;
+    bool result = millisecondsSinceLastNudge >= minMilliseconds;
+    debugPrint(
+        "_hasItBeenEnoughMillisecondsBetweenNudges: $result for $milliSecondsSinceLastNudge, with minMilliseconds as $minMilliseconds");
     return result;
   }
 

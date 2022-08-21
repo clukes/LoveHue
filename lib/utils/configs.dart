@@ -3,7 +3,8 @@ import 'dart:convert';
 import 'package:flutter/services.dart' show rootBundle;
 
 class NotificationsConfig {
-  static const String configFilePath = "assets/configs/notification_configs.json";
+  static const String configFilePath =
+      "assets/configs/notification_configs.json";
 
   final String notificationCollectionPath;
   final String columnRequested;

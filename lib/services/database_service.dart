@@ -9,8 +9,9 @@ class DatabaseService {
 
   /// Saves [data] to [docPath] in firestore.
   Future<void> saveAsync(String docPath, Map<String, dynamic> data,
-          {bool merge = false}) {
-    debugPrint("saveAsync: Writing to $docPath with data $data and merge set to $merge");
+      {bool merge = false}) {
+    debugPrint(
+        "saveAsync: Writing to $docPath with data $data and merge set to $merge");
     return firestore.doc(docPath).set(data, SetOptions(merge: merge));
   }
 
