@@ -41,6 +41,8 @@ void main() {
       notificationService: notificationService,
     );
     linkCodeRef = MockDocumentReference<LinkCode>();
+
+    // when(partnersInfoState.addPartner(any, any)).thenAnswer((realInvocation) async => null);
   });
 
   test('new user login setups up user and logs in', () async {

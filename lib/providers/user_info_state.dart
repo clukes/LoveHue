@@ -13,8 +13,7 @@ import '../resources/printable_error.dart';
 /// Handles current user state, dealing with users [UserInformation]
 class UserInfoState with ChangeNotifier {
   UserInfoState(FirebaseFirestore? firestore, this.partnersInfoState) {
-    this.firestore =
-        (firestore == null) ? FirebaseFirestore.instance : firestore;
+    this.firestore = firestore ?? FirebaseFirestore.instance;
   }
 
   final PartnersInfoState partnersInfoState;

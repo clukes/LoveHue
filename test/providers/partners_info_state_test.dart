@@ -16,6 +16,7 @@ void main() {
 
   late MockDocumentReference<LinkCode> linkCodeRef;
   late FakeFirebaseFirestore firestore;
+  late MockNotificationService mockNotificationService;
   late UserInformation currentUserInfo;
   late UserInformation partnersInfo;
   late PartnersInfoState partnersInfoState;
@@ -24,6 +25,7 @@ void main() {
     linkCodeRef = MockDocumentReference<LinkCode>();
     when(linkCodeRef.id).thenReturn(linkCodeID);
     firestore = FakeFirebaseFirestore();
+    mockNotificationService = MockNotificationService();
     currentUserInfo = UserInformation(
         userID: '1234', linkCode: linkCodeRef, firestore: firestore);
     partnersInfo = UserInformation(
@@ -31,7 +33,7 @@ void main() {
         userID: '5678',
         linkCode: linkCodeRef,
         firestore: firestore);
-    partnersInfoState = PartnersInfoState();
+    partnersInfoState = PartnersInfoState(mockNotificationService);
   });
 
   group('getters', () {
@@ -143,8 +145,13 @@ void main() {
 
   group('addPartner', () {
     test('sets partner info and display name', () async {
-      partnersInfoState.addPartner(partnersInfo, currentUserInfo);
+      partnersInfo.partner = currentUserInfo.getUserInDatabase();
+      await partnersInfo.firestoreSet();
 
+      // Act
+      await partnersInfoState.addPartner(partnersInfo, currentUserInfo);
+
+      verify(mockNotificationService.subscribeToNotificationsAsync(partnersInfo.userID));
       expect(partnersInfoState.partnersInfo, isNotNull);
       expect(
           partnersInfoState.partnersInfo!.userID, equals(partnersInfo.userID));
@@ -154,8 +161,12 @@ void main() {
 
   group('removePartner', () {
     test('removes partner info from state and current user info', () async {
-      partnersInfoState.removePartner(currentUserInfo);
+      partnersInfoState.partnersInfo = partnersInfo;
 
+      // Act
+      await partnersInfoState.removePartner(currentUserInfo);
+
+      verify(mockNotificationService.unsubscribeFromNotificationsAsync(partnersInfo.userID));
       expect(partnersInfoState.partnersInfo, isNull);
       expect(currentUserInfo.linkPending, isFalse);
       expect(currentUserInfo.partner, isNull);

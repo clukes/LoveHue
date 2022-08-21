@@ -1,4 +1,5 @@
 import 'package:clock/clock.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:lovehue/services/shared_preferences_service.dart';
 
 import '../models/notification_request.dart';
@@ -13,9 +14,12 @@ class NotificationService {
   final DatabaseService _databaseService;
   final NotificationsConfig _config;
   final Clock clock;
+  late final FirebaseMessaging firebaseMessaging;
 
   NotificationService(this._prefsService, this._databaseService, this._config,
-      {this.clock = const Clock()});
+      {this.clock = const Clock(), FirebaseMessaging? firebaseMessaging}) {
+    this.firebaseMessaging = firebaseMessaging ?? FirebaseMessaging.instance;
+  }
 
   String notificationDocumentPath(String userId) =>
       "${_config.notificationCollectionPath}/{userId}";
@@ -45,6 +49,16 @@ class NotificationService {
   /// Checks if it has been long enough since last nudge.
   bool canSendNudgeNotification() => _hasItBeenEnoughMillisecondsBetweenNudges(
       _getMillisecondsSinceLastNudge());
+
+  /// Subscribe to notifications from partner, by subscribing to topic with [partnersId].
+  Future<void> subscribeToNotificationsAsync(String partnersId, ) async {
+    return await firebaseMessaging.subscribeToTopic(partnersId);
+  }
+
+  /// Subscribe to notifications from partner, by subscribing to topic with [partnersId].
+  Future<void> unsubscribeFromNotificationsAsync(String partnersId) async {
+    return await firebaseMessaging.unsubscribeFromTopic(partnersId);
+  }
 
   bool _hasItBeenEnoughMillisecondsBetweenNudges(
           int milliSecondsSinceLastNudge) =>

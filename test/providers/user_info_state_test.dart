@@ -269,12 +269,12 @@ void main() {
     late DocumentReference<LinkCode?> linkCodeRef;
     late UserInformation partnerInfo;
     late UserInformation userInfo;
-    late MockDocumentReference<UserInformation?> userRef;
+    late MockDocumentReference<UserInformation?> partnerRef;
     late LinkCode linkCode;
 
     setUp(() async {
-      userRef = MockDocumentReference<UserInformation?>();
-      linkCode = LinkCode(linkCode: linkCodeID, user: userRef);
+      partnerRef = MockDocumentReference<UserInformation?>();
+      linkCode = LinkCode(linkCode: linkCodeID, user: partnerRef);
       linkCodeRef = LinkCode.getDocumentReference(linkCodeID, firestore);
       partnerInfo = UserInformation(
           userID: userID, linkCode: linkCodeRef, firestore: firestore);
@@ -284,11 +284,11 @@ void main() {
 
       partnerInfo.linkCode = linkCodeRef;
 
-      when(userRef.id).thenReturn(userID);
+      when(partnerRef.id).thenReturn(userID);
       await linkCodeRef.set(linkCode);
       await firestore
           .collection(userInfoCollection)
-          .doc(userRef.id)
+          .doc(partnerRef.id)
           .set(partnerInfo.toMap());
       await firestore
           .collection(userInfoCollection)
@@ -300,7 +300,7 @@ void main() {
 
     test('valid user adds partner to state', () async {
       when(partnersInfoState.addPartner(partnerInfo, userInfo)).thenAnswer(
-          (realInvocation) => expect(
+          (realInvocation) async => expect(
               realInvocation.positionalArguments.first['userID'],
               partnerInfo.userID));
       await subject.connectTo(linkCodeID);
@@ -344,7 +344,7 @@ void main() {
     });
 
     test('no user with link code throws error', () async {
-      await firestore.collection(userInfoCollection).doc(userRef.id).delete();
+      await firestore.collection(userInfoCollection).doc(partnerRef.id).delete();
       expectLater(
           subject.connectTo(linkCodeID), throwsA(isA<PrintableError>()));
     });
@@ -352,12 +352,12 @@ void main() {
     test('user with link code already has partner throws error', () async {
       partnerInfo = UserInformation(
           userID: userID,
-          partner: userRef,
+          partner: partnerRef,
           linkCode: linkCodeRef,
           firestore: firestore);
       await firestore
           .collection(userInfoCollection)
-          .doc(userRef.id)
+          .doc(partnerRef.id)
           .set(partnerInfo.toMap());
       expectLater(
           subject.connectTo(linkCodeID), throwsA(isA<PrintableError>()));
@@ -365,23 +365,23 @@ void main() {
   });
 
   group('acceptRequest', () {
-    late MockDocumentReference<UserInformation?> userRef;
+    late MockDocumentReference<UserInformation?> partnerRef;
     late UserInformation userInfo;
     late UserInformation partnerInfo;
 
     setUp(() async {
-      userRef = MockDocumentReference<UserInformation?>();
+      partnerRef = MockDocumentReference<UserInformation?>();
       userInfo = UserInformation(
           userID: userID, linkCode: linkCodeRef, firestore: firestore);
       partnerInfo = UserInformation(
           userID: '9876', linkCode: linkCodeRef, firestore: firestore);
 
-      userInfo.partner = userRef;
+      userInfo.partner = partnerRef;
       userInfo.linkPending = true;
 
       subject.userInfo = userInfo;
       when(partnersInfoState.partnerExist).thenReturn(false);
-      when(userRef.id).thenReturn(userID);
+      when(partnerRef.id).thenReturn(userID);
       await firestore
           .collection(userInfoCollection)
           .doc(userInfo.userID)
@@ -391,12 +391,15 @@ void main() {
     test(
         'valid request with incorrect local partner info adds partner to state',
         () async {
-      await subject.acceptRequest();
-      when(partnersInfoState.addPartner(partnerInfo, userInfo)).thenAnswer(
-          (realInvocation) => expect(
-              realInvocation.positionalArguments.first['userID'],
-              partnerInfo.userID));
-    });
+          await firestore
+              .collection(userInfoCollection)
+              .doc(partnerRef.id)
+              .set({"id": partnerInfo.userID, "linkCode": linkCodeRef});
+
+          await subject.acceptRequest();
+
+      verify(partnersInfoState.addPartner(argThat(predicate((UserInformation partnerArg) => partnerArg.userID == partnerInfo.userID)), any));
+        });
 
     test('valid request with correct local partner info notifies listeners',
         () async {
@@ -459,10 +462,7 @@ void main() {
         'valid user and partner infos updates infos and removes partner from state',
         () async {
       await userInfoState.unlink();
-      when(partnersInfoState.removePartner(userInfo)).thenAnswer(
-          (realInvocation) => expect(
-              realInvocation.positionalArguments.first['userID'],
-              userInfo.userID));
+
       DocumentSnapshot user = await firestore
           .collection(userInfoCollection)
           .doc(userInfo.userID)
@@ -473,6 +473,7 @@ void main() {
           .get();
       expectLater(user.get('partner'), isNull);
       expectLater(partner.get('partner'), isNull);
+      verify(partnersInfoState.removePartner(argThat(predicate((UserInformation argInfo) => argInfo.userID == userInfo.userID))));
     });
 
     test('no user info in state throws error', () async {

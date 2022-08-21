@@ -10,6 +10,7 @@ void main() {
   late MockSharedPreferencesService mockPreferencesService;
   late MockDatabaseService mockDatabaseService;
   late MockNotificationsConfig mockNotificationsConfig;
+  late MockFirebaseMessaging mockFirebaseMessaging;
   late NotificationService subject;
   final DateTime currentTime = DateTime.now();
   final mockClock = Clock.fixed(currentTime);
@@ -21,9 +22,10 @@ void main() {
     mockPreferencesService = MockSharedPreferencesService();
     mockDatabaseService = MockDatabaseService();
     mockNotificationsConfig = MockNotificationsConfig();
+    mockFirebaseMessaging = MockFirebaseMessaging();
     subject = NotificationService(
         mockPreferencesService, mockDatabaseService, mockNotificationsConfig,
-        clock: mockClock);
+        clock: mockClock, firebaseMessaging: mockFirebaseMessaging);
     when(mockNotificationsConfig.minimumMillisecondsBetweenNudges)
         .thenReturn(360000);
     when(mockNotificationsConfig.notificationCollectionPath)
@@ -147,5 +149,25 @@ void main() {
       verify(mockPreferencesService.getInt(timestampKey));
       expect(result, isFalse);
     });
+  });
+
+  group("Topic Subscriptions", () {
+    const topic = "TestTopic";
+
+    test(
+        'subscribeToNotificationsAsync calls firebaseMessaging subscribe',
+            () async {
+          await subject.subscribeToNotificationsAsync(topic);
+
+          verify(mockFirebaseMessaging.subscribeToTopic(topic));
+        });
+
+    test(
+        'unSubscribeFromNotificationsAsync calls firebaseMessaging unsubscribe',
+            () async {
+          await subject.unsubscribeFromNotificationsAsync(topic);
+
+          verify(mockFirebaseMessaging.unsubscribeFromTopic(topic));
+        });
   });
 }

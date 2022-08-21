@@ -66,7 +66,7 @@ Future<void> mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo,
         sharedPreferencesService, databaseService, notificationsConfig);
   }
 
-  final PartnersInfoState partnersInfoState = PartnersInfoState();
+  final PartnersInfoState partnersInfoState = PartnersInfoState(notificationService);
   final UserInfoState userInfoState =
       UserInfoState(firestore, partnersInfoState);
   final ApplicationState applicationState = ApplicationState(
