@@ -12,15 +12,17 @@ class NotificationService {
   final DatabaseService _databaseService;
   final Clock clock;
 
-  NotificationService(this._prefsService, this._databaseService, {this.clock = const Clock()});
+  NotificationService(this._prefsService, this._databaseService,
+      {this.clock = const Clock()});
 
-  static String _baseCollectionPath(String userId) => "nudgeNotifications/{userId}";
-  static String _requestedDocumentPath(String userId) => "${_baseCollectionPath(userId)}/requested";
-  static String _completedDocumentPath(String userId) => "${_baseCollectionPath(userId)}/completed";
+  static String _baseCollectionPath(String userId) =>
+      "nudgeNotifications/{userId}";
+  static String _requestedDocumentPath(String userId) =>
+      "${_baseCollectionPath(userId)}/requested";
 
   /// Sends nudge notification to partner if it has been long enough since last nudge.
   Future<NudgeResult> sendNudgeNotification(String? currentUserId) async {
-    if(currentUserId == null || currentUserId.isEmpty) {
+    if (currentUserId == null || currentUserId.isEmpty) {
       return NudgeResult(false, errorMessage: "No User Id.");
     }
 
@@ -70,7 +72,8 @@ class NotificationService {
       "${duration.inMinutes}:${(duration.inSeconds.remainder(60))}";
 
   void _saveNudgeRequest(int milliseconds, String userId) =>
-    _databaseService.saveTimestampAsync(_requestedDocumentPath(userId), lastNudgeTimestampKey, milliseconds);
+      _databaseService.saveTimestampAsync(
+          _requestedDocumentPath(userId), lastNudgeTimestampKey, milliseconds);
 }
 
 /// Result of trying to send a nudge notification, with an error message if unsuccessful.

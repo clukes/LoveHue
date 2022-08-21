@@ -34,12 +34,15 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> _signOutNavigate(BuildContext context) async {
     debugPrint("ProfilePage: Signed Out.");
-    await Navigator.of(context).pushAndRemoveUntil(MaterialPageRoute(builder: (_) => const SignInPage()), (route) => false);
+    await Navigator.of(context).pushAndRemoveUntil(
+        MaterialPageRoute(builder: (_) => const SignInPage()),
+        (route) => false);
   }
 
   @override
   Widget build(BuildContext context) {
-    ApplicationState appState = Provider.of<ApplicationState>(context, listen: false);
+    ApplicationState appState =
+        Provider.of<ApplicationState>(context, listen: false);
 
     final FirebaseAuth auth = appState.auth;
 
@@ -49,11 +52,15 @@ class _ProfilePageState extends State<ProfilePage> {
         const SizedBox(height: 32),
         Center(child: EditableUserDisplayName(auth: auth)),
         const SizedBox(height: 32),
-        Consumer<PartnersInfoState>(builder: (BuildContext context, PartnersInfoState partnersInfoState, _) {
+        Consumer<PartnersInfoState>(builder:
+            (BuildContext context, PartnersInfoState partnersInfoState, _) {
           // Consumer that gives a column if partner linked, or just an empty SizedBox otherwise.
           if (partnersInfoState.partnerExist &&
-              !(partnersInfoState.partnerPending || Provider.of<UserInfoState>(context, listen: false).userPending)) {
-            String partnerName = partnersInfoState.partnersInfo?.displayName ?? partnerNamePlaceholder;
+              !(partnersInfoState.partnerPending ||
+                  Provider.of<UserInfoState>(context, listen: false)
+                      .userPending)) {
+            String partnerName = partnersInfoState.partnersInfo?.displayName ??
+                partnerNamePlaceholder;
             return Column(children: [
               Center(child: Text('Linked with: $partnerName')),
               const SizedBox(height: 16),
@@ -61,7 +68,8 @@ class _ProfilePageState extends State<ProfilePage> {
                 width: double.infinity,
                 // Unlink Partner Button
                 child: OutlinedButton.icon(
-                    onPressed: () => UnlinkAlertDialog().show(context, partnerName, partnersInfoState.linkCode!),
+                    onPressed: () => UnlinkAlertDialog().show(
+                        context, partnerName, partnersInfoState.linkCode!),
                     icon: const Icon(Icons.person_remove),
                     label: const Text('Unlink Partner')),
               ),
@@ -70,11 +78,15 @@ class _ProfilePageState extends State<ProfilePage> {
           return const SizedBox.shrink();
         }),
         const SizedBox(height: 64),
-        ElevatedButton.icon(onPressed: () async => await _signOut(context, auth), icon: const Icon(Icons.logout), label: const Text('Sign Out')),
+        ElevatedButton.icon(
+            onPressed: () async => await _signOut(context, auth),
+            icon: const Icon(Icons.logout),
+            label: const Text('Sign Out')),
         const SizedBox(height: 24),
         if (auth.currentUser?.isAnonymous == true && !kIsWeb)
           OutlinedButton.icon(
-              onPressed: () async => await convertAnonToEmailLink(context, auth, appState), //TODO: Add this back in when convertAnonToEmailLink done.
+              onPressed: () async => await convertAnonToEmailLink(context, auth,
+                  appState), //TODO: Add this back in when convertAnonToEmailLink done.
               icon: const Icon(Icons.email),
               label: const Text('Sign In With Email')),
       ],
@@ -106,7 +118,8 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 }
 
-Future<void> convertAnonToEmailLink(BuildContext context, FirebaseAuth auth, ApplicationState appState) async {
+Future<void> convertAnonToEmailLink(
+    BuildContext context, FirebaseAuth auth, ApplicationState appState) async {
   //TODO: Finish implementing this. Test some more, figure out what happens if account exists with email and doesn't exist with email. What happens to users current data?
 
   if (auth.currentUser == null || auth.currentUser?.isAnonymous != true) {
@@ -115,9 +128,12 @@ Future<void> convertAnonToEmailLink(BuildContext context, FirebaseAuth auth, App
 
   EmailLinkProviderConfiguration emailLinkConfig;
   try {
-    emailLinkConfig = appState.authenticationInfo.providerConfigs.whereType<EmailLinkProviderConfiguration>().single;
+    emailLinkConfig = appState.authenticationInfo.providerConfigs
+        .whereType<EmailLinkProviderConfiguration>()
+        .single;
   } on StateError catch (error) {
-    throw PrintableError("convertAnonToEmailLink: EmailLinkProviderConfiguration error: ${error.message}");
+    throw PrintableError(
+        "convertAnonToEmailLink: EmailLinkProviderConfiguration error: ${error.message}");
   }
 
   await showDialog(

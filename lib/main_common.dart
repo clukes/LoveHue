@@ -59,7 +59,8 @@ Future<void> mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo,
     final SharedPreferencesService sharedPreferencesService =
         SharedPreferencesService(sharedPreferences);
     final DatabaseService databaseService = DatabaseService(firestore);
-    notificationService = NotificationService(sharedPreferencesService, databaseService);
+    notificationService =
+        NotificationService(sharedPreferencesService, databaseService);
   }
 
   final PartnersInfoState partnersInfoState = PartnersInfoState();

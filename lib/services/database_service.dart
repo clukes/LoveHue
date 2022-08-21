@@ -7,11 +7,12 @@ class DatabaseService {
   DatabaseService(this.firestore);
 
   /// Saves [data] to [docPath] in firestore.
-  Future<void> saveAsync(String docPath, Map<String, dynamic> data)
-    => firestore.doc(docPath).set(data);
+  Future<void> saveAsync(String docPath, Map<String, dynamic> data) =>
+      firestore.doc(docPath).set(data);
 
   /// Saves a milliseconds timestamp to [docPath] in firestore.
-  Future<void> saveTimestampAsync(String docPath, String lastNudgeTimestampKey, int milliseconds) {
+  Future<void> saveTimestampAsync(
+      String docPath, String lastNudgeTimestampKey, int milliseconds) {
     Timestamp timestamp = Timestamp.fromMillisecondsSinceEpoch(milliseconds);
     Map<String, Timestamp> data = {lastNudgeTimestampKey: timestamp};
     return saveAsync(docPath, data);

@@ -18,7 +18,8 @@ void main() {
   setUp(() {
     mockPreferencesService = MockSharedPreferencesService();
     mockDatabaseService = MockDatabaseService();
-    subject = NotificationService(mockPreferencesService, mockDatabaseService, clock: mockClock);
+    subject = NotificationService(mockPreferencesService, mockDatabaseService,
+        clock: mockClock);
   });
 
   group("sendNudgeNotification", () {
@@ -28,17 +29,14 @@ void main() {
 
       expect(result, isNotNull);
       expect(result.successful, isFalse);
-      expect(result.errorMessage,
-          equals("No User Id."));
+      expect(result.errorMessage, equals("No User Id."));
     }
 
-    test(
-        'sendNudgeNotification returns error when userId is null or empty',
+    test('sendNudgeNotification returns error when userId is null or empty',
         () async => await _testUserIdCheck(null));
 
-    test(
-        'sendNudgeNotification returns error when userId is empty',
-            () async => await _testUserIdCheck(""));
+    test('sendNudgeNotification returns error when userId is empty',
+        () async => await _testUserIdCheck(""));
 
     test(
         'sendNudgeNotification returns error when it hasnt been enough milliseconds between nudges',
@@ -65,9 +63,7 @@ void main() {
         () async {
       var currentMilliseconds = currentTime.millisecondsSinceEpoch;
 
-      int value = currentMilliseconds -
-          minimumMillisecondsBetweenNudges -
-          10;
+      int value = currentMilliseconds - minimumMillisecondsBetweenNudges - 10;
       when(mockPreferencesService.getInt(any)).thenReturn(value);
       when(mockPreferencesService.setInt(any, any))
           .thenAnswer((_) async => true);
@@ -76,9 +72,11 @@ void main() {
       var result = await subject.sendNudgeNotification(userId);
 
       verify(mockPreferencesService.getInt(timestampKey));
-      verify(mockPreferencesService.setInt(
-          timestampKey, currentMilliseconds));
-      verify(mockDatabaseService.saveTimestampAsync("nudgeNotifications/{userId}/requested", timestampKey, currentMilliseconds));
+      verify(mockPreferencesService.setInt(timestampKey, currentMilliseconds));
+      verify(mockDatabaseService.saveTimestampAsync(
+          "nudgeNotifications/{userId}/requested",
+          timestampKey,
+          currentMilliseconds));
       expect(result, isNotNull);
       expect(result.successful, isTrue);
       expect(result.errorMessage, isNull);
