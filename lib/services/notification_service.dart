@@ -73,7 +73,7 @@ class NotificationService {
   bool _hasItBeenEnoughMillisecondsBetweenNudges(
       int milliSecondsSinceLastNudge) {
     int millisecondsSinceLastNudge = _getMillisecondsSinceLastNudge();
-    int minMilliseconds = 1000; //_config.minimumMillisecondsBetweenNudges;
+    int minMilliseconds = _config.minimumMillisecondsBetweenNudges;
     bool result = millisecondsSinceLastNudge >= minMilliseconds;
     debugPrint(
         "_hasItBeenEnoughMillisecondsBetweenNudges: $result for $milliSecondsSinceLastNudge, with minMilliseconds as $minMilliseconds");
