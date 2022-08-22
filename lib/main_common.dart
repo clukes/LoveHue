@@ -1,5 +1,5 @@
 // TODO: Setup new email and developer name
-// Copyright (C) 2022 Conner Lukes <clukes@icloud.com>
+// Copyright (C) 2022 Conner Lukes <clukes@me.com>
 // All rights reserved.
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -9,8 +9,13 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:lovehue/services/database_service.dart';
+import 'package:lovehue/services/notification_service.dart';
+import 'package:lovehue/services/shared_preferences_service.dart';
+import 'package:lovehue/utils/configs.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import 'pages/sign_in_page.dart';
 import 'providers/application_state.dart';
@@ -26,7 +31,8 @@ Future<void> mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo,
     {PackageInfo? packageInfo,
     AppRunner? appRunner,
     FirebaseApp? firebaseApp,
-    FirebaseAuth? firebaseAuth}) async {
+    FirebaseAuth? firebaseAuth,
+    NotificationService? notificationService}) async {
   WidgetsFlutterBinding.ensureInitialized();
 
   final AppInfo appInfo = flavorAppInfo;
@@ -48,7 +54,20 @@ Future<void> mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo,
   // Only uses the bundled google fonts, prevents fetching from online.
   GoogleFonts.config.allowRuntimeFetching = false;
 
-  final PartnersInfoState partnersInfoState = PartnersInfoState();
+  if (notificationService == null) {
+    final SharedPreferences sharedPreferences =
+        await SharedPreferences.getInstance();
+    final SharedPreferencesService sharedPreferencesService =
+        SharedPreferencesService(sharedPreferences);
+    final DatabaseService databaseService = DatabaseService(firestore);
+    final NotificationsConfig notificationsConfig =
+        await NotificationsConfig.initialize();
+    notificationService = NotificationService(
+        sharedPreferencesService, databaseService, notificationsConfig);
+  }
+
+  final PartnersInfoState partnersInfoState =
+      PartnersInfoState(notificationService);
   final UserInfoState userInfoState =
       UserInfoState(firestore, partnersInfoState);
   final ApplicationState applicationState = ApplicationState(
@@ -58,6 +77,7 @@ Future<void> mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo,
     authenticationInfo: authenticationInfo,
     auth: firebaseAuth ?? FirebaseAuth.instance,
     appInfo: appInfo,
+    notificationService: notificationService,
   );
 
   final List<ChangeNotifierProvider<ChangeNotifier>> providers = [

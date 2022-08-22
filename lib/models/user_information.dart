@@ -9,6 +9,7 @@ import '../resources/authentication_info.dart';
 import '../resources/database_and_table_names.dart';
 import '../resources/delete_firestore_collection.dart';
 import '../resources/printable_error.dart';
+import '../services/notification_service.dart';
 import '../utils/globals.dart';
 import 'link_code.dart';
 
@@ -159,8 +160,11 @@ class UserInformation {
   /// Throws [PrintableError] if there is no userID stored for currentUser,
   /// or the userID for currentUser doesn't match the locally stored UserInformation,
   /// or if an error occurs during deletion.
-  Future<void> deleteUserData(BuildContext context, FirebaseAuth auth,
-      AuthenticationInfo authenticationInfo) async {
+  Future<void> deleteUserData(
+      BuildContext context,
+      FirebaseAuth auth,
+      AuthenticationInfo authenticationInfo,
+      NotificationService notificationService) async {
     String? userID = auth.currentUser?.uid;
     if (userID != null && userID == this.userID) {
       try {
@@ -172,8 +176,11 @@ class UserInformation {
           batch.update(partner!, {UserInformation.columnPartner: null});
         }
         DocumentReference userDoc = getUserInDatabase();
+        DocumentReference notificationsDoc =
+            firestore.doc(notificationService.notificationDocumentPath(userID));
         batch.delete(userDoc);
         batch.delete(linkCode);
+        batch.delete(notificationsDoc);
         // Add batch commit promises for all RelationshipBars for user, split in chunks of 500.
         // Max operations in a batch is 500, thus the split. This is necessary since:
         // "When you delete a document, Cloud Firestore does not automatically delete the documents within its subcollections".

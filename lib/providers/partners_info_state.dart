@@ -4,12 +4,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 
 import '../models/user_information.dart';
+import '../services/notification_service.dart';
 
 const String defaultPartnerName = "Partner";
 
 /// Handles partner state, dealing with partners [UserInformation]
 class PartnersInfoState with ChangeNotifier {
-  PartnersInfoState();
+  final NotificationService notificationService;
+
+  PartnersInfoState(this.notificationService);
 
   StreamSubscription<DocumentSnapshot>? _partnersInfoSubscription;
 
@@ -64,18 +67,25 @@ class PartnersInfoState with ChangeNotifier {
   }
 
   /// Setups local data for a new partner.
-  void addPartner(
-      UserInformation? newPartnerInfo, UserInformation currentUserInfo) {
-    if (newPartnerInfo != null) {
+  Future<void> addPartner(
+      UserInformation? newPartnerInfo, UserInformation currentUserInfo) async {
+    if (newPartnerInfo != null &&
+        newPartnerInfo.partnerID == currentUserInfo.userID) {
       partnersInfo = newPartnerInfo;
       partnersName.value = newPartnerInfo.displayName ?? defaultPartnerName;
       setupPartnerInfoSubscription(currentUserInfo);
+      await notificationService
+          .subscribeToNotificationsAsync(newPartnerInfo.userID);
       notify();
     }
   }
 
   /// Removes local data for current partner.
-  void removePartner(UserInformation? currentUserInfo) {
+  Future<void> removePartner(UserInformation? currentUserInfo) async {
+    var partnerID = partnersID;
+    if (partnerID != null) {
+      await notificationService.unsubscribeFromNotificationsAsync(partnerID);
+    }
     partnersInfo = null;
     _partnersInfoSubscription?.cancel();
     currentUserInfo?.linkPending = false;

@@ -175,7 +175,8 @@ void main() {
       appState = MockApplicationState();
       userInfoState = MockUserInfoState();
       partnersInfoState = MockPartnersInfoState();
-      deleteAlertDialog = DeleteAlertDialog(auth, authInfo);
+      deleteAlertDialog =
+          DeleteAlertDialog(auth, authInfo, MockNotificationService());
       when(authInfo.providerConfigs).thenReturn([]);
       when(userInfoState.userInfo).thenReturn(userInfo);
       when(appState.authenticationInfo).thenReturn(authInfo);
@@ -217,14 +218,14 @@ void main() {
           find.widgetWithText(TextButton, DeleteAlertDialog.yesButtonText));
       await tester.pumpAndSettle();
 
-      verify(userInfo.deleteUserData(any, any, any));
+      verify(userInfo.deleteUserData(any, any, any, any));
       expect(find.text(DeleteAlertDialog.yesButtonText), findsNothing);
       expect(find.text(DeleteAlertDialog.noButtonText), findsNothing);
     });
 
     testWidgets('delete error is displayed', (WidgetTester tester) async {
       const String errorText = 'TEST_ERROR';
-      when(userInfo.deleteUserData(any, any, any)).thenAnswer(
+      when(userInfo.deleteUserData(any, any, any, any)).thenAnswer(
           (realInvocation) async => throw PrintableError(errorText));
       await tester.pumpWidget(testWidgetBuild);
       await tester.tap(find.byKey(buttonKey));

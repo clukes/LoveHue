@@ -29,6 +29,7 @@ void main() {
       appRunner: mockAppRunner,
       firebaseApp: FakeFirebaseApp(),
       firebaseAuth: MockFirebaseAuth(),
+      notificationService: MockNotificationService(),
     );
     verify(mockAppRunner.run());
   });

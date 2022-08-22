@@ -1,4 +1,4 @@
-name: lovehue #TODO: Change this
+name: lovehue
 description: A relationship app. #TODO: Change this
 
 # The following line prevents the package from being accidentally published to
@@ -45,6 +45,9 @@ dependencies:
   google_fonts: ^3.0.1
   package_info_plus: ^1.4.3
   flutter_dotenv: ^5.0.2
+  shared_preferences: ^2.0.15
+  clock: ^1.1.0
+  firebase_messaging: ^12.0.3
 
 dev_dependencies:
   flutter_test:
@@ -81,7 +84,7 @@ flutter:
     - assets/images/
     - assets/google_fonts/
     - .dev.env
-
+    - assets/configs/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 
