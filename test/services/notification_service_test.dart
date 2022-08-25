@@ -33,7 +33,7 @@ void main() {
   });
 
   group("sendNudgeNotification", () {
-    Future _testUserIdCheck(String? userId) async {
+    Future testUserIdCheck(String? userId) async {
       // Act
       var result = await subject.sendNudgeNotification(userId);
 
@@ -43,10 +43,10 @@ void main() {
     }
 
     test('sendNudgeNotification returns error when userId is null or empty',
-        () async => await _testUserIdCheck(null));
+        () async => await testUserIdCheck(null));
 
     test('sendNudgeNotification returns error when userId is empty',
-        () async => await _testUserIdCheck(""));
+        () async => await testUserIdCheck(""));
 
     test(
         'sendNudgeNotification returns error when it hasnt been enough milliseconds between nudges',
