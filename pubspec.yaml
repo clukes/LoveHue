@@ -1,4 +1,4 @@
-name: lovehue #TODO: Change this
+name: lovehue
 description: A relationship app. #TODO: Change this
 
 # The following line prevents the package from being accidentally published to
@@ -34,17 +34,20 @@ dependencies:
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-  firebase_core: ^1.20.0
-  firebase_auth: ^3.3.5
-  cloud_firestore: ^3.1.6
+  firebase_core: ^1.20.1
+  firebase_auth: ^3.6.2
+  cloud_firestore: ^3.4.4
   provider: ^6.0.2
   firebase_dynamic_links: ^4.3.3
-  flutter_svg: ^1.0.2
+  flutter_svg: ^1.1.3
   flutterfire_ui: ^0.4.2+2
   intl: ^0.17.0
   google_fonts: ^3.0.1
   package_info_plus: ^1.4.3
   flutter_dotenv: ^5.0.2
+  shared_preferences: ^2.0.15
+  clock: ^1.1.0
+  firebase_messaging: ^12.0.3
 
 dev_dependencies:
   flutter_test:
@@ -55,7 +58,7 @@ dev_dependencies:
   test:
   build_runner:
   fake_cloud_firestore: ^1.3.0
-  firebase_auth_mocks:
+  firebase_auth_mocks: ^0.8.5+1
   firebase_core_platform_interface:
 
   # The "flutter_lints" package below contains a set of recommended lints to
@@ -81,7 +84,7 @@ flutter:
     - assets/images/
     - assets/google_fonts/
     - .dev.env
-
+    - assets/configs/
   # An image asset can refer to one or more resolution-specific "variants", see
   # https://flutter.dev/assets-and-images/#resolution-aware.
 

@@ -101,12 +101,15 @@ This can then open a conversation about why you each feel that way, moving the f
 ### Built With
 
 - Flutter
+- TypeScript (In Google Cloud Functions)
 - Google Firebase (Authentication and NoSQL database)
 
 ## Roadmap
 Current stage TODO:
 - [x] Unit Tests
 - [x] Widget Tests
+- [ ] Bug fixes + add missing features/elements
+
 - [ ] Integration Tests
 
 Development Process for V1.0:

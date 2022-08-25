@@ -1,0 +1,1 @@
+NB: Use emulated database for the integration test. Use the emulated flavour for the entry point.

@@ -7,6 +7,7 @@ import 'package:lovehue/models/link_code.dart';
 import 'package:lovehue/models/user_information.dart';
 import 'package:lovehue/providers/application_state.dart';
 import 'package:lovehue/resources/database_and_table_names.dart';
+import 'package:lovehue/services/notification_service.dart';
 import 'package:mockito/mockito.dart';
 
 import '../mocker.mocks.dart';
@@ -21,6 +22,7 @@ void main() {
   late MockFirebaseAuth auth;
   late ApplicationState appState;
   late MockDocumentReference linkCodeRef;
+  late MockNotificationService notificationService;
 
   setUp(() {
     firestore = FakeFirebaseFirestore();
@@ -28,6 +30,7 @@ void main() {
     user = MockUser(uid: '1234', isAnonymous: true);
     userInfoState = MockUserInfoState();
     auth = MockFirebaseAuth(mockUser: user);
+    notificationService = MockNotificationService();
     appState = ApplicationState(
       userInfoState: userInfoState,
       partnersInfoState: partnersInfoState,
@@ -35,8 +38,11 @@ void main() {
       firestore: firestore,
       authenticationInfo: MockAuthenticationInfo(),
       appInfo: MockAppInfo(),
+      notificationService: notificationService,
     );
     linkCodeRef = MockDocumentReference<LinkCode>();
+
+    // when(partnersInfoState.addPartner(any, any)).thenAnswer((realInvocation) async => null);
   });
 
   test('new user login setups up user and logs in', () async {
@@ -123,13 +129,13 @@ void main() {
     when(userInfoState.latestRelationshipBarDoc).thenReturn(null);
 
     appState = ApplicationState(
-      userInfoState: userInfoState,
-      partnersInfoState: partnersInfoState,
-      auth: auth,
-      firestore: firestore,
-      authenticationInfo: MockAuthenticationInfo(),
-      appInfo: MockAppInfo(),
-    );
+        userInfoState: userInfoState,
+        partnersInfoState: partnersInfoState,
+        auth: auth,
+        firestore: firestore,
+        authenticationInfo: MockAuthenticationInfo(),
+        appInfo: MockAppInfo(),
+        notificationService: notificationService);
     appState.loginState = ApplicationLoginState.loggedIn;
 
     String displayName = 'Test';
@@ -160,13 +166,13 @@ void main() {
     when(userInfoState.latestRelationshipBarDoc).thenReturn(null);
 
     appState = ApplicationState(
-      userInfoState: userInfoState,
-      partnersInfoState: partnersInfoState,
-      auth: auth,
-      firestore: firestore,
-      authenticationInfo: MockAuthenticationInfo(),
-      appInfo: MockAppInfo(),
-    );
+        userInfoState: userInfoState,
+        partnersInfoState: partnersInfoState,
+        auth: auth,
+        firestore: firestore,
+        authenticationInfo: MockAuthenticationInfo(),
+        appInfo: MockAppInfo(),
+        notificationService: notificationService);
     appState.loginState = ApplicationLoginState.loggedIn;
 
     await auth.signOut();
@@ -183,17 +189,39 @@ void main() {
   test('sign in anonymously calls auth state method', () async {
     var authInfo = MockAuthenticationInfo();
     appState = ApplicationState(
-      userInfoState: userInfoState,
-      partnersInfoState: partnersInfoState,
-      auth: auth,
-      firestore: firestore,
-      authenticationInfo: authInfo,
-      appInfo: MockAppInfo(),
-    );
+        userInfoState: userInfoState,
+        partnersInfoState: partnersInfoState,
+        auth: auth,
+        firestore: firestore,
+        authenticationInfo: authInfo,
+        appInfo: MockAppInfo(),
+        notificationService: notificationService);
     var state = NavigatorState();
 
     await appState.signInAnonymously(state);
 
     verify(authInfo.signInAnonymously(state, auth));
+  });
+
+  test('sendNudgeNotification calls NotificationService', () async {
+    String userId = "1234";
+    NudgeResult expectedResult = NudgeResult(false, errorMessage: "Test");
+    when(notificationService.sendNudgeNotification(any))
+        .thenAnswer((_) async => expectedResult);
+    when(userInfoState.userID).thenReturn(userId);
+
+    // act
+    var actualResult = await appState.sendNudgeNotification();
+
+    verify(userInfoState.userID);
+    verify(notificationService.sendNudgeNotification(userId));
+    expect(actualResult, equals(expectedResult));
+  });
+
+  test('canSendNudgeNotification calls NotificationService', () {
+    when(notificationService.canSendNudgeNotification()).thenReturn(false);
+    expect(appState.canSendNudgeNotification(), isFalse);
+
+    verify(notificationService.canSendNudgeNotification());
   });
 }

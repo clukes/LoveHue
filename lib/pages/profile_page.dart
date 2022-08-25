@@ -126,13 +126,16 @@ Future<void> convertAnonToEmailLink(
     throw PrintableError("No anonymous user");
   }
 
-  var emailTypes = appState.authenticationInfo.providerConfigs
-      .whereType<EmailLinkProviderConfiguration>();
-  if (emailTypes.isEmpty) {
-    throw PrintableError("No email link provider configuration");
+  EmailLinkProviderConfiguration emailLinkConfig;
+  try {
+    emailLinkConfig = appState.authenticationInfo.providerConfigs
+        .whereType<EmailLinkProviderConfiguration>()
+        .single;
+  } on StateError catch (error) {
+    throw PrintableError(
+        "convertAnonToEmailLink: EmailLinkProviderConfiguration error: ${error.message}");
   }
 
-  EmailLinkProviderConfiguration emailLinkConfig = emailTypes.first;
   await showDialog(
     context: context,
     builder: (context) => SimpleDialog(

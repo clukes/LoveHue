@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import '../pages/sign_in_page.dart';
 import '../providers/user_info_state.dart';
 import '../resources/authentication_info.dart';
+import '../services/notification_service.dart';
 
 /// Shows an alert dialog with yes and no buttons.
 Future<void> showAlertDialog({
@@ -105,10 +106,11 @@ class UnlinkAlertDialog {
 
 /// A dialog to delete account.
 class DeleteAlertDialog {
-  DeleteAlertDialog(this.auth, this.authInfo);
+  DeleteAlertDialog(this.auth, this.authInfo, this.notificationService);
 
   final FirebaseAuth auth;
   final AuthenticationInfo authInfo;
+  final NotificationService notificationService;
 
   static const String yesButtonText = "Delete";
   static const String noButtonText = "Cancel";
@@ -145,7 +147,7 @@ class DeleteAlertDialog {
         );
       }),
       yesPressed: () async {
-        await _deleteAccount(context, auth, authInfo).then((_) {
+        await _deleteAccount(context).then((_) {
           Navigator.pop(context, yesButtonText);
           Navigator.of(context).pushAndRemoveUntil(
               MaterialPageRoute(builder: (_) => const SignInPage()),
@@ -163,10 +165,9 @@ class DeleteAlertDialog {
   }
 
   /// Deletes user data in database, then delete [FirebaseAuth] account with [User.delete]
-  Future<void> _deleteAccount(BuildContext context, FirebaseAuth auth,
-      AuthenticationInfo authInfo) async {
+  Future<void> _deleteAccount(BuildContext context) async {
     return Provider.of<UserInfoState>(context, listen: false)
         .userInfo
-        ?.deleteUserData(context, auth, authInfo);
+        ?.deleteUserData(context, auth, authInfo, notificationService);
   }
 }
