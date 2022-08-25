@@ -22,7 +22,7 @@ jobs:
 
             # Checkout LoveHue code and get packages.
             - name: Checkout LoveHue code
-              uses: actions/checkout@d171c3b028d844f2bf14e9fdec0c58114451e4bf
+              uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
             - run: flutter pub get -v
 
             # Create .dev.env file
@@ -60,7 +60,7 @@ jobs:
 
     #     # Checkout code and get packages.
     #     - name: Checkout code
-    #       uses: actions/checkout@d171c3b028d844f2bf14e9fdec0c58114451e4bf
+    #       uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
     #     - run: flutter pub get -v
 
     #     - run: flutter test test_benchmarks
@@ -78,7 +78,7 @@ jobs:
 
     #     # Checkout code and get packages.
     #     - name: Checkout code
-    #       uses: actions/checkout@d171c3b028d844f2bf14e9fdec0c58114451e4bf
+    #       uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
     #     - run: flutter pub get -v
 
     #     # Run the golden tests and upload failed test artifacts.
