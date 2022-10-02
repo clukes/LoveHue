@@ -21,13 +21,13 @@ jobs:
         steps:
             # Set up Flutter.
             - name: Clone Flutter repository with stable channel
-              uses: subosito/flutter-action@6c2e035f2692eeac890d854df95630c72673f130
+              uses: subosito/flutter-action@1e6ee87cb840500837bcd50a667fb28815d8e310
               with:
                   channel: "stable"
             - run: flutter doctor -v
 
             - name: Install web dependencies
-              uses: actions/setup-node@2fddd8803e2f5c9604345a0b591c3020ee971a93
+              uses: actions/setup-node@969bd2663942d722d85b6a8626225850c2f7be4b
               with:
                   node-version: "14"
             - run: npm install -g firebase-tools@11.0.1
