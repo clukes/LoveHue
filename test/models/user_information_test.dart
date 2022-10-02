@@ -170,12 +170,16 @@ void main() {
     late MockUser user;
     late MockFirebaseAuth firebaseAuth;
     late MockAuthenticationInfo authenticationInfo;
+    late MockNotificationService notificationService;
 
     setUp(() {
       context = MockBuildContext();
       user = MockUser();
       firebaseAuth = MockFirebaseAuth();
       authenticationInfo = MockAuthenticationInfo();
+      notificationService = MockNotificationService();
+      when(notificationService.notificationDocumentPath(any))
+          .thenReturn("test/1234");
     });
 
     test(
@@ -192,6 +196,11 @@ void main() {
           firestore.collection(userInfoCollection).doc(user.uid);
       DocumentReference partnerDoc =
           firestore.collection(userInfoCollection).doc(partnerID);
+      DocumentReference notificationsDoc =
+          firestore.doc(notificationService.notificationDocumentPath(userID));
+      CollectionReference barsCollection =
+          RelationshipBarDocument.getUserBarsFromID(userID, firestore);
+
       UserInformation partner = UserInformation(
           firestore: firestore,
           userID: partnerID,
@@ -205,8 +214,13 @@ void main() {
 
       await partnerDoc.set(partner.toMap());
       await userDoc.set(currentUser.toMap());
+      await notificationsDoc.set({"test": 1234});
+      await barsCollection.doc("1").set(RelationshipBarDocument(
+          id: "1", userID: userID, firestore: firestore));
+
+      // Act
       await currentUser.deleteUserData(
-          context, firebaseAuth, authenticationInfo);
+          context, firebaseAuth, authenticationInfo, notificationService);
       Map<String, dynamic>? result = await firestore
           .collection(userInfoCollection)
           .doc(userID)
@@ -217,9 +231,14 @@ void main() {
           .doc(partnerID)
           .get()
           .then((value) => value.data());
+      DocumentSnapshot notificationsResult = await notificationsDoc.get();
+      QuerySnapshot barsResult = await barsCollection.get();
+
       expect(result, isNull);
       expect(firebaseAuth.currentUser, isNull);
       expect(partnerResult![UserInformation.columnPartner], isNull);
+      expect(barsResult.size, isZero);
+      expect(notificationsResult.exists, isFalse);
     });
 
     test("no recent sign in reauthenticates then deletes", () async {
@@ -252,7 +271,8 @@ void main() {
 
       await partnerDoc.set(partner.toMap());
       await userDoc.set(userInfo.toMap());
-      await userInfo.deleteUserData(context, firebaseAuth, authenticationInfo);
+      await userInfo.deleteUserData(
+          context, firebaseAuth, authenticationInfo, notificationService);
       Map<String, dynamic>? result = await firestore
           .collection(userInfoCollection)
           .doc(userID)
@@ -284,7 +304,8 @@ void main() {
 
       await userDoc.set(userInfo.toMap());
       await expectLater(
-          userInfo.deleteUserData(context, firebaseAuth, authenticationInfo),
+          userInfo.deleteUserData(
+              context, firebaseAuth, authenticationInfo, notificationService),
           throwsA(isA<PrintableError>()));
       verify(authenticationInfo.reauthenticate(context, firebaseAuth));
     });
@@ -293,7 +314,8 @@ void main() {
       when(firebaseAuth.currentUser).thenReturn(null);
 
       expectLater(
-          userInfo.deleteUserData(context, firebaseAuth, authenticationInfo),
+          userInfo.deleteUserData(
+              context, firebaseAuth, authenticationInfo, notificationService),
           throwsA(isA<PrintableError>()));
     });
 
@@ -302,7 +324,8 @@ void main() {
       when(firebaseAuth.currentUser).thenReturn(user);
 
       expectLater(
-          userInfo.deleteUserData(context, firebaseAuth, authenticationInfo),
+          userInfo.deleteUserData(
+              context, firebaseAuth, authenticationInfo, notificationService),
           throwsA(isA<PrintableError>()));
     });
   });

@@ -1,5 +1,3 @@
-//TODO: getSliderColor test
-
 import 'package:flutter_test/flutter_test.dart';
 import 'package:lovehue/utils/colors.dart';
 

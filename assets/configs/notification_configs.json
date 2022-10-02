@@ -1,0 +1,6 @@
+{
+    "notificationCollectionPath": "/NudgeNotifications",
+    "columnRequested": "requestedTimestampMilliseconds",
+    "columnCompleted": "completedTimestampMilliseconds",
+    "minimumMillisecondsBetweenNudges": 3600000
+}
