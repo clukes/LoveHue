@@ -50,7 +50,7 @@ class SettingsPage extends StatelessWidget {
             label: const Text('About this app')),
         const SizedBox(height: 32),
         ElevatedButton.icon(
-            style: ElevatedButton.styleFrom(primary: redColor),
+            style: ElevatedButton.styleFrom(backgroundColor: redColor),
             onPressed: () =>
                 DeleteAlertDialog(appState.auth, appState.authenticationInfo)
                     .show(context),
