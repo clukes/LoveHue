@@ -28,8 +28,8 @@
   <a href="https://www.codefactor.io/repository/github/clukes/lovehue">
     <img src="https://www.codefactor.io/repository/github/clukes/lovehue/badge" alt="CodeFactor" />
   </a>
-  <a href="https://api.securityscorecards.dev/projects/github.com/clukes/lovehue">
-    <img src="https://api.securityscorecards.dev/projects/github.com/clukes/lovehue/badge" alt="OpenSSF Scorecard" />
+  <a href="https://api.securityscorecards.dev/projects/github.com/clukes/LoveHue">
+    <img src="https://api.securityscorecards.dev/projects/github.com/clukes/LoveHue/badge" alt="OpenSSF Scorecard" />
   </a>
 </div>
 <br>
