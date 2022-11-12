@@ -26,7 +26,6 @@ jobs:
               uses: subosito/flutter-action@1e6ee87cb840500837bcd50a667fb28815d8e310
               with:
                   channel: 'stable'
-                  
             - run: flutter config --enable-macos-desktop
             - run: flutter doctor -v
 
