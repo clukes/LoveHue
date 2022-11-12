@@ -5,6 +5,9 @@ on:
     branches:
       - development
 
+permissions:  # added using https://github.com/step-security/secure-workflows
+  contents: read
+
 jobs:
   auto-merge:
     runs-on: ubuntu-latest
