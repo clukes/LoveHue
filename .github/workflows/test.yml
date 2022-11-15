@@ -15,14 +15,14 @@ jobs:
         steps:
             # Set up Flutter.
             - name: Clone Flutter repository with stable channel
-              uses: subosito/flutter-action@1e6ee87cb840500837bcd50a667fb28815d8e310
+              uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
               with:
                   channel: "stable"
             - run: flutter doctor -v
 
             # Checkout LoveHue code and get packages.
             - name: Checkout LoveHue code
-              uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+              uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
             - run: flutter pub get -v
 
             # Create .dev.env file
@@ -52,7 +52,7 @@ jobs:
     #   steps:
     #     # Set up Flutter.
     #     - name: Clone Flutter repository with master channel
-    #       uses: subosito/flutter-action@1e6ee87cb840500837bcd50a667fb28815d8e310
+    #       uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
     #       with:
     #         channel: master
     #     - run: flutter doctor -v
@@ -60,7 +60,7 @@ jobs:
 
     #     # Checkout code and get packages.
     #     - name: Checkout code
-    #       uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+    #       uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
     #     - run: flutter pub get -v
 
     #     - run: flutter test test_benchmarks
@@ -71,14 +71,14 @@ jobs:
     #   steps:
     #     # Set up Flutter.
     #     - name: Clone Flutter repository with master channel
-    #       uses: subosito/flutter-action@1e6ee87cb840500837bcd50a667fb28815d8e310
+    #       uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
     #       with:
     #         channel: master
     #     - run: flutter doctor -v
 
     #     # Checkout code and get packages.
     #     - name: Checkout code
-    #       uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+    #       uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
     #     - run: flutter pub get -v
 
     #     # Run the golden tests and upload failed test artifacts.
