@@ -1,12 +1,18 @@
 "use strict";
 
-import {firestore, logger} from "firebase-functions";
+import {
+  Change,
+  CloudFunction,
+  firestore,
+  logger,
+} from "firebase-functions";
 import * as admin from "firebase-admin";
 import * as config from "../../assets/configs/notification_configs.json";
 
 admin.initializeApp();
 
-const notificationDocPath = config.notificationCollectionPath + "/{userId}";
+const notificationDocPath =
+  config.notificationCollectionPath + "/{userId}";
 const requestTimestampFieldName = config.columnRequested;
 const completeTimestampFieldName = config.columnCompleted;
 const minimumMillisecondsBetweenNudges =
@@ -17,7 +23,9 @@ const minimumMillisecondsBetweenNudges =
  *
  * User saves a requested timestamp to `/nudge/{userId}`.
  */
-export const sendNudgeNotification = firestore
+export const sendNudgeNotification: CloudFunction<
+  Change<firestore.DocumentSnapshot>
+> = firestore
     .document(notificationDocPath)
     .onWrite(async (change, context) => {
       const userId: string = context.params.userId;
@@ -71,7 +79,9 @@ export const sendNudgeNotification = firestore
 
       // Send notification to topic, using the users userId.
       const topic = userId;
-      const response = await admin.messaging().sendToTopic(topic, payload);
+      const response = await admin
+          .messaging()
+          .sendToTopic(topic, payload);
       logger.log(
           "Notification request by user:",
           userId,
@@ -157,7 +167,8 @@ function isRequestValid(
     return false;
   }
 
-  const millisecondsSinceNudge = requestedTimestamp - lastCompletedTimestamp;
+  const millisecondsSinceNudge =
+    requestedTimestamp - lastCompletedTimestamp;
   if (millisecondsSinceNudge < minimumMillisecondsBetweenNudges) {
     logger.warn(
         "Hasn't been long enough since last nudge for user:",
