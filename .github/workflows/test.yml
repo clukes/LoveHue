@@ -9,20 +9,20 @@ on:
 permissions: read-all
 
 jobs:
-    unit-test:
-        name: Unit tests
+    unit-test-app:
+        name: Unit tests app
         runs-on: ubuntu-latest
         steps:
             # Set up Flutter.
             - name: Clone Flutter repository with stable channel
-              uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
+              uses: subosito/flutter-action@1e6ee87cb840500837bcd50a667fb28815d8e310
               with:
                   channel: "stable"
             - run: flutter doctor -v
 
             # Checkout LoveHue code and get packages.
             - name: Checkout LoveHue code
-              uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+              uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
             - run: flutter pub get -v
 
             # Create .dev.env file
@@ -46,13 +46,32 @@ jobs:
                   token: ${{secrets.CODECOV_TOKEN}}
                   file: coverage/lcov.info
 
+    unit-test-functions:
+        name: Unit tests cloud functions
+        runs-on: ubuntu-latest
+        steps:
+        - uses: 'actions/checkout@v3'
+
+        - uses: 'actions/setup-node@v3'
+          with:
+            node-version: '16.x'
+
+        - name: 'npm build'
+          run: 'npm ci && npm run build'
+
+        - name: 'npm lint'
+          run: 'npm run lint'
+
+        - name: 'npm test'
+          run: 'npm run test'
+
     # benchmark-test:
     #   name: Benchmark tests
     #   runs-on: ubuntu-18.04
     #   steps:
     #     # Set up Flutter.
     #     - name: Clone Flutter repository with master channel
-    #       uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
+    #       uses: subosito/flutter-action@1e6ee87cb840500837bcd50a667fb28815d8e310
     #       with:
     #         channel: master
     #     - run: flutter doctor -v
@@ -60,7 +79,7 @@ jobs:
 
     #     # Checkout code and get packages.
     #     - name: Checkout code
-    #       uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+    #       uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
     #     - run: flutter pub get -v
 
     #     - run: flutter test test_benchmarks
@@ -71,14 +90,14 @@ jobs:
     #   steps:
     #     # Set up Flutter.
     #     - name: Clone Flutter repository with master channel
-    #       uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
+    #       uses: subosito/flutter-action@1e6ee87cb840500837bcd50a667fb28815d8e310
     #       with:
     #         channel: master
     #     - run: flutter doctor -v
 
     #     # Checkout code and get packages.
     #     - name: Checkout code
-    #       uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+    #       uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
     #     - run: flutter pub get -v
 
     #     # Run the golden tests and upload failed test artifacts.
