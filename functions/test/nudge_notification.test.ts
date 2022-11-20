@@ -1,8 +1,8 @@
 "use strict";
 
 import { assert } from "chai";
-import sinon = require("sinon");
-import admin = require("firebase-admin");
+import * as sinon from "sinon";
+import * as admin from "firebase-admin";
 import { config as firebaseConfig } from "firebase-functions";
 import * as config from "../../assets/configs/notification_configs.json";
 
