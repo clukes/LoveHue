@@ -4,9 +4,10 @@ import {assert} from "chai";
 import * as sinon from "sinon";
 import * as admin from "firebase-admin";
 import {
+  CloudFunction,
   config as firebaseConfig,
-  HttpsFunction,
-  Runnable,
+  Change,
+  firestore,
 } from "firebase-functions";
 import * as config from "../../assets/configs/notification_configs.json";
 
@@ -17,8 +18,11 @@ import {
 } from "firebase-admin/lib/messaging/messaging-api";
 
 import * as firebaseFunctionsTest from "firebase-functions-test";
-import {WrappedFunction} from "firebase-functions-test/lib/v1";
-import {HttpsFunction} from "firebase-functions/v2/https";
+import {
+  WrappedFunction,
+  WrappedScheduledFunction,
+} from "firebase-functions-test/lib/v1";
+
 const tester = firebaseFunctionsTest();
 
 const userId = "1";
@@ -30,7 +34,11 @@ const minimumMillisecondsBetweenNudges =
   config.minimumMillisecondsBetweenNudges;
 
 describe("Cloud Functions", () => {
-  let myFunctions: {sendNudgeNotification: Record<string, unknown>};
+  let myFunctions: {
+    sendNudgeNotification: CloudFunction<
+      Change<firestore.DocumentSnapshot>
+    >;
+  };
   let adminInitStub: sinon.SinonStub<
     [
       options?: admin.AppOptions | undefined,
@@ -55,7 +63,7 @@ describe("Cloud Functions", () => {
     // we need to stub it out before requiring index.js. This is because the
     // functions will be executed as a part of the require process.
     // Here we stub admin.initializeApp
-    // to be a dummy function that doesn't do unknownthing.
+    // to be a dummy function that doesn't do anything.
     tester.firestore.exampleDocumentSnapshot();
     adminInitStub = sinon.stub(admin, "initializeApp");
     // Now we can require index.js and
@@ -391,16 +399,17 @@ An object with the following properties:
  */
 function setUpDocumentUpdate(
     myFunctions: {
-    sendNudgeNotification: HttpsFunction & Runnable<unknown>;
+    sendNudgeNotification: CloudFunction<
+      Change<firestore.DocumentSnapshot>
+    >;
   },
     beforeData: {[x: string]: string},
     afterData: {[x: string]: string | null}
 ): {
-  wrapped: WrappedFunction<
-    unknown,
-    HttpsFunction & Runnable<unknown>
-  >;
-  snapshotChange: unknown;
+  wrapped:
+    | WrappedFunction<Change<firestore.DocumentSnapshot>, void>
+    | WrappedScheduledFunction;
+  snapshotChange: Change<firestore.DocumentSnapshot>;
   updateStub: sinon.SinonStub<unknown[], unknown>;
 } {
   const snapshotBefore = tester.firestore.makeDocumentSnapshot(
@@ -434,8 +443,10 @@ function setUpDocumentUpdate(
  * @return {boolean} a boolean value.
  */
 async function assertNotificationNotSent(
-    wrapped: WrappedFunction<unknown, unknown & Runnable<unknown>>,
-    snapshotChange: unknown,
+    wrapped:
+    | WrappedFunction<Change<firestore.DocumentSnapshot>, void>
+    | WrappedScheduledFunction,
+    snapshotChange: Change<firestore.DocumentSnapshot>,
     messagingTopicStub: sinon.SinonStub<
     [
       topic: string,
@@ -462,8 +473,10 @@ async function assertNotificationNotSent(
  * @return {boolean} a boolean value.
  */
 async function assertNotificationSent(
-    wrapped: WrappedFunction<unknown, unknown & Runnable<unknown>>,
-    snapshotChange: unknown,
+    wrapped:
+    | WrappedFunction<Change<firestore.DocumentSnapshot>, void>
+    | WrappedScheduledFunction,
+    snapshotChange: Change<firestore.DocumentSnapshot>,
     messagingTopicStub: sinon.SinonStub<
     [
       topic: string,
