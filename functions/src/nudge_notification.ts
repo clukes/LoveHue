@@ -1,22 +1,31 @@
 "use strict";
 
-import * as functions from "firebase-functions";
+import {
+  Change,
+  CloudFunction,
+  firestore,
+  logger,
+} from "firebase-functions";
 import * as admin from "firebase-admin";
 import * as config from "../../assets/configs/notification_configs.json";
+
 admin.initializeApp();
 
-const notificationDocPath = config.notificationCollectionPath + "/{userId}";
+const notificationDocPath =
+  config.notificationCollectionPath + "/{userId}";
 const requestTimestampFieldName = config.columnRequested;
 const completeTimestampFieldName = config.columnCompleted;
 const minimumMillisecondsBetweenNudges =
-    config.minimumMillisecondsBetweenNudges;
+  config.minimumMillisecondsBetweenNudges;
 
 /**
  * Triggers when a nudge notification request is stored.
  *
  * User saves a requested timestamp to `/nudge/{userId}`.
  */
-export const sendNudgeNotification = functions.firestore
+export const sendNudgeNotification: CloudFunction<
+  Change<firestore.DocumentSnapshot>
+> = firestore
     .document(notificationDocPath)
     .onWrite(async (change, context) => {
       const userId: string = context.params.userId;
@@ -24,36 +33,41 @@ export const sendNudgeNotification = functions.firestore
       // If the request timestamp hasn't been updated, we exit.
       if (
         change.before.get(requestTimestampFieldName) ==
-            change.after.get(requestTimestampFieldName)
+      change.after.get(requestTimestampFieldName)
       ) {
-        return functions.logger.debug(
+        logger.debug(
             "User",
             userId,
             "had no change of request timestamp in notification doc, at:",
             notificationDocPath
         );
+        return false;
       }
 
       // If the document is deleted, we exit the function.
       if (!change.after.exists) {
-        return functions.logger.debug(
+        logger.debug(
             "User",
             userId,
             "has had notification doc deleted, at:",
             notificationDocPath
         );
+        return false;
       }
 
-      functions.logger.log("User request nudge notification:", userId);
+      logger.log("User request nudge notification:", userId);
 
       // Check if it's been long enough since last request.
       const requestedTimestamp = getTimestampFromDoc(
           change.after,
           requestTimestampFieldName
       );
-      if (requestedTimestamp == null) return;
 
-      if (!isRequestValid(change.after, userId, requestedTimestamp)) return;
+      if (requestedTimestamp == null) return false;
+
+      if (!isRequestValid(change.after, userId, requestedTimestamp)) {
+        return false;
+      }
 
       // Set notification details.
       const payload = {
@@ -65,8 +79,10 @@ export const sendNudgeNotification = functions.firestore
 
       // Send notification to topic, using the users userId.
       const topic = userId;
-      const response = await admin.messaging().sendToTopic(topic, payload);
-      functions.logger.log(
+      const response = await admin
+          .messaging()
+          .sendToTopic(topic, payload);
+      logger.log(
           "Notification request by user:",
           userId,
           "sent to topic:",
@@ -79,15 +95,16 @@ export const sendNudgeNotification = functions.firestore
 
       // Update completed timestamp
       await change.after.ref.update({
-        completeTimestampFieldName: requestedTimestamp,
+        [completeTimestampFieldName]: requestedTimestamp.toString(),
       });
 
-      return functions.logger.debug(
+      logger.debug(
           "Completed timestamp updated for:",
           userId,
           "with timestamp:",
           requestedTimestamp
       );
+      return true;
     });
 
 /**
@@ -106,7 +123,7 @@ function getTimestampFromDoc(
   const timestampString = doc.get(fieldName);
   const timestamp: number = parseInt(timestampString);
   if (isNaN(timestamp) || timestamp == undefined) {
-    functions.logger.error(
+    logger.error(
         fieldName,
         "for doc id:",
         doc.id,
@@ -123,7 +140,7 @@ function getTimestampFromDoc(
  * If the user has completed a nudge in the past, check that it's been at least
  * `minimumMillisecondsBetweenNudges` milliseconds since the last nudge
  * @param {admin.firestore.DocumentSnapshot} doc
- *  - this is the document that we're checking to see if
+ *  - this is the document that we're checking
  * @param {string} userId - The user ID of the user who is requesting a nudge.
  * @param {number} requestedTimestamp
  *  - The timestamp of the request to send a nudge.
@@ -137,7 +154,7 @@ function isRequestValid(
     requestedTimestamp: number
 ): boolean {
   if (doc.get(completeTimestampFieldName) == null) {
-    functions.logger.debug("No completed timestamp user:", userId);
+    logger.debug("No completed timestamp user:", userId);
     return true;
   }
 
@@ -145,11 +162,15 @@ function isRequestValid(
       doc,
       completeTimestampFieldName
   );
-  if (lastCompletedTimestamp == null) return false;
+  if (lastCompletedTimestamp == null) {
+    logger.warn("No lastCompletedTimestamp found for user:", userId);
+    return false;
+  }
 
-  const millisecondsSinceNudge = requestedTimestamp - lastCompletedTimestamp;
+  const millisecondsSinceNudge =
+    requestedTimestamp - lastCompletedTimestamp;
   if (millisecondsSinceNudge < minimumMillisecondsBetweenNudges) {
-    functions.logger.warn(
+    logger.warn(
         "Hasn't been long enough since last nudge for user:",
         userId,
         "last timestamp was:",
@@ -162,7 +183,7 @@ function isRequestValid(
     return false;
   }
 
-  functions.logger.debug(
+  logger.debug(
       "Has been long enough since last nudge for user:",
       userId,
       "last timestamp was:",
