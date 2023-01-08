@@ -18,6 +18,10 @@ import 'mocker.dart';
 import 'mocker.mocks.dart';
 
 void main() {
+  setUpAll(() async {
+    await setupMockFirebaseApp();
+  });
+
   test('mainCommon calls AppRunner', () async {
     var mockAppRunner = MockAppRunner();
     await mainCommon(
@@ -64,9 +68,13 @@ void main() {
       ];
       testWidget = RelationshipBarsApp(providers: providers);
 
+      var authenticationInfo = MockAuthenticationInfo();
+      when(authenticationInfo.providers).thenReturn([]);
+
       when(appState.auth).thenReturn(firebaseAuth);
       when(appState.appInfo).thenReturn(appInfo);
       when(appState.loginState).thenReturn(ApplicationLoginState.loggedOut);
+      when(appState.authenticationInfo).thenReturn(authenticationInfo);
     });
 
     testWidgets("navigates to responsive layout on sign in",

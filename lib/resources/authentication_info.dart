@@ -2,7 +2,7 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterfire_ui/auth.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:lovehue/resources/printable_error.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -23,18 +23,22 @@ class AuthenticationInfo {
       iOSBundleId: packageInfo.packageName,
     );
 
-    providerConfigs = <ProviderConfiguration>[
-      EmailLinkProviderConfiguration(actionCodeSettings: actionCodeSettings),
+    providers = <AuthProvider>[
+      EmailLinkAuthProvider(actionCodeSettings: actionCodeSettings)
     ];
   }
 
   /// [ActionCodeSettings] for the email link login.
   late final ActionCodeSettings actionCodeSettings;
 
+  /// Info with app metadata.
   late final PackageInfo packageInfo;
 
   /// Configs for different auth providers.
-  late final List<ProviderConfiguration> providerConfigs;
+  late final List<AuthProvider> providers;
+
+  /// Sets the providers in FirebaseUIAuth.
+  void setProviders() => FirebaseUIAuth.configureProviders(providers);
 
   /// Implements [signInAnonymously] to allow sign in without email.
   /// navigator is Navigator.of(context)
@@ -64,16 +68,16 @@ class AuthenticationInfo {
       throw PrintableError("No current user.");
     }
     helper ??= ReauthenticateHelper();
-    return helper.showDialog(context, auth, providerConfigs);
+    return helper.showDialog(context, auth, providers);
   }
 }
 
 class ReauthenticateHelper {
   Future<bool> showDialog(BuildContext context, FirebaseAuth auth,
-          List<ProviderConfiguration> providerConfigs) =>
+          List<AuthProvider> providers) =>
       showReauthenticateDialog(
         context: context,
-        providerConfigs: providerConfigs,
+        providers: providers,
         auth: auth,
         onSignedIn: () => Navigator.of(context).pop(true),
       );

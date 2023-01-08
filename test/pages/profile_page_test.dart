@@ -2,7 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutterfire_ui/auth.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:lovehue/pages/profile_page.dart';
 import 'package:lovehue/pages/settings_page.dart';
 import 'package:lovehue/pages/sign_in_page.dart';
@@ -13,6 +13,7 @@ import 'package:lovehue/widgets/profile_page_widgets.dart';
 import 'package:mockito/mockito.dart';
 import 'package:provider/provider.dart';
 
+import '../mocker.dart';
 import '../mocker.mocks.dart';
 
 void main() {
@@ -25,6 +26,10 @@ void main() {
   late Widget testWidget;
   late Widget testWidgetBuild;
   late MockFirebaseAuth auth;
+
+  setUpAll(() {
+    setupMockFirebaseApp();
+  });
 
   setUp(() {
     appState = MockApplicationState();
@@ -44,6 +49,16 @@ void main() {
     );
     when(appState.auth).thenReturn(auth);
     when(partnersInfoState.partnerExist).thenReturn(false);
+
+    var authenticationInfo = MockAuthenticationInfo();
+    when(authenticationInfo.providers).thenReturn([]);
+
+    var appInfo = MockAppInfo();
+    when(appInfo.appName).thenReturn("Test");
+
+    when(appState.appInfo).thenReturn(appInfo);
+    when(appState.loginState).thenReturn(ApplicationLoginState.loggedOut);
+    when(appState.authenticationInfo).thenReturn(authenticationInfo);
   });
 
   testWidgets('username is displayed', (WidgetTester tester) async {
@@ -93,7 +108,7 @@ void main() {
     expect(auth.currentUser, isNotNull);
 
     await tester.pumpWidget(testWidgetBuild);
-    await tester.tap(find.text('Sign Out'));
+    await tester.tap(find.byIcon(Icons.logout));
     await tester.pumpAndSettle();
 
     expect(auth.currentUser, isNull);
@@ -108,9 +123,8 @@ void main() {
 
     final authInfo = MockAuthenticationInfo();
     when(appState.authenticationInfo).thenReturn(authInfo);
-    when(authInfo.providerConfigs).thenReturn([
-      EmailLinkProviderConfiguration(
-          actionCodeSettings: ActionCodeSettings(url: ''))
+    when(authInfo.providers).thenReturn([
+      EmailLinkAuthProvider(actionCodeSettings: ActionCodeSettings(url: ''))
     ]);
 
     await auth.signInAnonymously();

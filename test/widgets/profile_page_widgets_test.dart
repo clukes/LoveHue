@@ -177,7 +177,7 @@ void main() {
       partnersInfoState = MockPartnersInfoState();
       deleteAlertDialog =
           DeleteAlertDialog(auth, authInfo, MockNotificationService());
-      when(authInfo.providerConfigs).thenReturn([]);
+      when(authInfo.providers).thenReturn([]);
       when(userInfoState.userInfo).thenReturn(userInfo);
       when(appState.authenticationInfo).thenReturn(authInfo);
 

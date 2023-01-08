@@ -5,6 +5,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -37,11 +38,13 @@ Future<void> mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo,
 
   final AppInfo appInfo = flavorAppInfo;
   packageInfo ??= await PackageInfo.fromPlatform();
-  final AuthenticationInfo authenticationInfo = AuthenticationInfo(packageInfo);
 
   firebaseApp ??= await Firebase.initializeApp(options: firebaseOptions);
   final FirebaseFirestore firestore =
       FirebaseFirestore.instanceFor(app: firebaseApp);
+
+  final AuthenticationInfo authenticationInfo = AuthenticationInfo(packageInfo);
+  FirebaseUIAuth.configureProviders(authenticationInfo.providers);
 
   // Add licenses for the fonts.
   LicenseRegistry.addLicense(() async* {
