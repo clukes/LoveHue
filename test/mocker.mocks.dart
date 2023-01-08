@@ -11,11 +11,11 @@ import 'package:cloud_firestore/cloud_firestore.dart' as _i4;
 import 'package:firebase_auth/firebase_auth.dart' as _i7;
 import 'package:firebase_core/firebase_core.dart' as _i16;
 import 'package:firebase_messaging/firebase_messaging.dart' as _i14;
+import 'package:firebase_ui_auth/firebase_ui_auth.dart' as _i23;
 import 'package:flutter/material.dart' as _i9;
 import 'package:flutter/scheduler.dart' as _i12;
 import 'package:flutter/src/foundation/assertions.dart' as _i22;
 import 'package:flutter/src/foundation/diagnostics.dart' as _i10;
-import 'package:flutterfire_ui/auth.dart' as _i23;
 import 'package:lovehue/models/relationship_bar_document.dart' as _i21;
 import 'package:lovehue/models/user_information.dart' as _i20;
 import 'package:lovehue/providers/application_state.dart' as _i17;
@@ -1306,16 +1306,20 @@ class MockAuthenticationInfo extends _i1.Mock
         returnValueForMissingStub: null,
       );
   @override
-  List<_i23.ProviderConfiguration> get providerConfigs => (super.noSuchMethod(
-        Invocation.getter(#providerConfigs),
-        returnValue: <_i23.ProviderConfiguration>[],
-      ) as List<_i23.ProviderConfiguration>);
+  List<_i23.AuthProvider<_i23.AuthListener, _i7.AuthCredential>>
+      get providers => (super.noSuchMethod(
+            Invocation.getter(#providers),
+            returnValue: <
+                _i23.AuthProvider<_i23.AuthListener, _i7.AuthCredential>>[],
+          ) as List<_i23.AuthProvider<_i23.AuthListener, _i7.AuthCredential>>);
   @override
-  set providerConfigs(List<_i23.ProviderConfiguration>? _providerConfigs) =>
+  set providers(
+          List<_i23.AuthProvider<_i23.AuthListener, _i7.AuthCredential>>?
+              _providers) =>
       super.noSuchMethod(
         Invocation.setter(
-          #providerConfigs,
-          _providerConfigs,
+          #providers,
+          _providers,
         ),
         returnValueForMissingStub: null,
       );
@@ -1999,7 +2003,7 @@ class MockReauthenticateHelper extends _i1.Mock
   _i18.Future<bool> showDialog(
     _i9.BuildContext? context,
     _i7.FirebaseAuth? auth,
-    List<_i23.ProviderConfiguration>? providerConfigs,
+    List<_i23.AuthProvider<_i23.AuthListener, _i7.AuthCredential>>? providers,
   ) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -2007,7 +2011,7 @@ class MockReauthenticateHelper extends _i1.Mock
           [
             context,
             auth,
-            providerConfigs,
+            providers,
           ],
         ),
         returnValue: _i18.Future<bool>.value(false),
@@ -2572,6 +2576,16 @@ class MockFirebaseMessaging extends _i1.Mock implements _i14.FirebaseMessaging {
   _i18.Future<void> setAutoInitEnabled(bool? enabled) => (super.noSuchMethod(
         Invocation.method(
           #setAutoInitEnabled,
+          [enabled],
+        ),
+        returnValue: _i18.Future<void>.value(),
+        returnValueForMissingStub: _i18.Future<void>.value(),
+      ) as _i18.Future<void>);
+  @override
+  _i18.Future<void> setDeliveryMetricsExportToBigQuery(bool? enabled) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #setDeliveryMetricsExportToBigQuery,
           [enabled],
         ),
         returnValue: _i18.Future<void>.value(),

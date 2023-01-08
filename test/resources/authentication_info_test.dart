@@ -1,11 +1,11 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter_test/flutter_test.dart';
-import 'package:flutterfire_ui/auth.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:lovehue/resources/authentication_info.dart';
 import 'package:lovehue/resources/printable_error.dart';
 import 'package:mockito/mockito.dart';
 import 'package:package_info_plus/package_info_plus.dart';
-
+import '../mocker.dart';
 import '../mocker.mocks.dart';
 import '../models/user_information_test.mocks.dart';
 
@@ -14,6 +14,10 @@ void main() {
 
   late AuthenticationInfo subject;
   late PackageInfo packageInfo;
+
+  setUpAll(() async {
+    await setupMockFirebaseApp();
+  });
 
   setUp(() {
     packageInfo = PackageInfo(
@@ -32,10 +36,8 @@ void main() {
       expect(subject.actionCodeSettings.iOSBundleId, packageName);
     });
 
-    test('providerConfigs has email link provider config', () async {
-      expect(
-          subject.providerConfigs.whereType<EmailLinkProviderConfiguration>(),
-          isNotEmpty);
+    test('providers has email link provider', () async {
+      expect(subject.providers.whereType<EmailLinkAuthProvider>(), isNotEmpty);
     });
   });
 
@@ -94,8 +96,7 @@ void main() {
 
       await subject.reauthenticate(context, auth, helper: helper);
 
-      verify(helper.showDialog(context, auth, subject.providerConfigs))
-          .called(1);
+      verify(helper.showDialog(context, auth, subject.providers)).called(1);
     });
   });
 }

@@ -200,6 +200,63 @@ class MockUser extends _i1.Mock implements _i3.User {
         )),
       ) as _i5.Future<_i3.UserCredential>);
   @override
+  _i5.Future<_i3.UserCredential> linkWithProvider(_i2.AuthProvider? provider) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #linkWithProvider,
+          [provider],
+        ),
+        returnValue: _i5.Future<_i3.UserCredential>.value(_FakeUserCredential_3(
+          this,
+          Invocation.method(
+            #linkWithProvider,
+            [provider],
+          ),
+        )),
+      ) as _i5.Future<_i3.UserCredential>);
+  @override
+  _i5.Future<_i3.UserCredential> reauthenticateWithProvider(
+          _i2.AuthProvider? provider) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #reauthenticateWithProvider,
+          [provider],
+        ),
+        returnValue: _i5.Future<_i3.UserCredential>.value(_FakeUserCredential_3(
+          this,
+          Invocation.method(
+            #reauthenticateWithProvider,
+            [provider],
+          ),
+        )),
+      ) as _i5.Future<_i3.UserCredential>);
+  @override
+  _i5.Future<_i3.UserCredential> reauthenticateWithPopup(
+          _i2.AuthProvider? provider) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #reauthenticateWithPopup,
+          [provider],
+        ),
+        returnValue: _i5.Future<_i3.UserCredential>.value(_FakeUserCredential_3(
+          this,
+          Invocation.method(
+            #reauthenticateWithPopup,
+            [provider],
+          ),
+        )),
+      ) as _i5.Future<_i3.UserCredential>);
+  @override
+  _i5.Future<void> reauthenticateWithRedirect(_i2.AuthProvider? provider) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #reauthenticateWithRedirect,
+          [provider],
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
+  @override
   _i5.Future<_i3.UserCredential> linkWithPopup(_i2.AuthProvider? provider) =>
       (super.noSuchMethod(
         Invocation.method(
@@ -214,6 +271,16 @@ class MockUser extends _i1.Mock implements _i3.User {
           ),
         )),
       ) as _i5.Future<_i3.UserCredential>);
+  @override
+  _i5.Future<void> linkWithRedirect(_i2.AuthProvider? provider) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #linkWithRedirect,
+          [provider],
+        ),
+        returnValue: _i5.Future<void>.value(),
+        returnValueForMissingStub: _i5.Future<void>.value(),
+      ) as _i5.Future<void>);
   @override
   _i5.Future<_i3.ConfirmationResult> linkWithPhoneNumber(
     String? phoneNumber, [
@@ -742,6 +809,22 @@ class MockFirebaseAuth extends _i1.Mock implements _i3.FirebaseAuth {
           this,
           Invocation.method(
             #signInWithAuthProvider,
+            [provider],
+          ),
+        )),
+      ) as _i5.Future<_i3.UserCredential>);
+  @override
+  _i5.Future<_i3.UserCredential> signInWithProvider(
+          _i2.AuthProvider? provider) =>
+      (super.noSuchMethod(
+        Invocation.method(
+          #signInWithProvider,
+          [provider],
+        ),
+        returnValue: _i5.Future<_i3.UserCredential>.value(_FakeUserCredential_3(
+          this,
+          Invocation.method(
+            #signInWithProvider,
             [provider],
           ),
         )),
