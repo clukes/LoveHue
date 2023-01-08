@@ -7,3 +7,6 @@ Functions for Google cloud functions.
 - Checks timestamp of last nudge notification to see if request is valid.
 - Sends a notification to the requesting users partner.
 - Saves completed timestamp to "nudgeNotifications/{userId}/completed".
+
+
+Run `npm test` to run unit tests.
