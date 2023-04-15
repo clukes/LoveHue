@@ -29,7 +29,7 @@ class BarDocBuilder extends StatelessWidget {
         if (barDoc?.timestamp != null)
           AppBar(
             primary: false,
-            titleTextStyle: Theme.of(context).textTheme.subtitle2,
+            titleTextStyle: Theme.of(context).textTheme.titleSmall,
             title: FittedBox(
               fit: BoxFit.scaleDown,
               child: Text(

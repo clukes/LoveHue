@@ -111,6 +111,7 @@ class RelationshipBarDocument {
         .catchError((error) {
       debugPrint(
           "RelationshipBarDocument.firestoreGet: Failed to retrieve relationship bar document: $error.");
+      return null;
     });
     return doc;
   }
@@ -132,6 +133,7 @@ class RelationshipBarDocument {
         .catchError((error) {
       debugPrint(
           "RelationshipBarDocument.firestoreGetLatest: Failed to retrieve relationship bar document: $error.");
+      return null;
     });
   }
 

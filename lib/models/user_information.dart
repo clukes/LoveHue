@@ -117,6 +117,7 @@ class UserInformation {
         .catchError((error) {
       debugPrint(
           "UserInformation.firestoreGet: Failed to retrieve user info: $error.");
+      return null;
     });
     return info;
   }
