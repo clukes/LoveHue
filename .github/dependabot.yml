@@ -12,7 +12,7 @@ updates:
       interval: weekly
       time: "09:00"
       timezone: Europe/London
-    target-branch: "development"
+    target-branch: "package-updates"
     open-pull-requests-limit: 2
   - package-ecosystem: github-actions
     directory: "/"
@@ -20,7 +20,7 @@ updates:
       interval: weekly
       time: "09:00"
       timezone: Europe/London
-    target-branch: "development"
+    target-branch: "package-updates"
 
 
   - package-ecosystem: npm
@@ -29,4 +29,4 @@ updates:
       interval: weekly
       time: "09:00"
       timezone: Europe/London
-    target-branch: "development"
+    target-branch: "package-updates"
