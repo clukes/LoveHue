@@ -1,6 +1,4 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
-import 'package:lovehue/firebase/firebase_options.dart';
 
 import 'flavour_firebase_options.dart';
 import 'main_common.dart';
