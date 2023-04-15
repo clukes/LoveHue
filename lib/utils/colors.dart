@@ -10,7 +10,8 @@ const primaryTextColor = Color.fromARGB(255, 51, 51, 51);
 const secondaryTextColor = Color.fromARGB(255, 105, 105, 105);
 
 /// Built [ColorScheme] from [primaryColor].
-final ColorScheme colorScheme = ColorScheme.fromSeed(seedColor: primaryColor);
+final ColorScheme colorScheme = ColorScheme.fromSeed(
+    seedColor: primaryColor, background: mobileBackgroundColor);
 
 /// Navigation colors.
 const navigationBackgroundColor = Color.fromARGB(255, 253, 254, 255);

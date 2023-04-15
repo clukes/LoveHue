@@ -9,7 +9,7 @@ jobs:
     permissions:
       pull-requests: write
     steps:
-      - uses: hmarr/auto-approve-action@de8ae18c173c131e182d4adf2c874d8d2308a85b
+      - uses: hmarr/auto-approve-action@44888193675f29a83e04faf4002fa8c0b537b1e4
         if: github.actor == 'clukes'
         with:
           github-token: ${{ secrets.GITHUB_TOKEN }}

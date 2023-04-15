@@ -50,7 +50,7 @@ void main() {
     when(appState.appInfo).thenReturn(appInfo);
     when(appState.authenticationInfo).thenReturn(authenticationInfo);
     when(appState.signInAnonymously(any)).thenAnswer((_) => Future.value());
-    when(authenticationInfo.providerConfigs).thenReturn([]);
+    when(authenticationInfo.providers).thenReturn([]);
   });
 
   testWidgets('displays app name', (WidgetTester tester) async {

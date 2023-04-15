@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterfire_ui/auth.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/application_state.dart';
@@ -95,7 +95,7 @@ class SignInPage extends StatelessWidget {
           ],
         );
       },
-      providerConfigs: appState.authenticationInfo.providerConfigs,
+      providers: appState.authenticationInfo.providers,
       actions: [
         AuthStateChangeAction<SignedIn>((context, _) async {
           appState.authenticationInfo.afterSignIn(Navigator.of(context));

@@ -7,7 +7,6 @@ import 'custom_shapes.dart';
 final ThemeData lightThemeData = ThemeData.light().copyWith(
   colorScheme: colorScheme,
   primaryColor: primaryColor,
-  backgroundColor: mobileBackgroundColor,
   scaffoldBackgroundColor: mobileBackgroundColor,
   brightness: Brightness.light,
   textTheme: _textTheme,
@@ -55,13 +54,13 @@ final TextTheme _primaryTextTheme = GoogleFonts.dmSansTextTheme(
     ThemeData.from(colorScheme: colorScheme).textTheme);
 
 final TextTheme _dmSansTextTheme = _primaryTextTheme.copyWith(
-  headline6: const TextStyle(
+  titleLarge: const TextStyle(
       fontWeight: FontWeight.w700, fontSize: 28, color: primaryTextColor),
-  subtitle1: const TextStyle(
+  titleMedium: const TextStyle(
       fontWeight: FontWeight.w700, fontSize: 16, color: primaryTextColor),
 );
 // Theme for non-primary text with a secondary font.
 final TextTheme _textTheme = _dmSansTextTheme.copyWith(
-  subtitle2: GoogleFonts.poppins(
+  titleSmall: GoogleFonts.poppins(
       fontWeight: FontWeight.normal, fontSize: 16, color: secondaryTextColor),
 );

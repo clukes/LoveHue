@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
-import 'package:flutterfire_ui/auth.dart';
 import 'package:provider/provider.dart';
 
 import '../pages/settings_page.dart';
@@ -26,12 +26,6 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  Future<void> _signOut(BuildContext context, FirebaseAuth auth) async {
-    await auth.signOut();
-    if (!mounted) return;
-    await _signOutNavigate(context);
-  }
-
   Future<void> _signOutNavigate(BuildContext context) async {
     debugPrint("ProfilePage: Signed Out.");
     await Navigator.of(context).pushAndRemoveUntil(
@@ -78,10 +72,7 @@ class _ProfilePageState extends State<ProfilePage> {
           return const SizedBox.shrink();
         }),
         const SizedBox(height: 64),
-        ElevatedButton.icon(
-            onPressed: () async => await _signOut(context, auth),
-            icon: const Icon(Icons.logout),
-            label: const Text('Sign Out')),
+        SignOutButton(auth: auth, variant: ButtonVariant.filled),
         const SizedBox(height: 24),
         if (auth.currentUser?.isAnonymous == true && !kIsWeb)
           OutlinedButton.icon(
@@ -92,7 +83,7 @@ class _ProfilePageState extends State<ProfilePage> {
       ],
     );
 
-    return FlutterFireUIActions(
+    return FirebaseUIActions(
       actions: [
         SignedOutAction((context) async =>
             // Called after account deleted, just navigate to SignInPage.
@@ -126,10 +117,10 @@ Future<void> convertAnonToEmailLink(
     throw PrintableError("No anonymous user");
   }
 
-  EmailLinkProviderConfiguration emailLinkConfig;
+  EmailLinkAuthProvider emailLinkAuthProvider;
   try {
-    emailLinkConfig = appState.authenticationInfo.providerConfigs
-        .whereType<EmailLinkProviderConfiguration>()
+    emailLinkAuthProvider = appState.authenticationInfo.providers
+        .whereType<EmailLinkAuthProvider>()
         .single;
   } on StateError catch (error) {
     throw PrintableError(
@@ -143,7 +134,7 @@ Future<void> convertAnonToEmailLink(
       children: [
         EmailLinkSignInView(
           auth: auth,
-          config: emailLinkConfig,
+          provider: emailLinkAuthProvider,
         )
       ],
     ),

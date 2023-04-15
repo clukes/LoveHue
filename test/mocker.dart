@@ -1,7 +1,10 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_core_platform_interface/firebase_core_platform_interface.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_test/flutter_test.dart';
 import 'package:lovehue/models/user_information.dart';
 import 'package:lovehue/providers/application_state.dart';
 import 'package:lovehue/providers/partners_info_state.dart';
@@ -36,6 +39,12 @@ class MockClipboard {
 
 class MockFunction extends Mock {
   call();
+}
+
+Future<FirebaseApp> setupMockFirebaseApp() async {
+  TestWidgetsFlutterBinding.ensureInitialized();
+  setupFirebaseCoreMocks();
+  return await Firebase.initializeApp();
 }
 
 @GenerateMocks([

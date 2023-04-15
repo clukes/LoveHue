@@ -3,7 +3,7 @@ name: auto-merge-dependabot
 on:
   pull_request:
     branches:
-      - development
+      - package-updates
 
 permissions:  # added using https://github.com/step-security/secure-workflows
   contents: read

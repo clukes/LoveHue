@@ -42,7 +42,7 @@ abstract class _BarSliderState extends State<BarSlider> {
             widget.relationshipBar.labelString(),
             style: Theme.of(context)
                 .textTheme
-                .subtitle1
+                .titleMedium
                 ?.copyWith(fontSize: _sliderTextFontSize),
           ),
         ),
@@ -54,7 +54,7 @@ abstract class _BarSliderState extends State<BarSlider> {
           widget.relationshipBar.valueString(),
           style: Theme.of(context)
               .textTheme
-              .subtitle2
+              .titleSmall
               ?.copyWith(fontSize: _sliderTextFontSize),
         ),
       ),
