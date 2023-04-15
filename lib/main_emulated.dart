@@ -1,16 +1,17 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:flutter_dotenv/flutter_dotenv.dart';
 
-import 'flavour_firebase_options.dart';
 import 'main_common.dart';
 import 'utils/app_info_class.dart';
 
 Future<void> main() async {
-  await dotenv.load(fileName: ".emu.env");
-  var firebaseOptions =
-      FlavourFirebaseOptions(dotenv.env, "lovehue-emu").currentPlatform;
+  const firebaseOptions = FirebaseOptions(
+    apiKey: "test",
+    appId: "test",
+    messagingSenderId: "test",
+    projectId: "lovehue-emu",
+  );
 
   var firebaseApp = await Firebase.initializeApp(options: firebaseOptions);
 

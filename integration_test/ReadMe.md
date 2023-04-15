@@ -7,13 +7,13 @@ headless:
 flutter drive \ 
   --driver=integration_test/test_driver/chrome_test_driver.dart \
   --target=integration_test/skip_login_test.dart \
-  -d chrome
+  -d web-server
 ```
 or not headless:
 ``` zsh
 flutter drive \ 
   --driver=integration_test/test_driver/chrome_test_driver.dart \
   --target=integration_test/skip_login_test.dart \
-  -d web-server
+  -d chrome
 ```
 
