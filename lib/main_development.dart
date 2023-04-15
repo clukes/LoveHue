@@ -5,7 +5,7 @@ import 'main_common.dart';
 import 'utils/app_info_class.dart';
 
 Future main() async {
-  await dotenv.load(fileName: ".emu.env");
+  await dotenv.load(fileName: ".dev.env");
   var firebaseOptions = FlavourFirebaseOptions(dotenv.env, "lovehue-dev");
   return await mainCommon(
     firebaseOptions.currentPlatform,
