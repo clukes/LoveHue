@@ -191,3 +191,5 @@ node_modules/
 .dev.env
 
 /functions/lib/
+
+screenshots/

@@ -17,6 +17,7 @@ jobs:
             - name: Clone Flutter repository with stable channel
               uses: subosito/flutter-action@1e6ee87cb840500837bcd50a667fb28815d8e310
               with:
+                  cache: true
                   channel: "stable"
             - run: flutter doctor -v
 
@@ -27,7 +28,7 @@ jobs:
 
             # Create .dev.env file
             - name: Set env
-              run: echo '${{ secrets.DEV_ENV }}' > .dev.env
+              run: echo '${{ secrets.DEV_ENV }}' > environment/.dev.env
 
             - name: generate mocks
               run: flutter pub get && flutter pub run build_runner build --delete-conflicting-outputs
@@ -53,28 +54,26 @@ jobs:
             run:
                 working-directory: ./functions
         steps:
-        - uses: 'actions/checkout@v3'
+            - uses: "actions/checkout@v3"
 
-        - uses: 'actions/setup-node@v3'
-          with:
-            node-version: '16.x'
+            - uses: "actions/setup-node@v3"
+              with:
+                  node-version: "16.x"
 
-        - name: 'npm build'
-          run: 'npm ci && npm run build'
+            - name: "npm build"
+              run: "npm ci && npm run build"
 
-        - name: 'npm lint'
-          run: 'npm run lint'
+            - name: "npm lint"
+              run: "npm run lint"
 
-        - name: 'npm test'
-          run: 'npm run test:coverage'
+            - name: "npm test"
+              run: "npm run test:coverage"
 
-
-        - name: Upload to code coverage
-          uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70
-          with:
-              token: ${{secrets.CODECOV_TOKEN}}
-              file: coverage/lcov.info
-
+            - name: Upload to code coverage
+              uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70
+              with:
+                  token: ${{secrets.CODECOV_TOKEN}}
+                  file: coverage/lcov.info
 
     # benchmark-test:
     #   name: Benchmark tests

@@ -22,6 +22,9 @@
   <a href="https://github.com/clukes/LoveHue/actions">
     <img src="https://github.com/clukes/LoveHue/workflows/Tests/badge.svg" alt="Test Status">
   </a>
+  <a href="https://github.com/clukes/LoveHue/actions">
+    <img src="https://github.com/clukes/LoveHue/workflows/Integration%20Tests/badge.svg" alt="Test Status">
+  </a>
   <a href="https://codecov.io/gh/clukes/LoveHue" > 
    <img src="https://codecov.io/gh/clukes/LoveHue/branch/main/graph/badge.svg?token=JPENNSAFQS"/> 
   </a>
@@ -37,8 +40,7 @@
 <summary>Table of Contents</summary>
 
 - [About](#about)
-  - [Screenshots](#screenshots)
-    - [Features](#features)
+  - [Features](#features)
   - [Built With](#built-with)
 - [Roadmap](#roadmap)
 - [Support](#support)
