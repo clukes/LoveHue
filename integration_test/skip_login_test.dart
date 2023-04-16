@@ -4,8 +4,10 @@ import 'package:integration_test/integration_test.dart';
 
 import 'package:lovehue/main_emulated.dart' as app;
 
+import 'test_driver/utilities.dart';
+
 void main() {
-  IntegrationTestWidgetsFlutterBinding.ensureInitialized();
+  final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
   group('end-to-end test', () {
     testWidgets('tapping on skip login will sign in anonymously',
@@ -31,6 +33,7 @@ void main() {
       // Verify that "Your bars" is displayed on the screen.
       final yourBarsText = find.text('Your Bars');
       expect(yourBarsText, findsOneWidget);
+      takeScreenshot(tester, binding, "SkipLogin-LoggedIn");
     });
   });
 }
