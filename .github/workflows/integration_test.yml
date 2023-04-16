@@ -48,17 +48,24 @@ jobs:
                 arch: [x86_64]
             fail-fast: true
         steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
             - name: Setup java
               uses: actions/setup-java@v3
               with:
                   distribution: "temurin"
                   java-version: "17"
-            - name: Checkout code
-              uses: actions/checkout@v3
             - name: Install Firebase Emulator Suite
               run: npm install -g firebase-tools
             - name: Start firebase emulator
               run: firebase emulators:start &
+            - name: Emulator cache
+              uses: actions/cache@v3
+              id: firebase-emulator-cache
+              with:
+                  path: |
+                      ~/.cache/firebase/emulators
+                  key: firebase-emulator-${{runner.os}}
             - name: Setup Flutter SDK
               uses: subosito/flutter-action@v2
               with:
@@ -96,7 +103,7 @@ jobs:
                   emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
                   disable-animations: true
                   script: flutter drive --driver=integration_test/test_driver/test_driver.dart --target integration_test/main.dart
-            - name: Upload Screenshoots
+            - name: Upload Screenshots
               uses: actions/upload-artifact@v3
               with:
                   name: Test result screenshots
@@ -105,17 +112,24 @@ jobs:
     web:
         runs-on: macos-latest
         steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
             - name: Setup java
               uses: actions/setup-java@v3
               with:
                   distribution: "temurin"
                   java-version: "17"
-            - name: Checkout code
-              uses: actions/checkout@v3
             - name: Install Firebase Emulator Suite
               run: npm install -g firebase-tools
             - name: Start firebase emulator
               run: firebase emulators:start &
+            - name: Emulator cache
+              uses: actions/cache@v3
+              id: firebase-emulator-cache
+              with:
+                  path: |
+                      ~//.cache/firebase/emulators
+                  key: firebase-emulator-${{runner.os}}
             - name: Install chromedriver
               uses: nanasess/setup-chromedriver@v2
             - name: Start chromedriver
@@ -128,7 +142,7 @@ jobs:
               run: flutter pub get
             - name: Run integration tests
               run: flutter drive --driver=integration_test/test_driver/test_driver.dart --target integration_test/main.dart -d chrome
-            - name: Upload Screenshoots
+            - name: Upload Screenshots
               uses: actions/upload-artifact@v3
               with:
                   name: Test result screenshots
