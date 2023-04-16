@@ -65,8 +65,9 @@ jobs:
             - name: Start firebase emulator
               run: firebase emulators:start &
             - name: Setup Flutter SDK
-              uses: subosito/flutter-action@v2
+              uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
               with:
+                  cache: true
                   channel: stable
             - name: Install Flutter dependencies
               run: flutter pub get
@@ -131,8 +132,9 @@ jobs:
             - name: Start chromedriver
               run: chromedriver --port=4444 &
             - name: Setup Flutter SDK
-              uses: subosito/flutter-action@v2
+              uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
               with:
+                  cache: true
                   channel: stable
             - name: Install Flutter dependencies
               run: flutter pub get

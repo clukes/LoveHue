@@ -69,6 +69,7 @@ jobs:
             - name: Clone Flutter repository with stable channel
               uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
               with:
+                  cache: true
                   channel: "stable"
 
             - name: Install Linux dependencies
