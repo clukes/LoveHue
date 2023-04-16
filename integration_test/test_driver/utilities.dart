@@ -13,7 +13,7 @@ Future<void> takeScreenshot(tester, binding, name) async {
     await tester.pumpAndSettle();
   }
 
-  if(!kIsWeb) {
+  if (!kIsWeb) {
     // Currently screenshots aren't working on web
     await binding.takeScreenshot(name);
   }

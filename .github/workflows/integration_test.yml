@@ -101,7 +101,7 @@ jobs:
                   force-avd-creation: false
                   emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
                   disable-animations: true
-                  script: flutter drive --driver=integration_test/test_driver/test_driver.dart --target integration_test/e2e_tests.dart
+                  script: flutter test integration_test/e2e_tests.dart --flavor emu
             - name: Upload Screenshots
               uses: actions/upload-artifact@v3
               with:
