@@ -48,6 +48,11 @@ jobs:
             arch: [x86_64]
             fail-fast: true
         steps:
+            - name: Setup java
+              uses: actions/setup-java@v3
+              with:
+                  distribution: "temurin"
+                  java-version: "17"
             - name: Checkout code
               uses: actions/checkout@v3
             - name: Install Firebase Emulator Suite
@@ -100,6 +105,11 @@ jobs:
     web:
         runs-on: macos-latest
         steps:
+            - name: Setup java
+              uses: actions/setup-java@v3
+              with:
+                  distribution: "temurin"
+                  java-version: "17"
             - name: Checkout code
               uses: actions/checkout@v3
             - name: Install Firebase Emulator Suite
