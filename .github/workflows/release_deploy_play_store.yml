@@ -24,7 +24,8 @@ jobs:
             - name: Clone Flutter repository with stable channel
               uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
               with:
-                  channel: "stable"
+                  cache: true
+                  channel: stable
             - run: flutter doctor -v
 
             # Checkout code and get packages.

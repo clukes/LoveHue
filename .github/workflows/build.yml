@@ -25,6 +25,7 @@ jobs:
             - name: Clone Flutter repository with stable channel
               uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
               with:
+                  cache: true
                   channel: 'stable'
             - run: flutter config --enable-macos-desktop
             - run: flutter doctor -v
@@ -36,6 +37,6 @@ jobs:
 
             # Create .dev.env file
             - name: Set env
-              run: echo '${{ secrets.DEV_ENV }}' > .dev.env
+              run: echo '${{ secrets.DEV_ENV }}' > environment/.dev.env
 
             - run: flutter build ${{ matrix.target }}
