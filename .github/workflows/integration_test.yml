@@ -46,7 +46,7 @@ jobs:
                 api-level: [29, 33]
                 target: [google_apis]
                 arch: [x86_64]
-                fail-fast: true
+            fail-fast: true
         steps:
             - name: Setup java
               uses: actions/setup-java@v3
