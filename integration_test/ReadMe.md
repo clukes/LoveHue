@@ -4,16 +4,10 @@
 3. Run tests (make sure new files are ran in main.dart)
 headless:
 ``` zsh
-flutter drive \ 
-  --driver=integration_test/test_driver/test_driver.dart \
-  --target=integration_test/main.dart \
-  -d web-server
+flutter drive --driver=integration_test/test_driver/test_driver.dart --target=integration_test/main.dart -d web-server
 ```
 or not headless:
 ``` zsh
-flutter drive \ 
-  --driver=integration_test/test_driver/test_driver.dart \
-  --target=integration_test/main.dart \
-  -d chrome
+flutter drive driver=integration_test/test_driver/test_driver.dart target=integration_test/main.dart -d chrome
 ```
 

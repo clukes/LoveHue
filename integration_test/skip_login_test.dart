@@ -33,7 +33,7 @@ void main() {
       // Verify that "Your bars" is displayed on the screen.
       final yourBarsText = find.text('Your Bars');
       expect(yourBarsText, findsOneWidget);
-      takeScreenshot(tester, binding, "SkipLogin-LoggedIn");
+      await takeScreenshot(tester, binding, "SkipLogin-LoggedIn");
     });
   });
 }
