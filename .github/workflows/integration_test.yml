@@ -101,7 +101,7 @@ jobs:
                   force-avd-creation: false
                   emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
                   disable-animations: true
-                  script: flutter drive --driver=integration_test/test_driver/test_driver.dart --target integration_test/main.dart
+                  script: flutter drive --driver=integration_test/test_driver/test_driver.dart --target integration_test/e2e_tests.dart
             - name: Upload Screenshots
               uses: actions/upload-artifact@v3
               with:
@@ -139,7 +139,7 @@ jobs:
             - name: Install Flutter dependencies
               run: flutter pub get
             - name: Run integration tests
-              run: flutter drive --driver=integration_test/test_driver/test_driver.dart --target integration_test/main.dart -d chrome
+              run: flutter drive --driver=integration_test/test_driver/test_driver.dart --target integration_test/e2e_tests.dart -d chrome
             - name: Upload Screenshots
               uses: actions/upload-artifact@v3
               with:
