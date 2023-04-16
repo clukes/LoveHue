@@ -41,67 +41,61 @@ jobs:
 
     android:
         runs-on: macos-latest
-
-I had similar problems with the API 33 emulator and it turned out that target: default tries to download the emulator without the Google API, which is missing in API 33. So my solution was to specify target: google_apis and arch: x86_64:
-
-jobs:
-  test:
-    runs-on: macos-latest
-    strategy:
-      matrix:
-        api-level: [29, 33]
-        target: [google_apis]
-        arch: [x86_64]
-        fail-fast: true
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v3
-      - name: Install Firebase Emulator Suite
-        run: npm install -g firebase-tools
-      - name: Start firebase emulator
-        run: firebase emulators:start &
-      - name: Setup Flutter SDK
-        uses: subosito/flutter-action@v2
-        with:
-          channel: stable
-      - name: Install Flutter dependencies
-        run: flutter pub get
-      - name: Gradle cache
-        uses: gradle/gradle-build-action@v2
-      - name: AVD cache
-        uses: actions/cache@v3
-        id: avd-cache
-        with:
-          path: |
-            ~/.android/avd/*
-            ~/.android/adb*
-          key: avd-${{ matrix.api-level }}
-      - name: Create AVD and generate snapshot for caching
-        if: steps.avd-cache.outputs.cache-hit != 'true'
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ matrix.api-level }}
-          target: ${{ matrix.target }}
-          arch: ${{ matrix.arch }}
-          force-avd-creation: false
-          emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: false
-          script: echo "Generated AVD snapshot for caching."
-      - name: Run tests
-        uses: reactivecircus/android-emulator-runner@v2
-        with:
-          api-level: ${{ matrix.api-level }}
-          target: ${{ matrix.target }}
-          arch: ${{ matrix.arch }}
-          force-avd-creation: false
-          emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-          disable-animations: true
-          script: flutter drive --driver=integration_test/test_driver/test_driver.dart --target integration_test/main.dart
-      - name: Upload Screenshoots
-        uses: actions/upload-artifact@v3
-        with:
-          name: Test result screenshots
-          path: screenshots/*.png
+        strategy:
+        matrix:
+            api-level: [29, 33]
+            target: [google_apis]
+            arch: [x86_64]
+            fail-fast: true
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v3
+            - name: Install Firebase Emulator Suite
+              run: npm install -g firebase-tools
+            - name: Start firebase emulator
+              run: firebase emulators:start &
+            - name: Setup Flutter SDK
+              uses: subosito/flutter-action@v2
+              with:
+                  channel: stable
+            - name: Install Flutter dependencies
+              run: flutter pub get
+            - name: Gradle cache
+              uses: gradle/gradle-build-action@v2
+            - name: AVD cache
+              uses: actions/cache@v3
+              id: avd-cache
+              with:
+                  path: |
+                      ~/.android/avd/*
+                      ~/.android/adb*
+                  key: avd-${{ matrix.api-level }}
+            - name: Create AVD and generate snapshot for caching
+              if: steps.avd-cache.outputs.cache-hit != 'true'
+              uses: reactivecircus/android-emulator-runner@v2
+              with:
+                  api-level: ${{ matrix.api-level }}
+                  target: ${{ matrix.target }}
+                  arch: ${{ matrix.arch }}
+                  force-avd-creation: false
+                  emulator-options: -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+                  disable-animations: false
+                  script: echo "Generated AVD snapshot for caching."
+            - name: Run tests
+              uses: reactivecircus/android-emulator-runner@v2
+              with:
+                  api-level: ${{ matrix.api-level }}
+                  target: ${{ matrix.target }}
+                  arch: ${{ matrix.arch }}
+                  force-avd-creation: false
+                  emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+                  disable-animations: true
+                  script: flutter drive --driver=integration_test/test_driver/test_driver.dart --target integration_test/main.dart
+            - name: Upload Screenshoots
+              uses: actions/upload-artifact@v3
+              with:
+                  name: Test result screenshots
+                  path: screenshots/*.png
 
     web:
         runs-on: macos-latest
