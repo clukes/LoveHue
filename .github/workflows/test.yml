@@ -42,7 +42,7 @@ jobs:
               run: flutter test --coverage
 
             - name: Upload to code coverage
-              uses: codecov/codecov-action@40a12dcee2df644d47232dde008099a3e9e4f865
+              uses: codecov/codecov-action@894ff025c7b54547a9a2a1e9f228beae737ad3c2
               with:
                   token: ${{secrets.CODECOV_TOKEN}}
                   file: coverage/lcov.info
@@ -70,7 +70,7 @@ jobs:
               run: "npm run test:coverage"
 
             - name: Upload to code coverage
-              uses: codecov/codecov-action@40a12dcee2df644d47232dde008099a3e9e4f865
+              uses: codecov/codecov-action@894ff025c7b54547a9a2a1e9f228beae737ad3c2
               with:
                   token: ${{secrets.CODECOV_TOKEN}}
                   file: coverage/lcov.info
