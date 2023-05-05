@@ -8,6 +8,6 @@ flutter drive --driver=integration_test/test_driver/test_driver.dart --target=in
 ```
 or not headless:
 ``` zsh
-flutter drive driver=integration_test/test_driver/test_driver.dart target=integration_test/e2e_tests.dart -d chrome
+flutter drive --driver=integration_test/test_driver/test_driver.dart --target=integration_test/e2e_tests.dart -d chrome
 ```
 

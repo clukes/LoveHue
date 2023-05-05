@@ -6,6 +6,20 @@ import 'package:lovehue/main_emulated.dart' as app;
 
 import 'test_driver/utilities.dart';
 
+Future<bool> waitForEmulator(WidgetTester tester, int retryCount, int delaySeconds) async {
+  for(int i = 0; i < retryCount; i++) {
+    try {
+      await FirebaseAuth.instance.fetchSignInMethodsForEmail("test@test.com");
+      return true;
+    }
+    on FirebaseAuthException catch (ex) {
+      tester.printToConsole("Emulator connection failed, retrying... attempt $i (Error: ${ex.message})");
+      await Future.delayed(Duration(seconds: delaySeconds));
+    }
+  }
+  return false;
+}
+
 void main() {
   final binding = IntegrationTestWidgetsFlutterBinding.ensureInitialized();
 
@@ -14,6 +28,10 @@ void main() {
         (tester) async {
       await app.main();
       await tester.pumpAndSettle();
+
+      var emulatorLoaded = await waitForEmulator(tester, 10, 3);
+      expect(emulatorLoaded, isTrue, reason: "Emulator wasn't ready");
+
       expect(find.text('Sign in'), findsOneWidget);
 
       // Find and tap the "Skip login" button.
