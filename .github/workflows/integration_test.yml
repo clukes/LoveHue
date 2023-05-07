@@ -97,7 +97,7 @@ jobs:
               with:
                 attempt_limit: 3
                 action: reactivecircus/android-emulator-runner@v2
-                with:
+                with: |
                     api-level: ${{ matrix.api-level }}
                     target: ${{ matrix.target }}
                     arch: ${{ matrix.arch }}
