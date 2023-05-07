@@ -30,7 +30,7 @@ void main() {
       await tester.pumpAndSettle();
 
       var emulatorLoaded = await waitForEmulator(tester, 10, 3);
-      expect(emulatorLoaded, isTrue, reason: "Emulator wasn't ready");
+      expect(emulatorLoaded, isTrue, reason: "Failure: Emulator wasn't ready");
 
       expect(find.text('Sign in'), findsOneWidget);
 

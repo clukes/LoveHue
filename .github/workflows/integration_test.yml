@@ -93,15 +93,18 @@ jobs:
                   disable-animations: false
                   script: echo "Generated AVD snapshot for caching."
             - name: Run tests
-              uses: reactivecircus/android-emulator-runner@v2
+              uses: Wandalen/wretry.action@master
               with:
-                  api-level: ${{ matrix.api-level }}
-                  target: ${{ matrix.target }}
-                  arch: ${{ matrix.arch }}
-                  force-avd-creation: false
-                  emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-                  disable-animations: true
-                  script: flutter test integration_test/e2e_tests.dart --flavor emu
+                attempt_limit: 3
+                action: reactivecircus/android-emulator-runner@v2
+                with:
+                    api-level: ${{ matrix.api-level }}
+                    target: ${{ matrix.target }}
+                    arch: ${{ matrix.arch }}
+                    force-avd-creation: false
+                    emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+                    disable-animations: true
+                    script: flutter test integration_test/e2e_tests.dart --flavor emu
             - name: Upload Screenshots
               uses: actions/upload-artifact@v3
               with:
