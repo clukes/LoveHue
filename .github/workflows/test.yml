@@ -11,7 +11,7 @@ permissions: read-all
 jobs:
     unit-test-app:
         name: Unit tests app
-        runs-on: ubuntu-latest
+        runs-on: macos-latest
         steps:
             # Set up Flutter.
             - name: Clone Flutter repository with stable channel
@@ -49,7 +49,7 @@ jobs:
 
     unit-test-functions:
         name: Unit tests cloud functions
-        runs-on: ubuntu-latest
+        runs-on: macos-latest
         defaults:
             run:
                 working-directory: ./functions
