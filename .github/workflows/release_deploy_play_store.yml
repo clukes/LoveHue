@@ -20,6 +20,9 @@ jobs:
     fastlane-deploy:
         runs-on: ubuntu-18.04
         steps:
+            - name: Checkout code
+              uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+
             # Set up Flutter.
             - name: Get Flutter version
               id: get-flutter-version
@@ -31,10 +34,6 @@ jobs:
                   flutter-version: ${{ steps.get-flutter-version.outputs.version }}
                   channel: stable
             - run: flutter doctor -v
-
-            # Checkout code and get packages.
-            - name: Checkout code
-              uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
             - run: flutter pub get
 
             # Setup Ruby, Bundler, and Gemfile dependencies
