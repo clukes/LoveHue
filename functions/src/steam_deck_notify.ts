@@ -11,7 +11,7 @@ const twofivesixgbpos = 1;
  */
 export const notifyInStock = functions.pubsub
     .schedule("every 5 minutes")
-    .onRun((context) => {
+    .onRun((_) => {
       const url =
       "https://store.steampowered.com/reservation/ajaxgetdefaultstate?rgReservationPackageIDs=[595603,595604]&rgDepositPackageIDs=[595598,595601]&cc=GB&l=english";
 

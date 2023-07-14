@@ -14,11 +14,15 @@ jobs:
         runs-on: macos-latest
         steps:
             # Set up Flutter.
-            - name: Clone Flutter repository with stable channel
-              uses: subosito/flutter-action@1e6ee87cb840500837bcd50a667fb28815d8e310
+            - name: Get Flutter version
+              id: get-flutter-version
+              uses: zgosalvez/github-actions-get-flutter-version-env@v2
+            - name: Setup Flutter SDK
+              uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
               with:
                   cache: true
-                  channel: "stable"
+                  flutter-version: ${{ steps.get-flutter-version.outputs.version }}
+                  channel: stable
             - run: flutter doctor -v
 
             # Checkout LoveHue code and get packages.
@@ -79,11 +83,16 @@ jobs:
     #   name: Benchmark tests
     #   runs-on: ubuntu-18.04
     #   steps:
-    #     # Set up Flutter.
-    #     - name: Clone Flutter repository with master channel
-    #       uses: subosito/flutter-action@1e6ee87cb840500837bcd50a667fb28815d8e310
-    #       with:
-    #         channel: master
+    # # Set up Flutter.
+    # - name: Get Flutter version
+    #   id: get-flutter-version
+    #   uses: zgosalvez/github-actions-get-flutter-version-env@v2
+    # - name: Setup Flutter SDK
+    #   uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
+    #   with:
+    #       cache: true
+    #       flutter-version: ${{ steps.get-flutter-version.outputs.version }}
+    #       channel: stable
     #     - run: flutter doctor -v
     #     - run: flutter config --enable-web
 
@@ -98,11 +107,16 @@ jobs:
     #   name: Golden tests
     #   runs-on: macos-10.15
     #   steps:
-    #     # Set up Flutter.
-    #     - name: Clone Flutter repository with master channel
-    #       uses: subosito/flutter-action@1e6ee87cb840500837bcd50a667fb28815d8e310
-    #       with:
-    #         channel: master
+    # Set up Flutter.
+    # - name: Get Flutter version
+    #   id: get-flutter-version
+    #   uses: zgosalvez/github-actions-get-flutter-version-env@v2
+    # - name: Setup Flutter SDK
+    #   uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
+    #   with:
+    #       cache: true
+    #       flutter-version: ${{ steps.get-flutter-version.outputs.version }}
+    #       channel: stable
     #     - run: flutter doctor -v
 
     #     # Checkout code and get packages.
