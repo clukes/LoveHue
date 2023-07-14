@@ -10,3 +10,6 @@ Functions for Google cloud functions.
 
 
 Run `npm test` to run unit tests.
+
+
+Run `npm run deploy` inside functions folder to deploy

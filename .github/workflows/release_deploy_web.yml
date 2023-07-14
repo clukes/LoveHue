@@ -19,11 +19,18 @@ jobs:
     build-and-deploy:
         runs-on: ubuntu-18.04
         steps:
-            # Set up Flutter.
-            - name: Clone Flutter repository with stable channel
+            - name: Checkout code
+              uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+
+              # Set up Flutter.
+            - name: Get Flutter version
+              id: get-flutter-version
+              uses: zgosalvez/github-actions-get-flutter-version-env@v2
+            - name: Setup Flutter SDK
               uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
               with:
                   cache: true
+                  flutter-version: ${{ steps.get-flutter-version.outputs.version }}
                   channel: stable
             - run: flutter doctor -v
 
@@ -33,9 +40,6 @@ jobs:
                   node-version: "14"
             - run: npm install -g firebase-tools@11.0.1
 
-            # Checkout code and get packages.
-            - name: Checkout code
-              uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
             - run: flutter pub get
 
             # Build and deploy (by default, to staging).
