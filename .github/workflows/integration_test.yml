@@ -28,12 +28,16 @@ jobs:
     #         echo $UDID
     #         xcrun simctl boot "${UDID:?No Simulator with this name found}"
     #     - uses: actions/checkout@v3
-    #     - name: Setup Flutter SDK
-    #       uses: subosito/flutter-action@v2
+    #     # Set up Flutter.
+    #     - name: Get Flutter version
+    #       id: get-flutter-version
+    #       uses: zgosalvez/github-actions-get-flutter-version-env@v2
+    #     - name: Clone Flutter repository with stable channel
+    #       uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
     #       with:
-    #         channel: stable
-    #         # instead of "channel: stable", you could be more precise by specifying the exact version of Flutter you're using:
-    #         # flutter-version: '<FLUTTER_VERSION>'
+    #       cache: true
+    #       channel: "stable"
+    #       flutter-version: ${{ steps.get-flutter-version.outputs.version }}
     #     - name: Install Flutter dependencies
     #       run: flutter pub get
     #     - name: Run integration tests
@@ -64,10 +68,15 @@ jobs:
               run: npm install -g firebase-tools
             - name: Start firebase emulator
               run: firebase emulators:start &
+            # Set up Flutter.
+            - name: Get Flutter version
+              id: get-flutter-version
+              uses: zgosalvez/github-actions-get-flutter-version-env@v2
             - name: Setup Flutter SDK
               uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
               with:
                   cache: true
+                  flutter-version: ${{ steps.get-flutter-version.outputs.version }}
                   channel: stable
             - name: Install Flutter dependencies
               run: flutter pub get
@@ -95,16 +104,16 @@ jobs:
             - name: Run tests
               uses: Wandalen/wretry.action@master
               with:
-                attempt_limit: 3
-                action: reactivecircus/android-emulator-runner@50986b1464923454c95e261820bc626f38490ec0
-                with: |
-                    api-level: ${{ matrix.api-level }}
-                    target: ${{ matrix.target }}
-                    arch: ${{ matrix.arch }}
-                    force-avd-creation: false
-                    emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
-                    disable-animations: true
-                    script: flutter test integration_test/e2e_tests.dart --flavor emu
+                  attempt_limit: 3
+                  action: reactivecircus/android-emulator-runner@50986b1464923454c95e261820bc626f38490ec0
+                  with: |
+                      api-level: ${{ matrix.api-level }}
+                      target: ${{ matrix.target }}
+                      arch: ${{ matrix.arch }}
+                      force-avd-creation: false
+                      emulator-options: -no-snapshot-save -no-window -gpu swiftshader_indirect -noaudio -no-boot-anim -camera-back none
+                      disable-animations: true
+                      script: flutter test integration_test/e2e_tests.dart --flavor emu
             - name: Upload Screenshots
               uses: actions/upload-artifact@v3
               with:
@@ -134,10 +143,15 @@ jobs:
               uses: nanasess/setup-chromedriver@v2
             - name: Start chromedriver
               run: chromedriver --port=4444 &
+            # Set up Flutter.
+            - name: Get Flutter version
+              id: get-flutter-version
+              uses: zgosalvez/github-actions-get-flutter-version-env@v2
             - name: Setup Flutter SDK
               uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
               with:
                   cache: true
+                  flutter-version: ${{ steps.get-flutter-version.outputs.version }}
                   channel: stable
             - name: Install Flutter dependencies
               run: flutter pub get
