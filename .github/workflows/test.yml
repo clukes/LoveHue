@@ -13,6 +13,9 @@ jobs:
         name: Unit tests app
         runs-on: macos-latest
         steps:
+            - name: Checkout LoveHue code
+              uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+
             # Set up Flutter.
             - name: Get Flutter version
               id: get-flutter-version
@@ -24,10 +27,6 @@ jobs:
                   flutter-version: ${{ steps.get-flutter-version.outputs.version }}
                   channel: stable
             - run: flutter doctor -v
-
-            # Checkout LoveHue code and get packages.
-            - name: Checkout LoveHue code
-              uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
             - run: flutter pub get -v
 
             # Create .dev.env file
