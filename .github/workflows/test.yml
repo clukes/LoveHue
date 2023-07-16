@@ -16,12 +16,11 @@ jobs:
             - name: Checkout LoveHue code
               uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
 
-            # Set up Flutter.
             - name: Get Flutter version
               id: get-flutter-version
               uses: zgosalvez/github-actions-get-flutter-version-env@v2
             - name: Setup Flutter SDK
-              uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
+              uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
               with:
                   cache: true
                   flutter-version: ${{ steps.get-flutter-version.outputs.version }}
@@ -45,7 +44,7 @@ jobs:
               run: flutter test --coverage
 
             - name: Upload to code coverage
-              uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70
+              uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d
               with:
                   token: ${{secrets.CODECOV_TOKEN}}
                   file: coverage/lcov.info
@@ -73,7 +72,7 @@ jobs:
               run: "npm run test:coverage"
 
             - name: Upload to code coverage
-              uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70
+              uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d
               with:
                   token: ${{secrets.CODECOV_TOKEN}}
                   file: coverage/lcov.info

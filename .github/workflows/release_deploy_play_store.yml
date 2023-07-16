@@ -28,7 +28,7 @@ jobs:
               id: get-flutter-version
               uses: zgosalvez/github-actions-get-flutter-version-env@v2
             - name: Setup Flutter SDK
-              uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
+              uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
               with:
                   cache: true
                   flutter-version: ${{ steps.get-flutter-version.outputs.version }}
@@ -38,7 +38,7 @@ jobs:
 
             # Setup Ruby, Bundler, and Gemfile dependencies
             - name: Setup Fastlane
-              uses: ruby/setup-ruby@55283cc23133118229fd3f97f9336ee23a179fcf
+              uses: ruby/setup-ruby@250fcd6a742febb1123a77a841497ccaa8b9e939
               with:
                   ruby-version: "2.6"
                   bundler-cache: true
