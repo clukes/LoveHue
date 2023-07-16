@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:integration_test/integration_test.dart';
 
@@ -84,9 +85,10 @@ Future testUpdatingBars(
 
   // Find a bar and update it.
   expect(find.text('Your Bars'), findsOneWidget);
-  final barToUpdate = find.byType(InteractableBarSlider);
-  expect(barToUpdate, findsAtLeastNWidgets(1));
-  await tester.drag(barToUpdate.first, const Offset(20, 0));
+  final bars = find.byType(InteractableBarSlider);
+  expect(bars, findsAtLeastNWidgets(1));
+  final barToUpdate = find.descendant(of: bars.first, matching: find.byType(Slider));
+  await tester.drag(barToUpdate, const Offset(20, 0));
 
   await tester.pumpAndSettle();
 
