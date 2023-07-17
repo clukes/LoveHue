@@ -333,10 +333,10 @@ packages:
     dependency: "direct main"
     description:
       name: firebase_auth
-      sha256: "8c97619ed2633148c41c344a59461f23c73bf8aa477ae48296703f06d9621fb0"
+      sha256: "87216661b409575ecb1a7849da38604a0abfcb6497146b66d4832cb97a4c9e0f"
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "4.4.2"
+    version: "4.7.0"
   firebase_auth_mocks:
     dependency: "direct dev"
     description:
@@ -349,18 +349,18 @@ packages:
     dependency: transitive
     description:
       name: firebase_auth_platform_interface
-      sha256: f7db119be795d79533c503887075a0315fc3ae1da6f9a9cd4f9100a62c68859c
+      sha256: "4ab0a8997994db2b76bf0652689d7908ca935a99314857c683251bc23d31c287"
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "6.13.1"
+    version: "6.16.0"
   firebase_auth_web:
     dependency: transitive
     description:
       name: firebase_auth_web
-      sha256: "45687246f5be811baf3810652460acd0f3d8c98f9d8f8b1961d7cc5c15c1e803"
+      sha256: c74c5753855896b31536b9e151e34bf7eea143f0d9c209947b5f7ddc8e111989
       url: "https://pub.dartlang.org"
     source: hosted
-    version: "5.3.2"
+    version: "5.6.0"
   firebase_core:
     dependency: "direct main"
     description:
