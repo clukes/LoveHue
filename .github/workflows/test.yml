@@ -5,29 +5,36 @@ on:
             - main
     pull_request:
 
+concurrency:
+    group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
+
 # Declare default permissions as read only.
 permissions: read-all
 
 jobs:
     unit-test-app:
         name: Unit tests app
-        runs-on: ubuntu-latest
+        runs-on: macos-latest
         steps:
-            # Set up Flutter.
-            - name: Clone Flutter repository with stable channel
-              uses: subosito/flutter-action@1e6ee87cb840500837bcd50a667fb28815d8e310
-              with:
-                  channel: "stable"
-            - run: flutter doctor -v
-
-            # Checkout LoveHue code and get packages.
             - name: Checkout LoveHue code
               uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+
+            - name: Get Flutter version
+              id: get-flutter-version
+              uses: zgosalvez/github-actions-get-flutter-version-env@v2
+            - name: Setup Flutter SDK
+              uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
+              with:
+                  cache: true
+                  flutter-version: ${{ steps.get-flutter-version.outputs.version }}
+                  channel: stable
+            - run: flutter doctor -v
             - run: flutter pub get -v
 
             # Create .dev.env file
             - name: Set env
-              run: echo '${{ secrets.DEV_ENV }}' > .dev.env
+              run: echo '${{ secrets.DEV_ENV }}' > environment/.dev.env
 
             - name: generate mocks
               run: flutter pub get && flutter pub run build_runner build --delete-conflicting-outputs
@@ -41,81 +48,87 @@ jobs:
               run: flutter test --coverage
 
             - name: Upload to code coverage
-              uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70
+              uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d
               with:
                   token: ${{secrets.CODECOV_TOKEN}}
                   file: coverage/lcov.info
 
     unit-test-functions:
         name: Unit tests cloud functions
-        runs-on: ubuntu-latest
+        runs-on: macos-latest
         defaults:
             run:
                 working-directory: ./functions
         steps:
-        - uses: 'actions/checkout@v3'
+            - uses: "actions/checkout@v3"
 
-        - uses: 'actions/setup-node@v3'
-          with:
-            node-version: '16.x'
+            - uses: "actions/setup-node@v3"
+              with:
+                  node-version: "16.x"
 
-        - name: 'npm build'
-          run: 'npm ci && npm run build'
+            - name: "npm build"
+              run: "npm ci && npm run build"
 
-        - name: 'npm lint'
-          run: 'npm run lint'
+            - name: "npm lint"
+              run: "npm run lint"
 
-        - name: 'npm test'
-          run: 'npm run test:coverage'
+            - name: "npm test"
+              run: "npm run test:coverage"
 
-
-        - name: Upload to code coverage
-          uses: codecov/codecov-action@d9f34f8cd5cb3b3eb79b3e4b5dae3a16df499a70
-          with:
-              token: ${{secrets.CODECOV_TOKEN}}
-              file: coverage/lcov.info
-
+            - name: Upload to code coverage
+              uses: codecov/codecov-action@eaaf4bedf32dbdc6b720b63067d99c4d77d6047d
+              with:
+                  token: ${{secrets.CODECOV_TOKEN}}
+                  file: coverage/lcov.info
 
     # benchmark-test:
     #   name: Benchmark tests
     #   runs-on: ubuntu-18.04
     #   steps:
-    #     # Set up Flutter.
-    #     - name: Clone Flutter repository with master channel
-    #       uses: subosito/flutter-action@1e6ee87cb840500837bcd50a667fb28815d8e310
-    #       with:
-    #         channel: master
-    #     - run: flutter doctor -v
-    #     - run: flutter config --enable-web
-
-    #     # Checkout code and get packages.
     #     - name: Checkout code
     #       uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
-    #     - run: flutter pub get -v
+#
+# # Set up Flutter.
+# - name: Get Flutter version
+#   id: get-flutter-version
+#   uses: zgosalvez/github-actions-get-flutter-version-env@v2
+# - name: Setup Flutter SDK
+#   uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
+#   with:
+#       cache: true
+#       flutter-version: ${{ steps.get-flutter-version.outputs.version }}
+#       channel: stable
+#     - run: flutter doctor -v
+#     - run: flutter config --enable-web
 
-    #     - run: flutter test test_benchmarks
+#     - run: flutter pub get -v
 
-    # golden-test:
-    #   name: Golden tests
-    #   runs-on: macos-10.15
-    #   steps:
-    #     # Set up Flutter.
-    #     - name: Clone Flutter repository with master channel
-    #       uses: subosito/flutter-action@1e6ee87cb840500837bcd50a667fb28815d8e310
-    #       with:
-    #         channel: master
-    #     - run: flutter doctor -v
+#     - run: flutter test test_benchmarks
 
-    #     # Checkout code and get packages.
-    #     - name: Checkout code
-    #       uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
-    #     - run: flutter pub get -v
+# golden-test:
+#   name: Golden tests
+#   runs-on: macos-10.15
+#   steps:
+#     - name: Checkout code
+#       uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+#
+# Set up Flutter.
+# - name: Get Flutter version
+#   id: get-flutter-version
+#   uses: zgosalvez/github-actions-get-flutter-version-env@v2
+# - name: Setup Flutter SDK
+#   uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
+#   with:
+#       cache: true
+#       flutter-version: ${{ steps.get-flutter-version.outputs.version }}
+#       channel: stable
+#     - run: flutter doctor -v
 
-    #     # Run the golden tests and upload failed test artifacts.
-    #     - run: flutter test test_goldens
-    #     - name: Upload goldens if tests fail
-    #       uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
-    #       if: failure()
-    #       with:
-    #         name: goldens
-    #         path: test_goldens/failures/
+#     # Run the golden tests and upload failed test artifacts.
+#     - run: flutter test test_goldens
+#     - name: Upload goldens if tests fail
+#       uses: actions/upload-artifact@3cea5372237819ed00197afe530f5a7ea3e805c8
+#       if: failure()
+#       with:
+#         name: goldens
+#         path: test_goldens/failures/
