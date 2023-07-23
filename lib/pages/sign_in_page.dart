@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_ui_auth/firebase_ui_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:lovehue/utils/loader_overlay.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/application_state.dart';
@@ -72,8 +73,8 @@ class SignInPage extends StatelessWidget {
                   padding: const EdgeInsets.symmetric(vertical: 8),
                   width: double.infinity,
                   child: OutlinedButton(
-                    onPressed: () async =>
-                        await appState.signInAnonymously(Navigator.of(context)),
+                    onPressed: () async => await withLoaderOverlay(() =>
+                        appState.signInAnonymously(Navigator.of(context))),
                     child: const Text('Skip Login'),
                   ),
                 ),

@@ -313,7 +313,7 @@ void main() {
     test("no user signed in throws error", () async {
       when(firebaseAuth.currentUser).thenReturn(null);
 
-      expectLater(
+      await expectLater(
           userInfo.deleteUserData(
               context, firebaseAuth, authenticationInfo, notificationService),
           throwsA(isA<PrintableError>()));
@@ -323,7 +323,7 @@ void main() {
       when(user.uid).thenReturn('5678');
       when(firebaseAuth.currentUser).thenReturn(user);
 
-      expectLater(
+      await expectLater(
           userInfo.deleteUserData(
               context, firebaseAuth, authenticationInfo, notificationService),
           throwsA(isA<PrintableError>()));

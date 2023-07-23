@@ -1355,8 +1355,8 @@ class MockAuthenticationInfo extends _i1.Mock
   List<_i23.AuthProvider<_i23.AuthListener, _i7.AuthCredential>>
       get providers => (super.noSuchMethod(
             Invocation.getter(#providers),
-            returnValue: <_i23
-                .AuthProvider<_i23.AuthListener, _i7.AuthCredential>>[],
+            returnValue: <
+                _i23.AuthProvider<_i23.AuthListener, _i7.AuthCredential>>[],
           ) as List<_i23.AuthProvider<_i23.AuthListener, _i7.AuthCredential>>);
   @override
   set providers(

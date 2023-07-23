@@ -42,19 +42,19 @@ void main() {
     test('new link code reference is returned', () async {
       DocumentReference codeRef = await LinkCode.create(firestore);
       DocumentSnapshot codeSnapshot = await codeRef.get();
-      expectLater(codeSnapshot.exists, isFalse);
+      await expectLater(codeSnapshot.exists, isFalse);
     });
 
     test('link codes are different', () async {
       DocumentReference codeRef = await LinkCode.create(firestore);
       DocumentSnapshot codeSnapshot = await codeRef.get();
-      expectLater(codeSnapshot.exists, isFalse);
+      await expectLater(codeSnapshot.exists, isFalse);
 
       DocumentReference codeRef2 = await LinkCode.create(firestore);
       DocumentSnapshot codeSnapshot2 = await codeRef.get();
-      expectLater(codeSnapshot2.exists, isFalse);
+      await expectLater(codeSnapshot2.exists, isFalse);
 
-      expectLater(codeRef.id, isNot(codeRef2.id));
+      await expectLater(codeRef.id, isNot(codeRef2.id));
     });
 
     test('existing link code generates a new one', () async {
@@ -66,8 +66,8 @@ void main() {
       DocumentReference codeRef =
           await LinkCode.create(firestore, newCode: '1234');
       DocumentSnapshot codeSnapshot = await codeRef.get();
-      expectLater(codeSnapshot.exists, isFalse);
-      expectLater(codeRef.id, isNot('1234'));
+      await expectLater(codeSnapshot.exists, isFalse);
+      await expectLater(codeRef.id, isNot('1234'));
     });
   });
 }

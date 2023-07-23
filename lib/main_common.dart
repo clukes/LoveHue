@@ -12,6 +12,7 @@ import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:loader_overlay/loader_overlay.dart';
 import 'package:lovehue/services/database_service.dart';
+import 'package:lovehue/services/context_service.dart';
 import 'package:lovehue/services/notification_service.dart';
 import 'package:lovehue/services/shared_preferences_service.dart';
 import 'package:lovehue/utils/configs.dart';
@@ -75,14 +76,13 @@ Future<void> mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo,
   final UserInfoState userInfoState =
       UserInfoState(firestore, partnersInfoState);
   final ApplicationState applicationState = ApplicationState(
-    userInfoState: userInfoState,
-    partnersInfoState: partnersInfoState,
-    firestore: firestore,
-    authenticationInfo: authenticationInfo,
-    auth: firebaseAuth ?? FirebaseAuth.instance,
-    appInfo: appInfo,
-    notificationService: notificationService,
-  );
+      userInfoState: userInfoState,
+      partnersInfoState: partnersInfoState,
+      firestore: firestore,
+      authenticationInfo: authenticationInfo,
+      auth: firebaseAuth ?? FirebaseAuth.instance,
+      appInfo: appInfo,
+      notificationService: notificationService);
 
   final List<ChangeNotifierProvider<ChangeNotifier>> providers = [
     ChangeNotifierProvider<UserInfoState>.value(value: userInfoState),
@@ -123,6 +123,7 @@ class RelationshipBarsApp extends StatelessWidget {
       providers: providers,
       builder: (context, child) => GlobalLoaderOverlay(
         child: MaterialApp(
+          navigatorKey: ContextService.navigatorKey,
           debugShowCheckedModeBanner: false,
           showPerformanceOverlay: false,
           title: Provider.of<ApplicationState>(context, listen: false)

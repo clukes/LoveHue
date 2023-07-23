@@ -1,5 +1,6 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:lovehue/utils/loader_overlay.dart';
 import 'package:provider/provider.dart';
 
 import '../pages/sign_in_page.dart';
@@ -147,18 +148,18 @@ class DeleteAlertDialog {
         );
       }),
       yesPressed: () async {
-        await _deleteAccount(context).then((_) {
-          Navigator.pop(context, yesButtonText);
-          Navigator.of(context).pushAndRemoveUntil(
-              MaterialPageRoute(builder: (_) => const SignInPage()),
-              (route) => false);
-        }).catchError((error) {
-          if (_setState != null) {
-            _setState!(() {
-              _errorMsg = "Error: $error";
-            });
-          }
-        });
+        await withLoaderOverlay(() => _deleteAccount(context).then((_) {
+              Navigator.pop(context, yesButtonText);
+              Navigator.of(context).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (_) => const SignInPage()),
+                  (route) => false);
+            }).catchError((error) {
+              if (_setState != null) {
+                _setState!(() {
+                  _errorMsg = "Error: $error";
+                });
+              }
+            }));
       },
       noPressed: () => Navigator.pop(context, noButtonText),
     );
