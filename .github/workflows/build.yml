@@ -24,14 +24,14 @@ jobs:
             - name: Checkout code
               uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
 
-            - uses: actions/setup-java@v3
+            - uses: actions/setup-java@5ffc13f4174014e2d4d4572b3d74c3fa61aeb2c2 # v3.11.0
               with:
                   distribution: "zulu"
                   java-version: "11"
             # Set up Flutter.
             - name: Get Flutter version
               id: get-flutter-version
-              uses: zgosalvez/github-actions-get-flutter-version-env@v2
+              uses: zgosalvez/github-actions-get-flutter-version-env@7fddf5259c22045dea8dc2f098f494bbd3ca2749 # v2.0.16
             - name: Clone Flutter repository with stable channel
               uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
               with:
