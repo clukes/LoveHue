@@ -2,8 +2,11 @@
 
 import 'dart:io' show Platform;
 import 'package:flutter/foundation.dart' show kIsWeb;
+import 'package:flutter_test/flutter_test.dart';
+import 'package:integration_test/integration_test.dart';
 
-Future<void> takeScreenshot(tester, binding, name) async {
+Future<void> takeScreenshot(WidgetTester tester,
+    IntegrationTestWidgetsFlutterBinding binding, String name) async {
   if (PlatformUtils.isAndroid) {
     try {
       await binding.convertFlutterSurfaceToImage();
