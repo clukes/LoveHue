@@ -10,7 +10,9 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:lovehue/services/database_service.dart';
+import 'package:lovehue/services/context_service.dart';
 import 'package:lovehue/services/notification_service.dart';
 import 'package:lovehue/services/shared_preferences_service.dart';
 import 'package:lovehue/utils/configs.dart';
@@ -74,14 +76,13 @@ Future<void> mainCommon(FirebaseOptions firebaseOptions, AppInfo flavorAppInfo,
   final UserInfoState userInfoState =
       UserInfoState(firestore, partnersInfoState);
   final ApplicationState applicationState = ApplicationState(
-    userInfoState: userInfoState,
-    partnersInfoState: partnersInfoState,
-    firestore: firestore,
-    authenticationInfo: authenticationInfo,
-    auth: firebaseAuth ?? FirebaseAuth.instance,
-    appInfo: appInfo,
-    notificationService: notificationService,
-  );
+      userInfoState: userInfoState,
+      partnersInfoState: partnersInfoState,
+      firestore: firestore,
+      authenticationInfo: authenticationInfo,
+      auth: firebaseAuth ?? FirebaseAuth.instance,
+      appInfo: appInfo,
+      notificationService: notificationService);
 
   final List<ChangeNotifierProvider<ChangeNotifier>> providers = [
     ChangeNotifierProvider<UserInfoState>.value(value: userInfoState),
@@ -120,40 +121,43 @@ class RelationshipBarsApp extends StatelessWidget {
     return MultiProvider(
       // Setup providers for states.
       providers: providers,
-      builder: (context, child) => MaterialApp(
-        debugShowCheckedModeBanner: false,
-        showPerformanceOverlay: false,
-        title: Provider.of<ApplicationState>(context, listen: false)
-            .appInfo
-            .appName,
-        // Currently there is only one theme, a light one.
-        theme: lightThemeData,
-        home: AnnotatedRegion<SystemUiOverlayStyle>(
-          // Ensures that the status bar stays dark with light text.
-          value: SystemUiOverlayStyle.dark
-              .copyWith(statusBarIconBrightness: Brightness.light),
-          child: SafeArea(
-            child: StreamBuilder(
-              stream: Provider.of<ApplicationState>(context, listen: false)
-                  .auth
-                  .authStateChanges(),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.active) {
-                  if (snapshot.hasData) {
-                    return responsiveLayout;
-                  } else if (snapshot.hasError) {
-                    return Center(
-                      child: Text('Error: ${snapshot.error}'),
+      builder: (context, child) => GlobalLoaderOverlay(
+        child: MaterialApp(
+          navigatorKey: ContextService.navigatorKey,
+          debugShowCheckedModeBanner: false,
+          showPerformanceOverlay: false,
+          title: Provider.of<ApplicationState>(context, listen: false)
+              .appInfo
+              .appName,
+          // Currently there is only one theme, a light one.
+          theme: lightThemeData,
+          home: AnnotatedRegion<SystemUiOverlayStyle>(
+            // Ensures that the status bar stays dark with light text.
+            value: SystemUiOverlayStyle.dark
+                .copyWith(statusBarIconBrightness: Brightness.light),
+            child: SafeArea(
+              child: StreamBuilder(
+                stream: Provider.of<ApplicationState>(context, listen: false)
+                    .auth
+                    .authStateChanges(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.active) {
+                    if (snapshot.hasData) {
+                      return responsiveLayout;
+                    } else if (snapshot.hasError) {
+                      return Center(
+                        child: Text('Error: ${snapshot.error}'),
+                      );
+                    }
+                  }
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(
+                      child: CircularProgressIndicator(),
                     );
                   }
-                }
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(
-                    child: CircularProgressIndicator(),
-                  );
-                }
-                return const SignInPage();
-              },
+                  return const SignInPage();
+                },
+              ),
             ),
           ),
         ),

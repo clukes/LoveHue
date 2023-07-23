@@ -5,6 +5,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:lovehue/models/user_information.dart';
 import 'package:lovehue/providers/application_state.dart';
 import 'package:lovehue/providers/partners_info_state.dart';
@@ -63,7 +64,8 @@ Future<FirebaseApp> setupMockFirebaseApp() async {
   SharedPreferencesService,
   DatabaseService,
   NotificationsConfig,
-  FirebaseMessaging
+  FirebaseMessaging,
+  OverlayControllerWidget
 ])
 void main() {
   // Uses build runner to generate mocks for tests.

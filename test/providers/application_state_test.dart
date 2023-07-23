@@ -60,7 +60,7 @@ void main() {
           .doc(user.uid)
           .get()
           .then((value) => value.data());
-      expectLater(info, isNotNull);
+      await expectLater(info, isNotNull);
     });
     await untilCalled(userInfoState.notifyListeners())
         .then((value) => verify(userInfoState.notifyListeners()))

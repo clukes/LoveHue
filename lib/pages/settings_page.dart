@@ -2,6 +2,8 @@
 
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:loader_overlay/loader_overlay.dart';
+import 'package:lovehue/utils/loader_overlay.dart';
 import 'package:provider/provider.dart';
 
 import '../main_common.dart';
@@ -44,8 +46,9 @@ class SettingsPage extends StatelessWidget {
       children: [
         const SizedBox(height: 32),
         OutlinedButton.icon(
-            onPressed: () async => await showAboutAppDialog(
-                context, appState.appInfo, appState.authenticationInfo),
+            onPressed: () async => await withLoaderOverlay(() =>
+                showAboutAppDialog(
+                    context, appState.appInfo, appState.authenticationInfo)),
             icon: const Icon(Icons.info),
             label: const Text('About this app')),
         const SizedBox(height: 32),

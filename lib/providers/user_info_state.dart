@@ -246,10 +246,10 @@ class UserInfoState with ChangeNotifier {
     RelationshipBarDocument? barDoc = latestRelationshipBarDoc;
     if (userID != null && barDoc != null) {
       barDoc.resetBarsChanged();
-      resetBarChange();
       latestRelationshipBarDoc =
           await RelationshipBarDocument.firestoreAddBarList(
               userID, barDoc.barList, firestore);
+      resetBarChange();
     }
     return;
   }
