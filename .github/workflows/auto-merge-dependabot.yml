@@ -1,19 +1,23 @@
 name: auto-merge-dependabot
 
 on:
-  pull_request:
-    branches:
-      - package-updates
+    pull_request:
+        branches:
+            - package-updates
 
-permissions:  # added using https://github.com/step-security/secure-workflows
-  contents: read
+concurrency:
+    group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.ref }}
+    cancel-in-progress: true
+
+permissions: # added using https://github.com/step-security/secure-workflows
+    contents: read
 
 jobs:
-  auto-merge:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
-      - uses: ahmadnassri/action-dependabot-auto-merge@v2
-        with:
-          github-token: ${{ secrets.AUTO_MERGE_TOKEN }}
-          target: minor
+    auto-merge:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@93ea575cb5d8a053eaa0ac8fa3b40d7e05a33cc8
+            - uses: ahmadnassri/action-dependabot-auto-merge@v2
+              with:
+                  github-token: ${{ secrets.AUTO_MERGE_TOKEN }}
+                  target: minor
