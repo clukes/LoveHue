@@ -22,7 +22,7 @@ jobs:
 
             - name: Get Flutter version
               id: get-flutter-version
-              uses: zgosalvez/github-actions-get-flutter-version-env@v2
+              uses: zgosalvez/github-actions-get-flutter-version-env@7fddf5259c22045dea8dc2f098f494bbd3ca2749 # v2.0.16
             - name: Setup Flutter SDK
               uses: subosito/flutter-action@48cafc24713cca54bbe03cdc3a423187d413aafa
               with:
@@ -60,9 +60,9 @@ jobs:
             run:
                 working-directory: ./functions
         steps:
-            - uses: "actions/checkout@v3"
+            - uses: "actions/checkout@c85c95e3d7251135ab7dc9ce3241c5835cc595a9 # v3.5.3"
 
-            - uses: "actions/setup-node@v3"
+            - uses: "actions/setup-node@e33196f7422957bea03ed53f6fbb155025ffc7b8 # v3.7.0"
               with:
                   node-version: "16.x"
 
@@ -91,7 +91,7 @@ jobs:
 # # Set up Flutter.
 # - name: Get Flutter version
 #   id: get-flutter-version
-#   uses: zgosalvez/github-actions-get-flutter-version-env@v2
+#   uses: zgosalvez/github-actions-get-flutter-version-env@7fddf5259c22045dea8dc2f098f494bbd3ca2749 # v2.0.16
 # - name: Setup Flutter SDK
 #   uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
 #   with:
@@ -115,7 +115,7 @@ jobs:
 # Set up Flutter.
 # - name: Get Flutter version
 #   id: get-flutter-version
-#   uses: zgosalvez/github-actions-get-flutter-version-env@v2
+#   uses: zgosalvez/github-actions-get-flutter-version-env@7fddf5259c22045dea8dc2f098f494bbd3ca2749 # v2.0.16
 # - name: Setup Flutter SDK
 #   uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
 #   with:
