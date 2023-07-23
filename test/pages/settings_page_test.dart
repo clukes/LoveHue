@@ -1,6 +1,7 @@
 import 'package:firebase_auth_mocks/firebase_auth_mocks.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:lovehue/pages/settings_page.dart';
 import 'package:lovehue/providers/application_state.dart';
 import 'package:lovehue/utils/app_info_class.dart';
@@ -43,7 +44,7 @@ void main() {
       providers: [
         ChangeNotifierProvider<ApplicationState>.value(value: appState),
       ],
-      child: testWidget,
+      child: LoaderOverlay(child: testWidget),
     ));
     when(appState.appInfo).thenReturn(appInfo);
     when(appState.authenticationInfo).thenReturn(authenticationInfo);
