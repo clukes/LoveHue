@@ -46,9 +46,9 @@ class SettingsPage extends StatelessWidget {
       children: [
         const SizedBox(height: 32),
         OutlinedButton.icon(
-            onPressed: () async =>
-              await withLoaderOverlay(context, () => showAboutAppDialog(
-                  context, appState.appInfo, appState.authenticationInfo)),
+            onPressed: () async => await withLoaderOverlay(() =>
+                showAboutAppDialog(
+                    context, appState.appInfo, appState.authenticationInfo)),
             icon: const Icon(Icons.info),
             label: const Text('About this app')),
         const SizedBox(height: 32),

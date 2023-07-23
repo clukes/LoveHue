@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lovehue/utils/loader_overlay.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/partners_info_state.dart';
@@ -165,16 +166,16 @@ class _LinkPartnerForm extends State<LinkPartnerForm> {
       String linkCode = _controller.text;
       UserInfoState userInfoState =
           Provider.of<UserInfoState>(context, listen: false);
-      await userInfoState.connectTo(linkCode).then((_) {
-        setState(() {
-          // Update page to reflect changes
-          _errorMsg = null;
-        });
-      }).catchError((error) {
-        setState(() {
-          _errorMsg = "Error: $error";
-        });
-      });
+      await withLoaderOverlay(() => userInfoState.connectTo(linkCode).then((_) {
+            setState(() {
+              // Update page to reflect changes
+              _errorMsg = null;
+            });
+          }).catchError((error) {
+            setState(() {
+              _errorMsg = "Error: $error";
+            });
+          }));
     }
     if (!mounted) return;
     ScaffoldMessenger.of(context).clearSnackBars();
@@ -222,7 +223,7 @@ class _LinkRequestSentState extends State<LinkRequestSent> {
         Provider.of<UserInfoState>(context, listen: false);
 
     try {
-      await userInfoState.unlink();
+      await withLoaderOverlay(() => userInfoState.unlink());
     } catch (error) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -294,7 +295,7 @@ class _IncomingLinkRequestState extends State<IncomingLinkRequest> {
       const SnackBar(content: Text('Accepting...')),
     );
     try {
-      await userInfoState.acceptRequest();
+      await withLoaderOverlay(() => userInfoState.acceptRequest());
     } catch (error) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
@@ -313,7 +314,7 @@ class _IncomingLinkRequestState extends State<IncomingLinkRequest> {
       const SnackBar(content: Text('Rejecting...')),
     );
     try {
-      await userInfoState.unlink();
+      await withLoaderOverlay(() => userInfoState.unlink());
     } catch (error) {
       ScaffoldMessenger.of(context).clearSnackBars();
       ScaffoldMessenger.of(context).showSnackBar(SnackBar(

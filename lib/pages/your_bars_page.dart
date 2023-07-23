@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:lovehue/utils/loader_overlay.dart';
 import 'package:provider/provider.dart';
 
 import '../providers/application_state.dart';
@@ -74,7 +75,8 @@ class _YourBarsState extends State<YourBars>
             BlurredCircle(
               child: FloatingActionButton(
                 heroTag: "saveButton",
-                onPressed: () async => await userInfoState.saveBars(),
+                onPressed: () async =>
+                    await withLoaderOverlay(() => userInfoState.saveBars()),
                 tooltip: 'Save',
                 child: const Icon(Icons.save),
               ),

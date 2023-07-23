@@ -309,27 +309,27 @@ void main() {
     test('pending partner throws error', () async {
       when(partnersInfoState.partnerExist).thenReturn(true);
       when(partnersInfoState.partnerPending).thenReturn(true);
-      expectLater(
+      await expectLater(
           subject.connectTo(linkCodeID), throwsA(isA<PrintableError>()));
     });
 
     test('linked partner throws error', () async {
       when(partnersInfoState.partnerExist).thenReturn(true);
       when(partnersInfoState.partnerPending).thenReturn(false);
-      expectLater(
+      await expectLater(
           subject.connectTo(linkCodeID), throwsA(isA<PrintableError>()));
     });
 
     test('null user info throws error', () async {
       when(partnersInfoState.partnerExist).thenReturn(false);
       subject.userInfo = null;
-      expectLater(
+      await expectLater(
           subject.connectTo(linkCodeID), throwsA(isA<PrintableError>()));
     });
 
     test('link code not in database throws error', () async {
       await firestore.collection(linkCodesCollection).doc(linkCodeID).delete();
-      expectLater(
+      await expectLater(
           subject.connectTo(linkCodeID), throwsA(isA<PrintableError>()));
     });
 
@@ -339,7 +339,7 @@ void main() {
           .collection(linkCodesCollection)
           .doc(linkCodeID)
           .set(linkCode.toMap());
-      expectLater(
+      await expectLater(
           subject.connectTo(linkCodeID), throwsA(isA<PrintableError>()));
     });
 
@@ -348,7 +348,7 @@ void main() {
           .collection(userInfoCollection)
           .doc(partnerRef.id)
           .delete();
-      expectLater(
+      await expectLater(
           subject.connectTo(linkCodeID), throwsA(isA<PrintableError>()));
     });
 
@@ -362,7 +362,7 @@ void main() {
           .collection(userInfoCollection)
           .doc(partnerRef.id)
           .set(partnerInfo.toMap());
-      expectLater(
+      await expectLater(
           subject.connectTo(linkCodeID), throwsA(isA<PrintableError>()));
     });
   });
@@ -419,12 +419,14 @@ void main() {
     test('user already connected to partner throws error', () async {
       when(partnersInfoState.partnerExist).thenReturn(true);
       subject.userInfo?.linkPending = false;
-      expectLater(subject.acceptRequest(), throwsA(isA<PrintableError>()));
+      await expectLater(
+          subject.acceptRequest(), throwsA(isA<PrintableError>()));
     });
 
     test('no user info in state throws error', () async {
       subject.userInfo = null;
-      expectLater(subject.acceptRequest(), throwsA(isA<PrintableError>()));
+      await expectLater(
+          subject.acceptRequest(), throwsA(isA<PrintableError>()));
     });
 
     test('no partner in user info throws error', () async {
@@ -433,7 +435,8 @@ void main() {
           linkCode: MockDocumentReference(),
           firestore: firestore);
       subject.userInfo = thisUserInfo;
-      expectLater(subject.acceptRequest(), throwsA(isA<PrintableError>()));
+      await expectLater(
+          subject.acceptRequest(), throwsA(isA<PrintableError>()));
     });
   });
 
@@ -477,15 +480,15 @@ void main() {
           .collection(userInfoCollection)
           .doc(partnerInfo.userID)
           .get();
-      expectLater(user.get('partner'), isNull);
-      expectLater(partner.get('partner'), isNull);
+      await expectLater(user.get('partner'), isNull);
+      await expectLater(partner.get('partner'), isNull);
       verify(partnersInfoState.removePartner(argThat(predicate(
           (UserInformation argInfo) => argInfo.userID == userInfo.userID))));
     });
 
     test('no user info in state throws error', () async {
       userInfoState.userInfo = null;
-      expectLater(userInfoState.unlink(), throwsA(isA<PrintableError>()));
+      await expectLater(userInfoState.unlink(), throwsA(isA<PrintableError>()));
     });
 
     test('no partner in user info throws error', () async {
@@ -493,7 +496,7 @@ void main() {
           userID: linkCodeID,
           linkCode: MockDocumentReference(),
           firestore: firestore);
-      expectLater(userInfoState.unlink(), throwsA(isA<PrintableError>()));
+      await expectLater(userInfoState.unlink(), throwsA(isA<PrintableError>()));
     });
   });
 

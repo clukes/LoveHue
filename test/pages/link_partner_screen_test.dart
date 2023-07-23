@@ -176,20 +176,21 @@ void main() {
 
     testWidgets('linking submit shows then hides snack bar',
         (WidgetTester tester) async {
-      String userCode = "12345";
+      const String linkingText = "Linking...";
+      const String userCode = "12345";
       Completer completer = Completer();
       when(userInfoState.connectTo(userCode))
           .thenAnswer((_) async => completer.future);
       await tester.pumpWidget(testWidgetBuild);
       await tester.enterText(linkCodeFieldFinder, userCode);
       await tester.tap(linkButtonFinder);
-      expect(find.widgetWithText(SnackBar, "Linking..."), findsNothing);
+      expect(find.widgetWithText(SnackBar, linkingText), findsNothing);
       await tester.pump();
-      expect(find.widgetWithText(SnackBar, "Linking..."), findsOneWidget);
+      expect(find.widgetWithText(SnackBar, linkingText), findsOneWidget);
       // Complete the future to finish execution and hide snackbar
       completer.complete();
       await tester.pumpAndSettle();
-      expect(find.widgetWithText(SnackBar, "Linking..."), findsNothing);
+      expect(find.widgetWithText(SnackBar, linkingText), findsNothing);
     });
   });
 

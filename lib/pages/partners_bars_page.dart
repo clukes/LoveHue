@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:lovehue/services/notification_service.dart';
+import 'package:lovehue/utils/loader_overlay.dart';
 import 'package:provider/provider.dart';
 
 import '../models/relationship_bar_document.dart';
@@ -31,7 +32,8 @@ class _PartnersBarsState extends State<PartnersBars>
   bool get wantKeepAlive => true;
 
   Future<void> clickSendNudge(ApplicationState appState) async {
-    NudgeResult result = await appState.sendNudgeNotification();
+    NudgeResult result =
+        await withLoaderOverlay(() => appState.sendNudgeNotification());
     if (!mounted) return;
     if (result.successful) {
       showSnackbar("Nudge notification sent to partner.");

@@ -1,6 +1,7 @@
 import 'package:fake_cloud_firestore/fake_cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:loader_overlay/loader_overlay.dart';
 import 'package:lovehue/models/relationship_bar.dart';
 import 'package:lovehue/models/relationship_bar_document.dart';
 import 'package:lovehue/pages/partners_bars_page.dart';
@@ -41,7 +42,7 @@ void main() {
         ChangeNotifierProvider<PartnersInfoState>.value(
             value: partnersInfoState),
       ],
-      child: testWidget,
+      child: LoaderOverlay(child: testWidget),
     ));
 
     partnersNameValueNotifier = ValueNotifier('TEST_NAME');
