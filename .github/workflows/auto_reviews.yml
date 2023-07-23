@@ -13,6 +13,11 @@ jobs:
         permissions:
             pull-requests: write
         steps:
+            - name: Harden Runner
+              uses: step-security/harden-runner@55d479fb1c5bcad5a4f9099a5d9f37c8857b2845 # v2.4.1
+              with:
+                egress-policy: audit
+
             - uses: hmarr/auto-approve-action@44888193675f29a83e04faf4002fa8c0b537b1e4
               if: github.actor == 'clukes'
               with:
