@@ -43,7 +43,7 @@ dependencies:
     intl: ^0.17.0
     google_fonts: ^4.0.4
     package_info_plus: ^3.0.2
-    flutter_dotenv: ^5.0.2
+    flutter_dotenv: ^5.1.0
     shared_preferences: ^2.0.15
     clock: ^1.1.0
     firebase_ui_auth: ^1.1.7
