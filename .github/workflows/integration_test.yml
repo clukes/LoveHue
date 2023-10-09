@@ -31,7 +31,7 @@ jobs:
     #         UDID=$(xcrun xctrace list devices | grep "^${{ matrix.device }}" | awk '{gsub(/[()]/,""); print $NF}')
     #         echo $UDID
     #         xcrun simctl boot "${UDID:?No Simulator with this name found}"
-    #     - uses: actions/checkout@v3
+    #     - uses: actions/checkout@v4
     #     # Set up Flutter.
     #     - name: Get Flutter version
     #       id: get-flutter-version
@@ -57,7 +57,7 @@ jobs:
             fail-fast: true
         steps:
             - name: Checkout code
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
             - name: Emulator cache
               uses: actions/cache@v3
               with:
@@ -128,7 +128,7 @@ jobs:
         runs-on: macos-latest
         steps:
             - name: Checkout code
-              uses: actions/checkout@v3
+              uses: actions/checkout@v4
             - name: Emulator cache
               uses: actions/cache@v3
               with:
