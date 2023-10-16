@@ -30,7 +30,7 @@
         "firebase-functions-test": "^3.1.0",
         "mocha": "^10.1.0",
         "nyc": "^15.1.0",
-        "sinon": "^15.0.4",
+        "sinon": "^16.1.0",
         "ts-mocha": "^10.0.0",
         "typescript": "^5.2.2"
     },
