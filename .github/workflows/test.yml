@@ -18,7 +18,7 @@ jobs:
         runs-on: macos-latest
         steps:
             - name: Checkout LoveHue code
-              uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+              uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
 
             - name: Get Flutter version
               id: get-flutter-version
@@ -60,7 +60,7 @@ jobs:
             run:
                 working-directory: ./functions
         steps:
-            - uses: "actions/checkout@v3"
+            - uses: "actions/checkout@v4"
 
             - uses: "actions/setup-node@v3"
               with:
@@ -86,7 +86,7 @@ jobs:
     #   runs-on: ubuntu-18.04
     #   steps:
     #     - name: Checkout code
-    #       uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+    #       uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
 #
 # # Set up Flutter.
 # - name: Get Flutter version
@@ -110,7 +110,7 @@ jobs:
 #   runs-on: macos-10.15
 #   steps:
 #     - name: Checkout code
-#       uses: actions/checkout@2541b1294d2704b0964813337f33b291d3f8596b
+#       uses: actions/checkout@8ade135a41bc03ea155e62e844d188df1ea18608
 #
 # Set up Flutter.
 # - name: Get Flutter version
