@@ -35,7 +35,7 @@ jobs:
     #     # Set up Flutter.
     #     - name: Get Flutter version
     #       id: get-flutter-version
-    #       uses: zgosalvez/github-actions-get-flutter-version-env@v2
+    #       uses: zgosalvez/github-actions-get-flutter-version-env@v3
     #     - name: Clone Flutter repository with stable channel
     #       uses: subosito/flutter-action@dbf1fa04f4d2e52c33185153d06cdb5443aa189d
     #       with:
@@ -75,7 +75,7 @@ jobs:
             # Set up Flutter.
             - name: Get Flutter version
               id: get-flutter-version
-              uses: zgosalvez/github-actions-get-flutter-version-env@v2
+              uses: zgosalvez/github-actions-get-flutter-version-env@v3
             - name: Setup Flutter SDK
               uses: subosito/flutter-action@cc97e1648fff6ca5cc647fa67f47e70f7895510b
               with:
@@ -150,7 +150,7 @@ jobs:
             # Set up Flutter.
             - name: Get Flutter version
               id: get-flutter-version
-              uses: zgosalvez/github-actions-get-flutter-version-env@v2
+              uses: zgosalvez/github-actions-get-flutter-version-env@v3
             - name: Setup Flutter SDK
               uses: subosito/flutter-action@cc97e1648fff6ca5cc647fa67f47e70f7895510b
               with:
